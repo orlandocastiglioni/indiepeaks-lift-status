@@ -1,7 +1,7 @@
-From 40d01a1673f883538c235c2225ed4b0d05313989 Mon Sep 17 00:00:00 2001
+From 66beca412d72e3f9b00c1b3b7dc573807c581bcb Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:14:51 -0400
-Subject: [PATCH 6/8] resort: add hochzeiger
+Subject: [PATCH 06/14] resort: add hochzeiger
  (https://www.hochzeiger.com/de/liftstatus-hochzeiger.html)
 
 ---
@@ -32,7 +32,7 @@ index 0000000..d536a3b
 +}
 diff --git a/lib/resorts/hochzeiger/resort.json b/lib/resorts/hochzeiger/resort.json
 new file mode 100644
-index 0000000..361a027
+index 0000000..940f5e1
 --- /dev/null
 +++ b/lib/resorts/hochzeiger/resort.json
 @@ -0,0 +1,25 @@
@@ -57,8 +57,8 @@ index 0000000..361a027
 +    "Tirol"
 +  ],
 +  "ll": [
-+    10.753390,
-+    47.149660
++    10.75339,
++    47.14966
 +  ]
 +}
 diff --git a/test/resorts/example/hochzeiger.json b/test/resorts/example/hochzeiger.json

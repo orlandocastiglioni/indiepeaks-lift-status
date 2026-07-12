@@ -1,7 +1,7 @@
-From 218ff25f983904b9f421616ab31000762a3b6511 Mon Sep 17 00:00:00 2001
+From 701463f0378aa640865072c3987e5a3eb3ebc245 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:18:12 -0400
-Subject: [PATCH 8/8] resort: add pitztaler-gletscher
+Subject: [PATCH 08/14] resort: add pitztaler-gletscher
  (https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus)
 
 ---
@@ -41,7 +41,7 @@ index 0000000..6c3a6fb
 +};
 diff --git a/lib/resorts/pitztaler-gletscher/resort.json b/lib/resorts/pitztaler-gletscher/resort.json
 new file mode 100644
-index 0000000..b52b617
+index 0000000..2edcdec
 --- /dev/null
 +++ b/lib/resorts/pitztaler-gletscher/resort.json
 @@ -0,0 +1,16 @@
@@ -57,8 +57,8 @@ index 0000000..b52b617
 +    "Tirol"
 +  ],
 +  "ll": [
-+    10.880600,
-+    46.927500
++    10.8806,
++    46.9275
 +  ]
 +}
 diff --git a/test/resorts/example/pitztaler-gletscher.html b/test/resorts/example/pitztaler-gletscher.html

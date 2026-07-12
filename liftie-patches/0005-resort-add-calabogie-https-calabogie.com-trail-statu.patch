@@ -1,15 +1,15 @@
-From bc0a61c35b4988e8e099f0e936d41dc1cc3e257e Mon Sep 17 00:00:00 2001
+From db570f4364964edf19412d000fabbab11b422200 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:08:37 -0400
-Subject: [PATCH 5/8] resort: add calabogie
+Subject: [PATCH 05/14] resort: add calabogie
  (https://calabogie.com/trail-status/)
 
 ---
- lib/resorts/calabogie/index.js      |   23 +
+ lib/resorts/calabogie/index.js      |   21 +
  lib/resorts/calabogie/resort.json   |   15 +
  test/resorts/calabogie.js           |   26 +
  test/resorts/example/calabogie.html | 3567 +++++++++++++++++++++++++++
- 4 files changed, 3631 insertions(+)
+ 4 files changed, 3629 insertions(+)
  create mode 100644 lib/resorts/calabogie/index.js
  create mode 100644 lib/resorts/calabogie/resort.json
  create mode 100644 test/resorts/calabogie.js
@@ -17,10 +17,10 @@ Subject: [PATCH 5/8] resort: add calabogie
 
 diff --git a/lib/resorts/calabogie/index.js b/lib/resorts/calabogie/index.js
 new file mode 100644
-index 0000000..2b6d9ed
+index 0000000..04282a3
 --- /dev/null
 +++ b/lib/resorts/calabogie/index.js
-@@ -0,0 +1,23 @@
+@@ -0,0 +1,21 @@
 +import select from '../../select.js';
 +import { allText } from '../../tools/domutil.js';
 +
@@ -30,9 +30,7 @@ index 0000000..2b6d9ed
 +  const liftStatus = {};
 +  let name;
 +  for (const node of select(dom, 'h3.elementor-heading-title')) {
-+    const text = allText(node)
-+      .replace(/[​\s]+/g, ' ')
-+      .trim();
++    const text = allText(node).replace(/[​\s]+/g, ' ').trim();
 +    if (/^(open|closed)$/i.test(text)) {
 +      if (name) {
 +        liftStatus[name] = text.toLowerCase();
@@ -46,7 +44,7 @@ index 0000000..2b6d9ed
 +}
 diff --git a/lib/resorts/calabogie/resort.json b/lib/resorts/calabogie/resort.json
 new file mode 100644
-index 0000000..0c81d06
+index 0000000..7237dfb
 --- /dev/null
 +++ b/lib/resorts/calabogie/resort.json
 @@ -0,0 +1,15 @@
@@ -60,14 +58,14 @@ index 0000000..0c81d06
 +    "Ontario"
 +  ],
 +  "ll": [
-+    -76.795530,
-+    45.257890
++    -76.79553,
++    45.25789
 +  ],
 +  "twitter": "CalabogiePeaks"
 +}
 diff --git a/test/resorts/calabogie.js b/test/resorts/calabogie.js
 new file mode 100644
-index 0000000..8a60bc7
+index 0000000..13850ea
 --- /dev/null
 +++ b/test/resorts/calabogie.js
 @@ -0,0 +1,26 @@
@@ -78,19 +76,19 @@ index 0000000..8a60bc7
 +  'Lower Ole K & P': 'open',
 +  'Shantyman': 'open',
 +  'Fiddler': 'open',
-+  'Shannahan\'s': 'open',
++  "Shannahan's": 'open',
 +  'Beginner Bowl': 'open',
 +  'Progression': 'open',
 +  'Barrett Chute': 'open',
-+  'O\'Brien\'s': 'open',
++  "O'Brien's": 'open',
 +  'Jack Bone': 'open',
-+  'Dillon\'s Dip': 'open',
++  "Dillon's Dip": 'open',
 +  'Bear Paw': 'closed',
-+  'Bailey\'s': 'closed',
++  "Bailey's": 'closed',
 +  'Causeway': 'open',
 +  'Black Donald': 'open',
 +  'Juniper Junction': 'open',
-+  'Al\'s Alley': 'open',
++  "Al's Alley": 'open',
 +  'Whistlin Paddy': 'open',
 +  'Lower Finnegan': 'open',
 +  'Buckshot': 'open',
