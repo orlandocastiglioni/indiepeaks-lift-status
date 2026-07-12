@@ -1,52 +1,127 @@
 {
-  "fetchedAt": "2026-07-12T12:19:20Z",
+  "fetchedAt": "2026-07-12T13:45:59Z",
   "href": "https://calabogie.com/trail-status/",
   "id": "calabogie",
-  "lifts": {
-    "stats": {
-      "closed": 20,
-      "hold": 0,
-      "open": 0,
-      "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
-      },
-      "scheduled": 0
-    },
-    "status": {
-      "Al's Alley": "closed",
-      "Bailey's": "closed",
-      "Barrett Chute": "closed",
-      "Bear Paw": "closed",
-      "Beginner Bowl": "closed",
-      "Black Donald": "closed",
-      "Causeway": "closed",
-      "Dillon's Dip": "closed",
-      "Face of Tiger": "closed",
-      "Fiddler": "closed",
-      "Jack Bone": "closed",
-      "Juniper Junction": "closed",
-      "Lower Finnegan": "closed",
-      "Lower Ole K & P": "closed",
-      "O'Brien's": "closed",
-      "Progression": "closed",
-      "Shannahan's": "closed",
-      "Shantyman": "closed",
-      "Upper Ole K & P": "closed",
-      "Whistlin Paddy": "closed"
-    }
-  },
   "ll": [
     -76.79553,
     45.25789
   ],
   "name": "Calabogie Peaks",
   "timestamp": {
-    "lifts": 1783858737523,
-    "opening": 1783858736123,
+    "lifts": 0,
+    "opening": 1783863706555,
+    "trails": 1783863708178,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Upper Ole K & P",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Ole K & P",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Shantyman",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Fiddler",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Shannahan's",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Beginner Bowl",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Progression",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Barrett Chute",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "O'Brien's",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Jack Bone",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Dillon's Dip",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bear Paw",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bailey's",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Causeway",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Black Donald",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Juniper Junction",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Al's Alley",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Whistlin Paddy",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Finnegan",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Face of Tiger",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 20,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }
