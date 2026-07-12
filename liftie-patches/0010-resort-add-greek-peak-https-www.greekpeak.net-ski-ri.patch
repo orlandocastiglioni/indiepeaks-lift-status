@@ -1,7 +1,7 @@
 From 27e1eed8c2c40dc01f1a5a56389a45d799d8054f Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:25:09 -0400
-Subject: [PATCH 10/14] resort: add greek-peak
+Subject: [PATCH 10/31] resort: add greek-peak
  (https://www.greekpeak.net/ski-ride/current-conditions/)
 
 ---
@@ -17,7 +17,7 @@ Subject: [PATCH 10/14] resort: add greek-peak
 
 diff --git a/lib/resorts/greek-peak/index.js b/lib/resorts/greek-peak/index.js
 new file mode 100644
-index 0000000..b06fc2f
+index 00000000..b06fc2f5
 --- /dev/null
 +++ b/lib/resorts/greek-peak/index.js
 @@ -0,0 +1,16 @@
@@ -39,7 +39,7 @@ index 0000000..b06fc2f
 +};
 diff --git a/lib/resorts/greek-peak/resort.json b/lib/resorts/greek-peak/resort.json
 new file mode 100644
-index 0000000..ad97787
+index 00000000..ad97787f
 --- /dev/null
 +++ b/lib/resorts/greek-peak/resort.json
 @@ -0,0 +1,15 @@
@@ -60,7 +60,7 @@ index 0000000..ad97787
 +}
 diff --git a/test/resorts/example/greek-peak.html b/test/resorts/example/greek-peak.html
 new file mode 100644
-index 0000000..adfb48b
+index 00000000..adfb48b3
 --- /dev/null
 +++ b/test/resorts/example/greek-peak.html
 @@ -0,0 +1,5911 @@
@@ -5978,7 +5978,7 @@ index 0000000..adfb48b
 \ No newline at end of file
 diff --git a/test/resorts/greek-peak.js b/test/resorts/greek-peak.js
 new file mode 100644
-index 0000000..013643b
+index 00000000..013643bb
 --- /dev/null
 +++ b/test/resorts/greek-peak.js
 @@ -0,0 +1,12 @@

@@ -1,0 +1,236 @@
+From a11033862a7a2604d9063e6cfa9f6bab1fd4685a Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:44:37 -0400
+Subject: [PATCH 18/31] resort: add manning-park trail status
+
+---
+ lib/resorts/manning-park/resort.json |   3 +-
+ lib/resorts/manning-park/trails.js   |  17 +++
+ test/resorts/manning-park-trails.js  | 179 +++++++++++++++++++++++++++
+ 3 files changed, 198 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/manning-park/trails.js
+ create mode 100644 test/resorts/manning-park-trails.js
+
+diff --git a/lib/resorts/manning-park/resort.json b/lib/resorts/manning-park/resort.json
+index a7f1d877..d832ec90 100644
+--- a/lib/resorts/manning-park/resort.json
++++ b/lib/resorts/manning-park/resort.json
+@@ -12,5 +12,6 @@
+     49.06906966124412
+   ],
+   "twitter": "Manningpark",
+-  "opening": "2021-12-22"
++  "opening": "2021-12-22",
++  "trails": true
+ }
+diff --git a/lib/resorts/manning-park/trails.js b/lib/resorts/manning-park/trails.js
+new file mode 100644
+index 00000000..4f316c6c
+--- /dev/null
++++ b/lib/resorts/manning-park/trails.js
+@@ -0,0 +1,17 @@
++import { findText } from '../../tools/domutil.js';
++
++// the runs table also has id="mpw-lifts" - anchor on the heading;
++// columns are Name | Status | Accessed from | Grade
++export default {
++  selector: '.elementor-widget-heading:contains(Alpine run Status) + .elementor-widget-shortcode #mpw-lifts tbody tr',
++  parse: row => {
++    const tds = row.children.filter(c => c.name === 'td');
++    const byClass = cls => tds.find(td => td.attribs?.class === cls);
++    const name = findText(byClass('name'));
++    const status = findText(byClass('status'));
++    const level = findText(byClass('grade'));
++    if (name && status) {
++      return { name, status, level };
++    }
++  }
++};
+diff --git a/test/resorts/manning-park-trails.js b/test/resorts/manning-park-trails.js
+new file mode 100644
+index 00000000..884f7885
+--- /dev/null
++++ b/test/resorts/manning-park-trails.js
+@@ -0,0 +1,179 @@
++import trails from '../trails/index.js';
++
++trails('manning-park', [
++  {
++    'name': 'Novice Area',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Wagon Trail',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Crossover',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'The Loop',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Tower 6',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Junction',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Old Wagon Trail',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Horseshoe',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Blue Face',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Featherstone Special',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Orange Streak',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Featherstone',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Mogul Hill',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Coming Home',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Fool Hen Run',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Shadow',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Race Course',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Back Bowl',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Blue Streak',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Big Spruce',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Snag',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Lower Snag',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Timber Cruise',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Gravity Bowl',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Hokey's Hollow",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Muncher's Delight",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Treewell',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Gully',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Apple Bowl',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Sunstep',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Chit-chat',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Sun Step Traverse',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Outer Apple Bowl',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Apple Bowl Hike',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Tree Island',
++    'status': 'closed',
++    'level': 'green'
++  }
++]);
+-- 
+2.39.5
+

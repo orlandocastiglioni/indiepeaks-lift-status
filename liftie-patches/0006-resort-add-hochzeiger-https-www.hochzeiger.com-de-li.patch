@@ -1,7 +1,7 @@
 From 66beca412d72e3f9b00c1b3b7dc573807c581bcb Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:14:51 -0400
-Subject: [PATCH 06/14] resort: add hochzeiger
+Subject: [PATCH 06/31] resort: add hochzeiger
  (https://www.hochzeiger.com/de/liftstatus-hochzeiger.html)
 
 ---
@@ -17,7 +17,7 @@ Subject: [PATCH 06/14] resort: add hochzeiger
 
 diff --git a/lib/resorts/hochzeiger/index.js b/lib/resorts/hochzeiger/index.js
 new file mode 100644
-index 0000000..d536a3b
+index 00000000..d536a3bd
 --- /dev/null
 +++ b/lib/resorts/hochzeiger/index.js
 @@ -0,0 +1,9 @@
@@ -32,7 +32,7 @@ index 0000000..d536a3b
 +}
 diff --git a/lib/resorts/hochzeiger/resort.json b/lib/resorts/hochzeiger/resort.json
 new file mode 100644
-index 0000000..940f5e1
+index 00000000..940f5e1f
 --- /dev/null
 +++ b/lib/resorts/hochzeiger/resort.json
 @@ -0,0 +1,25 @@
@@ -63,7 +63,7 @@ index 0000000..940f5e1
 +}
 diff --git a/test/resorts/example/hochzeiger.json b/test/resorts/example/hochzeiger.json
 new file mode 100644
-index 0000000..fe13359
+index 00000000..fe133590
 --- /dev/null
 +++ b/test/resorts/example/hochzeiger.json
 @@ -0,0 +1 @@
@@ -71,7 +71,7 @@ index 0000000..fe13359
 \ No newline at end of file
 diff --git a/test/resorts/hochzeiger.js b/test/resorts/hochzeiger.js
 new file mode 100644
-index 0000000..522287d
+index 00000000..522287dc
 --- /dev/null
 +++ b/test/resorts/hochzeiger.js
 @@ -0,0 +1,13 @@

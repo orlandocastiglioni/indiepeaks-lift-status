@@ -1,7 +1,7 @@
 From 8572c7f4cad8ab15f3808250d94a6c0bdee994ae Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:15:22 -0400
-Subject: [PATCH 07/14] resort: fix skiwelt - route JSON endpoint through api
+Subject: [PATCH 07/31] resort: fix skiwelt - route JSON endpoint through api
  instead of dataUrl
 
 dataUrl responses always go through the HTML parser, so the JSON parse
@@ -12,7 +12,7 @@ dataUrl is not implemented anywhere in lib/.
  1 file changed, 11 insertions(+), 12 deletions(-)
 
 diff --git a/lib/resorts/skiwelt/resort.json b/lib/resorts/skiwelt/resort.json
-index 185ad6e..76638c6 100644
+index 185ad6ea..76638c6a 100644
 --- a/lib/resorts/skiwelt/resort.json
 +++ b/lib/resorts/skiwelt/resort.json
 @@ -4,17 +4,6 @@

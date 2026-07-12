@@ -1,7 +1,7 @@
 From f1dcc2f4062c0a27312fb9786f08fa1f36053689 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:36:41 -0400
-Subject: [PATCH 14/14] resort: add west-mountain
+Subject: [PATCH 14/31] resort: add west-mountain
  (https://westmountain.com/trail-conditions/)
 
 ---
@@ -17,7 +17,7 @@ Subject: [PATCH 14/14] resort: add west-mountain
 
 diff --git a/lib/resorts/west-mountain/index.js b/lib/resorts/west-mountain/index.js
 new file mode 100644
-index 0000000..d35d03b
+index 00000000..d35d03b2
 --- /dev/null
 +++ b/lib/resorts/west-mountain/index.js
 @@ -0,0 +1,13 @@
@@ -36,7 +36,7 @@ index 0000000..d35d03b
 +};
 diff --git a/lib/resorts/west-mountain/resort.json b/lib/resorts/west-mountain/resort.json
 new file mode 100644
-index 0000000..1058444
+index 00000000..10584446
 --- /dev/null
 +++ b/lib/resorts/west-mountain/resort.json
 @@ -0,0 +1,15 @@
@@ -57,7 +57,7 @@ index 0000000..1058444
 +}
 diff --git a/test/resorts/example/west-mountain.html b/test/resorts/example/west-mountain.html
 new file mode 100644
-index 0000000..6f58b7b
+index 00000000..6f58b7bf
 --- /dev/null
 +++ b/test/resorts/example/west-mountain.html
 @@ -0,0 +1,184 @@
@@ -248,7 +248,7 @@ index 0000000..6f58b7b
 \ No newline at end of file
 diff --git a/test/resorts/west-mountain.js b/test/resorts/west-mountain.js
 new file mode 100644
-index 0000000..f8198a9
+index 00000000..f8198a90
 --- /dev/null
 +++ b/test/resorts/west-mountain.js
 @@ -0,0 +1,10 @@

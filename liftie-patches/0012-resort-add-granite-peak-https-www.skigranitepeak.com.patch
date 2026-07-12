@@ -1,7 +1,7 @@
 From 2b46ec081d65766500c7478403a32b4efb30b31a Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:29:58 -0400
-Subject: [PATCH 12/14] resort: add granite-peak
+Subject: [PATCH 12/31] resort: add granite-peak
  (https://www.skigranitepeak.com/mountain-info/mountain-report)
 
 ---
@@ -17,7 +17,7 @@ Subject: [PATCH 12/14] resort: add granite-peak
 
 diff --git a/lib/resorts/granite-peak/index.js b/lib/resorts/granite-peak/index.js
 new file mode 100644
-index 0000000..d724c21
+index 00000000..d724c21d
 --- /dev/null
 +++ b/lib/resorts/granite-peak/index.js
 @@ -0,0 +1,14 @@
@@ -37,7 +37,7 @@ index 0000000..d724c21
 +};
 diff --git a/lib/resorts/granite-peak/resort.json b/lib/resorts/granite-peak/resort.json
 new file mode 100644
-index 0000000..baa7fd0
+index 00000000..baa7fd02
 --- /dev/null
 +++ b/lib/resorts/granite-peak/resort.json
 @@ -0,0 +1,16 @@
@@ -59,7 +59,7 @@ index 0000000..baa7fd0
 +}
 diff --git a/test/resorts/example/granite-peak.html b/test/resorts/example/granite-peak.html
 new file mode 100644
-index 0000000..a4a19ed
+index 00000000..a4a19edb
 --- /dev/null
 +++ b/test/resorts/example/granite-peak.html
 @@ -0,0 +1,3688 @@
@@ -3753,7 +3753,7 @@ index 0000000..a4a19ed
 +</html>
 diff --git a/test/resorts/granite-peak.js b/test/resorts/granite-peak.js
 new file mode 100644
-index 0000000..2f5d887
+index 00000000..2f5d8870
 --- /dev/null
 +++ b/test/resorts/granite-peak.js
 @@ -0,0 +1,11 @@

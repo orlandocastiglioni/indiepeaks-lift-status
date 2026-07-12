@@ -1,0 +1,584 @@
+From 933872b2da621d7e73b4c62aa350a470259152f6 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:52:05 -0400
+Subject: [PATCH 27/31] resort: add skiwelt trail status
+
+---
+ lib/resorts/skiwelt/resort.json          |  11 +
+ lib/resorts/skiwelt/trails.js            |  17 +
+ test/resorts/example/skiwelt-trails.json |   1 +
+ test/resorts/skiwelt-trails.js           | 508 +++++++++++++++++++++++
+ 4 files changed, 537 insertions(+)
+ create mode 100644 lib/resorts/skiwelt/trails.js
+ create mode 100644 test/resorts/example/skiwelt-trails.json
+ create mode 100644 test/resorts/skiwelt-trails.js
+
+diff --git a/lib/resorts/skiwelt/resort.json b/lib/resorts/skiwelt/resort.json
+index 76638c6a..58f73810 100644
+--- a/lib/resorts/skiwelt/resort.json
++++ b/lib/resorts/skiwelt/resort.json
+@@ -21,5 +21,16 @@
+       "season": "winter",
+       "typeIDs": 1
+     }
++  },
++  "trails": {
++    "host": "https://www.skiwelt.at",
++    "pathname": "/webapi/micadoweb",
++    "query": {
++      "api": "Micado.Ski.Web/Micado.Ski.Web.IO.Api.FacilityApi/List.api",
++      "region": "skiwelt",
++      "season": "winter",
++      "typeIDs": 2
++    },
++    "json": true
+   }
+ }
+diff --git a/lib/resorts/skiwelt/trails.js b/lib/resorts/skiwelt/trails.js
+new file mode 100644
+index 00000000..b99a2907
+--- /dev/null
++++ b/lib/resorts/skiwelt/trails.js
+@@ -0,0 +1,17 @@
++const levels = {
++  'easy-piste': 'green',
++  'medium-piste': 'blue',
++  'difficult-piste2': 'black',
++  skiroute: 'doubleBlack'
++};
++
++export default function parse(data = {}) {
++  const { items = [] } = data;
++  return items
++    .filter(item => item.state) // off season the report carries no state
++    .map(({ title, state, facilityTypeIdentifier }) => ({
++      name: title,
++      status: state,
++      level: levels[facilityTypeIdentifier]
++    }));
++}
+diff --git a/test/resorts/example/skiwelt-trails.json b/test/resorts/example/skiwelt-trails.json
+new file mode 100644
+index 00000000..8ddea20a
+--- /dev/null
++++ b/test/resorts/example/skiwelt-trails.json
+@@ -0,0 +1 @@
++{"copyrights":[],"count":{"length":268544,"total":227},"entries":227,"items":[{"address":"","addressAddition":"","addressTitle":"SkiWelt Westendorf","city":"Westendorf","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"31","fields":[],"guid":"fc9c69be-127a-4a26-9545-d429d62a8bf9","hasWlan":true,"id":557,"latitudeStart":47.3999,"liftLength":3219,"longitudeStart":12.262,"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/fun-park-jump-line.html","mobile":"","number":"119b","operatesInWinter":true,"operatingTimes":[],"pagename":"fun-park-jump-line","parkingChargeable":false,"phone":"+43 5334 2000","region":{"id":1,"identifier":"skiwelt","pageName":"/de/skiwelt.html","title":"SkiWelt Wilder Kaiser-Brixental"},"state":"closed","title":"Fun Park - Jump-Line","website":"www.skiwelt.at/boardersplayground","zip":"6363"},{"address":"","addressAddition":"","addressTitle":"SkiWelt Westendorf","city":"Westendorf","country":"","description":"","disableAggregation":true,"facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"31","fields":[],"guid":"605cc8ba-f015-4ab4-8e26-e1510020e4b8","hasWlan":true,"id":558,"latitudeStart":47.3999,"location":"Westendorf","longitudeStart":12.262,"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/fun-park-jib-line.html","mobile":"","number":"119c","operatesInWinter":true,"operatingTimes":[],"pagename":"fun-park-jib-line","parkingChargeable":false,"phone":"+43 5334 2000","region":{"id":1,"identifier":"skiwelt","pageName":"/de/skiwelt.html","title":"SkiWelt Wilder Kaiser-Brixental"},"state":"closed","teaserText":"","title":"Fun Park - Jib-Line","website":"www.skiwelt.at/boardersplayground","zip":"6363"},{"address":"","addressAddition":"","addressTitle":"","altitude":635,"city":"","country":"","description":"","facilityTypeIdentifier":"difficult-piste2","fax":"","feratelID":"21","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"84456a6a-cc09-4a0f-8009-5a35089358ad","id":23,"interfaces":[{"interfaceIdentifier":"21","title":"Feratel CPS 2.0"}],"liftLength":2793,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kaslach-abfahrt.html","mobile":"","number":"1","operatesInWinter":true,"operatingTimes":[],"pagename":"kaslach-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Kaslach Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":135,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4060","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"5f36ac3b-cfc1-499c-b8c1-82f8a3f22626","id":443,"interfaces":[{"interfaceIdentifier":"4060","title":"Feratel CPS 2.0"}],"liftLength":530,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/umfahrung.html","mobile":"","number":"7","operatesInWinter":true,"operatingTimes":[],"pagename":"umfahrung","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","title":"Umfahrung","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":477,"city":"","country":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"65","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"ab05701d-e818-4cc5-9a80-5f54ee8c444d","id":413,"interfaces":[{"interfaceIdentifier":"65","title":"Feratel CPS 2.0"}],"liftLength":1853,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/streif.html","mobile":"","number":"1a","operatesInWinter":true,"operatingTimes":[],"pagename":"streif","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","title":"Streif","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":596,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"22","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"ecce2e8a-14f7-4c2f-ba66-d4fde7199ccc","id":19,"interfaces":[{"interfaceIdentifier":"22","title":"Feratel CPS 2.0"}],"liftLength":2604,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/brixen-abfahrt.html","mobile":"","number":"1b","operatesInWinter":true,"operatingTimes":[],"pagename":"brixen-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Brixen Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":724,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"23","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"eaa82da6-0287-45cd-8e30-5021783787a8","id":12,"interfaces":[{"interfaceIdentifier":"23","title":"Feratel CPS 2.0"}],"liftLength":3493,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/tanzer-abfahrt.html","mobile":"","number":"1c","operatesInWinter":true,"operatingTimes":[],"pagename":"tanzer-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Tanzer Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":695,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"24","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"befcf0cc-3c73-41db-bead-4cf5048c03a2","id":20,"interfaces":[{"interfaceIdentifier":"24","title":"Feratel CPS 2.0"}],"liftLength":3257,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kaelberalm-abfahrt.html","mobile":"","number":"2","operatesInWinter":true,"operatingTimes":[],"pagename":"kaelberalm-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Kälberalm Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":250,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"25","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"1f1c556e-9f0b-43b0-8f25-23ad45046c2d","id":13,"interfaces":[{"interfaceIdentifier":"25","title":"Feratel CPS 2.0"}],"liftLength":2805,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/hochbrixen-abfahrt.html","mobile":"","number":"2a","operatesInWinter":true,"operatingTimes":[],"pagename":"hochbrixen-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Hochbrixen Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":307,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"26","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"40a7f633-2e51-4c46-badb-5bd37cb183cf","id":21,"interfaces":[{"interfaceIdentifier":"26","title":"Feratel CPS 2.0"}],"liftLength":1469,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kaelberalm-suedabfahrt.html","mobile":"","number":"2b","operatesInWinter":true,"operatingTimes":[],"pagename":"kaelberalm-suedabfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Kälberalm Südabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":80,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"70","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"93c15bb8-4f10-4ab7-8bc8-2b759e5e80f1","id":445,"interfaces":[{"interfaceIdentifier":"70","title":"Feratel CPS 2.0"}],"liftLength":624,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/rennstrecke.html","mobile":"","number":"2","operatesInWinter":true,"operatingTimes":[],"pagename":"rennstrecke","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","title":"Rennstrecke Brixen","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":200,"city":"","country":"","description":"","facilityTypeIdentifier":"difficult-piste2","fax":"","feratelID":"27","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"855f9dbd-02d3-4e7b-839c-607474bf86b3","id":24,"interfaces":[{"interfaceIdentifier":"27","title":"Feratel CPS 2.0"}],"liftLength":491,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/suedabfahrt-hohe-salve.html","mobile":"","number":"2c","operatesInWinter":true,"operatingTimes":[],"pagename":"suedabfahrt-hohe-salve","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Südabfahrt-Hohe Salve","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":486,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"28","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"3edef685-fe9a-4e2e-8ff2-49636b0b4163","id":14,"interfaces":[{"interfaceIdentifier":"28","title":"Feratel CPS 2.0"}],"liftLength":3479,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/zinsbergabfahrt.html","mobile":"","number":"3","operatesInWinter":true,"operatingTimes":[],"pagename":"zinsbergabfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Zinsbergabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":103,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"29","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"e7c6f94e-e09d-4171-b30b-059060249093","id":15,"interfaces":[{"interfaceIdentifier":"29","title":"Feratel CPS 2.0"}],"liftLength":703,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/poldanger-abfahrt.html","mobile":"","number":"4","operatesInWinter":true,"operatingTimes":[],"pagename":"poldanger-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Poldanger Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":715,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"30","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"9e620f5d-1c66-49df-aa91-61ed8019a08a","id":16,"interfaces":[{"interfaceIdentifier":"30","title":"Feratel CPS 2.0"}],"liftLength":3805,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/holzalm-abfahrt.html","mobile":"","number":"6a","operatesInWinter":true,"operatingTimes":[],"pagename":"holzalm-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Holzalm Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":309,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"31","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"b91dee61-eb99-4d8d-b842-560104baf0d6","id":22,"interfaces":[{"interfaceIdentifier":"31","title":"Feratel CPS 2.0"}],"liftLength":2165,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/joch-abfahrt.html","mobile":"","number":"6","operatesInWinter":true,"operatingTimes":[],"pagename":"joch-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Joch Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":286,"city":"","country":"","description":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"32","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"ba2f1795-18df-4051-bafd-d03b589f6afc","id":407,"interfaces":[{"interfaceIdentifier":"32","title":"Feratel CPS 2.0"}],"liftLength":1513,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/joch-abfahrt-1.html","mobile":"","number":"6b","operatesInWinter":true,"operatingTimes":[],"pagename":"joch-abfahrt-1","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Joch Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":245,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"46","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"eab41438-8a73-4435-8d6a-834b43422db4","id":472,"interfaces":[{"interfaceIdentifier":"46","title":"Feratel CPS 2.0"}],"liftLength":1665,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/filzboden-abfahrt-3.html","mobile":"","number":"7a","operatesInWinter":true,"operatingTimes":[],"pagename":"filzboden-abfahrt-3","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Filzboden Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":421,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"34","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"518582da-f442-4ba4-a9be-f7f5838a6357","id":235,"interfaces":[{"interfaceIdentifier":"34","title":"Feratel CPS 2.0"}],"liftLength":3764,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/filzboden-abfahrt-1.html","mobile":"","number":"7","operatesInWinter":true,"operatingTimes":[],"pagename":"filzboden-abfahrt-1","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Filzboden Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":46,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"33","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"88f57a17-3a32-43e6-9372-429af9d48a9f","id":234,"interfaces":[{"interfaceIdentifier":"33","title":"Feratel CPS 2.0"}],"liftLength":227,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/filzboden-abfahrt.html","mobile":"","number":"7","operatesInWinter":true,"operatingTimes":[],"pagename":"filzboden-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","title":"Geschwindigkeitsmessstrecke Brixen","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":171,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"77","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"08f31e71-2fba-4cac-9f58-828491a6ebf5","id":444,"interfaces":[{"interfaceIdentifier":"77","title":"Feratel CPS 2.0"}],"liftLength":232,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/filzboden-abfahrt-2.html","mobile":"","number":"7a","operatesInWinter":true,"operatingTimes":[],"pagename":"filzboden-abfahrt-2","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Filzboden Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":15,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"44","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"1af45b2d-5b5a-4133-a62e-20b3c6926f20","id":458,"interfaces":[{"interfaceIdentifier":"44","title":"Feratel CPS 2.0"}],"liftLength":167,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/uebungslift-hochbrixen-abfahrt.html","mobile":"","number":"9","operatesInWinter":true,"operatingTimes":[],"pagename":"uebungslift-hochbrixen-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Übungslift Hochbrixen Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":13,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"73","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"1684a4a7-01d7-4972-b889-147b0a968fdc","id":448,"interfaces":[{"interfaceIdentifier":"73","title":"Feratel CPS 2.0"}],"liftLength":160,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/skischullift-abfahrt.html","mobile":"","number":"10","operatesInWinter":true,"operatingTimes":[],"pagename":"skischullift-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Skischullift Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":1211,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"37","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"f5e613b3-d506-440b-950c-ed0cb3bafd9d","id":17,"interfaces":[{"interfaceIdentifier":"37","title":"Feratel CPS 2.0"}],"liftLength":5237,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kandleralm-abfahrt.html","mobile":"","number":"11","operatesInWinter":true,"operatingTimes":[],"pagename":"kandleralm-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Kandleralm Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":302,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"74","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"4c501bcb-420e-47de-8c10-bb97f201d244","id":447,"interfaces":[{"interfaceIdentifier":"74","title":"Feratel CPS 2.0"}],"liftLength":1054,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/umfahrung-marast.html","mobile":"","number":"11","operatesInWinter":true,"operatingTimes":[],"pagename":"umfahrung-marast","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","title":"Umfahrung Marast","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":433,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"38","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"d5ac3343-cf14-4e63-8710-a3317c12600e","id":18,"interfaces":[{"interfaceIdentifier":"38","title":"Feratel CPS 2.0"}],"liftLength":2323,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/goetschen-abfahrt.html","mobile":"","number":"16a","operatesInWinter":true,"operatingTimes":[],"pagename":"goetschen-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Götschen Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":93,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"39","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"64eefe15-d3a5-430e-92ec-cb00e17a5091","id":11,"interfaces":[{"interfaceIdentifier":"39","title":"Feratel CPS 2.0"}],"liftLength":913,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/schusterbuehel-abfahrt.html","mobile":"","number":"17","operatesInWinter":true,"operatingTimes":[],"pagename":"schusterbuehel-abfahrt","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Schusterbühel Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":300,"city":"","country":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"66","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"053fc014-7060-4818-85d6-84e40d2670ba","id":236,"interfaces":[{"interfaceIdentifier":"66","title":"Feratel CPS 2.0"}],"liftLength":882,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/direttissima-jochbahn.html","mobile":"","number":"18","operatesInWinter":true,"operatingTimes":[],"pagename":"direttissima-jochbahn","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","title":"Direttissima - Jochbahn","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"","fields":[],"guid":"c2df09f2-7ca1-4793-b324-aedb2bfb73e0","id":1002,"liftLength":560,"location":"Brixen im Thale","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/umfahrung-otten.html","mobile":"","number":"6a","operatesInWinter":true,"operatingTimes":[],"pagename":"umfahrung-otten","parkingChargeable":false,"phone":"","region":{"id":2,"identifier":"brixen","title":"SkiWelt Brixen im Thale"},"state":"closed","teaserText":"","title":"Umfahrung Otten","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":632,"city":"Hopfgarten","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2020","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"f7227148-7834-459d-be1b-c235ff41106a","id":41,"interfaces":[{"interfaceIdentifier":"2020","title":"Feratel CPS 2.0"}],"liftLength":3293,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/talabfahrt-hopfgarten.html","mobile":"","number":"20a","operatesInWinter":true,"operatingTimes":[],"pagename":"talabfahrt-hopfgarten","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Talabfahrt Hopfgarten","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":258,"city":"","country":"","description":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"2021","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"0"}],"guid":"db5a75da-abc4-4cbc-bf3e-2da76c6d3f92","id":249,"interfaces":[{"interfaceIdentifier":"2021","title":"Feratel CPS 2.0"}],"liftLength":1245,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/talabfahrt-hopfgarten-umfahrung-skiroute.html","mobile":"","number":"20b","operatesInWinter":true,"operatingTimes":[],"pagename":"talabfahrt-hopfgarten-umfahrung-skiroute","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Talabfahrt Hopfgarten Umfahrung Skiroute","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":208,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2024","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"c3a31330-7363-4a15-a159-15e3992d8c39","id":297,"interfaces":[{"interfaceIdentifier":"2024","title":"Feratel CPS 2.0"}],"liftLength":1235,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/rigi-mittelstation-hopfgarten-2.html","mobile":"","number":"21c","operatesInWinter":true,"operatingTimes":[],"pagename":"rigi-mittelstation-hopfgarten-2","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Rigi-Mittelstation Hopfgarten","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":466,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2022","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"dff7bc28-48a1-4ce4-97a0-2ca3ef3ba43a","id":250,"interfaces":[{"interfaceIdentifier":"2022","title":"Feratel CPS 2.0"}],"liftLength":2579,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/rigi-mittelstation-hopfgarten.html","mobile":"","number":"21a","operatesInWinter":true,"operatingTimes":[],"pagename":"rigi-mittelstation-hopfgarten","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Rigi-Mittelstation Hopfgarten","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":446,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2023","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"cd454c8d-0001-46c2-970a-023980d30a9b","id":251,"interfaces":[{"interfaceIdentifier":"2023","title":"Feratel CPS 2.0"}],"liftLength":1775,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/rigi-mittelstation-1.html","mobile":"","number":"21b","operatesInWinter":true,"operatingTimes":[],"pagename":"rigi-mittelstation-1","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Rigi-Mittelstation Hopfgarten","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":330,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2027","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"0"}],"guid":"b7573cb7-1cd4-4354-bb7e-f0cd7d0668f7","id":237,"interfaces":[{"interfaceIdentifier":"2027","title":"Feratel CPS 2.0"}],"liftLength":1043,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/hohe-salve-rigi.html","mobile":"","number":"22","operatesInWinter":true,"operatingTimes":[],"pagename":"hohe-salve-rigi","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Hohe Salve - Rigi","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":500,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2028","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"1a558cfa-3234-4868-82d4-e361db4f0d35","id":42,"interfaces":[{"interfaceIdentifier":"2028","title":"Feratel CPS 2.0"}],"liftLength":2282,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/schernthannabfahrt.html","mobile":"","number":"24a","operatesInWinter":true,"operatingTimes":[],"pagename":"schernthannabfahrt","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Schernthannabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":214,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2029","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"8c37fc9c-ea27-47f2-9c7f-c314ec5c92da","id":256,"interfaces":[{"interfaceIdentifier":"2029","title":"Feratel CPS 2.0"}],"liftLength":727,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/schernthannabfahrt-1.html","mobile":"","number":"24b","operatesInWinter":true,"operatingTimes":[],"pagename":"schernthannabfahrt-1","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Schernthannabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":90,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2055","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"71f4ca71-fa1a-4950-9309-0c7deeb1da97","id":477,"interfaces":[{"interfaceIdentifier":"2055","title":"Feratel CPS 2.0"}],"liftLength":750,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/skiweg-schernthann-wildbichl-foisching.html","mobile":"","number":"24,25","operatesInWinter":true,"operatingTimes":[],"pagename":"skiweg-schernthann-wildbichl-foisching","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Skiweg Schernthann Wildbichl - Foisching","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":498,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2030","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"0bf35da3-b82e-424b-8e99-eb1749c98c17","id":243,"interfaces":[{"interfaceIdentifier":"2030","title":"Feratel CPS 2.0"}],"liftLength":2472,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/foischingabfahrt.html","mobile":"","number":"25a","operatesInWinter":true,"operatingTimes":[],"pagename":"foischingabfahrt","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Foischingabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":230,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2031","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"7c95bc3d-7e88-4744-897d-2aec13bc1d20","id":252,"interfaces":[{"interfaceIdentifier":"2031","title":"Feratel CPS 2.0"}],"liftLength":1040,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/foischingabfahrt-1.html","mobile":"","number":"25b","operatesInWinter":true,"operatingTimes":[],"pagename":"foischingabfahrt-1","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Foischingabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":112,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2032","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"9c992959-8a58-44c0-95db-55baae1a877d","id":299,"interfaces":[{"interfaceIdentifier":"2032","title":"Feratel CPS 2.0"}],"liftLength":507,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/foischingabfahrt-2.html","mobile":"","number":"25c","operatesInWinter":true,"operatingTimes":[],"pagename":"foischingabfahrt-2","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Foischingabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":54,"city":"","country":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"2033","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"5198f43e-959c-4f42-815c-080b88f8c3eb","id":253,"interfaces":[{"interfaceIdentifier":"2033","title":"Feratel CPS 2.0"}],"liftLength":638,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/skiweg-klaus.html","mobile":"","number":"26","operatesInWinter":true,"operatingTimes":[],"pagename":"skiweg-klaus","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Skiroute Klaus","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":26,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2052","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"ea72f881-cfe5-453c-8552-7df4f65ec431","id":303,"interfaces":[{"interfaceIdentifier":"2052","title":"Feratel CPS 2.0"}],"liftLength":156,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/zauberteppich-bodenschmied-1.html","mobile":"","number":"27b","operatesInWinter":true,"operatingTimes":[],"pagename":"zauberteppich-bodenschmied-1","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Zauberteppich Bodenschmied","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":12,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2051","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"1914ec2a-0546-4c88-a35f-1387f88fcaeb","id":302,"interfaces":[{"interfaceIdentifier":"2051","title":"Feratel CPS 2.0"}],"liftLength":184,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/zauberteppich-hoegerfeld-1.html","mobile":"","number":"27a","operatesInWinter":true,"operatingTimes":[],"pagename":"zauberteppich-hoegerfeld-1","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Zauberteppich Högerfeld","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":208,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2036","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"a133e6a8-f523-49b9-9da3-7a291594defb","id":254,"interfaces":[{"interfaceIdentifier":"2036","title":"Feratel CPS 2.0"}],"liftLength":1550,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/rigi-kraftalm.html","mobile":"","number":"30,31","operatesInWinter":true,"operatingTimes":[],"pagename":"rigi-kraftalm","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Rigi-Kraftalm","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":681,"city":"Itter","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2039","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"83496846-5e37-4998-abf1-433c2b2c06e0","id":43,"interfaces":[{"interfaceIdentifier":"2039","title":"Feratel CPS 2.0"}],"liftLength":3443,"location":"Itter","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/talabfahrt-itter.html","mobile":"","number":"30","operatesInWinter":true,"operatingTimes":[],"pagename":"talabfahrt-itter","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Talabfahrt Itter","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":388,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2037","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"cea91594-6dba-4ca4-817b-6b671a172d28","id":255,"interfaces":[{"interfaceIdentifier":"2037","title":"Feratel CPS 2.0"}],"liftLength":1688,"location":"Itter","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kraftalm-kasbichl-a.html","mobile":"","number":"31a","operatesInWinter":true,"operatingTimes":[],"pagename":"kraftalm-kasbichl-a","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Kraftalm - Kasbichl","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":154,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"2038","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"f786b926-2218-4cbe-bc3a-9e852cee7b1f","id":298,"interfaces":[{"interfaceIdentifier":"2038","title":"Feratel CPS 2.0"}],"liftLength":532,"location":"Itter","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kraftalm-kasbichl-b.html","mobile":"","number":"31b","operatesInWinter":true,"operatingTimes":[],"pagename":"kraftalm-kasbichl-b","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Kraftalm - Kasbichl","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":63,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2035","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"9aafc838-44cc-460a-b4c1-392917197d53","id":44,"interfaces":[{"interfaceIdentifier":"2035","title":"Feratel CPS 2.0"}],"liftLength":830,"location":"Itter","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/rigi-kraftalm-skiweg.html","mobile":"","number":"30,31","operatesInWinter":true,"operatingTimes":[],"pagename":"rigi-kraftalm-skiweg","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Rigi - Kraftalm Skiweg","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":20,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"2041","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"02adf326-33a4-4ba8-b22b-29f0470864b7","id":39,"interfaces":[{"interfaceIdentifier":"2041","title":"Feratel CPS 2.0"}],"liftLength":437,"location":"Itter","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/tellerschlepplift-salvista-abfahrt.html","mobile":"","number":"33","operatesInWinter":true,"operatingTimes":[],"pagename":"tellerschlepplift-salvista-abfahrt","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","teaserText":"","title":"Tellerschlepplift-Salvista Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":70,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"","fields":[],"guid":"9b8eaefe-a00a-4646-888b-ee82c318602c","id":584,"liftLength":620,"location":"Itter","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/piste-kleine-salve.html","mobile":"","number":"30a","operatesInWinter":true,"operatingTimes":[],"pagename":"piste-kleine-salve","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Piste Kleine Salve","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","city":"","country":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"","fields":[],"guid":"74a76bab-aa95-40a7-97c1-7cd16e21e28b","id":777,"liftLength":320,"location":"Itter","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/skiroute-hexen6er-kasbichl.html","mobile":"","number":"31c","operatesInWinter":true,"operatingTimes":[],"pagename":"skiroute-hexen6er-kasbichl","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Skiroute Hexen6er-Kasbichl","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"","fields":[],"guid":"0c387d59-e7a6-4cea-b9cd-4117f3fe8535","id":849,"liftLength":267,"location":"Hopfgarten","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kraftalm-kasbichl.html","mobile":"","number":"31a","operatesInWinter":true,"operatingTimes":[],"pagename":"kraftalm-kasbichl","parkingChargeable":false,"phone":"","region":{"id":3,"identifier":"hopfgarten","title":"SkiWelt Hopfgarten - Itter"},"state":"closed","title":"Kraftalm - Kasbichl","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":418,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"4031","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"a846378d-3248-4e48-8c67-e0da179bc894","id":55,"interfaces":[{"interfaceIdentifier":"4031","title":"Feratel CPS 2.0"}],"liftLength":3830,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/familienabfahrt-1.html","mobile":"","number":"40","operatesInWinter":true,"operatingTimes":[],"pagename":"familienabfahrt-1","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Familienabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":260,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4032","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"dfa62738-7e72-48e0-b94a-f43c90ec74ee","id":57,"interfaces":[{"interfaceIdentifier":"4032","title":"Feratel CPS 2.0"}],"liftLength":1391,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/hohe-salve-kraftalmabfahrt.html","mobile":"","number":"40","operatesInWinter":true,"operatingTimes":[],"pagename":"hohe-salve-kraftalmabfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Hohe Salve - Kraftalmabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":427,"city":"Söll","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4033","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"443ccab4-be7e-4d8c-86f4-7805e2d51cf1","id":58,"interfaces":[{"interfaceIdentifier":"4033","title":"Feratel CPS 2.0"}],"liftLength":2436,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/talabfahrt-soell.html","mobile":"","number":"40a","operatesInWinter":true,"operatingTimes":[],"pagename":"talabfahrt-soell","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Talabfahrt Söll","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":301,"city":"","country":"","facilityTypeIdentifier":"difficult-piste2","fax":"","feratelID":"4034","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"a1022aca-d34d-4a84-9ad1-a88e2b5aa045","id":64,"interfaces":[{"interfaceIdentifier":"4034","title":"Feratel CPS 2.0"}],"liftLength":936,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/gipfelabfahrt-nord.html","mobile":"","number":"42","operatesInWinter":true,"operatingTimes":[],"pagename":"gipfelabfahrt-nord","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Black Eagle (Gipfelabfahrt)","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":205,"city":"","country":"","facilityTypeIdentifier":"difficult-piste2","fax":"","feratelID":"4035","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"dbb31311-ef26-4087-9d9f-72dd9ff1d513","id":63,"interfaces":[{"interfaceIdentifier":"4035","title":"Feratel CPS 2.0"}],"liftLength":780,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/hohe-salve-abfahrt-nord.html","mobile":"","number":"42a","operatesInWinter":true,"operatingTimes":[],"pagename":"hohe-salve-abfahrt-nord","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Gipfel - Hangbrücke","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":240,"city":"","country":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"4061","fields":[],"guid":"5e957f7d-1893-40ec-81b0-4153218fee2d","id":482,"interfaces":[{"interfaceIdentifier":"4061","title":"Feratel CPS 2.0"}],"liftLength":510,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/black-pipe.html","mobile":"","number":"42b","operatesInWinter":true,"operatingTimes":[],"pagename":"black-pipe","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Black Pipe","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":573,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4036","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":13,"identifier":"openingtimes-fallback","title":"Öffnungszeiten (Fallback)","value":"ab 25.12.2025 Nachtskifahren = 18:30 - 21:45 Uhr"}],"guid":"004de1b4-1630-424b-9c7f-175ebabbf8a6","id":59,"interfaces":[{"interfaceIdentifier":"4036","title":"Feratel CPS 2.0"}],"liftLength":2882,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/keatabfahrt.html","mobile":"","number":"43","operatesInWinter":true,"operatingTimes":[],"pagename":"keatabfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Keatabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":110,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4062","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"bd7be5bf-608e-441c-84ed-b2706f12fefa","id":442,"interfaces":[{"interfaceIdentifier":"4062","title":"Feratel CPS 2.0"}],"liftLength":651,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/trainingsstrecke-keat.html","mobile":"","number":"43","operatesInWinter":true,"operatingTimes":[],"pagename":"trainingsstrecke-keat","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Trainingsstrecke Keat","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":399,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"4037","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"1b873092-c9ab-4bd9-8659-22c24e94bd33","id":56,"interfaces":[{"interfaceIdentifier":"4037","title":"Feratel CPS 2.0"}],"liftLength":3290,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/keat-antlasseeabfahrt.html","mobile":"","number":"43a","operatesInWinter":true,"operatingTimes":[],"pagename":"keat-antlasseeabfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Skiweg Keat Siller - Hochsöll","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":181,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"4038","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":13,"identifier":"openingtimes-fallback","title":"Öffnungszeiten (Fallback)","value":"ab 25.12.2025 Nachtskifahren = 18:30 - 21:45 Uhr"}],"guid":"ba5d1443-1b8b-4620-9bd5-c98365c1fd49","id":213,"interfaces":[{"interfaceIdentifier":"4038","title":"Feratel CPS 2.0"}],"liftLength":782,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/stoecklabfahrt.html","mobile":"","number":"44","operatesInWinter":true,"operatingTimes":[],"pagename":"stoecklabfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Stöcklabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":492,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4039","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":13,"identifier":"openingtimes-fallback","title":"Öffnungszeiten (Fallback)","value":"ab 25.12.2025 Nachtskifahren = 18:30 - 21:45 Uhr"}],"guid":"b178ea42-edfd-4bd3-94ae-aa63803ad978","id":212,"interfaces":[{"interfaceIdentifier":"4039","title":"Feratel CPS 2.0"}],"liftLength":1880,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/hexen6er-abfahrt.html","mobile":"","number":"45","operatesInWinter":true,"operatingTimes":[],"pagename":"hexen6er-abfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Hexen6er-Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":331,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"4040","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"346a9cd3-555c-4d84-b294-6720417552e2","id":211,"interfaces":[{"interfaceIdentifier":"4040","title":"Feratel CPS 2.0"}],"liftLength":2030,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/rinnerabfahrt.html","mobile":"","number":"46","operatesInWinter":true,"operatingTimes":[],"pagename":"rinnerabfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Rinnerabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":40,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4063","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":13,"identifier":"openingtimes-fallback","title":"Öffnungszeiten (Fallback)","value":"bis 15.3.2026"}],"guid":"160a3f28-5b9f-4a30-87d5-3b350346aca0","id":441,"interfaces":[{"interfaceIdentifier":"4063","title":"Feratel CPS 2.0"}],"liftLength":333,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/rinner-funpark.html","mobile":"","number":"","operatesInWinter":true,"operatingTimes":[],"pagename":"rinner-funpark","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Hexenwelle","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":70,"city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4064","fields":[{"id":13,"identifier":"openingtimes-fallback","title":"Öffnungszeiten (Fallback)","value":"bis 15.3.2026"}],"guid":"616594ba-227f-4e1f-828e-1f743b5b6736","id":483,"interfaces":[{"interfaceIdentifier":"4064","title":"Feratel CPS 2.0"}],"latitudeStart":47.4791,"liftLength":320,"location":"Söll","longitudeStart":12.1901,"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/boardercross-red-viper.html","mobile":"","number":"","operatesInWinter":true,"operatingTimes":[],"pagename":"boardercross-red-viper","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Boardercross - Red Viper","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":215,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"4041","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":13,"identifier":"openingtimes-fallback","title":"Öffnungszeiten (Fallback)","value":"ab 25.12.2025 Nachtskifahren = 18:30 - 21:45 Uhr"}],"guid":"cc4bbbd6-3601-47c8-a3c1-648e5311dac1","id":210,"interfaces":[{"interfaceIdentifier":"4041","title":"Feratel CPS 2.0"}],"liftLength":1484,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/hans-im-glueck-abfahrt.html","mobile":"","number":"47","operatesInWinter":true,"operatingTimes":[],"pagename":"hans-im-glueck-abfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Hans im Glück Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":50,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4065","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":13,"identifier":"openingtimes-fallback","title":"Öffnungszeiten (Fallback)","value":"Nachtskifahren = 18:30 - 21:45 Uhr"}],"guid":"7305eb36-1de5-4328-ae3f-8dc714882aa7","id":439,"interfaces":[{"interfaceIdentifier":"4065","title":"Feratel CPS 2.0"}],"liftLength":854,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/funslope-salvenmoos.html","mobile":"","number":"","operatesInWinter":true,"operatingTimes":[],"pagename":"funslope-salvenmoos","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Hans im Glück Skiparcours","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":341,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4042","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"b2b1d7ea-3acb-4a90-a124-eb1af348e60a","id":60,"interfaces":[{"interfaceIdentifier":"4042","title":"Feratel CPS 2.0"}],"liftLength":1841,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/silleralmabfahrt-1.html","mobile":"","number":"51","operatesInWinter":true,"operatingTimes":[],"pagename":"silleralmabfahrt-1","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Siller-Keat","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":494,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"4043","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"85c06dfb-2c7b-47d3-bf9b-cacee8c5dc0f","id":276,"interfaces":[{"interfaceIdentifier":"4043","title":"Feratel CPS 2.0"}],"liftLength":2747,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/silleralmabfahrt.html","mobile":"","number":"51a","operatesInWinter":true,"operatingTimes":[],"pagename":"silleralmabfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Siller-Keat","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":80,"city":"","country":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"4044","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"7d5c2f61-7484-46eb-a4d3-5aca7d41f9a2","id":61,"interfaces":[{"interfaceIdentifier":"4044","title":"Feratel CPS 2.0"}],"liftLength":1188,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/silleralmschiweg.html","mobile":"","number":"51b","operatesInWinter":true,"operatingTimes":[],"pagename":"silleralmschiweg","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Skiweg (Silleralmschiweg)","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":29,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"4047","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"c40e9371-ca53-4e80-a611-977712262839","id":209,"interfaces":[{"interfaceIdentifier":"4047","title":"Feratel CPS 2.0"}],"liftLength":455,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/knollnabfahrt.html","mobile":"","number":"57","operatesInWinter":true,"operatingTimes":[],"pagename":"knollnabfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Knollnabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":10,"city":"","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"4048","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"9104c681-a6ea-4fb2-9be7-4361ee0c5139","id":208,"interfaces":[{"interfaceIdentifier":"4048","title":"Feratel CPS 2.0"}],"liftLength":120,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/hexenteppich-abfahrt.html","mobile":"","number":"58","operatesInWinter":true,"operatingTimes":[],"pagename":"hexenteppich-abfahrt","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","teaserText":"","title":"Hexenteppich Abfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":100,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"4066","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"1e130533-1555-442b-84fc-a720f6c8d4d4","id":492,"interfaces":[{"interfaceIdentifier":"4066","title":"Feratel CPS 2.0"}],"liftLength":219,"location":"Söll","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/trainingsstrecke-stoeckl.html","mobile":"","number":"","operatesInWinter":true,"operatingTimes":[],"pagename":"trainingsstrecke-stoeckl","parkingChargeable":false,"phone":"","region":{"id":4,"identifier":"soell","title":"SkiWelt Söll"},"state":"closed","title":"Trainingsstrecke Stöckl","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"71","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"a0a4f89c-905e-4cbc-be84-3c51b934645d","id":468,"interfaces":[{"interfaceIdentifier":"71","title":"Feratel CPS 2.0"}],"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/talabfahrt-bis-mittelstation.html","mobile":"","number":"80","operatesInWinter":true,"operatingTimes":[],"pagename":"talabfahrt-bis-mittelstation","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","teaserText":"","title":"Talabfahrt bis Mittelstation","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","city":"","country":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"59","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"17565e5e-2aed-468a-9cfc-1358292544f3","id":469,"interfaces":[{"interfaceIdentifier":"59","title":"Feratel CPS 2.0"}],"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/80c-ellmau.html","mobile":"","number":"80c","operatesInWinter":true,"operatingTimes":[],"pagename":"80c-ellmau","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"80c nach Ellmau","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","city":"","country":"","description":"","facilityTypeIdentifier":"medium-piste","fax":"","fields":[],"guid":"6ebbfd22-92d8-40a6-8c0b-631e737a890d","id":1003,"interfaces":[{"interfaceIdentifier":"1071","title":"Feratel CPS 2.0"}],"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/80-talabfahrt-bis-mittelstation-bergbahn-ellmau-going.html","mobile":"","number":"","operatesInWinter":true,"operatingTimes":[],"pagename":"80-talabfahrt-bis-mittelstation-bergbahn-ellmau-going","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","teaserText":"","title":"80 Talabfahrt bis Mittelstation (Bergbahn Ellmau - Going)","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":50,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"53","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"9b31f97d-2f71-4be4-9d1b-ceb3bef0f796","id":98,"interfaces":[{"interfaceIdentifier":"53","title":"Feratel CPS 2.0"}],"liftLength":200,"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/nach-scheffau-1.html","mobile":"","number":"62","operatesInWinter":true,"operatingTimes":[],"pagename":"nach-scheffau-1","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"nach Scheffau","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":3,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","fields":[],"guid":"b299d7f5-67ad-4a20-8b05-ccd33905bdba","id":1004,"interfaces":[{"interfaceIdentifier":"1079","title":"Feratel CPS 2.0"}],"liftLength":18,"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/ellmis-zauberteppich-abfahrt-iii.html","mobile":"","number":"89c","operatesInWinter":true,"operatingTimes":[],"pagename":"ellmis-zauberteppich-abfahrt-iii","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Ellmi´s Zauberteppich Abfahrt III","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":713,"city":"Ellmau","country":"","description":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"1025","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"ab0a5c15-dfff-4db9-9ed6-b2cb4cb1e9ce","id":88,"interfaces":[{"interfaceIdentifier":"1025","title":"Feratel CPS 2.0"}],"liftLength":3623,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/talabfahrt-hartkaiserbahn.html","mobile":"","number":"80","operatesInWinter":true,"operatingTimes":[],"pagename":"talabfahrt-hartkaiserbahn","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","teaserText":"","title":"Talabfahrt Hartkaiserbahn","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":700,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"1026","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"1d302100-1d92-49ca-bb93-f44e14a24d2f","id":99,"interfaces":[{"interfaceIdentifier":"1026","title":"Feratel CPS 2.0"}],"liftLength":449,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/harmstaett-ellmau-1.html","mobile":"","number":"80a","operatesInWinter":true,"operatingTimes":[],"pagename":"harmstaett-ellmau-1","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Harmstätt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":229,"city":"","country":"","description":"","facilityTypeIdentifier":"difficult-piste2","fax":"","feratelID":"1027","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"},{"id":3,"identifier":"downhill","title":"Talabfahrt","value":"1"}],"guid":"d7e70ff5-1b21-4a1c-be89-a60ac150133b","id":109,"interfaces":[{"interfaceIdentifier":"1027","title":"Feratel CPS 2.0"}],"liftLength":548,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/hartkaiserbahn-talabfahrt.html","mobile":"","number":"80b","operatesInWinter":true,"operatingTimes":[],"pagename":"hartkaiserbahn-talabfahrt","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","teaserText":"","title":"Hartkaiserbahn Talabfahrt","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":612,"city":"","country":"","description":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"1060","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"1389f1ab-b05c-427c-8854-81f170a1ecee","id":111,"interfaces":[{"interfaceIdentifier":"1060","title":"Feratel CPS 2.0"}],"liftLength":3070,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/talabfahrt-fraunwalden.html","mobile":"","number":"80c","operatesInWinter":true,"operatingTimes":[],"pagename":"talabfahrt-fraunwalden","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","teaserText":"","title":"Talabfahrt Fraunwalden","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":202,"city":"","country":"","facilityTypeIdentifier":"skiroute","fax":"","feratelID":"1061","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"ee75ab76-d65d-4c9b-bd84-34c3760fe1cc","id":112,"interfaces":[{"interfaceIdentifier":"1061","title":"Feratel CPS 2.0"}],"liftLength":2026,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/nach-ellmau.html","mobile":"","number":"80e","operatesInWinter":true,"operatingTimes":[],"pagename":"nach-ellmau","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Schmiedalm zur Rübezahlalm","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":263,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"1030","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"ee7973bf-908a-4c14-a493-bff643beee98","id":456,"interfaces":[{"interfaceIdentifier":"1030","title":"Feratel CPS 2.0"}],"liftLength":530,"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/ranhart-1.html","mobile":"","number":"87a","operatesInWinter":true,"operatingTimes":[],"pagename":"ranhart-1","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Umfahrung Seppenbauer","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":452,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"1031","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"71491f19-d177-4583-8fab-917d511e7aa7","id":101,"interfaces":[{"interfaceIdentifier":"1031","title":"Feratel CPS 2.0"}],"liftLength":1946,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/ranhart-2.html","mobile":"","number":"87a","operatesInWinter":true,"operatingTimes":[],"pagename":"ranhart-2","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Umfahrung Seppenbauer","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":63,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"1062","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"b4833854-f8e5-49d5-92e8-9cb6d93551dd","id":113,"interfaces":[{"interfaceIdentifier":"1062","title":"Feratel CPS 2.0"}],"liftLength":800,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/zum-ranhartlift.html","mobile":"","number":"87","operatesInWinter":true,"operatingTimes":[],"pagename":"zum-ranhartlift","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Ranhart","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":418,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"1032","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"a60a791d-67c4-463f-b9d1-9bc36c23b5c8","id":102,"interfaces":[{"interfaceIdentifier":"1032","title":"Feratel CPS 2.0"}],"liftLength":1704,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/schmiedalm-1.html","mobile":"","number":"88","operatesInWinter":true,"operatingTimes":[],"pagename":"schmiedalm-1","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Schmiedalm","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":300,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"1054","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"cf6e08fb-1a12-4c5a-9f75-c47b6ea3bab6","id":406,"interfaces":[{"interfaceIdentifier":"1054","title":"Feratel CPS 2.0"}],"liftLength":1789,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/ellmis-6er-2.html","mobile":"","number":"91","operatesInWinter":true,"operatingTimes":[],"pagename":"ellmis-6er-2","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Ellmis 6er","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":300,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"1055","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"ea3a555d-ebff-4a11-bb15-7ebf2c39d6b6","id":457,"interfaces":[{"interfaceIdentifier":"1055","title":"Feratel CPS 2.0"}],"liftLength":654,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/ellmis-6er-1.html","mobile":"","number":"91a","operatesInWinter":true,"operatingTimes":[],"pagename":"ellmis-6er-1","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Ellmis 6er","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":160,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"1034","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"d800ffcc-db95-43e9-8e1a-8a06ce4880c3","id":89,"interfaces":[{"interfaceIdentifier":"1034","title":"Feratel CPS 2.0"}],"liftLength":625,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kaiserexpress-1.html","mobile":"","number":"96","operatesInWinter":true,"operatingTimes":[],"pagename":"kaiserexpress-1","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Kaiserexpress","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":123,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"f1dfebe1-930c-4820-ad50-ad65a771e912","id":512,"interfaces":[{"interfaceIdentifier":"","title":"Feratel CPS 2.0"}],"liftLength":851,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/verbindung-eiberg-ellmau-going.html","mobile":"","number":"97-99","operatesInWinter":true,"operatingTimes":[],"pagename":"verbindung-eiberg-ellmau-going","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Verbindung Eiberg - Ellmau/Going","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":161,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"1035","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"5b5cac1a-e359-422f-aa22-6215447744a2","id":104,"interfaces":[{"interfaceIdentifier":"1035","title":"Feratel CPS 2.0"}],"latitudeStart":47.4943,"liftLength":854,"location":"Ellmau","longitudeStart":12.2671,"mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kaiserexpress-3.html","mobile":"","number":"96a","operatesInWinter":true,"operatingTimes":[],"pagename":"kaiserexpress-3","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Kaiserexpress","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":160,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"1036","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"9d8589c8-bb55-4816-b8c9-8beaa005bcd8","id":105,"interfaces":[{"interfaceIdentifier":"1036","title":"Feratel CPS 2.0"}],"liftLength":1786,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/kaiserexpress-2.html","mobile":"","number":"96b","operatesInWinter":true,"operatingTimes":[],"pagename":"kaiserexpress-2","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Kaiserexpress","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":15,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"e2373387-abfb-4c37-9a36-fb3a4c9d1717","id":513,"interfaces":[{"interfaceIdentifier":"3120","title":"Feratel CPS 2.0"}],"liftLength":232,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/verbindung-uebungslift-berg-ellmau-going.html","mobile":"","number":"78","operatesInWinter":true,"operatingTimes":[],"pagename":"verbindung-uebungslift-berg-ellmau-going","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Verbindung Übungslift Berg - Ellmau/Going","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":40,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"fea65365-885c-4c07-8bca-5c74d04bcf4c","id":514,"interfaces":[{"interfaceIdentifier":"","title":"Feratel CPS 2.0"}],"liftLength":512,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/verbindung-ostlift-tanzboden.html","mobile":"","number":"99c","operatesInWinter":true,"operatingTimes":[],"pagename":"verbindung-ostlift-tanzboden","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Verbinung Ostlift - Tanzboden","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":298,"city":"","country":"","facilityTypeIdentifier":"medium-piste","fax":"","feratelID":"1038","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"fc8b9f9c-6203-4401-9197-fb25ebecd277","id":106,"interfaces":[{"interfaceIdentifier":"1038","title":"Feratel CPS 2.0"}],"liftLength":1023,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/koeglbahn-5.html","mobile":"","number":"97","operatesInWinter":true,"operatingTimes":[],"pagename":"koeglbahn-5","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Köglbahn","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":438,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"1039","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"5585116e-fa64-489c-a0f9-7b3a911d0b54","id":107,"interfaces":[{"interfaceIdentifier":"1039","title":"Feratel CPS 2.0"}],"liftLength":2127,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/koeglbahn-1.html","mobile":"","number":"97b","operatesInWinter":true,"operatingTimes":[],"pagename":"koeglbahn-1","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Köglbahn","website":"","zip":""},{"address":"","addressAddition":"","addressTitle":"","altitude":267,"city":"","country":"","facilityTypeIdentifier":"easy-piste","fax":"","feratelID":"1040","fields":[{"id":1,"identifier":"contiguous","title":"Teil des zusammenhängenden Skigebietes","value":"1"}],"guid":"f8b16105-4757-40e2-8ea6-4f9f96c30df3","id":90,"interfaces":[{"interfaceIdentifier":"1040","title":"Feratel CPS 2.0"}],"liftLength":1053,"location":"Ellmau","mail":"","mapURL":"https://skimap.skiwelt.at/de/winter/koeglbahn-3.html","mobile":"","number":"97c","operatesInWinter":true,"operatingTimes":[],"pagename":"koeglbahn-3","parkingChargeable":false,"phone":"","region":{"id":5,"identifier":"ellmau","title":"SkiWelt Ellmau - Going"},"state":"closed","title":"Köglbahn","website":"","zip":""}],"meta":{"lastUpdate":"2026-07-12T15:50:42"}}
+\ No newline at end of file
+diff --git a/test/resorts/skiwelt-trails.js b/test/resorts/skiwelt-trails.js
+new file mode 100644
+index 00000000..11c7f232
+--- /dev/null
++++ b/test/resorts/skiwelt-trails.js
+@@ -0,0 +1,508 @@
++import trails from '../trails/index.js';
++
++trails(
++  'skiwelt',
++  [
++    {
++      'name': 'Fun Park - Jump-Line',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Fun Park - Jib-Line',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Kaslach Abfahrt',
++      'status': 'closed',
++      'level': 'black'
++    },
++    {
++      'name': 'Umfahrung',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Streif',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Brixen Abfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Tanzer Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Kälberalm Abfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Hochbrixen Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Kälberalm Südabfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Rennstrecke Brixen',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Südabfahrt-Hohe Salve',
++      'status': 'closed',
++      'level': 'black'
++    },
++    {
++      'name': 'Zinsbergabfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Poldanger Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Holzalm Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Joch Abfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Joch Abfahrt',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Filzboden Abfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Filzboden Abfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Geschwindigkeitsmessstrecke Brixen',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Filzboden Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Übungslift Hochbrixen Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Skischullift Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Kandleralm Abfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Umfahrung Marast',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Götschen Abfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Schusterbühel Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Direttissima - Jochbahn',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Umfahrung Otten',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Talabfahrt Hopfgarten',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Talabfahrt Hopfgarten Umfahrung Skiroute',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Rigi-Mittelstation Hopfgarten',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Rigi-Mittelstation Hopfgarten',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Rigi-Mittelstation Hopfgarten',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Hohe Salve - Rigi',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Schernthannabfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Schernthannabfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Skiweg Schernthann Wildbichl - Foisching',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Foischingabfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Foischingabfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Foischingabfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Skiroute Klaus',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Zauberteppich Bodenschmied',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Zauberteppich Högerfeld',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Rigi-Kraftalm',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Talabfahrt Itter',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Kraftalm - Kasbichl',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Kraftalm - Kasbichl',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Rigi - Kraftalm Skiweg',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Tellerschlepplift-Salvista Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Piste Kleine Salve',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Skiroute Hexen6er-Kasbichl',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Kraftalm - Kasbichl',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Familienabfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Hohe Salve - Kraftalmabfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Talabfahrt Söll',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Black Eagle (Gipfelabfahrt)',
++      'status': 'closed',
++      'level': 'black'
++    },
++    {
++      'name': 'Gipfel - Hangbrücke',
++      'status': 'closed',
++      'level': 'black'
++    },
++    {
++      'name': 'Black Pipe',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Keatabfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Trainingsstrecke Keat',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Skiweg Keat Siller - Hochsöll',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Stöcklabfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Hexen6er-Abfahrt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Rinnerabfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Hexenwelle',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Boardercross - Red Viper',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Hans im Glück Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Hans im Glück Skiparcours',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Siller-Keat',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Siller-Keat',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Skiweg (Silleralmschiweg)',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Knollnabfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Hexenteppich Abfahrt',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Trainingsstrecke Stöckl',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Talabfahrt bis Mittelstation',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': '80c nach Ellmau',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': '80 Talabfahrt bis Mittelstation (Bergbahn Ellmau - Going)',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'nach Scheffau',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Ellmi´s Zauberteppich Abfahrt III',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Talabfahrt Hartkaiserbahn',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Harmstätt',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Hartkaiserbahn Talabfahrt',
++      'status': 'closed',
++      'level': 'black'
++    },
++    {
++      'name': 'Talabfahrt Fraunwalden',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Schmiedalm zur Rübezahlalm',
++      'status': 'closed',
++      'level': 'doubleBlack'
++    },
++    {
++      'name': 'Umfahrung Seppenbauer',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Umfahrung Seppenbauer',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Ranhart',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Schmiedalm',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Ellmis 6er',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Ellmis 6er',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Kaiserexpress',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Verbindung Eiberg - Ellmau/Going',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Kaiserexpress',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Kaiserexpress',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Verbindung Übungslift Berg - Ellmau/Going',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Verbinung Ostlift - Tanzboden',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Köglbahn',
++      'status': 'closed',
++      'level': 'blue'
++    },
++    {
++      'name': 'Köglbahn',
++      'status': 'closed',
++      'level': 'green'
++    },
++    {
++      'name': 'Köglbahn',
++      'status': 'closed',
++      'level': 'green'
++    }
++  ],
++  { ext: 'json', example: 'skiwelt-trails' }
++);
+-- 
+2.39.5
+

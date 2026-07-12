@@ -1,7 +1,7 @@
 From db570f4364964edf19412d000fabbab11b422200 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:08:37 -0400
-Subject: [PATCH 05/14] resort: add calabogie
+Subject: [PATCH 05/31] resort: add calabogie
  (https://calabogie.com/trail-status/)
 
 ---
@@ -17,7 +17,7 @@ Subject: [PATCH 05/14] resort: add calabogie
 
 diff --git a/lib/resorts/calabogie/index.js b/lib/resorts/calabogie/index.js
 new file mode 100644
-index 0000000..04282a3
+index 00000000..04282a33
 --- /dev/null
 +++ b/lib/resorts/calabogie/index.js
 @@ -0,0 +1,21 @@
@@ -44,7 +44,7 @@ index 0000000..04282a3
 +}
 diff --git a/lib/resorts/calabogie/resort.json b/lib/resorts/calabogie/resort.json
 new file mode 100644
-index 0000000..7237dfb
+index 00000000..7237dfb8
 --- /dev/null
 +++ b/lib/resorts/calabogie/resort.json
 @@ -0,0 +1,15 @@
@@ -65,7 +65,7 @@ index 0000000..7237dfb
 +}
 diff --git a/test/resorts/calabogie.js b/test/resorts/calabogie.js
 new file mode 100644
-index 0000000..13850ea
+index 00000000..13850eab
 --- /dev/null
 +++ b/test/resorts/calabogie.js
 @@ -0,0 +1,26 @@
@@ -97,7 +97,7 @@ index 0000000..13850ea
 +});
 diff --git a/test/resorts/example/calabogie.html b/test/resorts/example/calabogie.html
 new file mode 100644
-index 0000000..d11a96e
+index 00000000..d11a96eb
 --- /dev/null
 +++ b/test/resorts/example/calabogie.html
 @@ -0,0 +1,3567 @@

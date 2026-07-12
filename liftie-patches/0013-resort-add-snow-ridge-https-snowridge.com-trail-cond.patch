@@ -1,7 +1,7 @@
 From d1205176bd7fd237664845380c2807200a24b0bd Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:33:58 -0400
-Subject: [PATCH 13/14] resort: add snow-ridge
+Subject: [PATCH 13/31] resort: add snow-ridge
  (https://snowridge.com/trail-conditions/)
 
 ---
@@ -17,7 +17,7 @@ Subject: [PATCH 13/14] resort: add snow-ridge
 
 diff --git a/lib/resorts/snow-ridge/index.js b/lib/resorts/snow-ridge/index.js
 new file mode 100644
-index 0000000..b230534
+index 00000000..b2305344
 --- /dev/null
 +++ b/lib/resorts/snow-ridge/index.js
 @@ -0,0 +1,26 @@
@@ -49,7 +49,7 @@ index 0000000..b230534
 +}
 diff --git a/lib/resorts/snow-ridge/resort.json b/lib/resorts/snow-ridge/resort.json
 new file mode 100644
-index 0000000..ffa37a7
+index 00000000..ffa37a7d
 --- /dev/null
 +++ b/lib/resorts/snow-ridge/resort.json
 @@ -0,0 +1,14 @@
@@ -69,7 +69,7 @@ index 0000000..ffa37a7
 +}
 diff --git a/test/resorts/example/snow-ridge.html b/test/resorts/example/snow-ridge.html
 new file mode 100644
-index 0000000..944eb99
+index 00000000..944eb99e
 --- /dev/null
 +++ b/test/resorts/example/snow-ridge.html
 @@ -0,0 +1,360 @@
@@ -435,7 +435,7 @@ index 0000000..944eb99
 +</body></html>
 diff --git a/test/resorts/snow-ridge.js b/test/resorts/snow-ridge.js
 new file mode 100644
-index 0000000..b890369
+index 00000000..b8903693
 --- /dev/null
 +++ b/test/resorts/snow-ridge.js
 @@ -0,0 +1,9 @@

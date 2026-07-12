@@ -1,0 +1,268 @@
+From dbb7ca369f82be3f4f035df5ac455356902e76ff Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:40:18 -0400
+Subject: [PATCH 15/31] trails: optional per-resort trail status plugin
+
+Resorts opt in with "trails" in resort.json (true = same page as lifts,
+or a {host, pathname} url object) plus a lib/resorts/<id>/trails.js parse
+descriptor in the same idiom as lift parsers. Parsed rows carry an
+optional difficulty level (green/blue/black/doubleBlack/terrainPark).
+Served as data.trails = { stats, list } alongside lifts.
+---
+ app.js               |  2 +
+ lib/trails/index.js  | 64 +++++++++++++++++++++++++++++
+ lib/trails/parse.js  | 96 ++++++++++++++++++++++++++++++++++++++++++++
+ lib/trails/stats.js  | 11 +++++
+ test/trails/index.js | 28 +++++++++++++
+ 5 files changed, 201 insertions(+)
+ create mode 100644 lib/trails/index.js
+ create mode 100644 lib/trails/parse.js
+ create mode 100644 lib/trails/stats.js
+ create mode 100644 test/trails/index.js
+
+diff --git a/app.js b/app.js
+index 1f352c6d..8e8bccd2 100644
+--- a/app.js
++++ b/app.js
+@@ -16,6 +16,7 @@ import opening from './lib/opening.js';
+ import * as plugins from './lib/plugins.js';
+ import dataRoutes from './lib/routes/data.js';
+ import routes from './lib/routes/index.js';
++import trails from './lib/trails/index.js';
+ import weather from './lib/weather/index.js';
+ import webcams from './lib/webcams.js';
+ 
+@@ -68,6 +69,7 @@ app.loaders.register(loader);
+ 
+ app.plugins = plugins;
+ app.plugins.register('lifts', lifts);
++app.plugins.register('trails', trails);
+ app.plugins.register('opening', opening);
+ app.plugins.register('weather', weather);
+ app.plugins.register('webcams', webcams);
+diff --git a/lib/trails/index.js b/lib/trails/index.js
+new file mode 100644
+index 00000000..cc5c7ecf
+--- /dev/null
++++ b/lib/trails/index.js
+@@ -0,0 +1,64 @@
++import Debug from 'debug';
++import { parseHtml } from '../lifts/parser.js';
++import request from '../lifts/request.js';
++import collect from './parse.js';
++import stats from './stats.js';
++
++const debug = Debug('liftie:trails');
++
++const shortInterval = 60 * 1000; // once a minute - fetch status if there were requests
++const longInterval = 30 * shortInterval; // once every 30 minutes - fetch even if there wasn't any requests
++
++fetch.interval = {
++  active: shortInterval,
++  inactive: longInterval
++};
++
++/**
++ * optional trail status - resorts opt in with "trails" in resort.json:
++ *   "trails": true           - trail rows live on the same page as the lifts
++ *   "trails": { host, pathname } - trail rows live on their own page
++ * the parse descriptor is lib/resorts/<id>/trails.js
++ */
++export default async function fetch(resort, fn) {
++  if (!resort.trails) {
++    return fn(null, undefined);
++  }
++  if (!resort._trailsParse) {
++    const { default: descriptor } = await import(`../resorts/${resort.id}/trails.js`);
++    resort._trailsParse = descriptor;
++  }
++  const url = resort.trails.host ? resort.trails : resort.dataUrl || resort.url;
++  debug('fetch trails for %s', resort.id);
++  request(url)
++    .then(async res => {
++      if (res.status < 200 || res.status >= 300) {
++        console.error('Error fetching trails', url, res.status);
++        return fn(res.status);
++      }
++      const html = await res.text();
++      const parse = dom => {
++        try {
++          return collect(dom, resort._trailsParse);
++        } catch (e) {
++          console.error(`Exception when parsing trails for ${resort.id}`, e);
++          return [];
++        }
++      };
++      parseHtml(html, parse, (err, list) => {
++        if (err) {
++          return fn(err);
++        }
++        fn(null, shape(list));
++      });
++    })
++    .catch(fn);
++}
++
++function shape(list) {
++  const hasLevels = list.some(t => t.level);
++  return {
++    stats: stats(list),
++    list: hasLevels ? list : Object.fromEntries(list.map(({ name, status }) => [name, status]))
++  };
++}
+diff --git a/lib/trails/parse.js b/lib/trails/parse.js
+new file mode 100644
+index 00000000..ccea365f
+--- /dev/null
++++ b/lib/trails/parse.js
+@@ -0,0 +1,96 @@
++import Debug from 'debug';
++import select from '../select.js';
++import coerce from '../tools/coerce.js';
++import { text } from '../tools/domutil.js';
++
++const debug = Debug('liftie:trails');
++
++const levels = {
++  green: 'green',
++  greencircle: 'green',
++  easy: 'green',
++  easier: 'green',
++  easiest: 'green',
++  beginner: 'green',
++  novice: 'green',
++
++  blue: 'blue',
++  bluesquare: 'blue',
++  intermediate: 'blue',
++  moredifficult: 'blue',
++
++  black: 'black',
++  blackdiamond: 'black',
++  advanced: 'black',
++  difficult: 'black',
++  mostdifficult: 'black',
++
++  doubleblack: 'doubleBlack',
++  doubleblackdiamond: 'doubleBlack',
++  expert: 'doubleBlack',
++  extreme: 'doubleBlack',
++  expertsonly: 'doubleBlack',
++
++  terrainpark: 'terrainPark',
++  park: 'terrainPark',
++  freestyle: 'terrainPark',
++  freestyleterrain: 'terrainPark'
++};
++
++export function normalizeLevel(str) {
++  if (!str) {
++    return;
++  }
++  return levels[str.replace(/[\s_-]+/g, '').toLowerCase()];
++}
++
++/**
++ * collect trail rows from the dom
++ *
++ * descriptor is either a function (dom => array of {name, status, level?})
++ * or { selector, parse } in the same idiom as lift parsers, where parse is
++ * a function (node => {name, status, level?}) or descriptors for name/status/level
++ */
++export default function collect(dom, descriptor) {
++  const rows = typeof descriptor === 'function' ? descriptor(dom) : collectRows(dom, descriptor);
++  const result = [];
++  for (const row of rows ?? []) {
++    if (!row?.name) {
++      continue;
++    }
++    const trail = {
++      name: row.name.trim(),
++      status: coerce(row.status)
++    };
++    const level = normalizeLevel(row.level);
++    if (level) {
++      trail.level = level;
++    }
++    result.push(trail);
++  }
++  debug('collected %d trails', result.length);
++  return result;
++}
++
++function collectRows(dom, { selector, parse }) {
++  const parseFn =
++    typeof parse === 'function'
++      ? parse
++      : node => {
++          if (parse.filter && !parse.filter(node)) {
++            return;
++          }
++          const name = text(node, parse.name);
++          if (!name) {
++            return;
++          }
++          return {
++            name,
++            status: text(node, parse.status),
++            level: parse.level && text(node, parse.level)
++          };
++        };
++  return select(dom, selector)
++    .map(parseFn)
++    .filter(Boolean);
++}
+diff --git a/lib/trails/stats.js b/lib/trails/stats.js
+new file mode 100644
+index 00000000..9fb34847
+--- /dev/null
++++ b/lib/trails/stats.js
+@@ -0,0 +1,11 @@
++const states = ['open', 'hold', 'scheduled', 'closed'];
++
++export default function stats(rows) {
++  const r = Object.fromEntries(states.map(s => [s, 0]));
++  rows.forEach(({ status }) => {
++    if (status in r) {
++      r[status] += 1;
++    }
++  });
++  return r;
++}
+diff --git a/test/trails/index.js b/test/trails/index.js
+new file mode 100644
+index 00000000..730720bb
+--- /dev/null
++++ b/test/trails/index.js
+@@ -0,0 +1,28 @@
++import assert from 'node:assert/strict';
++import { createReadStream } from 'node:fs';
++import { resolve } from 'node:path';
++import test from 'node:test';
++import parser from '../../lib/lifts/parser.js';
++import collect from '../../lib/trails/parse.js';
++
++export default async function testTrails(name, expected, opts = {}) {
++  const filename = resolve(import.meta.dirname, `../resorts/example/${opts.example ?? name}.html`);
++  const { default: descriptor } = await import(`../../lib/resorts/${name}/trails.js`);
++
++  function testHTML(_t, done) {
++    const stream = createReadStream(filename);
++    stream.on('error', done);
++    stream.pipe(
++      parser(
++        dom => collect(dom, descriptor),
++        (err, list) => {
++          assert.ifError(err);
++          assert.deepEqual(list, expected, `trails should match for ${name}, received: ${JSON.stringify(list)}`);
++          done();
++        }
++      )
++    );
++  }
++
++  test(`${name} trails`, testHTML);
++}
+-- 
+2.39.5
+

@@ -1,7 +1,7 @@
 From dd9327db95830cdf615fd0ac8363713891d6a9f8 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:00:37 -0400
-Subject: [PATCH 03/14] resort: fix manning-park
+Subject: [PATCH 03/31] resort: fix manning-park
  (https://manningpark.com/weather-webcams-trail-stats/)
 
 ---
@@ -12,7 +12,7 @@ Subject: [PATCH 03/14] resort: fix manning-park
  4 files changed, 2979 insertions(+), 12904 deletions(-)
 
 diff --git a/lib/resorts/manning-park/index.js b/lib/resorts/manning-park/index.js
-index af764e0..354d628 100644
+index af764e05..354d628c 100644
 --- a/lib/resorts/manning-park/index.js
 +++ b/lib/resorts/manning-park/index.js
 @@ -1,7 +1,12 @@
@@ -33,7 +33,7 @@ index af764e0..354d628 100644
    }
  };
 diff --git a/lib/resorts/manning-park/resort.json b/lib/resorts/manning-park/resort.json
-index d8dc923..a7f1d87 100644
+index d8dc923f..a7f1d877 100644
 --- a/lib/resorts/manning-park/resort.json
 +++ b/lib/resorts/manning-park/resort.json
 @@ -1,8 +1,8 @@
@@ -48,7 +48,7 @@ index d8dc923..a7f1d87 100644
    "tags": [
      "British Columbia"
 diff --git a/test/resorts/example/manning-park.html b/test/resorts/example/manning-park.html
-index 7bc4c9d..a015ead 100644
+index 7bc4c9d5..a015ead0 100644
 --- a/test/resorts/example/manning-park.html
 +++ b/test/resorts/example/manning-park.html
 @@ -1,70 +1,58 @@
@@ -16180,7 +16180,7 @@ index 7bc4c9d..a015ead 100644
 +<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a19fdd3a0b30a5bb',t:'MTc4Mzg1NzM4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 +</html>
 diff --git a/test/resorts/manning-park.js b/test/resorts/manning-park.js
-index ff44d13..879868e 100644
+index ff44d13e..879868ec 100644
 --- a/test/resorts/manning-park.js
 +++ b/test/resorts/manning-park.js
 @@ -1,9 +1,9 @@

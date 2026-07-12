@@ -1,0 +1,671 @@
+From 6a950f767ab754a5ae3511d9b5cbdec1543a0266 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:59:51 -0400
+Subject: [PATCH 31/31] resort: add okunakayama
+ (https://www.okunakayamakogen.jp/winter-season/lift-status/)
+
+---
+ lib/resorts/okunakayama/index.js      |  18 +
+ lib/resorts/okunakayama/resort.json   |  15 +
+ lib/resorts/okunakayama/status.js     |  11 +
+ lib/resorts/okunakayama/trails.js     |  17 +
+ test/resorts/example/okunakayama.html | 484 ++++++++++++++++++++++++++
+ test/resorts/okunakayama-trails.js    |  48 +++
+ test/resorts/okunakayama.js           |   9 +
+ 7 files changed, 602 insertions(+)
+ create mode 100644 lib/resorts/okunakayama/index.js
+ create mode 100644 lib/resorts/okunakayama/resort.json
+ create mode 100644 lib/resorts/okunakayama/status.js
+ create mode 100644 lib/resorts/okunakayama/trails.js
+ create mode 100644 test/resorts/example/okunakayama.html
+ create mode 100644 test/resorts/okunakayama-trails.js
+ create mode 100644 test/resorts/okunakayama.js
+
+diff --git a/lib/resorts/okunakayama/index.js b/lib/resorts/okunakayama/index.js
+new file mode 100644
+index 00000000..70c7462e
+--- /dev/null
++++ b/lib/resorts/okunakayama/index.js
+@@ -0,0 +1,18 @@
++import select from '../../select.js';
++import coerce from '../../tools/coerce.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// lifts table follows the リフト heading; rows are <th|td>name</> <td>status</td>
++export default function parse(dom) {
++  const liftStatus = {};
++  for (const row of select(dom, 'h3:contains(リフト) + figure table tr')) {
++    const cells = row.children.filter(c => c.name === 'th' || c.name === 'td');
++    const name = findText(cells[0])?.trim();
++    const state = findText(cells[1]);
++    if (name && state) {
++      liftStatus[name] = coerce(status(state));
++    }
++  }
++  return liftStatus;
++}
+diff --git a/lib/resorts/okunakayama/resort.json b/lib/resorts/okunakayama/resort.json
+new file mode 100644
+index 00000000..e0c177ce
+--- /dev/null
++++ b/lib/resorts/okunakayama/resort.json
+@@ -0,0 +1,15 @@
++{
++  "name": "Okunakayama Kogen",
++  "url": {
++    "host": "https://www.okunakayamakogen.jp",
++    "pathname": "/winter-season/lift-status/"
++  },
++  "trails": true,
++  "tags": [
++    "Japan"
++  ],
++  "ll": [
++    141.2431,
++    40.1447
++  ]
++}
+diff --git a/lib/resorts/okunakayama/status.js b/lib/resorts/okunakayama/status.js
+new file mode 100644
+index 00000000..82c6a52b
+--- /dev/null
++++ b/lib/resorts/okunakayama/status.js
+@@ -0,0 +1,11 @@
++// shared status glyph translation for the Japanese status tables
++export default function status(text = '') {
++  const t = text.trim();
++  if (/^[○◯〇]$|運行|営業中/.test(t)) {
++    return 'open';
++  }
++  if (/^[×✕✖-]$|運休|営業終了/.test(t)) {
++    return 'closed';
++  }
++  return t;
++}
+diff --git a/lib/resorts/okunakayama/trails.js b/lib/resorts/okunakayama/trails.js
+new file mode 100644
+index 00000000..4306eaf4
+--- /dev/null
++++ b/lib/resorts/okunakayama/trails.js
+@@ -0,0 +1,17 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// course tables follow the コース名 heading; no difficulty markers on the page
++export default function parse(dom) {
++  const rows = [];
++  for (const row of select(dom, 'h3:contains(コース名) ~ div table tr')) {
++    const cells = row.children.filter(c => c.name === 'th' || c.name === 'td');
++    const name = findText(cells[0])?.trim();
++    const state = findText(cells[1]);
++    if (name && state) {
++      rows.push({ name, status: status(state) });
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/example/okunakayama.html b/test/resorts/example/okunakayama.html
+new file mode 100644
+index 00000000..d5984184
+--- /dev/null
++++ b/test/resorts/example/okunakayama.html
+@@ -0,0 +1,484 @@
++<!doctype html>
++<html dir="ltr" lang="ja"
++	prefix="og: https://ogp.me/ns#" >
++<head>
++<!-- Google Tag Manager -->
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-NWW32LP6');</script>
++<!-- End Google Tag Manager -->
++	
++<meta charset="utf-8">
++<meta name="viewport" content="width=device-width">
++<meta name="format-detection" content="telephone=no">
++<meta http-equiv="X-UA-Compatible" content="IE=edge">
++<meta name="theme-color" content="#fff">
++<meta name="msapplication-TileColor" content="#da532c">
++
++<link rel="preconnect" href="https://fonts.googleapis.com">
++<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++<link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet">
++
++
++<title>リフト運行状況 | 奥中山高原</title>
++
++		<!-- All in One SEO 4.3.7 - aioseo.com -->
++		<meta name="robots" content="max-image-preview:large" />
++		<link rel="canonical" href="https://www.okunakayamakogen.jp/winter-season/lift-status/" />
++		<meta name="generator" content="All in One SEO (AIOSEO) 4.3.7" />
++		<meta property="og:locale" content="ja_JP" />
++		<meta property="og:site_name" content="奥中山高原 | 岩手県一戸町の天然温泉とパウダースノーのスキーが楽しめる高原リゾート。" />
++		<meta property="og:type" content="article" />
++		<meta property="og:title" content="リフト運行状況 | 奥中山高原" />
++		<meta property="og:url" content="https://www.okunakayamakogen.jp/winter-season/lift-status/" />
++		<meta property="og:image" content="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2023/12/ogp.jpg" />
++		<meta property="og:image:secure_url" content="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2023/12/ogp.jpg" />
++		<meta property="og:image:width" content="1200" />
++		<meta property="og:image:height" content="630" />
++		<meta property="article:published_time" content="2024-05-01T05:06:18+00:00" />
++		<meta property="article:modified_time" content="2024-05-01T05:06:18+00:00" />
++		<meta property="article:publisher" content="https://www.facebook.com/OkunakayamakogenResort/" />
++		<meta name="twitter:card" content="summary" />
++		<meta name="twitter:site" content="@Okunaka_Kirara" />
++		<meta name="twitter:title" content="リフト運行状況 | 奥中山高原" />
++		<meta name="twitter:creator" content="@Okunaka_Kirara" />
++		<meta name="twitter:image" content="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2023/12/ogp.jpg" />
++		<script type="application/ld+json" class="aioseo-schema">
++			{"@context":"https:\/\/schema.org","@graph":[{"@type":"BreadcrumbList","@id":"https:\/\/www.okunakayamakogen.jp\/winter-season\/lift-status\/#breadcrumblist","itemListElement":[{"@type":"ListItem","@id":"https:\/\/www.okunakayamakogen.jp\/#listItem","position":1,"item":{"@type":"WebPage","@id":"https:\/\/www.okunakayamakogen.jp\/","name":"\u30db\u30fc\u30e0","description":"\u5ca9\u624b\u770c\u4e00\u6238\u753a\u306e\u5929\u7136\u6e29\u6cc9\u3068\u30d1\u30a6\u30c0\u30fc\u30b9\u30ce\u30fc\u306e\u30b9\u30ad\u30fc\u304c\u697d\u3057\u3081\u308b\u9ad8\u539f\u30ea\u30be\u30fc\u30c8\u3002","url":"https:\/\/www.okunakayamakogen.jp\/"},"nextItem":"https:\/\/www.okunakayamakogen.jp\/winter-season\/#listItem"},{"@type":"ListItem","@id":"https:\/\/www.okunakayamakogen.jp\/winter-season\/#listItem","position":2,"item":{"@type":"WebPage","@id":"https:\/\/www.okunakayamakogen.jp\/winter-season\/","name":"\u30a6\u30a3\u30f3\u30bf\u30fc\u30b7\u30fc\u30ba\u30f3","url":"https:\/\/www.okunakayamakogen.jp\/winter-season\/"},"nextItem":"https:\/\/www.okunakayamakogen.jp\/winter-season\/lift-status\/#listItem","previousItem":"https:\/\/www.okunakayamakogen.jp\/#listItem"},{"@type":"ListItem","@id":"https:\/\/www.okunakayamakogen.jp\/winter-season\/lift-status\/#listItem","position":3,"item":{"@type":"WebPage","@id":"https:\/\/www.okunakayamakogen.jp\/winter-season\/lift-status\/","name":"\u30ea\u30d5\u30c8\u904b\u884c\u72b6\u6cc1","url":"https:\/\/www.okunakayamakogen.jp\/winter-season\/lift-status\/"},"previousItem":"https:\/\/www.okunakayamakogen.jp\/winter-season\/#listItem"}]},{"@type":"Organization","@id":"https:\/\/www.okunakayamakogen.jp\/#organization","name":"\u5965\u4e2d\u5c71\u9ad8\u539f","url":"https:\/\/www.okunakayamakogen.jp\/","sameAs":["https:\/\/www.facebook.com\/OkunakayamakogenResort\/","https:\/\/twitter.com\/Okunaka_Kirara","https:\/\/www.instagram.com\/okunakayama_kogen\/","https:\/\/www.youtube.com\/channel\/UCIgWKqJdw3ZRX0Cevq5v9FQ"]},{"@type":"WebPage","@id":"https:\/\/www.okunakayamakogen.jp\/winter-season\/lift-status\/#webpage","url":"https:\/\/www.okunakayamakogen.jp\/winter-season\/lift-status\/","name":"\u30ea\u30d5\u30c8\u904b\u884c\u72b6\u6cc1 | \u5965\u4e2d\u5c71\u9ad8\u539f","inLanguage":"ja","isPartOf":{"@id":"https:\/\/www.okunakayamakogen.jp\/#website"},"breadcrumb":{"@id":"https:\/\/www.okunakayamakogen.jp\/winter-season\/lift-status\/#breadcrumblist"},"datePublished":"2024-05-01T05:06:18+09:00","dateModified":"2024-05-01T05:06:18+09:00"},{"@type":"WebSite","@id":"https:\/\/www.okunakayamakogen.jp\/#website","url":"https:\/\/www.okunakayamakogen.jp\/","name":"\u5965\u4e2d\u5c71\u9ad8\u539f","description":"\u5ca9\u624b\u770c\u4e00\u6238\u753a\u306e\u5929\u7136\u6e29\u6cc9\u3068\u30d1\u30a6\u30c0\u30fc\u30b9\u30ce\u30fc\u306e\u30b9\u30ad\u30fc\u304c\u697d\u3057\u3081\u308b\u9ad8\u539f\u30ea\u30be\u30fc\u30c8\u3002","inLanguage":"ja","publisher":{"@id":"https:\/\/www.okunakayamakogen.jp\/#organization"}}]}
++		</script>
++		<!-- All in One SEO -->
++
++<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://www.okunakayamakogen.jp/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.okunakayamakogen.jp%2Fwinter-season%2Flift-status%2F" />
++<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://www.okunakayamakogen.jp/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.okunakayamakogen.jp%2Fwinter-season%2Flift-status%2F&#038;format=xml" />
++<style id="wp-img-auto-sizes-contain-inline-css">
++img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
++/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
++</style>
++<link rel='stylesheet' id='sbi_styles-css' href='https://www.okunakayamakogen.jp/wp/wp-content/plugins/instagram-feed/css/sbi-styles.min.css?ver=6.1.4' media='all' />
++<style id="wp-block-library-inline-css">
++:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style*=border-color]){border-style:solid}html :where([style*=border-top-color]){border-top-style:solid}html :where([style*=border-right-color]){border-right-style:solid}html :where([style*=border-bottom-color]){border-bottom-style:solid}html :where([style*=border-left-color]){border-left-style:solid}html :where([style*=border-width]){border-style:solid}html :where([style*=border-top-width]){border-top-style:solid}html :where([style*=border-right-width]){border-right-style:solid}html :where([style*=border-bottom-width]){border-bottom-style:solid}html :where([style*=border-left-width]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
++
++/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
++</style>
++<style id="wp-block-image-inline-css">
++.wp-block-image>a,.wp-block-image>figure>a{display:inline-block}.wp-block-image img{box-sizing:border-box;height:auto;max-width:100%;vertical-align:bottom}@media not (prefers-reduced-motion){.wp-block-image img.hide{visibility:hidden}.wp-block-image img.show{animation:show-content-image .4s}}.wp-block-image[style*=border-radius] img,.wp-block-image[style*=border-radius]>a{border-radius:inherit}.wp-block-image.has-custom-border img{box-sizing:border-box}.wp-block-image.aligncenter{text-align:center}.wp-block-image.alignfull>a,.wp-block-image.alignwide>a{width:100%}.wp-block-image.alignfull img,.wp-block-image.alignwide img{height:auto;width:100%}.wp-block-image .aligncenter,.wp-block-image .alignleft,.wp-block-image .alignright,.wp-block-image.aligncenter,.wp-block-image.alignleft,.wp-block-image.alignright{display:table}.wp-block-image .aligncenter>figcaption,.wp-block-image .alignleft>figcaption,.wp-block-image .alignright>figcaption,.wp-block-image.aligncenter>figcaption,.wp-block-image.alignleft>figcaption,.wp-block-image.alignright>figcaption{caption-side:bottom;display:table-caption}.wp-block-image .alignleft{float:left;margin:.5em 1em .5em 0}.wp-block-image .alignright{float:right;margin:.5em 0 .5em 1em}.wp-block-image .aligncenter{margin-left:auto;margin-right:auto}.wp-block-image :where(figcaption){margin-bottom:1em;margin-top:.5em}.wp-block-image.is-style-circle-mask img{border-radius:9999px}@supports ((-webkit-mask-image:none) or (mask-image:none)) or (-webkit-mask-image:none){.wp-block-image.is-style-circle-mask img{border-radius:0;-webkit-mask-image:url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>');mask-image:url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>');mask-mode:alpha;-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:contain;mask-size:contain}}:root :where(.wp-block-image.is-style-rounded img,.wp-block-image .is-style-rounded img){border-radius:9999px}.wp-block-image figure{margin:0}.wp-lightbox-container{display:flex;flex-direction:column;position:relative}.wp-lightbox-container img{cursor:zoom-in}.wp-lightbox-container img:hover+button{opacity:1}.wp-lightbox-container button{align-items:center;backdrop-filter:blur(16px) saturate(180%);background-color:#5a5a5a40;border:none;border-radius:4px;cursor:zoom-in;display:flex;height:20px;justify-content:center;opacity:0;padding:0;position:absolute;right:16px;text-align:center;top:16px;width:20px;z-index:100}@media not (prefers-reduced-motion){.wp-lightbox-container button{transition:opacity .2s ease}}.wp-lightbox-container button:focus-visible{outline:3px auto #5a5a5a40;outline:3px auto -webkit-focus-ring-color;outline-offset:3px}.wp-lightbox-container button:hover{cursor:pointer;opacity:1}.wp-lightbox-container button:focus{opacity:1}.wp-lightbox-container button:focus,.wp-lightbox-container button:hover,.wp-lightbox-container button:not(:hover):not(:active):not(.has-background){background-color:#5a5a5a40;border:none}.wp-lightbox-overlay{box-sizing:border-box;cursor:zoom-out;height:100vh;left:0;overflow:hidden;position:fixed;top:0;visibility:hidden;width:100%;z-index:100000}.wp-lightbox-overlay .wp-lightbox-close-button{align-items:center;cursor:pointer;display:flex;font-family:inherit;gap:8px;justify-content:center;line-height:1;min-height:40px;min-width:40px;padding:0 4px;position:absolute;right:calc(env(safe-area-inset-right) + 16px);top:calc(env(safe-area-inset-top) + 16px);z-index:5000000}.wp-lightbox-overlay .wp-lightbox-close-button:focus,.wp-lightbox-overlay .wp-lightbox-close-button:hover,.wp-lightbox-overlay .wp-lightbox-close-button:not(:hover):not(:active):not(.has-background){background:none;border:none}.wp-lightbox-overlay .wp-lightbox-close-button:has(.wp-lightbox-close-text:not([hidden])) .wp-lightbox-close-icon svg{height:1em;width:1em}.wp-lightbox-overlay .wp-lightbox-close-icon svg{display:block}.wp-lightbox-overlay .wp-lightbox-navigation-button-next,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{align-items:center;bottom:16px;cursor:pointer;display:flex;font-family:inherit;gap:4px;justify-content:center;line-height:1;min-height:40px;min-width:40px;padding:0 8px;position:absolute;z-index:2000002}.wp-lightbox-overlay .wp-lightbox-navigation-button-next[hidden],.wp-lightbox-overlay .wp-lightbox-navigation-button-prev[hidden]{display:none}@media (min-width:960px){.wp-lightbox-overlay .wp-lightbox-navigation-button-next,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{bottom:50%;transform:translateY(-50%)}}.wp-lightbox-overlay .wp-lightbox-navigation-button-next:focus,.wp-lightbox-overlay .wp-lightbox-navigation-button-next:hover,.wp-lightbox-overlay .wp-lightbox-navigation-button-next:not(:hover):not(:active):not(.has-background),.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:focus,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:hover,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:not(:hover):not(:active):not(.has-background){background:none;border:none;padding:0 8px}.wp-lightbox-overlay .wp-lightbox-navigation-button-next:has(.wp-lightbox-navigation-text:not([hidden])) .wp-lightbox-navigation-icon svg,.wp-lightbox-overlay .wp-lightbox-navigation-button-prev:has(.wp-lightbox-navigation-text:not([hidden])) .wp-lightbox-navigation-icon svg{display:block;height:1.5em;width:1.5em}.wp-lightbox-overlay .wp-lightbox-navigation-button-prev{left:calc(env(safe-area-inset-left) + 16px)}.wp-lightbox-overlay .wp-lightbox-navigation-button-next{right:calc(env(safe-area-inset-right) + 16px)}.wp-lightbox-overlay .wp-lightbox-navigation-icon svg{vertical-align:middle}.wp-lightbox-overlay .lightbox-image-container{height:var(--wp--lightbox-container-height);left:50%;overflow:hidden;position:absolute;top:50%;transform:translate(-50%,-50%);transform-origin:top left;width:var(--wp--lightbox-container-width);z-index:2000001}.wp-lightbox-overlay .wp-block-image{align-items:center;box-sizing:border-box;display:flex;height:100%;justify-content:center;margin:0;position:relative;transform-origin:0 0;width:100%;z-index:3000000}.wp-lightbox-overlay .wp-block-image img{height:var(--wp--lightbox-image-height);min-height:var(--wp--lightbox-image-height);min-width:var(--wp--lightbox-image-width);width:var(--wp--lightbox-image-width)}.wp-lightbox-overlay .wp-block-image figcaption{display:none}.wp-lightbox-overlay button{background:none;border:none}.wp-lightbox-overlay .scrim{background-color:#fff;height:100%;opacity:.9;position:absolute;width:100%;z-index:2000000}.wp-lightbox-overlay.active{visibility:visible}@media not (prefers-reduced-motion){.wp-lightbox-overlay.active{animation:turn-on-visibility .25s both}.wp-lightbox-overlay.active img{animation:turn-on-visibility .35s both}.wp-lightbox-overlay.show-closing-animation:not(.active){animation:turn-off-visibility .35s both}.wp-lightbox-overlay.show-closing-animation:not(.active) img{animation:turn-off-visibility .25s both}.wp-lightbox-overlay.zoom.active{animation:none;opacity:1;visibility:visible}.wp-lightbox-overlay.zoom.active .lightbox-image-container{animation:lightbox-zoom-in .4s}.wp-lightbox-overlay.zoom.active .lightbox-image-container img{animation:none}.wp-lightbox-overlay.zoom.active .scrim{animation:turn-on-visibility .4s forwards}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active){animation:none}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container{animation:lightbox-zoom-out .4s}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container img{animation:none}.wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .scrim{animation:turn-off-visibility .4s forwards}}@keyframes show-content-image{0%{visibility:hidden}99%{visibility:hidden}to{visibility:visible}}@keyframes turn-on-visibility{0%{opacity:0}to{opacity:1}}@keyframes turn-off-visibility{0%{opacity:1;visibility:visible}99%{opacity:0;visibility:visible}to{opacity:0;visibility:hidden}}@keyframes lightbox-zoom-in{0%{transform:translate(calc((-100vw + var(--wp--lightbox-scrollbar-width))/2 + var(--wp--lightbox-initial-left-position)),calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale))}to{transform:translate(-50%,-50%) scale(1)}}@keyframes lightbox-zoom-out{0%{transform:translate(-50%,-50%) scale(1);visibility:visible}99%{visibility:visible}to{transform:translate(calc((-100vw + var(--wp--lightbox-scrollbar-width))/2 + var(--wp--lightbox-initial-left-position)),calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale));visibility:hidden}}
++/*# sourceURL=https://www.okunakayamakogen.jp/wp/wp-includes/blocks/image/style.min.css */
++</style>
++<style id="wp-block-paragraph-inline-css">
++.is-small-text{font-size:.875em}.is-regular-text{font-size:1em}.is-large-text{font-size:2.25em}.is-larger-text{font-size:3em}.has-drop-cap:not(:focus):first-letter{float:left;font-size:8.4em;font-style:normal;font-weight:100;line-height:.68;margin:.05em .1em 0 0;text-transform:uppercase}body.rtl .has-drop-cap:not(:focus):first-letter{float:none;margin-left:.1em}p.has-drop-cap.has-background{overflow:hidden}:root :where(p.has-background){padding:1.25em 2.375em}:where(p.has-text-color:not(.has-link-color)) a{color:inherit}p.has-text-align-left[style*="writing-mode:vertical-lr"],p.has-text-align-right[style*="writing-mode:vertical-rl"]{rotate:180deg}
++/*# sourceURL=https://www.okunakayamakogen.jp/wp/wp-includes/blocks/paragraph/style.min.css */
++</style>
++
++<style id="classic-theme-styles-inline-css">
++/*! This file is auto-generated */
++.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
++/*# sourceURL=/wp-includes/css/classic-themes.min.css */
++</style>
++
++<style id="global-styles-inline-css">
++:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
++/*# sourceURL=global-styles-inline-css */
++</style>
++
++<link rel='stylesheet' id='responsive-lightbox-fancybox-css' href='https://www.okunakayamakogen.jp/wp/wp-content/plugins/responsive-lightbox/assets/fancybox/jquery.fancybox.min.css?ver=2.4.5' media='all' />
++<link rel='stylesheet' id='wp-pagenavi-css' href='https://www.okunakayamakogen.jp/wp/wp-content/plugins/wp-pagenavi/pagenavi-css.css?ver=2.70' media='all' />
++<link rel='stylesheet' id='xo-event-calendar-css' href='https://www.okunakayamakogen.jp/wp/wp-content/plugins/xo-event-calendar/css/xo-event-calendar.css?ver=3.1.4' media='all' />
++<link rel='stylesheet' id='xo-event-calendar-event-calendar-css' href='https://www.okunakayamakogen.jp/wp/wp-content/plugins/xo-event-calendar/build/event-calendar/style-index.css?ver=3.1.4' media='all' />
++<link rel='stylesheet' id='reset_css-css' href='https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/css/reset.css?ver=1.0.0' media='all' />
++<link rel='stylesheet' id='style-css' href='https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/style.css?ver=2024.12.16' media='all' />
++<link rel='stylesheet' id='style_hbn-css' href='https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/css/style_hbn.css?ver=2024.4.25' media='all' />
++<link rel='stylesheet' id='fancybox-css' href='https://www.okunakayamakogen.jp/wp/wp-content/plugins/easy-fancybox/fancybox/1.5.4/jquery.fancybox.min.css?ver=66f2d755073cc50bd72aec987b82a457' media='screen' />
++<script id="jquery-core-js" src="https://www.okunakayamakogen.jp/wp/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
++<script id="jquery-migrate-js" src="https://www.okunakayamakogen.jp/wp/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
++<script id="responsive-lightbox-fancybox-js" src="https://www.okunakayamakogen.jp/wp/wp-content/plugins/responsive-lightbox/assets/fancybox/jquery.fancybox.min.js?ver=2.4.5"></script>
++<script id="underscore-js" src="https://www.okunakayamakogen.jp/wp/wp-includes/js/underscore.min.js?ver=1.13.8"></script>
++<script id="responsive-lightbox-infinite-scroll-js" src="https://www.okunakayamakogen.jp/wp/wp-content/plugins/responsive-lightbox/assets/infinitescroll/infinite-scroll.pkgd.min.js?ver=66f2d755073cc50bd72aec987b82a457"></script>
++<script id="responsive-lightbox-js-before">
++var rlArgs = {"script":"fancybox","selector":"lightbox","customEvents":"","activeGalleries":true,"modal":false,"showOverlay":true,"showCloseButton":true,"enableEscapeButton":true,"hideOnOverlayClick":true,"hideOnContentClick":false,"cyclic":false,"showNavArrows":true,"autoScale":true,"scrolling":"yes","centerOnScroll":true,"opacity":true,"overlayOpacity":70,"overlayColor":"#666","titleShow":true,"titlePosition":"outside","transitions":"fade","easings":"swing","speeds":300,"changeSpeed":300,"changeFade":100,"padding":5,"margin":5,"videoWidth":1080,"videoHeight":720,"woocommerce_gallery":false,"ajaxurl":"https:\/\/www.okunakayamakogen.jp\/wp\/wp-admin\/admin-ajax.php","nonce":"ee85a98f9e","preview":false,"postId":8708,"scriptExtension":false};
++
++//# sourceURL=responsive-lightbox-js-before
++</script>
++<script id="responsive-lightbox-js" src="https://www.okunakayamakogen.jp/wp/wp-content/plugins/responsive-lightbox/js/front.js?ver=2.4.5"></script>
++<link rel="https://api.w.org/" href="https://www.okunakayamakogen.jp/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://www.okunakayamakogen.jp/wp-json/wp/v2/pages/8708" /><link rel='shortlink' href='https://www.okunakayamakogen.jp/?p=8708' />
++<link rel="icon" href="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2023/12/android-chrome-256x256-1-150x150.png" sizes="32x32" />
++<link rel="icon" href="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2023/12/android-chrome-256x256-1.png" sizes="192x192" />
++<link rel="apple-touch-icon" href="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2023/12/android-chrome-256x256-1.png" />
++<meta name="msapplication-TileImage" content="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2023/12/android-chrome-256x256-1.png" />
++</head>
++	
++<body class="wp-singular page-template-default page page-id-8708 page-child parent-pageid-8703 wp-theme-okunakayama">
++<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWW32LP6"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++<header>
++		<div class="headerWrap">
++			<div class="headerInfo">
++				<ul class="flex">
++					<li class="visually-hidden"><a href="#main">本文へスキップ</a></li>
++					<li class="tb_on english"><a href="https://www.okunakayamakogen.jp/en">English</a></li>
++					<li class="btm"><a href="https://reserve.489ban.net/client/okunakayamakogen/0/plan"
++							target="_blank">空室検索・宿泊のご予約</a></li>
++				</ul>
++			</div>
++			<div class="headerInner flex">
++				<div class="logoArea">
++					<a href="https://www.okunakayamakogen.jp/">
++						<img src="https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/images/site-logo.svg" alt="奥中山高原" class="logo" width="162" height="43">
++						<p>夏も冬も、 大自然を満喫。</p>
++					</a>
++				</div><!--logoArea-->
++
++				<!--▼ グローバルナビゲーション -->
++				<button id="js-hamburger" type="button" class="hamburger" aria-controls="navigation"
++					aria-expanded="false" aria-label="メニューを開く">
++					<span class="hamburgerLine"></span>
++					<span class="hamburgerText"></span>
++				</button>
++				<!--PC menu-->
++					<nav class="global-nav"><ul id="menu-common" class="global-nav-list"><li id="menu-item-14742" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14742"><a href="https://www.okunakayamakogen.jp/%e3%81%84%e3%82%8f%e3%81%a6%e6%97%85%e5%89%b2%e3%82%ad%e3%83%a3%e3%83%b3%e3%83%9a%e3%83%bc%e3%83%b3%e3%80%80/">いわて旅割キャンペーン　</a></li>
++<li id="menu-item-8687" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8687"><a href="https://www.okunakayamakogen.jp/stay/">宿泊</a></li>
++<li id="menu-item-11298" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11298"><a href="https://www.okunakayamakogen.jp/%e3%82%b9%e3%83%9d%e3%83%bc%e3%83%84%e5%90%88%e5%ae%bf%e3%83%bb%e5%a4%a7%e4%bc%9a%e3%83%97%e3%83%a9%e3%83%b3/">合宿・大会プラン</a></li>
++<li id="menu-item-8686" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8686"><a href="https://www.okunakayamakogen.jp/hotspring/">温泉</a></li>
++<li id="menu-item-10213" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10213"><a href="https://www.okunakayamakogen.jp/access/%e7%84%a1%e6%96%99%e5%b7%a1%e5%9b%9e%e3%83%90%e3%82%b9%ef%bc%88%e4%b8%80%e6%88%b8%e7%94%ba%e3%83%bb%e5%b2%a9%e6%89%8b%e7%94%ba%ef%bc%89/">無料巡回バス（一戸町・岩手町）</a></li>
++<li id="menu-item-8688" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8688"><a href="https://www.okunakayamakogen.jp/ryouri/">お食事</a></li>
++<li id="menu-item-8863" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8863"><a href="https://www.okunakayamakogen.jp/ryouri/%e5%be%a1%e6%b3%95%e4%ba%8b/">御法事</a></li>
++<li id="menu-item-8864" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8864"><a href="https://www.okunakayamakogen.jp/daytrip/">日帰り宴会・仕出し</a></li>
++<li id="menu-item-8918" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8918"><a href="https://www.okunakayamakogen.jp/%e3%83%8f%e3%83%a9%e3%83%98%e3%83%83%e3%82%bf%e4%ba%ad%e3%82%82%e3%81%90%e3%82%82%e3%81%90%e3%83%a1%e3%83%8b%e3%83%a5%e3%83%bc/">ハラヘッタ亭もぐもぐ</a></li>
++<li id="menu-item-8689" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8689"><a href="https://www.okunakayamakogen.jp/gelato/">ジェラート雪あかり</a></li>
++<li id="menu-item-8690" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8690"><a href="https://www.okunakayamakogen.jp/%e8%a6%b3%e5%85%89/">観光</a></li>
++</ul></nav>				
++				<nav class="sub-nav">
++					<ul class="sub-nav-list">
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/news-list">お知らせ</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/access">アクセス</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/contact">お問い合わせ</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/live-camera">ライブカメラ</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://weathernews.jp/onebox/40.066105/141.222628/q=%E5%B2%A9%E6%89%8B%E7%9C%8C%E4%BA%8C%E6%88%B8%E9%83%A1%E4%B8%80%E6%88%B8%E7%94%BA%E5%A5%A5%E4%B8%AD%E5%B1%B1&v=7334f93413fe2758f45cc8c66e9ddcdba9f102749be99bc8780557d8e0272d06&temp=c&lang=ja" target="_blank" rel="noopener">奥中山高原の天気</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/en">English</a>
++							</li>
++					</ul>
++				</nav>
++				<!--SP-TB menu-->
++				<nav class="global-nav-sp" id="navigation" aria-controls="navigation">
++					<div class="logoArea">
++						<a href="https://www.okunakayamakogen.jp/">
++							<img src="https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/images/site-logo.svg" alt="奥中山高原" class="logo" width="162" height="43">
++							<p>夏も冬も、 大自然を満喫。</p>
++						</a>
++					</div><!--logoArea-->
++					<ul id="menu-common-1" class="nav-list"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14742"><a href="https://www.okunakayamakogen.jp/%e3%81%84%e3%82%8f%e3%81%a6%e6%97%85%e5%89%b2%e3%82%ad%e3%83%a3%e3%83%b3%e3%83%9a%e3%83%bc%e3%83%b3%e3%80%80/">いわて旅割キャンペーン　</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8687"><a href="https://www.okunakayamakogen.jp/stay/">宿泊</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11298"><a href="https://www.okunakayamakogen.jp/%e3%82%b9%e3%83%9d%e3%83%bc%e3%83%84%e5%90%88%e5%ae%bf%e3%83%bb%e5%a4%a7%e4%bc%9a%e3%83%97%e3%83%a9%e3%83%b3/">合宿・大会プラン</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8686"><a href="https://www.okunakayamakogen.jp/hotspring/">温泉</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10213"><a href="https://www.okunakayamakogen.jp/access/%e7%84%a1%e6%96%99%e5%b7%a1%e5%9b%9e%e3%83%90%e3%82%b9%ef%bc%88%e4%b8%80%e6%88%b8%e7%94%ba%e3%83%bb%e5%b2%a9%e6%89%8b%e7%94%ba%ef%bc%89/">無料巡回バス（一戸町・岩手町）</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8688"><a href="https://www.okunakayamakogen.jp/ryouri/">お食事</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8863"><a href="https://www.okunakayamakogen.jp/ryouri/%e5%be%a1%e6%b3%95%e4%ba%8b/">御法事</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8864"><a href="https://www.okunakayamakogen.jp/daytrip/">日帰り宴会・仕出し</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8918"><a href="https://www.okunakayamakogen.jp/%e3%83%8f%e3%83%a9%e3%83%98%e3%83%83%e3%82%bf%e4%ba%ad%e3%82%82%e3%81%90%e3%82%82%e3%81%90%e3%83%a1%e3%83%8b%e3%83%a5%e3%83%bc/">ハラヘッタ亭もぐもぐ</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8689"><a href="https://www.okunakayamakogen.jp/gelato/">ジェラート雪あかり</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8690"><a href="https://www.okunakayamakogen.jp/%e8%a6%b3%e5%85%89/">観光</a></li>
++</ul>
++					<div class="flex season-nav">
++					<div class="season-winter js-season-on">
++							<p class="season-nav-ttl"><span class="en">Winter Season</span>ウィンターシーズン</p>
++							<ul id="menu-submenu-winter" class="season-nav-list"><li id="menu-item-10122" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-8708 current_page_item menu-item-10122"><a href="https://www.okunakayamakogen.jp/winter-season/lift-status/" aria-current="page">リフト運行状況</a></li>
++<li id="menu-item-10123" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10123"><a href="https://www.okunakayamakogen.jp/winter-season/%e5%96%b6%e6%a5%ad%e6%99%82%e9%96%93-2/">営業時間</a></li>
++<li id="menu-item-10124" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10124"><a href="https://www.okunakayamakogen.jp/winter-season/lift-price/">2025-2026シーズン　リフト料金</a></li>
++<li id="menu-item-10125" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10125"><a href="https://www.okunakayamakogen.jp/winter-season/lift-plan/">【2025-2026】　リフト券・シーズン券</a></li>
++<li id="menu-item-10126" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10126"><a href="https://www.okunakayamakogen.jp/winter-season/rental/">レンタル</a></li>
++<li id="menu-item-10127" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10127"><a href="https://www.okunakayamakogen.jp/winter-season/course-guide/">ゲレンデガイド</a></li>
++<li id="menu-item-10128" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10128"><a href="https://www.okunakayamakogen.jp/winter-season/snow-park/">奥中山スノーパーク</a></li>
++<li id="menu-item-10129" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10129"><a href="https://www.okunakayamakogen.jp/winter-season/okunaka-kids-land/">OKUNAKAこどもらんど</a></li>
++<li id="menu-item-10130" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10130"><a href="https://www.okunakayamakogen.jp/winter-season/ski-school/">スキー教室</a></li>
++<li id="menu-item-10133" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10133"><a target="_blank" href="https://ssiwate.info/">スノーボードスクール岩手</a></li>
++<li id="menu-item-10134" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10134"><a target="_blank" href="https://weathernews.jp/ski/spot/33317/">お天気情報</a></li>
++<li id="menu-item-10135" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10135"><a href="https://www.okunakayamakogen.jp/%e5%a5%a5%e4%b8%ad%e5%b1%b1%e9%ab%98%e5%8e%9f%e3%82%b9%e3%82%ad%e3%83%bc%e5%a0%b4%e3%83%89%e3%83%ad%e3%83%bc%e3%83%b3%e6%98%a0%e5%83%8f/">奥中山高原スキー場ドローン映像</a></li>
++<li id="menu-item-10221" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10221"><a href="https://www.okunakayamakogen.jp/%e3%81%8a%e5%be%97%e3%81%aa%e3%82%b9%e3%82%ad%e3%83%bc%e5%88%87%e7%ac%a6%e3%80%80igr%e3%81%84%e3%82%8f%e3%81%a6%e9%8a%80%e6%b2%b3%e9%89%84%e9%81%93/">お得なスキー切符　IGRいわて銀河鉄道</a></li>
++</ul>								<a href="https://www.driveplaza.com/etc/drawari/2025_winter_pass/" target="_blank" class="navbnr">
++									<img src="https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/images/bnr-winterpass.png" alt="ウィンターパス　ゲレンデまでの往復の高速道路料金がお得!（ETC限定）" class="img100" width="290" height="150">
++								</a>
++						</div>
++						<div class="season-green">
++							<p class="season-nav-ttl"><span class="en">Green Season</span>グリーンシーズン</p>
++							<ul id="menu-submenu-green" class="season-nav-list"><li id="menu-item-134" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-134"><a href="https://www.okunakayamakogen.jp/green-season/fishing/">つりぼり</a></li>
++<li id="menu-item-135" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-135"><a href="https://www.okunakayamakogen.jp/green-season/playground/">遊具ひろば</a></li>
++<li id="menu-item-14270" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14270"><a href="https://www.okunakayamakogen.jp/green-season/trampoline/">トランポリン</a></li>
++<li id="menu-item-137" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-137"><a href="https://www.okunakayamakogen.jp/green-season/trekking/">西岳トレッキング</a></li>
++<li id="menu-item-167" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-167"><a target="_blank" href="https://weathernews.jp/onebox/40.066105/141.222628/q=%E5%B2%A9%E6%89%8B%E7%9C%8C%E4%BA%8C%E6%88%B8%E9%83%A1%E4%B8%80%E6%88%B8%E7%94%BA%E5%A5%A5%E4%B8%AD%E5%B1%B1&#038;v=7334f93413fe2758f45cc8c66e9ddcdba9f102749be99bc8780557d8e0272d06&#038;temp=c&#038;lang=ja">お天気情報</a></li>
++<li id="menu-item-11184" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11184"><a href="https://1nohe-obs.net/visit/#visitinfo">一戸町観光天文台</a></li>
++</ul>						</div>
++						
++						
++					</div><!--flex-->
++					<div class="sub-nav">
++						<ul class="sub-nav-list">
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/news-list">お知らせ</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/access">アクセス</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/contact">お問い合わせ</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/live-camera">ライブカメラ</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://weathernews.jp/onebox/40.066105/141.222628/q=%E5%B2%A9%E6%89%8B%E7%9C%8C%E4%BA%8C%E6%88%B8%E9%83%A1%E4%B8%80%E6%88%B8%E7%94%BA%E5%A5%A5%E4%B8%AD%E5%B1%B1&v=7334f93413fe2758f45cc8c66e9ddcdba9f102749be99bc8780557d8e0272d06&temp=c&lang=ja" target="_blank" rel="noopener">奥中山高原の天気</a>
++							</li>
++							<li class="menu-item">
++								<a href="https://www.okunakayamakogen.jp/en/">English</a>
++							</li>
++						</ul>
++					</div>
++				</nav>
++
++				<!--▲ グローバルナビゲーション -->
++			</div><!--headerInner flex-->
++		</div><!-- header_wrap -->
++	</header>
++<div class="contentsWrap flex">
++<main id="main">
++<div id="ttlArea" class="flex">
++<div class="inner">
++<h1>
++        リフト運行状況    </h1>
++
++<div id="breadcrumb">
++<ol class="breadcrumb">
++<!-- Breadcrumb NavXT 7.2.0 -->
++<li class="home"><span property="itemListElement" typeof="ListItem"><a property="item" typeof="WebPage" title="Go to 奥中山高原." href="https://www.okunakayamakogen.jp" class="home" ><span property="name">HOME</span></a><meta property="position" content="1"></span></li>
++<li class="post post-page"><span property="itemListElement" typeof="ListItem"><a property="item" typeof="WebPage" title="Go to ウィンターシーズン." href="https://www.okunakayamakogen.jp/winter-season/" class="post post-page" ><span property="name">ウィンターシーズン</span></a><meta property="position" content="2"></span></li>
++<li class="post post-page current-item"><span property="itemListElement" typeof="ListItem"><span property="name" class="post post-page current-item">リフト運行状況</span><meta property="url" content="https://www.okunakayamakogen.jp/winter-season/lift-status/"><meta property="position" content="3"></span></li>
++		
++</ol>
++</div>
++</div>
++
++						<img src="https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/images/ttlAreaImg-winter.jpg" alt="" loading="lazy" width="1600" height="400" class="ttlAreaImg">
++					
++
++</div><!--ttlArea-->
++<div class="contentArea">
++  <div class="inner">
++    <article>
++
++                        
++<p class="has-text-align-center has-text-color has-large-font-size wp-block-paragraph" style="color:#ff0000"></p>
++
++
++<div class="wp-block-image">
++<figure class="aligncenter size-full"><img fetchpriority="high" decoding="async" width="945" height="666" src="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2020/07/course_guide-1.jpg" alt="" class="wp-image-277" srcset="https://www.okunakayamakogen.jp/wp/wp-content/uploads/2020/07/course_guide-1.jpg 945w, https://www.okunakayamakogen.jp/wp/wp-content/uploads/2020/07/course_guide-1-400x282.jpg 400w, https://www.okunakayamakogen.jp/wp/wp-content/uploads/2020/07/course_guide-1-768x541.jpg 768w" sizes="(max-width: 945px) 100vw, 945px" /></figure>
++</div>                 
++         
++
++<h2>本日のリフト運行状況</h2>
++
++
++(2026/3/29　7時30分 現在)
++
++<div class="wp-block-columns">
++<div class="wp-block-column">
++<h3>インフォメーション</h3>
++<figure class="wp-block-table">
++<table class="liftTable"><tbody>
++<tr><th>天気</th><td>くもり</td></tr>
++<tr><th>自然積雪</th><td></td></tr>
++<tr><th>圧雪後</th><td></td></tr>
++<tr><th>気温</th><td>4℃</td></tr>
++<tr><th>リフト運行状況</th><td>営業終了</td></tr>
++<tr><th>お知らせ</th><td>2025⁻2026シーズンの営業は3月29日(日)をもってを終了いたしました。皆様のご来場誠にありがとうございました。</td></tr>
++</tbody></table></figure>
++</div>
++
++
++<div class="wp-block-column">
++<h3>リフト</h3>
++<figure class="wp-block-table lift-jokyo-table"><table class="liftTable"><tbody>
++
++	<tr><td>第1リフト</td><td>×</td></tr>
++
++<tr><th>第3リフト</th><td>運休</td></tr>
++<tr><th>第4リフト</th><td>運休</td></tr>
++<tr><th>第5リフト</th><td>運休</td></tr>
++<tr><th>第6リフト</th><td>運休</td></tr>
++</tbody></table></figure>
++</div>
++</div>
++
++
++
++<h3>コース名</h3>
++<div class="wp-block-columns">
++<div class="wp-block-column lift-jokyo-table">
++<figure class="wp-block-table"><table class="liftTable"><tbody>
++<tr><th>ぶなの木</th><td>×</td></tr>
++<tr><th>つばめ</th><td>×</td></tr>
++<tr><th>こなゆき</th><td>×</td></tr>
++<tr><th>山彦</th><td>×</td></tr>
++<tr><th>こぐまゲレンデ</th><td>×</td></tr>
++<tr><th>西岳</th><td>×</td></tr>
++</tbody></table></figure>
++</div>
++
++
++<div class="wp-block-column">
++<figure class="wp-block-table lift-jokyo-table"><table class="liftTable"><tbody>
++<tr><th>はやぶさ</th><td>×</td></tr>
++<tr><th>やまばと</th><td>×</td></tr>
++<tr><th>しらかば</th><td>×</td></tr>
++<tr><th>ビギナー</th><td>×</td></tr>
++<tr><th>かもしか</th><td>×</td></tr>
++</tbody></table></figure>
++</div>
++</div>
++
++
++
++
++
++
++
++    </article>
++	</div><!--inner-->
++
++</div><!--cotentArea-->
++</main>
++
++<aside>
++			<div class="asideArea">
++			<nav>
++				<h2><span class="en" aria-hidden="true">Green Season</span>グリーンシーズン</h2>
++				<ul id="menu-submenu-green-1" class="aside-nav-list"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-134"><a href="https://www.okunakayamakogen.jp/green-season/fishing/">つりぼり</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-135"><a href="https://www.okunakayamakogen.jp/green-season/playground/">遊具ひろば</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14270"><a href="https://www.okunakayamakogen.jp/green-season/trampoline/">トランポリン</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-137"><a href="https://www.okunakayamakogen.jp/green-season/trekking/">西岳トレッキング</a></li>
++<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-167"><a target="_blank" href="https://weathernews.jp/onebox/40.066105/141.222628/q=%E5%B2%A9%E6%89%8B%E7%9C%8C%E4%BA%8C%E6%88%B8%E9%83%A1%E4%B8%80%E6%88%B8%E7%94%BA%E5%A5%A5%E4%B8%AD%E5%B1%B1&#038;v=7334f93413fe2758f45cc8c66e9ddcdba9f102749be99bc8780557d8e0272d06&#038;temp=c&#038;lang=ja">お天気情報</a></li>
++<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11184"><a href="https://1nohe-obs.net/visit/#visitinfo">一戸町観光天文台</a></li>
++</ul>			</nav>
++			<nav>
++					<h2><span class="en" aria-hidden="true">Winter Season</span>ウィンターシーズン</h2>
++					<ul id="menu-submenu-winter-1" class="aside-nav-list"><li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-8708 current_page_item menu-item-10122"><a href="https://www.okunakayamakogen.jp/winter-season/lift-status/" aria-current="page">リフト運行状況</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10123"><a href="https://www.okunakayamakogen.jp/winter-season/%e5%96%b6%e6%a5%ad%e6%99%82%e9%96%93-2/">営業時間</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10124"><a href="https://www.okunakayamakogen.jp/winter-season/lift-price/">2025-2026シーズン　リフト料金</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10125"><a href="https://www.okunakayamakogen.jp/winter-season/lift-plan/">【2025-2026】　リフト券・シーズン券</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10126"><a href="https://www.okunakayamakogen.jp/winter-season/rental/">レンタル</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10127"><a href="https://www.okunakayamakogen.jp/winter-season/course-guide/">ゲレンデガイド</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10128"><a href="https://www.okunakayamakogen.jp/winter-season/snow-park/">奥中山スノーパーク</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10129"><a href="https://www.okunakayamakogen.jp/winter-season/okunaka-kids-land/">OKUNAKAこどもらんど</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10130"><a href="https://www.okunakayamakogen.jp/winter-season/ski-school/">スキー教室</a></li>
++<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10133"><a target="_blank" href="https://ssiwate.info/">スノーボードスクール岩手</a></li>
++<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10134"><a target="_blank" href="https://weathernews.jp/ski/spot/33317/">お天気情報</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10135"><a href="https://www.okunakayamakogen.jp/%e5%a5%a5%e4%b8%ad%e5%b1%b1%e9%ab%98%e5%8e%9f%e3%82%b9%e3%82%ad%e3%83%bc%e5%a0%b4%e3%83%89%e3%83%ad%e3%83%bc%e3%83%b3%e6%98%a0%e5%83%8f/">奥中山高原スキー場ドローン映像</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10221"><a href="https://www.okunakayamakogen.jp/%e3%81%8a%e5%be%97%e3%81%aa%e3%82%b9%e3%82%ad%e3%83%bc%e5%88%87%e7%ac%a6%e3%80%80igr%e3%81%84%e3%82%8f%e3%81%a6%e9%8a%80%e6%b2%b3%e9%89%84%e9%81%93/">お得なスキー切符　IGRいわて銀河鉄道</a></li>
++</ul>				</nav>
++				<a href="https://www.driveplaza.com/etc/drawari/2026_winter_pass/set.html" target="_blank" class="navbnr">
++					<img src="https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/images/bnr-winterpass.png" alt="ウィンターパス　ゲレンデまでの往復の高速道路料金がお得!（ETC限定）" class="img100" width="290" height="150">
++				</a>
++				
++				
++				
++				<ul class="snsList">
++					<li class="facebook"><a href="https://www.facebook.com/OkunakayamakogenResort/"
++							target="_blank">Facebook</a>
++					</li>
++					<li class="insta"><a href="https://www.instagram.com/okunakayama_kogen/"
++							target="_blank">Instagram</a></li>
++					<li class="twitter"><a href="https://twitter.com/Okunaka_Kirara" target="_blank">X（旧Twitter）</a></li>
++
++					<li class="youtube"><a href="https://www.youtube.com/channel/UCIgWKqJdw3ZRX0Cevq5v9FQ"
++							target="_blank">YouTube</a>
++					</li>
++				</ul>
++			</div>
++</aside>
++</div><!--contentsWrap-->
++
++<footer>
++		<div class="inner">
++			<div class="flex">
++				<address>
++					<h2>奥中山高原</h2>
++					<p>〒028-5134　岩手県二戸郡一戸町奥中山字西田子662-1<br>
++						TEL <a href="tel:0195-35-3131">0195-35-3131（代）</a>FAX 0195-36-1022</p>
++					<div class="btm-arrow"><a href="https://www.okunakayamakogen.jp/contact">お問い合わせフォーム</a></div>
++				</address>
++				<ul id="menu-footer" class="footerMnue"><li id="menu-item-8684" class="btm-arrow menu-item menu-item-type-post_type menu-item-object-page menu-item-8684"><a href="https://www.okunakayamakogen.jp/link/">リンク集</a></li>
++<li id="menu-item-8685" class="btm-arrow menu-item menu-item-type-post_type menu-item-object-page menu-item-8685"><a href="https://www.okunakayamakogen.jp/privacy-policy/">プライバシーポリシー</a></li>
++<li id="menu-item-11209" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11209"><a href="https://www.okunakayamakogen.jp/%e5%a5%a5%e4%b8%ad%e5%b1%b1%e9%ab%98%e5%8e%9f%e3%82%b9%e3%82%ad%e3%83%bc%e5%a0%b4%e5%ae%89%e5%85%a8%e5%a0%b1%e5%91%8a%e6%9b%b8/">　  奥中山高原スキー場安全報告書</a></li>
++</ul>			</div>
++			<small><span>&copy;</span>Okunakayamakogen</small>
++		</div>
++
++		<div id="pagetop">
++			<a href="#" aria-label="ページ上部へ戻る"><img src="https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/images/pagetop.svg" alt="ページ上部へ戻る" width="97" height="49"></a>
++		</div><!--pagetop-->
++
++		<div class="copyArea"><span>&copy;Okunakayamakogen</span></div>
++	</footer>
++
++
++<script type="speculationrules">
++{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp/wp-*.php","/wp/wp-admin/*","/wp/wp-content/uploads/*","/wp/wp-content/*","/wp/wp-content/plugins/*","/wp/wp-content/themes/okunakayama/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
++</script>
++<!-- Instagram Feed JS -->
++<script type="text/javascript">
++var sbiajaxurl = "https://www.okunakayamakogen.jp/wp/wp-admin/admin-ajax.php";
++</script>
++<script id="xo-event-calendar-ajax-js-extra">
++var xo_event_calendar_object = {"ajax_url":"https://www.okunakayamakogen.jp/wp/wp-admin/admin-ajax.php","action":"xo_event_calendar_month"};
++var xo_simple_calendar_object = {"ajax_url":"https://www.okunakayamakogen.jp/wp/wp-admin/admin-ajax.php","action":"xo_simple_calendar_month"};
++//# sourceURL=xo-event-calendar-ajax-js-extra
++</script>
++<script id="xo-event-calendar-ajax-js" src="https://www.okunakayamakogen.jp/wp/wp-content/plugins/xo-event-calendar/js/ajax.js?ver=3.1.4"></script>
++<script id="my-common-js" src="https://www.okunakayamakogen.jp/wp/wp-content/themes/okunakayama/js/common.js?ver=1.0.0"></script>
++<script id="jquery-fancybox-js" src="https://www.okunakayamakogen.jp/wp/wp-content/plugins/easy-fancybox/fancybox/1.5.4/jquery.fancybox.min.js?ver=66f2d755073cc50bd72aec987b82a457"></script>
++<script id="jquery-fancybox-js-after">
++var fb_timeout, fb_opts={'overlayShow':true,'hideOnOverlayClick':true,'showCloseButton':true,'margin':20,'enableEscapeButton':true,'autoScale':true };
++if(typeof easy_fancybox_handler==='undefined'){
++var easy_fancybox_handler=function(){
++jQuery([".nolightbox","a.wp-block-fileesc_html__button","a.pin-it-button","a[href*='pinterest.com\/pin\/create']","a[href*='facebook.com\/share']","a[href*='twitter.com\/share']"].join(',')).addClass('nofancybox');
++jQuery('a.fancybox-close').on('click',function(e){e.preventDefault();jQuery.fancybox.close()});
++/* IMG */
++var fb_IMG_select=jQuery('a[href*=".jpg" i]:not(.nofancybox,li.nofancybox>a),area[href*=".jpg" i]:not(.nofancybox),a[href*=".jpeg" i]:not(.nofancybox,li.nofancybox>a),area[href*=".jpeg" i]:not(.nofancybox),a[href*=".png" i]:not(.nofancybox,li.nofancybox>a),area[href*=".png" i]:not(.nofancybox),a[href*=".webp" i]:not(.nofancybox,li.nofancybox>a),area[href*=".webp" i]:not(.nofancybox)');
++fb_IMG_select.addClass('fancybox image');
++var fb_IMG_sections=jQuery('.gallery,.wp-block-gallery,.tiled-gallery,.wp-block-jetpack-tiled-gallery');
++fb_IMG_sections.each(function(){jQuery(this).find(fb_IMG_select).attr('rel','gallery-'+fb_IMG_sections.index(this));});
++jQuery('a.fancybox,area.fancybox,.fancybox>a').each(function(){jQuery(this).fancybox(jQuery.extend(true,{},fb_opts,{'transitionIn':'elastic','easingIn':'easeOutBack','transitionOut':'elastic','easingOut':'easeInBack','opacity':false,'hideOnContentClick':false,'titleShow':true,'titlePosition':'inside','titleFromAlt':true,'showNavArrows':true,'enableKeyboardNav':true,'cyclic':false}))});
++/* Inline */
++jQuery('a.fancybox-inline,area.fancybox-inline,.fancybox-inline>a').each(function(){jQuery(this).fancybox(jQuery.extend(true,{},fb_opts,{'type':'inline','autoDimensions':true,'scrolling':'no','easingIn':'easeOutBack','easingOut':'easeInBack','opacity':false,'hideOnContentClick':false,'titleShow':false}))});
++/* PDF */
++jQuery('a[href*=".pdf" i],area[href*=".pdf" i]').not('.nofancybox,li.nofancybox>a').addClass('fancybox-pdf');
++jQuery('a.fancybox-pdf,area.fancybox-pdf,.fancybox-pdf>a').each(function(){jQuery(this).fancybox(jQuery.extend(true,{},fb_opts,{'type':'iframe','width':'90%','height':'90%','padding':10,'titleShow':false,'titlePosition':'float','titleFromAlt':true,'autoDimensions':false,'scrolling':'no'}))});
++/* SVG */
++jQuery('a[href*=".svg" i],area[href*=".svg" i]').not('.nofancybox,li.nofancybox>a').addClass('fancybox-svg');
++jQuery('a.fancybox-svg,area.fancybox-svg,.fancybox-svg>a').each(function(){jQuery(this).fancybox(jQuery.extend(true,{},fb_opts,{'type':'svg','width':680,'height':495,'titleShow':false,'titlePosition':'float','titleFromAlt':true,'svg':{'wmode':'opaque','allowfullscreen':true}}))});
++/* YouTube */
++jQuery('a[href*="youtu.be/" i],area[href*="youtu.be/" i],a[href*="youtube.com/" i],area[href*="youtube.com/" i]').filter(function(){return this.href.match(/\/(?:youtu\.be|watch\?|embed\/)/);}).not('.nofancybox,li.nofancybox>a').addClass('fancybox-youtube');
++jQuery('a.fancybox-youtube,area.fancybox-youtube,.fancybox-youtube>a').each(function(){jQuery(this).fancybox(jQuery.extend(true,{},fb_opts,{'type':'iframe','width':640,'height':360,'keepRatio':1,'titleShow':false,'titlePosition':'float','titleFromAlt':true,'onStart':function(a,i,o){var splitOn=a[i].href.indexOf("?");var urlParms=(splitOn>-1)?a[i].href.substring(splitOn):"";o.allowfullscreen=(urlParms.indexOf("fs=0")>-1)?false:true;o.href=a[i].href.replace(/https?:\/\/(?:www\.)?youtu(?:\.be\/([^\?]+)\??|be\.com\/watch\?(.*(?=v=))v=([^&]+))(.*)/gi,"https://www.youtube.com/embed/$1$3?$2$4&autoplay=1");}}))});
++};};
++var easy_fancybox_auto=function(){setTimeout(function(){jQuery('a#fancybox-auto,#fancybox-auto>a').first().trigger('click')},1000);};
++jQuery(easy_fancybox_handler);jQuery(document).on('post-load',easy_fancybox_handler);
++jQuery(easy_fancybox_auto);
++//# sourceURL=jquery-fancybox-js-after
++</script>
++<script id="jquery-easing-js" src="https://www.okunakayamakogen.jp/wp/wp-content/plugins/easy-fancybox/vendor/jquery.easing.min.js?ver=1.4.1"></script>
++
++</body>
++
++</html>
+\ No newline at end of file
+diff --git a/test/resorts/okunakayama-trails.js b/test/resorts/okunakayama-trails.js
+new file mode 100644
+index 00000000..0c2a65ae
+--- /dev/null
++++ b/test/resorts/okunakayama-trails.js
+@@ -0,0 +1,48 @@
++import trails from '../trails/index.js';
++
++trails('okunakayama', [
++  {
++    'name': 'ぶなの木',
++    'status': 'closed'
++  },
++  {
++    'name': 'つばめ',
++    'status': 'closed'
++  },
++  {
++    'name': 'こなゆき',
++    'status': 'closed'
++  },
++  {
++    'name': '山彦',
++    'status': 'closed'
++  },
++  {
++    'name': 'こぐまゲレンデ',
++    'status': 'closed'
++  },
++  {
++    'name': '西岳',
++    'status': 'closed'
++  },
++  {
++    'name': 'はやぶさ',
++    'status': 'closed'
++  },
++  {
++    'name': 'やまばと',
++    'status': 'closed'
++  },
++  {
++    'name': 'しらかば',
++    'status': 'closed'
++  },
++  {
++    'name': 'ビギナー',
++    'status': 'closed'
++  },
++  {
++    'name': 'かもしか',
++    'status': 'closed'
++  }
++]);
+diff --git a/test/resorts/okunakayama.js b/test/resorts/okunakayama.js
+new file mode 100644
+index 00000000..29d2c95a
+--- /dev/null
++++ b/test/resorts/okunakayama.js
+@@ -0,0 +1,9 @@
++import lifts from '../lifts/index.js';
++
++lifts('okunakayama', 'html', {
++  '第1リフト': 'closed',
++  '第3リフト': 'closed',
++  '第4リフト': 'closed',
++  '第5リフト': 'closed',
++  '第6リフト': 'closed'
++});
+-- 
+2.39.5
+

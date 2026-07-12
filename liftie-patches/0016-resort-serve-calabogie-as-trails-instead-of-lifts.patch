@@ -1,0 +1,264 @@
+From 0878a04b4f858a342324335dd93b0b61fda173f2 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:41:15 -0400
+Subject: [PATCH 16/31] resort: serve calabogie as trails instead of lifts
+
+The page has no per-lift data - the rows smuggled into the lifts slot
+were trails. Move them to the trails plugin with difficulty levels from
+the section headers, and disable the lifts plugin for this resort.
+---
+ lib/resorts/calabogie/index.js    |  21 ------
+ lib/resorts/calabogie/resort.json |   6 +-
+ lib/resorts/calabogie/trails.js   |  41 +++++++++++
+ test/resorts/calabogie-trails.js  | 114 ++++++++++++++++++++++++++++++
+ test/resorts/calabogie.js         |  26 -------
+ 5 files changed, 160 insertions(+), 48 deletions(-)
+ delete mode 100644 lib/resorts/calabogie/index.js
+ create mode 100644 lib/resorts/calabogie/trails.js
+ create mode 100644 test/resorts/calabogie-trails.js
+ delete mode 100644 test/resorts/calabogie.js
+
+diff --git a/lib/resorts/calabogie/index.js b/lib/resorts/calabogie/index.js
+deleted file mode 100644
+index 04282a33..00000000
+--- a/lib/resorts/calabogie/index.js
++++ /dev/null
+@@ -1,21 +0,0 @@
+-import select from '../../select.js';
+-import { allText } from '../../tools/domutil.js';
+-
+-// trail status page is a grid of elementor headings flowing in triplets:
+-// trail name, status (Open/Closed), snowmaking state - no per-lift data
+-export default function parse(dom) {
+-  const liftStatus = {};
+-  let name;
+-  for (const node of select(dom, 'h3.elementor-heading-title')) {
+-    const text = allText(node).replace(/[​\s]+/g, ' ').trim();
+-    if (/^(open|closed)$/i.test(text)) {
+-      if (name) {
+-        liftStatus[name] = text.toLowerCase();
+-        name = undefined;
+-      }
+-    } else if (text && !/(trail status|snowmaking)$/i.test(text)) {
+-      name = text;
+-    }
+-  }
+-  return liftStatus;
+-}
+diff --git a/lib/resorts/calabogie/resort.json b/lib/resorts/calabogie/resort.json
+index 7237dfb8..38c5b3f1 100644
+--- a/lib/resorts/calabogie/resort.json
++++ b/lib/resorts/calabogie/resort.json
+@@ -11,5 +11,9 @@
+     -76.79553,
+     45.25789
+   ],
+-  "twitter": "CalabogiePeaks"
++  "twitter": "CalabogiePeaks",
++  "trails": true,
++  "no": {
++    "lifts": true
++  }
+ }
+diff --git a/lib/resorts/calabogie/trails.js b/lib/resorts/calabogie/trails.js
+new file mode 100644
+index 00000000..23459910
+--- /dev/null
++++ b/lib/resorts/calabogie/trails.js
+@@ -0,0 +1,41 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++
++function sectionLevel(header = '') {
++  const m = header.match(/\((green|blue|black)\)/i);
++  if (m) {
++    return m[1];
++  }
++  if (/terrain park/i.test(header)) {
++    return 'terrainPark';
++  }
++}
++
++// trail status page is a grid of elementor headings flowing in triplets
++// (trail name, status, snowmaking state) under per-difficulty section
++// headers like "Easy (Green)" followed by "Trail Status"/"Snowmaking"
++export default function parse(dom) {
++  const rows = [];
++  let level;
++  let prev;
++  let name;
++  for (const node of select(dom, 'h3.elementor-heading-title')) {
++    const text = allText(node).replace(/[​\s]+/g, ' ').trim();
++    if (!text || /^[-—\s]+$/.test(text)) {
++      continue;
++    }
++    if (/^trail status$/i.test(text)) {
++      level = sectionLevel(prev);
++      name = undefined;
++    } else if (/^(open|closed)$/i.test(text)) {
++      if (name) {
++        rows.push({ name, status: text, level });
++        name = undefined;
++      }
++    } else if (!/^snowmaking$/i.test(text)) {
++      name = text;
++    }
++    prev = text;
++  }
++  return rows;
++}
+diff --git a/test/resorts/calabogie-trails.js b/test/resorts/calabogie-trails.js
+new file mode 100644
+index 00000000..2715b900
+--- /dev/null
++++ b/test/resorts/calabogie-trails.js
+@@ -0,0 +1,114 @@
++import trails from '../trails/index.js';
++
++trails('calabogie', [
++  {
++    name: 'Upper Ole K & P',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Lower Ole K & P',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Shantyman',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Fiddler',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: "Shannahan's",
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Beginner Bowl',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Progression',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Barrett Chute',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "O'Brien's",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Jack Bone',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Dillon's Dip",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Bear Paw',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: "Bailey's",
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Causeway',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Black Donald',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Juniper Junction',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Al's Alley",
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Whistlin Paddy',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Lower Finnegan',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Buckshot',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Face of Tiger',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Mini Park',
++    status: 'open',
++    level: 'terrainPark'
++  }
++]);
+diff --git a/test/resorts/calabogie.js b/test/resorts/calabogie.js
+deleted file mode 100644
+index 13850eab..00000000
+--- a/test/resorts/calabogie.js
++++ /dev/null
+@@ -1,26 +0,0 @@
+-import lifts from '../lifts/index.js';
+-
+-lifts('calabogie', 'html', {
+-  'Upper Ole K & P': 'open',
+-  'Lower Ole K & P': 'open',
+-  'Shantyman': 'open',
+-  'Fiddler': 'open',
+-  "Shannahan's": 'open',
+-  'Beginner Bowl': 'open',
+-  'Progression': 'open',
+-  'Barrett Chute': 'open',
+-  "O'Brien's": 'open',
+-  'Jack Bone': 'open',
+-  "Dillon's Dip": 'open',
+-  'Bear Paw': 'closed',
+-  "Bailey's": 'closed',
+-  'Causeway': 'open',
+-  'Black Donald': 'open',
+-  'Juniper Junction': 'open',
+-  "Al's Alley": 'open',
+-  'Whistlin Paddy': 'open',
+-  'Lower Finnegan': 'open',
+-  'Buckshot': 'open',
+-  'Face of Tiger': 'open',
+-  'Mini Park': 'open'
+-});
+-- 
+2.39.5
+

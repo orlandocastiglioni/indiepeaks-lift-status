@@ -1,0 +1,1935 @@
+From 0fd41f759a6a275bb613be368563e62d83a19afa Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:54:22 -0400
+Subject: [PATCH 29/31] resort: add canaan-valley
+ (https://www.canaanresort.com/trail-report)
+
+---
+ lib/resorts/canaan-valley/resort.json   |   19 +
+ lib/resorts/canaan-valley/trails.js     |   28 +
+ test/resorts/canaan-valley-trails.js    |  134 ++
+ test/resorts/example/canaan-valley.html | 1710 +++++++++++++++++++++++
+ 4 files changed, 1891 insertions(+)
+ create mode 100644 lib/resorts/canaan-valley/resort.json
+ create mode 100644 lib/resorts/canaan-valley/trails.js
+ create mode 100644 test/resorts/canaan-valley-trails.js
+ create mode 100644 test/resorts/example/canaan-valley.html
+
+diff --git a/lib/resorts/canaan-valley/resort.json b/lib/resorts/canaan-valley/resort.json
+new file mode 100644
+index 00000000..082dc1bc
+--- /dev/null
++++ b/lib/resorts/canaan-valley/resort.json
+@@ -0,0 +1,19 @@
++{
++  "name": "Canaan Valley",
++  "url": {
++    "host": "https://www.canaanresort.com",
++    "pathname": "/trail-report"
++  },
++  "trails": true,
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "West Virginia"
++  ],
++  "ll": [
++    -79.4379,
++    39.0337
++  ],
++  "twitter": "CanaanResortWV"
++}
+diff --git a/lib/resorts/canaan-valley/trails.js b/lib/resorts/canaan-valley/trails.js
+new file mode 100644
+index 00000000..8cbb601a
+--- /dev/null
++++ b/lib/resorts/canaan-valley/trails.js
+@@ -0,0 +1,28 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++
++const sections = {
++  beginner: 'green',
++  'more-difficult': 'blue',
++  'most-difficult': 'black'
++};
++
++// per-difficulty <div class="beginner|more-difficult|most-difficult"><table>
++// rows: <tr class="status-open|status-natural|status-closed">
++//         <td class="status">O<span class="is-vishidden">open</span></td><td class="trail">...
++// status-natural means open with natural snow only
++export default function parse(dom) {
++  const rows = [];
++  for (const [cls, level] of Object.entries(sections)) {
++    for (const row of select(dom, `div.${cls} table tr`)) {
++      const m = row.attribs?.class?.match(/status-([a-z-]+)/);
++      const name = findText(select(row.children, 'td.trail')[0])?.trim();
++      if (!m || !name) {
++        continue;
++      }
++      const status = m[1] === 'natural' || m[1] === 'open-natural-snow' ? 'open' : m[1];
++      rows.push({ name, status, level });
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/canaan-valley-trails.js b/test/resorts/canaan-valley-trails.js
+new file mode 100644
+index 00000000..5ad643b3
+--- /dev/null
++++ b/test/resorts/canaan-valley-trails.js
+@@ -0,0 +1,134 @@
++import trails from '../trails/index.js';
++
++trails('canaan-valley', [
++  {
++    'name': 'B Slope',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Sissy Schuss',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Bunny Buster',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Timber Trail',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Cutback',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Ramble Cutback',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Critters Crawl',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Canaan Spruce Run',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Canaan Slide',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Buck Run',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Chute',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Valley Vista',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Ramble',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Lower Ramble',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Easy Does It',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'C Lift Line',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Weiss Meadow 3',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Valley Vista',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Gravity',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Weiss Meadow 2',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Glades 1',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Glades 2',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Glades 3',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Prosperity',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Dark Side of the Moon',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Meadows 1',
++    'status': 'open',
++    'level': 'black'
++  }
++]);
+diff --git a/test/resorts/example/canaan-valley.html b/test/resorts/example/canaan-valley.html
+new file mode 100644
+index 00000000..94061ddb
+--- /dev/null
++++ b/test/resorts/example/canaan-valley.html
+@@ -0,0 +1,1710 @@
++
++<!doctype html>
++<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
++<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8 ie7" lang="en"> <![endif]-->
++<!--[if IE 8]>         <html class="no-js lt-ie9 ie8" lang="en"> <![endif]-->
++<!--[if IE 9]>         <html class="no-js ie9" lang="en"> <![endif]-->
++<!--[if gt IE 9]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
++
++<head>
++	<meta charset="utf-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1">
++        
++    
++    <!-- BEGIN SEOmatic rendered SEO Meta -->
++
++<title>Ski &amp; Golf Resort in West Virginia | Canaan Valley Resort State Park</title>
++
++<!-- Standard SEO -->
++
++<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
++<meta name="referrer" content="no-referrer-when-downgrade" />
++<meta name="robots" content="all" />
++<meta name="description" content="Canaan Valley Resort State Park provides the perfect year-round destination for skiing and golfing." />
++<meta name="generator" content="SEOmatic" />
++<link rel="canonical" href="https://www.canaanresort.com/trail-report" />
++<link rel="alternate" href="https://www.canaanresort.com/trail-report" hreflang="x-default" />
++<meta name="geo.region" content="WV" />
++<meta name="geo.position" content="39.0242855,-79.467248" />
++<meta name="ICBM" content="39.0242855,-79.467248" />
++<meta name="geo.placename" content="Canaan Valley Resort State Park" />
++
++<!-- Dublin Core basic info -->
++
++<meta name="dcterms.Identifier" content="https://www.canaanresort.com/trail-report" />
++<meta name="dcterms.Format" content="text/html" />
++<meta name="dcterms.Relation" content="Canaan Valley Resort State Park" />
++<meta name="dcterms.Language" content="en" />
++<meta name="dcterms.Publisher" content="Canaan Valley Resort State Park" />
++<meta name="dcterms.Type" content="text/html" />
++<meta name="dcterms.Coverage" content="https://www.canaanresort.com/" />
++<meta name="dcterms.Rights" content="Copyright &copy;2026 Canaan Valley Resort State Park." />
++<meta name="dcterms.Title" content="Ski &amp; Golf Resort in West Virginia" />
++<meta name="dcterms.Subject" content="" />
++<meta name="dcterms.Contributor" content="Canaan Valley Resort State Park" />
++<meta name="dcterms.Date" content="2026-02-16" />
++<meta name="dcterms.Description" content="Canaan Valley Resort State Park provides the perfect year-round destination for skiing and golfing." />
++
++<!-- Facebook OpenGraph -->
++
++<meta property="og:type" content="website" />
++<meta property="og:locale" content="en_us" />
++<meta property="og:url" content="https://www.canaanresort.com/trail-report" />
++<meta property="og:title" content="Ski &amp; Golf Resort in West Virginia | Canaan Valley Resort State Park" />
++<meta property="og:description" content="Canaan Valley Resort State Park provides the perfect year-round destination for skiing and golfing." />
++<meta property="og:image" content="https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/24-CVRImage_Resize1200x612.jpg?mtime=20241213120138" />
++<meta property="og:image:type" content="image/jpeg" />
++<meta property="og:image:width" content="1200" />
++<meta property="og:image:height" content="612" />
++<meta property="og:site_name" content="Canaan Valley Resort State Park" />
++
++
++<!-- Humans.txt authorship http://humanstxt.org -->
++
++<link type="text/plain" rel="author" href="/humans.txt" />
++
++<!-- Domain verification -->
++
++<meta name="google-site-verification" content="E8uGWUXFE0ONlG5EM1Wcfh8tFXvoJeh6ug46MrLcjFs" />
++<meta name="msvalidate.01" content="A20BFED6CFBF9E4DF36B0601442C2918" />
++
++<!-- Identity -->
++
++<script type="application/ld+json">
++{
++    "@context": "http://schema.org",
++    "@type": "LodgingBusiness",
++    "name": "Canaan Valley Resort State Park",
++    "url": "http://canaanresort.com",
++    "image": {
++        "@type": "ImageObject",
++        "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++        "height": "630",
++        "width": "1497" 
++    },
++    "telephone": "1-304-866-4121",
++    "address": {
++        "@type": "PostalAddress",
++        "streetAddress": "230 Main Lodge Road",
++        "addressLocality": "Davis",
++        "addressRegion": "WV",
++        "postalCode": "26260",
++        "addressCountry": "US" 
++    },
++    "logo": {
++        "@type": "ImageObject",
++        "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++        "height": "630",
++        "width": "1497" 
++    },
++    "location": {
++        "@type": "Place",
++        "name": "Canaan Valley Resort State Park",
++        "hasMap": "http://maps.google.com/maps?q=Canaan+Valley+Resort+State+Park%2C+230+Main+Lodge+Road%2C+Davis%2C+WV+26260%2C+US",
++        "telephone": "1-304-866-4121",
++        "image": {
++            "@type": "ImageObject",
++            "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++            "height": "630",
++            "width": "1497" 
++        },
++        "logo": {
++            "@type": "ImageObject",
++            "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++            "height": "630",
++            "width": "1497" 
++        },
++        "url": "http://canaanresort.com",
++        "geo": {
++            "@type": "GeoCoordinates",
++            "latitude": "39.0242855",
++            "longitude": "-79.467248" 
++        },
++        "address": {
++            "@type": "PostalAddress",
++            "streetAddress": "230 Main Lodge Road",
++            "addressLocality": "Davis",
++            "addressRegion": "WV",
++            "postalCode": "26260",
++            "addressCountry": "US" 
++        },
++        "openingHoursSpecification": [
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Sunday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Monday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Tuesday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Wednesday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Thursday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Friday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Saturday"],
++                "opens": "00:00:00" 
++            }
++        ] 
++    },
++    "priceRange": "$$$",
++    "openingHoursSpecification": [
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Sunday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Monday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Tuesday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Wednesday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Thursday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Friday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Saturday"],
++            "opens": "00:00:00" 
++        }
++    ],
++    "checkinTime": "16:00",
++    "checkoutTime": "10:00",
++    "availableLanguage": "English",
++    "starRating": {
++        "@type": "http://schema.org/Rating",
++        "ratingValue": "4" 
++    },
++    "petsAllowed": "There are limited pet friendly cabin and cottages. Fees charged. ",
++    "smokingAllowed": "false" 
++}
++</script>
++
++<!-- WebSite -->
++
++<script type="application/ld+json">
++{
++    "@context": "http://schema.org",
++    "@type": "WebSite",
++    "name": "Canaan Valley Resort State Park",
++    "description": "Canaan Valley Resort State Park provides the perfect year-round destination for skiing and golfing.",
++    "url": "https://www.canaanresort.com",
++    "image": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/24-CVRImage_Resize1200x612.jpg?mtime=20241213120138",
++    "copyrightHolder": {
++        "@type": "LodgingBusiness",
++        "name": "Canaan Valley Resort State Park",
++        "url": "http://canaanresort.com",
++        "image": {
++            "@type": "ImageObject",
++            "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++            "height": "630",
++            "width": "1497" 
++        },
++        "telephone": "1-304-866-4121",
++        "address": {
++            "@type": "PostalAddress",
++            "streetAddress": "230 Main Lodge Road",
++            "addressLocality": "Davis",
++            "addressRegion": "WV",
++            "postalCode": "26260",
++            "addressCountry": "US" 
++        },
++        "logo": {
++            "@type": "ImageObject",
++            "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++            "height": "630",
++            "width": "1497" 
++        },
++        "location": {
++            "@type": "Place",
++            "name": "Canaan Valley Resort State Park",
++            "hasMap": "http://maps.google.com/maps?q=Canaan+Valley+Resort+State+Park%2C+230+Main+Lodge+Road%2C+Davis%2C+WV+26260%2C+US",
++            "telephone": "1-304-866-4121",
++            "image": {
++                "@type": "ImageObject",
++                "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++                "height": "630",
++                "width": "1497" 
++            },
++            "logo": {
++                "@type": "ImageObject",
++                "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++                "height": "630",
++                "width": "1497" 
++            },
++            "url": "http://canaanresort.com",
++            "geo": {
++                "@type": "GeoCoordinates",
++                "latitude": "39.0242855",
++                "longitude": "-79.467248" 
++            },
++            "address": {
++                "@type": "PostalAddress",
++                "streetAddress": "230 Main Lodge Road",
++                "addressLocality": "Davis",
++                "addressRegion": "WV",
++                "postalCode": "26260",
++                "addressCountry": "US" 
++            },
++            "openingHoursSpecification": [
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Sunday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Monday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Tuesday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Wednesday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Thursday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Friday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Saturday"],
++                    "opens": "00:00:00" 
++                }
++            ] 
++        },
++        "priceRange": "$$$",
++        "openingHoursSpecification": [
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Sunday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Monday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Tuesday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Wednesday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Thursday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Friday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Saturday"],
++                "opens": "00:00:00" 
++            }
++        ],
++        "checkinTime": "16:00",
++        "checkoutTime": "10:00",
++        "availableLanguage": "English",
++        "starRating": {
++            "@type": "http://schema.org/Rating",
++            "ratingValue": "4" 
++        },
++        "petsAllowed": "There are limited pet friendly cabin and cottages. Fees charged. ",
++        "smokingAllowed": "false" 
++    },
++    "author": {
++        "@type": "LodgingBusiness",
++        "name": "Canaan Valley Resort State Park",
++        "url": "http://canaanresort.com",
++        "image": {
++            "@type": "ImageObject",
++            "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++            "height": "630",
++            "width": "1497" 
++        },
++        "telephone": "1-304-866-4121",
++        "address": {
++            "@type": "PostalAddress",
++            "streetAddress": "230 Main Lodge Road",
++            "addressLocality": "Davis",
++            "addressRegion": "WV",
++            "postalCode": "26260",
++            "addressCountry": "US" 
++        },
++        "logo": {
++            "@type": "ImageObject",
++            "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++            "height": "630",
++            "width": "1497" 
++        },
++        "location": {
++            "@type": "Place",
++            "name": "Canaan Valley Resort State Park",
++            "hasMap": "http://maps.google.com/maps?q=Canaan+Valley+Resort+State+Park%2C+230+Main+Lodge+Road%2C+Davis%2C+WV+26260%2C+US",
++            "telephone": "1-304-866-4121",
++            "image": {
++                "@type": "ImageObject",
++                "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++                "height": "630",
++                "width": "1497" 
++            },
++            "logo": {
++                "@type": "ImageObject",
++                "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++                "height": "630",
++                "width": "1497" 
++            },
++            "url": "http://canaanresort.com",
++            "geo": {
++                "@type": "GeoCoordinates",
++                "latitude": "39.0242855",
++                "longitude": "-79.467248" 
++            },
++            "address": {
++                "@type": "PostalAddress",
++                "streetAddress": "230 Main Lodge Road",
++                "addressLocality": "Davis",
++                "addressRegion": "WV",
++                "postalCode": "26260",
++                "addressCountry": "US" 
++            },
++            "openingHoursSpecification": [
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Sunday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Monday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Tuesday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Wednesday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Thursday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Friday"],
++                    "opens": "00:00:00" 
++                },
++                {
++                    "@type": "OpeningHoursSpecification",
++                    "closes": "23:59:00",
++                    "dayOfWeek": ["Saturday"],
++                    "opens": "00:00:00" 
++                }
++            ] 
++        },
++        "priceRange": "$$$",
++        "openingHoursSpecification": [
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Sunday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Monday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Tuesday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Wednesday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Thursday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Friday"],
++                "opens": "00:00:00" 
++            },
++            {
++                "@type": "OpeningHoursSpecification",
++                "closes": "23:59:00",
++                "dayOfWeek": ["Saturday"],
++                "opens": "00:00:00" 
++            }
++        ],
++        "checkinTime": "16:00",
++        "checkoutTime": "10:00",
++        "availableLanguage": "English",
++        "starRating": {
++            "@type": "http://schema.org/Rating",
++            "ratingValue": "4" 
++        },
++        "petsAllowed": "There are limited pet friendly cabin and cottages. Fees charged. ",
++        "smokingAllowed": "false" 
++    },
++    "creator": {
++        "@type": "Organization" 
++    } 
++}
++</script>
++
++<!-- Place -->
++
++<script type="application/ld+json">
++{
++    "@context": "http://schema.org",
++    "@type": "Place",
++    "name": "Canaan Valley Resort State Park",
++    "hasMap": "http://maps.google.com/maps?q=Canaan+Valley+Resort+State+Park%2C+230+Main+Lodge+Road%2C+Davis%2C+WV+26260%2C+US",
++    "telephone": "1-304-866-4121",
++    "image": {
++        "@type": "ImageObject",
++        "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++        "height": "630",
++        "width": "1497" 
++    },
++    "logo": {
++        "@type": "ImageObject",
++        "url": "https://s3.amazonaws.com/com-canaanresort-cdn/featured-images/Canaan_Valley-Resort-1497x630.jpg?mtime=20170323145616",
++        "height": "630",
++        "width": "1497" 
++    },
++    "url": "http://canaanresort.com",
++    "geo": {
++        "@type": "GeoCoordinates",
++        "latitude": "39.0242855",
++        "longitude": "-79.467248" 
++    },
++    "address": {
++        "@type": "PostalAddress",
++        "streetAddress": "230 Main Lodge Road",
++        "addressLocality": "Davis",
++        "addressRegion": "WV",
++        "postalCode": "26260",
++        "addressCountry": "US" 
++    },
++    "openingHoursSpecification": [
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Sunday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Monday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Tuesday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Wednesday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Thursday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Friday"],
++            "opens": "00:00:00" 
++        },
++        {
++            "@type": "OpeningHoursSpecification",
++            "closes": "23:59:00",
++            "dayOfWeek": ["Saturday"],
++            "opens": "00:00:00" 
++        }
++    ] 
++}
++</script>
++
++<!-- Main Entity of Page -->
++
++
++
++<!-- Breadcrumbs -->
++
++<script type="application/ld+json">
++{
++    "@context": "http://schema.org",
++    "@type": "BreadcrumbList",
++    "itemListElement": [
++        {
++            "@type": "ListItem",
++            "position": "1",
++            "item": {
++                "@id": "https://www.canaanresort.com",
++                "name": "Homepage" 
++            } 
++        }
++    ] 
++}
++</script>
++
++<!-- Google Tag Manager -->
++
++<script>
++  dataLayer = [];
++  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++  })(window,document,'script','dataLayer','GTM-MD86XJ');
++</script>
++<!-- Google Analytics -->
++
++
++<!-- END SEOmatic rendered SEO Meta -->
++  
++	<!-- Load External CSS -->
++  <link rel="stylesheet" href="/assets/libs/normalize/normalize.css">
++	<link rel="stylesheet" href="/assets/libs/owl.carousel/dist/assets/owl.carousel.css">
++	<link rel="stylesheet" href="/assets/libs/magnific-popup/dist/magnific-popup.css">
++	<link rel="stylesheet" href="/assets/libs/pickadate/lib/themes/default.css">
++	<link rel="stylesheet" href="/assets/libs/pickadate/lib/themes/default.date.css">
++	<link rel="stylesheet" href="/assets/css/style.css?v=1750683307" media="all">
++			<link rel="stylesheet" href="/assets/css/print.css?v=1740157681" media="print">
++	
++	<!-- Load Header Javascript -->
++	<!--<script src="/assets/libs/modernizr/modernizr.js"></script> -->
++
++  <!-- Fonts -->
++  <script src="https://use.typekit.net/cpq1rsf.js"></script>
++	<script>try{Typekit.load({ async: true });}catch(e){}</script>
++	<script>
++		var bookingEngineUrl = 'https://canaanvalley.ibe.stayntouch.com/search-results/';
++	</script>
++
++	<script src="//assets.adobedtm.com/c876840ac68fc41c08a580a3fb1869c51ca83380/satelliteLib-7ebb8064c5636c039914cc38b097f0127e12a843.js"></script>
++<meta name="facebook-domain-verification" content="h5m0dczrg2pxokd1wzq3q81nk88zzn" /> 
++</head>
++
++<body class="interior no-newsletter">
++	<div class="body-container1">
++	  <div class="body-container2">
++			<div class="body-overlay"></div>
++        <nav class="skip-link" aria-label="Bypass Block"><a href="#content">Skip to Content</a></nav>
++
++
++			  			
++
++			<div id="container">
++				  
++                        
++  <header class="interior-page-header page-header" style="background-image: url();">
++    <div class="header-container">
++            <nav class="nav-aux" aria-label="Auxilary">
++      
++  <ul class="no-bullets">
++        <li><a href="/search" target=""><span class="fa fa-search" aria-hidden="true"></span> Search</a></li>
++        <li><a href="https://www.canaanresort.com/events" target="">Events</a></li>
++        <li><a href="https://www.canaanresort.com/directions" target="">Directions</a></li>
++        <li><a href="https://www.canaanresort.com/contact-us" target="">Contact Us</a></li>
++        <li><a href="tel:8006224121" target=""><span class="fa fa-phone" aria-hidden="true"></span> 800.622.4121</a></li>
++      </ul>
++      </nav>
++      <div class="logo-nav-primary">
++    	<a href="/" class="header-logo"><img src="/assets/images/logo.svg" alt="Canaan Valley Resort &amp; Conference Center"></a>
++      <a href="/" class="header-logo-mobile"><img src="/assets/images/logo.svg" alt="Canaan Valley Resort &amp; Conference Center"></a>
++</div>
++      <nav class="nav-mobile-primary" aria-label="Mobile">
++  <ul class="no-bullets">
++    <li><a href="tel:800-622-4121"><span class="fa fa-phone" aria-hidden="true"></span> Call</a></li>
++    <li><a href="https://canaanvalley.ibe.stayntouch.com/search-results/" target="_blank"><span class="fa fa-calendar-check-o" aria-hidden="true"></span> Book</a></li>
++    <li class="off-canvas-trigger"><button><span class="fa fa-bars" aria-hidden="true"></span> Menu</button></li>
++  </ul>
++</nav>
++          </div>
++
++    <nav class="nav-primary" aria-label="Primary">
++            <ul class="no-bullets">
++                  
++                        
++    <li class="nav-item--level-1    nav-item--has-children">
++      <a href="/resort">
++        Resort
++              </a>
++              <button class="nav-submenu plus" aria-expanded="false"><span class="is-vishidden">Show Resort child pages</span></button>
++        <ul>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/dining">
++                Dining
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/gift-shops">
++                Gift Shops
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/events">
++                Events
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/beech-club-pool-fitness">
++                Beech Club Pool &amp; Fitness
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/arcade">
++                Arcade
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/area-attractions">
++                Area Attractions
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/employment">
++                Employment
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/gift-cards">
++                Gift Cards
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/resort/webcams">
++                Webcam Views
++                                    </a>
++                          </li>
++                  </ul>
++          </li>
++                  
++                        
++    <li class="nav-item--level-1    nav-item--has-children">
++      <a href="/accommodations">
++        Accommodations
++              </a>
++              <button class="nav-submenu plus" aria-expanded="false"><span class="is-vishidden">Show Accommodations child pages</span></button>
++        <ul>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/accommodations/lodge-rooms-suites">
++                Lodge Rooms &amp; Suites
++                                    </a>
++                              <ul>
++                                                      
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/standard-king">
++                Standard King
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/king-jr-suite">
++                King Jr Suite
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/standard-queen">
++                Standard Queen
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/queen-jr-suite">
++                Queen Jr Suite
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/king-balcony">
++                King Balcony
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/queen-balcony">
++                Queen Balcony
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/king-suite">
++                King Suite
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/queen-suite">
++                Queen Suite
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/accommodations/lodge-rooms-suites/governor-suite">
++                Governor Suite
++                                    </a>
++                          </li>
++                          </ul>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/accommodations/cabins-cottages">
++                Cabins &amp; Cottages
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/accommodations/camping">
++                Camping
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/accommodations/specials">
++                Specials
++                                    </a>
++                          </li>
++                  </ul>
++          </li>
++                  
++                        
++    <li class="nav-item--level-1    nav-item--has-children">
++      <a href="/ski-winter-activities">
++        Ski &amp; Winter Activities
++              </a>
++              <button class="nav-submenu plus" aria-expanded="false"><span class="is-vishidden">Show Ski &amp; Winter Activities child pages</span></button>
++        <ul>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/ski-winter-activities/skiing-snowboarding">
++                Skiing &amp; Snowboarding
++                                    </a>
++                              <ul>
++                                                      
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/ski-winter-activities/skiing-snowboarding/lift-tickets">
++                Ski Pass &amp; Rental Rates
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/ski-winter-activities/skiing-snowboarding/ski-deals-promotions">
++                Ski Deals &amp; Promotions
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/ski-winter-activities/skiing-snowboarding/season-passes">
++                Ski Season Passes
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/ski-winter-activities/skiing-snowboarding/adaptive-ski-program">
++                Adaptive Ski Program
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/ski-winter-activities/skiing-snowboarding/lessons">
++                Lessons
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/ski-winter-activities/skiing-snowboarding/mountain-map-rules-stats">
++                Mountain Map, Rules, &amp; Stats
++                                    </a>
++                          </li>
++                          </ul>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/ski-winter-activities/snow-tubing">
++                Snow Tubing
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/ski-winter-activities/ice-skating">
++                Ice Skating
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/ski-winter-activities/safety-measures-for-skiers-riders">
++                Skiers &amp; Riders Education
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/ski-winter-activities/rfid-lift">
++                RFID Ski Pass
++                                    </a>
++                          </li>
++                  </ul>
++          </li>
++                  
++                        
++    <li class="nav-item--level-1    nav-item--has-children">
++      <a href="/golf-summer-activities">
++        Golf &amp; Summer Activities
++              </a>
++              <button class="nav-submenu plus" aria-expanded="false"><span class="is-vishidden">Show Golf &amp; Summer Activities child pages</span></button>
++        <ul>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/golf-summer-activities/golf">
++                Golf
++                                    </a>
++                              <ul>
++                                                      
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/golf-summer-activities/golf/golf-rates">
++                Golf Rates
++                                    </a>
++                          </li>
++                          </ul>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/golf-summer-activities/sporting-clays">
++                Sporting Clays
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/golf-summer-activities/hiking-bikings">
++                Hiking &amp; Biking
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/golf-summer-activities/scenic-chairlift-ride">
++                Scenic Chairlift Ride
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/golf-summer-activities/scavenger-hunt">
++                Scavenger Hunt
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/golf-summer-activities/outdoor-pool">
++                Outdoor Pool
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/golf-summer-activities/recreation-center-activities">
++                Recreation Center Activities
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/golf-summer-activities/outside-guide">
++                Canaan Pocket Guide
++                                    </a>
++                          </li>
++                  </ul>
++          </li>
++                  
++                        
++    <li class="nav-item--level-1    nav-item--has-children">
++      <a href="/groups-meetings">
++        Groups &amp; Meetings
++              </a>
++              <button class="nav-submenu plus" aria-expanded="false"><span class="is-vishidden">Show Groups &amp; Meetings child pages</span></button>
++        <ul>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/groups-meetings/conferences-meetings-team-building">
++                Conferences &amp; Meetings
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/groups-meetings/family-reunions">
++                Family Reunions
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/groups-meetings/recreation-social-groups">
++                Recreation &amp; Social Groups
++                                    </a>
++                              <ul>
++                                                      
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/groups-meetings/recreation-social-groups/motorcoach-tours">
++                Bus Tours
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/groups-meetings/recreation-social-groups/golf-groups">
++                Golf Groups
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/groups-meetings/recreation-social-groups/ski-groups">
++                Ski Groups
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/groups-meetings/recreation-social-groups/religious-retreats">
++                Religious Retreats
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-3  ">
++              <a href="/groups-meetings/recreation-social-groups/motorcycle-auto-club">
++                Motorcycle &amp; Auto Club
++                                    </a>
++                          </li>
++                          </ul>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/groups-meetings/menus-meeting-space">
++                Menus &amp; Meeting Space
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/groups-meetings/rfp">
++                Request a Proposal
++                                    </a>
++                          </li>
++                  </ul>
++          </li>
++                  
++                        
++    <li class="nav-item--level-1    nav-item--has-children">
++      <a href="/weddings">
++        Weddings
++              </a>
++              <button class="nav-submenu plus" aria-expanded="false"><span class="is-vishidden">Show Weddings child pages</span></button>
++        <ul>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/weddings/rehearsal-dinner">
++                Rehearsal Dinner
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/weddings/ceremony-reception-locations">
++                Ceremony &amp; Reception Venues
++                                    </a>
++                          </li>
++                                              
++                                                
++            <li class="nav-item--level-2  ">
++              <a href="/weddings/catering">
++                Catering
++                                    </a>
++                          </li>
++                  </ul>
++          </li>
++  </ul>
++          </nav>
++    <div class="booking-bar date-pickers">
++  <h2>Book Online</h2>
++
++  <form method="GET" id="booking-form" action="https://canaanvalley.ibe.stayntouch.com/search-results/" class="booking" novalidate="novalidate" >
++    <div class="booking-bar-check-in-out check-in">
++      <label class="" for="checkin"><a href="#checkin">Check In:</a></label>
++      <input type="text" name="checkin" id="checkin" class="booking-input-check-in" data-value="2026-02-16" tabindex="-1">
++      <span class="date date-picker2">02-16-26</span>
++    </div>
++
++        <div class="booking-bar-check-in-out check-out">
++      <label class="" for="checkout"><a href="#checkout">Check Out:</a></label>
++      <input type="text" name="checkout" id="checkout" class="booking-input-check-out" data-value="2026-02-17" tabindex="-1">
++      <span class="date-picker2 date">02-17-26</span>
++    </div>
++
++    <div class="guest-box">
++      <label class="guest-dd" for="adults">
++        Guests:
++      </label>
++      <select name="adults" id="adults" class="freeform-input">
++        <option>1</option>
++        <option>2</option>
++        <option>3</option>
++        <option>4</option>
++        <option>5</option>
++        <option>6</option>
++        <option>7</option>
++        <option>8</option>
++      </select>
++    </div>
++
++
++    <div class="offer-code ">
++      <label class="offer" for="offers">Group Code:</label>
++      <input type="text" name="Group" id="offers" value="">
++    </div>
++
++
++			<button class="block-btn btn btn-style-primary" type="submit">Book Now</button>
++      			<span class="booking-bar-slash">//</span>
++      <a href="https://ski.canaanresort.com/ecommerce/" target="_blank" class="block-btn btn btn-style-primary booking-bar-ski-btn">Buy Ski Pass &amp; Rentals</a>
++					</form>
++</div>
++    <div class="page-title">
++      <h1>Trail Report</h1>
++    </div>
++  </header>
++
++        <style>
++          .nav-off-canvas button.plus:not(.nav-submenu) {
++            display: none;
++          }
++        </style>
++			  <section class="nav-off-canvas" aria-label="Mobile">
++			    <div>
++			    	<nav class="nav-off-canvas-items" aria-label="Mobile Main">
++			    	</nav>
++			    </div>
++
++			  </section>
++
++				<main id="content" role="main">
++					  <section class="interior-page" aria-label="Main content">
++    
++    <article class="interior-page-content trail-report" aria-label="Trail Report">
++      <header>
++        <h2><span class="date">February 16, 2026</span> <span class="time">8:30am</span></h2>
++      </header>
++
++
++
++      <div class="column left">
++        <h3>Conditions</h3>
++        <table>
++          <tr class="header">
++            <th scope="colgroup" colspan="2">Weather</th>
++          </tr>
++          <tr>
++            <th>Temperature:</th>
++            <td>32</td>
++          </tr>
++          <tr>
++            <th>Skies</th>
++            <td>Cloudy</td>
++          </tr>
++          <tr>
++            <th>Snowfall (24hrs):</th>
++            <td>
++                                                                    </td>
++          </tr>
++          <tr>
++            <th>Storm Total:</th>
++            <td>
++                                          24 inches                          </td>
++          </tr>
++          <tr>
++            <th>Season Total:</th>
++            <td>
++              
++            </td>
++          </tr>
++          <tr class="header">
++            <th scope="colgroup" colspan="2">Slope</th>
++          </tr>
++          <tr>
++            <th>Base Depth:</th>
++            <td>48</td>
++          </tr>
++          <tr>
++            <th>Primary Surface:</th>
++            <td>Groomed</td>
++          </tr>
++          <tr>
++            <th>Secondary Surface:</th>
++            <td></td>
++          </tr>
++          <tr>
++            <th>Lifts Open:</th>
++            <td>B, A</td>
++          </tr>
++          <tr>
++            <th>Surface Lifts Open:</th>
++            <td>2</td>
++          </tr>
++          <tr>
++            <th>Trails Open:</th>
++            <td>25 of 26</td>
++          </tr>
++          <tr>
++            <th>Snowmaking in Progress:</th>
++            <td>No</td>
++          </tr>
++        </table>
++
++                  <h3>Good Stuff</h3>
++          <div class="trail-report-text-callout">
++            <p>Happy Monday Folks! Fog has settled in on the mountain this morning, which may impact conditions as the day progresses. We’re currently operating with 25 trails open, though terrain availability could change throughout the day. We encourage you to check back later this morning for updated reports as conditions evolve. Safe travels, and we’ll see you on the mountain.</p>
++          </div>
++        
++
++        <h3>Hours of Operation</h3>
++        <table>
++          <tr class="header">
++            <th scope="colgroup" colspan="2">Ski Area</th>
++          </tr>
++          <tr>
++            <th>Daily Lift Hours:</th>
++            <td>9:00 AM - 4:30PM</td>
++          </tr>
++          <tr class="header">
++            <th scope="colgroup" colspan="2">Tube Park</th>
++          </tr>
++          <tr>
++            <th>Monday-Thursday Schedule:</th>
++            <td>Session A: 10:00 AM – 12:00 PM  Session B: 12:30 PM – 2:30 PM  Session C: 3:00 PM – 5:00 PM</td>
++          </tr>
++          <tr>
++            <th>FridaySchedule:</th>
++            <td>Session A: 10:00 AM – 12:00 PM  Session B: 12:30 PM – 2:30 PM  Session C: 3:00 PM – 5:00 PM  Session D*: 5:30 PM – 7:30 PM  Session E*: 8:00 PM – 10:00 PM</td>
++          </tr>
++          <tr>
++            <th>Saturday Schedule:</th>
++            <td>Session A: 10:00 AM – 12:00 PM  Session B: 12:30 PM – 2:30 PM  Session C: 3:00 PM – 5:00 PM  Session D*: 5:30 PM – 7:30 PM  Session E*: 8:00 PM – 10:00 PM</td>
++          </tr>
++          <tr>
++            <th>Sunday Schedule:</th>
++            <td>Session A: 10:00 AM – 12:00 PM  Session B: 12:30 PM – 2:30 PM  Session C: 3:00 PM – 5:00 PM </td>
++          </tr>
++                    <tr>
++            <th>Holiday Schedule:</th>
++            <td>Session A: 10:00 AM – 12:00 PM  Session B: 12:30 PM – 2:30 PM  Session C: 3:00 PM – 5:00 PM  Session D*: 5:30 PM – 7:30 PM  Session E*: 8:00 PM – 10:00 PM</td>
++          </tr>
++                    <tr>
++            <th>Tube Lanes Open:</th>
++            <td></td>
++          </tr>
++          <tr class="header">
++            <th scope="colgroup" colspan="2">XC Skiing &amp; Snowshoeing</th>
++          </tr>
++          <tr>
++            <th>Hours of Operation:</th>
++            <td></td>
++          </tr>
++          <tr>
++            <th>Snow Conditions:</th>
++            <td></td>
++          </tr>
++          <tr>
++            <th>Available Trails:</th>
++            <td></td>
++          </tr>
++          <tr class="header">
++            <th scope="colgroup" colspan="2">Ice Skating Rink</th>
++          </tr>
++          <tr>
++            <th>Hours of Operation:</th>
++            <td>9AM - 3PM</td>
++          </tr>
++        </table>
++
++        
++              </div>
++
++
++
++      <div class="column right">
++        <h3>Trail Status</h3>
++
++        <table class="legend">
++          <tr class="header">
++            <th scope="colgroup" colspan="2">Legend</th>
++          </tr>
++          <tr class="status-snowmaking">
++            <td class="symbol">S</td>
++            <td class="description">Snowmaking</td>
++          </tr>
++          <tr class="status-open-natural-snow">
++            <td class="symbol">O/N</td>
++            <td class="description">Open with Natural Snow</td>
++          </tr>
++          <tr class="status-open-snowmaking">
++            <td class="symbol">O/S</td>
++            <td class="description">Open with Snowmaking</td>
++          </tr>
++          <tr class="status-open">
++            <td class="symbol">O</td>
++            <td class="description">Open</td>
++          </tr>
++          <tr class="status-closed">
++            <td class="symbol">X</td>
++            <td class="description">Closed</td>
++          </tr>
++          <tr class="status-uphill">
++            <td class="symbol">U</td>
++            <td class="description">Uphill Skiing</td>
++          </tr>
++          <tr class="status-tubing">
++            <td class="symbol">T</td>
++            <td class="description">Snow Tubing</td>
++          </tr>
++        </table>
++
++                  <div class="beginner">
++            <table>
++              <tr class="header">
++                <th scope="colgroup" colspan="2"><span class="title">Beginner</span></th>
++              </tr>
++                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">B Slope </td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Sissy Schuss</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Bunny Buster</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Timber Trail</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Cutback</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Ramble Cutback</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Critters Crawl</td>
++                </tr>
++                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </table>
++          </div>
++                  <div class="more-difficult">
++            <table>
++              <tr class="header">
++                <th scope="colgroup" colspan="2"><span class="title">More Difficult</span></th>
++              </tr>
++                                                                                                                                                                                                                                                                                                                                                                <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Canaan Spruce Run</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Canaan Slide</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Buck Run</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Chute</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Valley Vista</td>
++                </tr>
++                                                                                                                                                              <tr class="status-natural">
++                  <td class="status">O/N<span class="is-vishidden">natural</span></td>
++                  <td class="trail">Upper Ramble</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Lower Ramble</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Easy Does It</td>
++                </tr>
++                                                                                                                                                              <tr class="status-natural">
++                  <td class="status">O/N<span class="is-vishidden">natural</span></td>
++                  <td class="trail">C Lift Line</td>
++                </tr>
++                                                                                                                                                              <tr class="status-natural">
++                  <td class="status">O/N<span class="is-vishidden">natural</span></td>
++                  <td class="trail">Weiss Meadow 3</td>
++                </tr>
++                                                                                                                                                                                                                                                                                                                        </table>
++          </div>
++                  <div class="most-difficult">
++            <table>
++              <tr class="header">
++                <th scope="colgroup" colspan="2"><span class="title">Most Difficult</span></th>
++              </tr>
++                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Upper Valley Vista</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Gravity</td>
++                </tr>
++                                                                                                                                                              <tr class="status-natural">
++                  <td class="status">O/N<span class="is-vishidden">natural</span></td>
++                  <td class="trail">Weiss Meadow 2</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Glades 1</td>
++                </tr>
++                                                                                                                                                              <tr class="status-natural">
++                  <td class="status">O/N<span class="is-vishidden">natural</span></td>
++                  <td class="trail">Glades 2</td>
++                </tr>
++                                                                                                                                                              <tr class="status-natural">
++                  <td class="status">O/N<span class="is-vishidden">natural</span></td>
++                  <td class="trail">Glades 3</td>
++                </tr>
++                                                                                                                                                              <tr class="status-natural">
++                  <td class="status">O/N<span class="is-vishidden">natural</span></td>
++                  <td class="trail">Prosperity</td>
++                </tr>
++                                                                                                                                                              <tr class="status-closed">
++                  <td class="status">X<span class="is-vishidden">closed</span></td>
++                  <td class="trail">Dark Side of the Moon</td>
++                </tr>
++                                                                                                                                                              <tr class="status-open">
++                  <td class="status">O<span class="is-vishidden">open</span></td>
++                  <td class="trail">Meadows 1</td>
++                </tr>
++                                          </table>
++          </div>
++        
++      </div>
++
++    </article>
++  </section>
++				</main>
++
++		    					<section class="footer-email-updates" aria-label="Email Updates">
++  <div class="email-updates">
++    <h2>Email Updates</h2>
++
++    <p>Sign up to receive emails about upcoming promotions and events happening at Canaan Valley Resort State Park.</p>
++
++<script type="text/javascript" src="//contact-api.inguest.com/bundles/revinatecontactapi/js/revinate-form.js?v=1"></script>
++<form id="revinate_contact_api_form" token="199199d9-13dd-4352-b3c6-eba9b50681ed" class="newsletter-signup" 
++      onsubmit="revFormOnSubmit(); event.preventDefault();" action="/newsletter-thank-you">
++  <div class="freeform-row">
++    <div class="freeform-column">
++      <label class="freeform-label freeform-required " for="firstName">First Name</label>
++      <input type="text" name="firstName" id="firstName" class="freeform-input" placeholder="First Name"/>
++    </div>
++    <div class="freeform-column">
++      <label class="freeform-label freeform-required " for="lastName">Last Name</label>
++      <input type="text" name="lastName" id="lastName" class="freeform-input" placeholder="Last Name"/>
++    </div>
++  </div>
++  <div class="freeform-row">
++    <div class="freeform-column">
++      <label class="freeform-label freeform-required " for="email">Email</label>
++      <input type="email" name="email" id="email" class="freeform-input" required placeholder="Email"/>
++    </div>
++  </div>
++  <div class="freeform-row ">
++    <div class="freeform-column ">
++      <label class="freeform-label " for="form-input-interestsDropdown">Interests Dropdown</label>
++        <select name="interestsDropdown" id="form-input-interestsDropdown" class="freeform-input">
++          <option value="" selected="">What Are You Interested In?</option>
++          <option value="summer-golf">Summer / Golf</option>
++          <option value="winter-ski">Winter / Ski</option>
++          <option value="specials">Specials</option>
++        </select>
++    </div>
++  </div>
++  <div class="freeform-row">
++    <div class="freeform-column">
++      <label class="custom-checkbox freeform-label freeform-input-only-label" for="confirmation">
++        <input type="checkbox" id="confirmation" class="freeform-input" name="confirmation" required/> <span>By selecting this I am agreeing to receive marketing notifications.</span>
++      </label>
++    </div>
++  </div>
++  <div class="freeform-row">
++    <div class="freeform-column  freeform-column-content-align-left">
++      <button type="submit" class="btn primary-btn" disabled>Sign up</button>
++    </div>
++  </div>
++</form>
++
++    <div class="mountains"><img src="/assets/images/flower-icon.svg" alt="Flower" /></div>
++
++  </div>
++</section>
++		    
++				<section class="footer-contact" aria-label="Contact">
++  <article class="footer-contact-row" aria-label="Contact Info">
++    <div class="footer-contact-logo footer-contact-column">
++      <img src="/assets/images/logo.svg" alt="Canaan Valley Resort &amp; Conference Center"/>
++      <div class="partner-logo">
++        <script src="https://wvtourism.com/logo-light-manual.js"></script>
++      </div>
++    </div>
++    <div class="footer-address footer-contact-column">
++      <div class="footer-contact-info"><span class="fa fa-map-marker" aria-hidden="true"></span></div>
++      230 Main Lodge Rd.<br>
++            Davis, West Virginia 26260
++    </div>
++
++    <div class="footer-address footer-contact-column footer-phone">
++      <div class="footer-contact-info"><span class="fa fa-phone" aria-hidden="true"></span></div>
++      Toll-Free: <a href="tel:800-622-4121">800-622-4121</a><br/>
++      Direct: <a href="tel:304-866-4121">304-866-4121</a>
++    </div>
++
++    <div class="social-icons footer-contact-column">
++      <ul class="social-icons no-bullets">
++    <li><a href="https://www.facebook.com/canaanvalleyresort/" target="_blank" aria-label="facebook">
++  <svg aria-label="facebook" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook" class="svg-inline--fa fa-facebook fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path></svg>  </a></li>
++    <li><a href="https://www.instagram.com/canaanresort/" target="_blank" aria-label="instagram">
++  <svg aria-label="instagram" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" class="svg-inline--fa fa-instagram fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path></svg>  </a></li>
++  </ul>
++    </div>
++  </article>
++  <div class="footer-contact-row footer-contact-buttons">
++        <a class="block-btn btn btn-style-primary" href="https://canaanvalley.ibe.stayntouch.com/search-results/" target="_blank">Book Now</a>
++      </div>
++</section>
++								<section class="footer-bottom" aria-label="Footer Info">
++  <ul class="social-icons no-bullets">
++    <li><a href="https://www.facebook.com/canaanvalleyresort/" target="_blank" aria-label="facebook">
++  <svg aria-label="facebook" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook" class="svg-inline--fa fa-facebook fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path></svg>  </a></li>
++    <li><a href="https://www.instagram.com/canaanresort/" target="_blank" aria-label="instagram">
++  <svg aria-label="instagram" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" class="svg-inline--fa fa-instagram fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path></svg>  </a></li>
++  </ul>
++  <nav class="nav-footer nav-aux" aria-label="Footer Auxilary">
++    
++  <ul class="no-bullets">
++        <li><a href="/search" target=""><span class="fa fa-search" aria-hidden="true"></span> Search</a></li>
++        <li><a href="https://www.canaanresort.com/events" target="">Events</a></li>
++        <li><a href="https://www.canaanresort.com/directions" target="">Directions</a></li>
++        <li><a href="https://www.canaanresort.com/contact-us" target="">Contact Us</a></li>
++        <li><a href="tel:8006224121" target=""><span class="fa fa-phone" aria-hidden="true"></span> 800.622.4121</a></li>
++      </ul>
++  </nav>
++
++  <div class="footer-bottom-content">
++    <ul class="no-bullets">
++      <li><span>&copy; 2026 Regency Hotel Management Company</span></li>
++            <li><a href="https://www.canaanresort.com/privacy-policy" target="">Privacy Policy</a></li>
++            <li><a href="https://www.canaanresort.com/accessibility" target="">Accessibility</a></li>
++            <li><a href="https://www.canaanresort.com/employment" target="">Employment</a></li>
++            <li><a href="https://clickrain.com" rel="nofollow"><span>Site by</span> <img src="/assets/images/clickrain.svg" alt="Click Rain" ></a></li>
++    </ul>
++  </div>
++</section>
++							</div>
++
++			<!-- Load Footer Javascript -->
++			<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
++			<script>window.jQuery || document.write('<script src="/assets/libs/jquery/jquery.min.js"><\/script>')</script>
++			<script src="/assets/js/script.js?v=1754078742"></script>
++
++			<!-- Reachlocal RCT -->
++<script type="text/javascript">
++  (function() {
++    var rct_load = document.createElement("script");
++    rct_load.type = "text/javascript";
++    rct_load.src = document.location.protocol+"//rtsys.rtrk.com/rct_lct/js/rlrct1.js";
++    (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(rct_load);
++  })();
++</script>
++<script type="text/javascript">_satellite.pageBottom();</script>
++
++	  </div>
++	</div>
++</body>
++</html>
+-- 
+2.39.5
+

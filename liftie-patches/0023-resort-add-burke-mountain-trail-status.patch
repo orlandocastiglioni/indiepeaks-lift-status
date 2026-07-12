@@ -1,0 +1,365 @@
+From 89a55cb6a13434312213585d3766766d7314f96d Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:49:02 -0400
+Subject: [PATCH 23/31] resort: add burke-mountain trail status
+
+---
+ lib/resorts/burke-mountain/resort.json |   3 +-
+ lib/resorts/burke-mountain/trails.js   |  55 +++++
+ test/resorts/burke-mountain-trails.js  | 270 +++++++++++++++++++++++++
+ 3 files changed, 327 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/burke-mountain/trails.js
+ create mode 100644 test/resorts/burke-mountain-trails.js
+
+diff --git a/lib/resorts/burke-mountain/resort.json b/lib/resorts/burke-mountain/resort.json
+index 6aaa2ff1..48d6d3ed 100644
+--- a/lib/resorts/burke-mountain/resort.json
++++ b/lib/resorts/burke-mountain/resort.json
+@@ -14,5 +14,6 @@
+   ],
+   "twitter": "skiburke",
+   "opening": "2017-12-01",
+-  "noaa": "BTV/130,69"
++  "noaa": "BTV/130,69",
++  "trails": true
+ }
+diff --git a/lib/resorts/burke-mountain/trails.js b/lib/resorts/burke-mountain/trails.js
+new file mode 100644
+index 00000000..b425244d
+--- /dev/null
++++ b/lib/resorts/burke-mountain/trails.js
+@@ -0,0 +1,55 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++
++function iconLevel(td) {
++  const icons = select(td.children, '[uk-icon]').map(n => n.attribs['uk-icon']);
++  if (icons.some(i => i.includes('poker-diamonds'))) {
++    return icons.filter(i => i.includes('poker-diamonds')).length > 1 ? 'doubleBlack' : 'black';
++  }
++  if (icons.some(i => i.includes('--square'))) {
++    return 'blue';
++  }
++  if (icons.some(i => i.includes('circle'))) {
++    return 'green';
++  }
++}
++
++function hasClass(node, className) {
++  if (node?.attribs?.class?.includes(className)) return true;
++  if (node?.children) return node.children.some(c => hasClass(c, className));
++  return false;
++}
++
++// several fs-tables (main trails, glades, terrain parks) share the layout;
++// column sets vary (Open+Closed in season, single Closed column off season),
++// so columns are located by their header text
++export default function parse(dom) {
++  const rows = [];
++  for (const table of select(dom, 'table')) {
++    const headers = select(table.children, 'thead th').map(th => (findText(th) ?? '').trim());
++    const nameCol = headers.indexOf('Trail Name');
++    if (nameCol < 0) {
++      continue;
++    }
++    const statusCols = headers
++      .map((h, i) => (['Open', 'Closed', 'Status'].includes(h) ? i : -1))
++      .filter(i => i >= 0);
++    for (const tr of select(table.children, 'tbody tr')) {
++      const tds = tr.children.filter(c => c.name === 'td');
++      const name = findText(tds[nameCol])?.trim();
++      if (!name) {
++        continue;
++      }
++      let status;
++      if (statusCols.some(i => hasClass(tds[i], 'uk-text-success'))) {
++        status = 'open';
++      } else if (statusCols.some(i => hasClass(tds[i], 'uk-text-danger'))) {
++        status = 'closed';
++      } else {
++        continue;
++      }
++      rows.push({ name, status, level: iconLevel(tds[0]) });
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/burke-mountain-trails.js b/test/resorts/burke-mountain-trails.js
+new file mode 100644
+index 00000000..8d992ffe
+--- /dev/null
++++ b/test/resorts/burke-mountain-trails.js
+@@ -0,0 +1,270 @@
++import trails from '../trails/index.js';
++
++trails('burke-mountain', [
++  {
++    'name': 'East Bowl',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Wilderness',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Powderhorn',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Carriage Road',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Life Line',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Deer Run',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Power Line',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Lower Power Line',
++    'status': 'closed'
++  },
++  {
++    'name': "Doug's Drop",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Lower Doug's Drop",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'ReRun',
++    'status': 'closed'
++  },
++  {
++    'name': 'Mountain Marsh',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "McHarg's Cut-off",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Dipper Doodle',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Lew's Leap",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Boarder Line',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Upper Dipper',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Big Dipper',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Open Slope',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Hemlock Hill',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Little Dipper',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Upper Warren's Way",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Lower Warren's Way",
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': "Upper Fox's Folly",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Fox's Folly",
++    'status': 'closed'
++  },
++  {
++    'name': 'Graham Slam',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'The Gap',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Bear Den',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Ledges',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Lower Bear Den',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'The Shoot',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Upper Willoughby',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Lower Willoughby',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'High Meadows Pass',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Binney Lane',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Bunker Hill',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Carter Country',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Midway',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Enchanted Forest',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Wayne's World",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Hibernator',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Flaming Eddie's",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Scooby Doo',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Lee's Loop",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Sasquatch',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Dixiland',
++    'status': 'closed'
++  },
++  {
++    'name': 'Caveman',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Throbulator',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Y-Knot',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Marshland',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Birches',
++    'status': 'closed'
++  },
++  {
++    'name': 'The Jungle',
++    'status': 'closed'
++  },
++  {
++    'name': 'Jester',
++    'status': 'closed'
++  },
++  {
++    'name': 'Dashney Mile',
++    'status': 'closed'
++  },
++  {
++    'name': 'Progression Park',
++    'status': 'closed'
++  }
++]);
+-- 
+2.39.5
+

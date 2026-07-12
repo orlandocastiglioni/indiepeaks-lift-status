@@ -1,0 +1,364 @@
+From ee32f2b0e0a7bdabbd0302b695803a4ab6788261 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:46:06 -0400
+Subject: [PATCH 20/31] resort: add greek-peak trail status
+
+---
+ lib/resorts/greek-peak/resort.json |   3 +-
+ lib/resorts/greek-peak/trails.js   |  35 ++++
+ test/resorts/greek-peak-trails.js  | 289 +++++++++++++++++++++++++++++
+ 3 files changed, 326 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/greek-peak/trails.js
+ create mode 100644 test/resorts/greek-peak-trails.js
+
+diff --git a/lib/resorts/greek-peak/resort.json b/lib/resorts/greek-peak/resort.json
+index ad97787f..d9eea96f 100644
+--- a/lib/resorts/greek-peak/resort.json
++++ b/lib/resorts/greek-peak/resort.json
+@@ -11,5 +11,6 @@
+     -76.136,
+     42.5034
+   ],
+-  "twitter": "GreekPeakMtn"
++  "twitter": "GreekPeakMtn",
++  "trails": true
+ }
+diff --git a/lib/resorts/greek-peak/trails.js b/lib/resorts/greek-peak/trails.js
+new file mode 100644
+index 00000000..1859cd1b
+--- /dev/null
++++ b/lib/resorts/greek-peak/trails.js
+@@ -0,0 +1,35 @@
++import { allText } from '../../tools/domutil.js';
++
++const emojiLevels = {
++  '🟢': 'green',
++  '🟦': 'blue',
++  '🔵': 'blue',
++  '♦': 'black',
++  '♦♦': 'doubleBlack',
++  '⛰': 'terrainPark'
++};
++
++// #gp-trail-table rows: name cell starts with a difficulty emoji,
++// day column class carries trail-open/trail-closed (cell text is a time in season)
++export default {
++  selector: '#gp-trail-table tr',
++  parse: row => {
++    const tds = row.children.filter(c => c.name === 'td');
++    const nameCell = tds.find(c => c.attribs?.class?.includes('trail-col-name'));
++    const day = tds.find(c => c.attribs?.class?.includes('trail-col-day'));
++    const m = day?.attribs.class.match(/trail-(open|closed)/);
++    if (!nameCell || !m) {
++      return;
++    }
++    const text = allText(nameCell).replace(/\s+/g, ' ').trim();
++    const parts = text.match(/^(\S*?)\s*([A-Za-z0-9(].*)$/);
++    if (!parts) {
++      return;
++    }
++    return {
++      name: parts[2].trim(),
++      status: m[1],
++      level: emojiLevels[parts[1]]
++    };
++  }
++};
+diff --git a/test/resorts/greek-peak-trails.js b/test/resorts/greek-peak-trails.js
+new file mode 100644
+index 00000000..b76d190c
+--- /dev/null
++++ b/test/resorts/greek-peak-trails.js
+@@ -0,0 +1,289 @@
++import trails from '../trails/index.js';
++
++trails('greek-peak', [
++  {
++    'name': 'Alpha',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Castor',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Castor Connection',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Castor Lower',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Crisaen Way',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'East Alpha',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'East Meadow',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Epicurus Way',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Karyatis Way',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Lambi',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Ligo',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Lower Arcadian Gate',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Lower Pollux',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Lower Poseidon',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Marathon',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Meadow',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Platonic',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Platonic Lower',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Upper Mars Hill',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Upper Poseidon',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Zephyr',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': "Cristy's Run",
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Elysian Fields',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Keres',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Lower Atlas',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Lower Electra',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Lower Thanatos',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Lower Zeus',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Mars Hill',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Mars Hill Connection',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Medusa',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Stoic',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Thantos',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Trojan',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Arcadian Gate',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Pollux',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': "Aesop's Glade",
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Alcmene',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Alcmene Lower',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Alsos Glade',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Arethusa Way',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Atlas',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Down & Dirty',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Electra',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Iliad',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Khione',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Middle Pollux',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Odyssey',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Trident',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Trident Lower',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': "Wendy's Way",
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Zeus',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Hercules',
++    'status': 'open',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Labyrinth Glade',
++    'status': 'open',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Nemesis',
++    'status': 'open',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Olympian',
++    'status': 'open',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Spartan',
++    'status': 'open',
++    'level': 'doubleBlack'
++  }
++]);
+-- 
+2.39.5
+

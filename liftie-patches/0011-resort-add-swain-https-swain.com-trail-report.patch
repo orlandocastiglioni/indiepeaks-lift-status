@@ -1,7 +1,7 @@
 From 5f1bda350b9087757e38d581ad1688b47b96ad62 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:26:35 -0400
-Subject: [PATCH 11/14] resort: add swain (https://swain.com/trail-report/)
+Subject: [PATCH 11/31] resort: add swain (https://swain.com/trail-report/)
 
 ---
  lib/resorts/swain/index.js      |    9 +
@@ -16,7 +16,7 @@ Subject: [PATCH 11/14] resort: add swain (https://swain.com/trail-report/)
 
 diff --git a/lib/resorts/swain/index.js b/lib/resorts/swain/index.js
 new file mode 100644
-index 0000000..e0063f4
+index 00000000..e0063f46
 --- /dev/null
 +++ b/lib/resorts/swain/index.js
 @@ -0,0 +1,9 @@
@@ -31,7 +31,7 @@ index 0000000..e0063f4
 +};
 diff --git a/lib/resorts/swain/resort.json b/lib/resorts/swain/resort.json
 new file mode 100644
-index 0000000..d7c2f56
+index 00000000..d7c2f56a
 --- /dev/null
 +++ b/lib/resorts/swain/resort.json
 @@ -0,0 +1,15 @@
@@ -52,7 +52,7 @@ index 0000000..d7c2f56
 +}
 diff --git a/test/resorts/example/swain.html b/test/resorts/example/swain.html
 new file mode 100644
-index 0000000..d2a9faa
+index 00000000..d2a9faac
 --- /dev/null
 +++ b/test/resorts/example/swain.html
 @@ -0,0 +1,2104 @@
@@ -2163,7 +2163,7 @@ index 0000000..d2a9faa
 \ No newline at end of file
 diff --git a/test/resorts/swain.js b/test/resorts/swain.js
 new file mode 100644
-index 0000000..94676e3
+index 00000000..94676e31
 --- /dev/null
 +++ b/test/resorts/swain.js
 @@ -0,0 +1,9 @@

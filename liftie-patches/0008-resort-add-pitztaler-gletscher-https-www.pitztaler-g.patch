@@ -1,7 +1,7 @@
 From 701463f0378aa640865072c3987e5a3eb3ebc245 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:18:12 -0400
-Subject: [PATCH 08/14] resort: add pitztaler-gletscher
+Subject: [PATCH 08/31] resort: add pitztaler-gletscher
  (https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus)
 
 ---
@@ -17,7 +17,7 @@ Subject: [PATCH 08/14] resort: add pitztaler-gletscher
 
 diff --git a/lib/resorts/pitztaler-gletscher/index.js b/lib/resorts/pitztaler-gletscher/index.js
 new file mode 100644
-index 0000000..6c3a6fb
+index 00000000..6c3a6fbd
 --- /dev/null
 +++ b/lib/resorts/pitztaler-gletscher/index.js
 @@ -0,0 +1,18 @@
@@ -41,7 +41,7 @@ index 0000000..6c3a6fb
 +};
 diff --git a/lib/resorts/pitztaler-gletscher/resort.json b/lib/resorts/pitztaler-gletscher/resort.json
 new file mode 100644
-index 0000000..2edcdec
+index 00000000..2edcdec6
 --- /dev/null
 +++ b/lib/resorts/pitztaler-gletscher/resort.json
 @@ -0,0 +1,16 @@
@@ -63,7 +63,7 @@ index 0000000..2edcdec
 +}
 diff --git a/test/resorts/example/pitztaler-gletscher.html b/test/resorts/example/pitztaler-gletscher.html
 new file mode 100644
-index 0000000..0b4843b
+index 00000000..0b4843bf
 --- /dev/null
 +++ b/test/resorts/example/pitztaler-gletscher.html
 @@ -0,0 +1,2 @@
@@ -72,7 +72,7 @@ index 0000000..0b4843b
 \ No newline at end of file
 diff --git a/test/resorts/pitztaler-gletscher.js b/test/resorts/pitztaler-gletscher.js
 new file mode 100644
-index 0000000..0f0b7b4
+index 00000000..0f0b7b4c
 --- /dev/null
 +++ b/test/resorts/pitztaler-gletscher.js
 @@ -0,0 +1,16 @@

@@ -1,0 +1,233 @@
+From dcf0d44305dcd4f1673afe7d618a54a1f1266851 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:47:44 -0400
+Subject: [PATCH 22/31] resort: add west-mountain trail status
+
+---
+ lib/resorts/west-mountain/resort.json |   3 +-
+ lib/resorts/west-mountain/trails.js   |   9 ++
+ test/resorts/west-mountain-trails.js  | 184 ++++++++++++++++++++++++++
+ 3 files changed, 195 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/west-mountain/trails.js
+ create mode 100644 test/resorts/west-mountain-trails.js
+
+diff --git a/lib/resorts/west-mountain/resort.json b/lib/resorts/west-mountain/resort.json
+index 10584446..a1ab79ac 100644
+--- a/lib/resorts/west-mountain/resort.json
++++ b/lib/resorts/west-mountain/resort.json
+@@ -11,5 +11,6 @@
+     -73.6866,
+     43.2842
+   ],
+-  "twitter": "WestMtn"
++  "twitter": "WestMtn",
++  "trails": true
+ }
+diff --git a/lib/resorts/west-mountain/trails.js b/lib/resorts/west-mountain/trails.js
+new file mode 100644
+index 00000000..837b8a6c
+--- /dev/null
++++ b/lib/resorts/west-mountain/trails.js
+@@ -0,0 +1,9 @@
++export default {
++  // the trails pp-table: Trails | Difficulty | Open/Closed | Conditions | LIGHTS
++  selector: 'table:has(th:contains(Trails)) tbody tr',
++  parse: {
++    name: '0/0',
++    level: '1/0',
++    status: '2/0'
++  }
++};
+diff --git a/test/resorts/west-mountain-trails.js b/test/resorts/west-mountain-trails.js
+new file mode 100644
+index 00000000..bab7340f
+--- /dev/null
++++ b/test/resorts/west-mountain-trails.js
+@@ -0,0 +1,184 @@
++import trails from '../trails/index.js';
++
++trails('west-mountain', [
++  {
++    'name': 'Melon Patch (North)-Learning Area',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Melon Patch (South)-Learning Area',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'The Race Face (South)',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'The North Face',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'The North Face Terrain Park',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Gnarwall',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Gnarwall North',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'The Cure',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Upper Holy Makerel',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Middle Holy Makerel',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Lower Holy Makerel',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'The Frolic',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'The Meadows',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Crossover',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Shortcut',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Slip Thru',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Coy Dog',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'The Alley',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Chute',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Turtle Back',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Inchworm',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Northwest Passage',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Bannister',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Mach',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Midway',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Evergreen Pass',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': "Gleason's Road",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Front Yard',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Connection',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'AOA',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Go-Go',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Northwest Glades',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Hot Glades',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Voltage Glades',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Insanity Glades',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Liability Glades',
++    'status': 'closed',
++    'level': 'black'
++  }
++]);
+-- 
+2.39.5
+

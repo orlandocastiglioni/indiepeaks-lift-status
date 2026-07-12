@@ -1,0 +1,50 @@
+From 2b8b1f1ecc6eb878f972f917a1d6a7dfeb310ab1 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:43:42 -0400
+Subject: [PATCH 17/31] trails: support JSON sources, add blue-black level
+ alias
+
+---
+ lib/trails/index.js | 4 ++++
+ lib/trails/parse.js | 5 ++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/lib/trails/index.js b/lib/trails/index.js
+index cc5c7ecf..d8d79a6c 100644
+--- a/lib/trails/index.js
++++ b/lib/trails/index.js
+@@ -36,6 +36,10 @@ export default async function fetch(resort, fn) {
+         console.error('Error fetching trails', url, res.status);
+         return fn(res.status);
+       }
++      if (url.json) {
++        const body = await res.json();
++        return fn(null, shape(collect(body, resort._trailsParse)));
++      }
+       const html = await res.text();
+       const parse = dom => {
+         try {
+diff --git a/lib/trails/parse.js b/lib/trails/parse.js
+index ccea365f..5f659f74 100644
+--- a/lib/trails/parse.js
++++ b/lib/trails/parse.js
+@@ -24,6 +24,7 @@ const levels = {
+   advanced: 'black',
+   difficult: 'black',
+   mostdifficult: 'black',
++  blueblack: 'black',
+ 
+   doubleblack: 'doubleBlack',
+   doubleblackdiamond: 'doubleBlack',
+@@ -90,7 +91,5 @@ function collectRows(dom, { selector, parse }) {
+             level: parse.level && text(node, parse.level)
+           };
+         };
+-  return select(dom, selector)
+-    .map(parseFn)
+-    .filter(Boolean);
++  return select(dom, selector).map(parseFn).filter(Boolean);
+ }
+-- 
+2.39.5
+

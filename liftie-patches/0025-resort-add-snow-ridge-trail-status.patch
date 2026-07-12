@@ -1,0 +1,192 @@
+From 135f9332a52ea95cb7b6636688ebd4a42da4dd2e Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:50:16 -0400
+Subject: [PATCH 25/31] resort: add snow-ridge trail status
+
+---
+ lib/resorts/snow-ridge/resort.json |   3 +-
+ lib/resorts/snow-ridge/trails.js   |  33 ++++++++
+ test/resorts/snow-ridge-trails.js  | 119 +++++++++++++++++++++++++++++
+ 3 files changed, 154 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/snow-ridge/trails.js
+ create mode 100644 test/resorts/snow-ridge-trails.js
+
+diff --git a/lib/resorts/snow-ridge/resort.json b/lib/resorts/snow-ridge/resort.json
+index ffa37a7d..cbd0d66d 100644
+--- a/lib/resorts/snow-ridge/resort.json
++++ b/lib/resorts/snow-ridge/resort.json
+@@ -10,5 +10,6 @@
+   "ll": [
+     -75.4085,
+     43.6295
+-  ]
++  ],
++  "trails": true
+ }
+diff --git a/lib/resorts/snow-ridge/trails.js b/lib/resorts/snow-ridge/trails.js
+new file mode 100644
+index 00000000..7ce61ed3
+--- /dev/null
++++ b/lib/resorts/snow-ridge/trails.js
+@@ -0,0 +1,33 @@
++import select from '../../select.js';
++import { allText, findText } from '../../tools/domutil.js';
++
++// same hand-posted table as the lifts: trail rows come before the
++// "Lift Report" marker row; difficulty is an icon image in the name cell
++export default function parse(dom) {
++  const rows = [];
++  for (const row of select(dom, 'table tr')) {
++    const tds = row.children.filter(c => c.name === 'td');
++    if (tds.some(td => td.children.some(c => c.name === 'h2'))) {
++      break; // reached the Lift Report (or a later) section
++    }
++    if (tds.length < 2) {
++      continue;
++    }
++    const icon = select(tds[0].children, 'img')[0];
++    if (!icon) {
++      continue; // header or filler row
++    }
++    const name = allText(tds[0])
++      .replace(/^\s*\d+\.\s*/, '')
++      .trim();
++    const status = findText(tds[1]);
++    if (name && status) {
++      rows.push({
++        name,
++        status,
++        level: icon.attribs.alt || icon.attribs.src.match(/icon-([a-z_]+)\.png/)?.[1]
++      });
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/snow-ridge-trails.js b/test/resorts/snow-ridge-trails.js
+new file mode 100644
+index 00000000..713e1d37
+--- /dev/null
++++ b/test/resorts/snow-ridge-trails.js
+@@ -0,0 +1,119 @@
++import trails from '../trails/index.js';
++
++trails('snow-ridge', [
++  {
++    'name': 'Von Allmen',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Black River',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Snow Pocket',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Side Pocket',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Pocket Glades',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Rockin Robin',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Kuersteiner',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Bunny Bowl',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Main Park:',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'South Slope',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Progression Park:',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Ridge Run',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'The Bumps',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'North Slope',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Silversmith',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Johannsen',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Cruikshank',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Silver Glades',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Challenger',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Amazing Grace',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'One Way Out',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Little Mountain',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Little North',
++    'status': 'open',
++    'level': 'blue'
++  }
++]);
+-- 
+2.39.5
+

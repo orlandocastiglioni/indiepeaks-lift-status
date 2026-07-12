@@ -1,7 +1,7 @@
 From 605705e1da0716f69238ce0db419289b5bbdb159 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:21:52 -0400
-Subject: [PATCH 09/14] resort: add mission-ridge
+Subject: [PATCH 09/31] resort: add mission-ridge
  (https://www.missionridge.com/mountain-report/)
 
 ---
@@ -17,7 +17,7 @@ Subject: [PATCH 09/14] resort: add mission-ridge
 
 diff --git a/lib/resorts/mission-ridge/index.js b/lib/resorts/mission-ridge/index.js
 new file mode 100644
-index 0000000..7ed232e
+index 00000000..7ed232eb
 --- /dev/null
 +++ b/lib/resorts/mission-ridge/index.js
 @@ -0,0 +1,15 @@
@@ -38,7 +38,7 @@ index 0000000..7ed232e
 +};
 diff --git a/lib/resorts/mission-ridge/resort.json b/lib/resorts/mission-ridge/resort.json
 new file mode 100644
-index 0000000..870071a
+index 00000000..870071ab
 --- /dev/null
 +++ b/lib/resorts/mission-ridge/resort.json
 @@ -0,0 +1,15 @@
@@ -59,7 +59,7 @@ index 0000000..870071a
 +}
 diff --git a/test/resorts/example/mission-ridge.html b/test/resorts/example/mission-ridge.html
 new file mode 100644
-index 0000000..d749520
+index 00000000..d7495202
 --- /dev/null
 +++ b/test/resorts/example/mission-ridge.html
 @@ -0,0 +1,2494 @@
@@ -2559,7 +2559,7 @@ index 0000000..d749520
 +</html>
 diff --git a/test/resorts/mission-ridge.js b/test/resorts/mission-ridge.js
 new file mode 100644
-index 0000000..5cccb35
+index 00000000..5cccb35b
 --- /dev/null
 +++ b/test/resorts/mission-ridge.js
 @@ -0,0 +1,11 @@

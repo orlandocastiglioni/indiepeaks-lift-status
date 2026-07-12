@@ -39,6 +39,13 @@ part is `lifts`:
 Lift states are `open`, `closed`, `hold`, or `scheduled`. Off-season the
 `status` map may be empty and stats all zero.
 
+Resorts whose pages carry per-trail rows also publish a top-level `trails`
+object: `stats` with the same four states, and `list` — an array of
+`{name, status, level?}` objects when the page shows difficulty markers
+(`level` is `green`, `blue`, `black`, `doubleBlack`, or `terrainPark`),
+or a plain `{name: status}` map when it doesn't. Trails-only resorts
+(e.g. calabogie, canaan-valley) have no `lifts` key at all.
+
 ## Credits & license
 
 Lift status is collected by [Liftie](https://github.com/pirxpilot/liftie)

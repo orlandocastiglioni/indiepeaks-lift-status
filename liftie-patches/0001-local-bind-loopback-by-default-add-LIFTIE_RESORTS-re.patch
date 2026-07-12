@@ -1,7 +1,7 @@
 From df0f85152ad51c5b01850cf9f58d7c4357b701e0 Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sat, 11 Jul 2026 22:42:11 -0400
-Subject: [PATCH 01/14] local: bind loopback by default, add LIFTIE_RESORTS
+Subject: [PATCH 01/31] local: bind loopback by default, add LIFTIE_RESORTS
  registry filter
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 01/14] local: bind loopback by default, add LIFTIE_RESORTS
  2 files changed, 13 insertions(+), 3 deletions(-)
 
 diff --git a/app.js b/app.js
-index 222b112..1f352c6 100644
+index 222b112f..1f352c6d 100644
 --- a/app.js
 +++ b/app.js
 @@ -83,8 +83,10 @@ app.run = function run() {
@@ -27,7 +27,7 @@ index 222b112..1f352c6 100644
    });
  };
 diff --git a/lib/loader.js b/lib/loader.js
-index 67c3e67..cfaed93 100644
+index 67c3e670..cfaed935 100644
 --- a/lib/loader.js
 +++ b/lib/loader.js
 @@ -1,7 +1,15 @@

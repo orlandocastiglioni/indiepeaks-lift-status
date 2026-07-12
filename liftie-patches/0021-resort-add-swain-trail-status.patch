@@ -1,0 +1,243 @@
+From 0559ae520a99c98d1a04dfd4782282a9e703543c Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:46:56 -0400
+Subject: [PATCH 21/31] resort: add swain trail status
+
+---
+ lib/resorts/swain/resort.json |   3 +-
+ lib/resorts/swain/trails.js   |  24 +++++
+ test/resorts/swain-trails.js  | 179 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 205 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/swain/trails.js
+ create mode 100644 test/resorts/swain-trails.js
+
+diff --git a/lib/resorts/swain/resort.json b/lib/resorts/swain/resort.json
+index d7c2f56a..f02d635f 100644
+--- a/lib/resorts/swain/resort.json
++++ b/lib/resorts/swain/resort.json
+@@ -11,5 +11,6 @@
+     -77.8586,
+     42.4773
+   ],
+-  "twitter": "SwainResort"
++  "twitter": "SwainResort",
++  "trails": true
+ }
+diff --git a/lib/resorts/swain/trails.js b/lib/resorts/swain/trails.js
+new file mode 100644
+index 00000000..a15608ce
+--- /dev/null
++++ b/lib/resorts/swain/trails.js
+@@ -0,0 +1,24 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++
++// one table per difficulty section: <h3>Green Circle Trails (Easy)</h3><div><table>...
++export default function parse(dom) {
++  const rows = [];
++  for (const h3 of select(dom, 'h3')) {
++    const heading = findText(h3) ?? '';
++    const m = heading.match(/^(Green|Blue|Black|Double Black)[\w\s]*Trails/i);
++    if (!m) {
++      continue;
++    }
++    const table = h3.next?.name === 'div' ? select(h3.next.children, 'table tr') : [];
++    for (const row of table) {
++      const tds = row.children.filter(c => c.name === 'td');
++      const name = findText(tds[0]);
++      const status = findText(tds[1]);
++      if (name && status) {
++        rows.push({ name: name.trim(), status, level: m[1] });
++      }
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/swain-trails.js b/test/resorts/swain-trails.js
+new file mode 100644
+index 00000000..e5c98c23
+--- /dev/null
++++ b/test/resorts/swain-trails.js
+@@ -0,0 +1,179 @@
++import trails from '../trails/index.js';
++
++trails('swain', [
++  {
++    'name': 'Magic Mountain',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Shadow Mountain',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Round Top',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Lower Robinson',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Lower Brewer',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Upper Mile Sweep',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Lower Mile Sweep',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Black Forest',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Promenade',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Lower Maverick',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Illusion',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'Clark',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': '80 Acres',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Testament',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'The Pass',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Fools Gold',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': "Bandit's Pass",
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Lower Twister',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Maverick',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Dozey Doe',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Ben Blakely',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Allegany Glades',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'Hidden Shadows',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': "Shakey's Trees",
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': "Wheel's Run",
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Upper Robinson',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Upper Brewer',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': "Glen's Run",
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Pines',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Rattler',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Old Main',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': "Robin's Way",
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': "Dave's Run",
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Last Will',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'Outlaw',
++    'status': 'open',
++    'level': 'black'
++  }
++]);
+-- 
+2.39.5
+

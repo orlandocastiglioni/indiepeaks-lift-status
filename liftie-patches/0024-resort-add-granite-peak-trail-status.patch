@@ -1,0 +1,420 @@
+From 71f128ed0596a98805a958e90490386a7fb87656 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:49:30 -0400
+Subject: [PATCH 24/31] resort: add granite-peak trail status
+
+---
+ lib/resorts/granite-peak/resort.json |   3 +-
+ lib/resorts/granite-peak/trails.js   |  21 ++
+ test/resorts/granite-peak-trails.js  | 359 +++++++++++++++++++++++++++
+ 3 files changed, 382 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/granite-peak/trails.js
+ create mode 100644 test/resorts/granite-peak-trails.js
+
+diff --git a/lib/resorts/granite-peak/resort.json b/lib/resorts/granite-peak/resort.json
+index baa7fd02..6800b764 100644
+--- a/lib/resorts/granite-peak/resort.json
++++ b/lib/resorts/granite-peak/resort.json
+@@ -12,5 +12,6 @@
+     -89.6832,
+     44.9328
+   ],
+-  "twitter": "SkiGranitePeak"
++  "twitter": "SkiGranitePeak",
++  "trails": true
+ }
+diff --git a/lib/resorts/granite-peak/trails.js b/lib/resorts/granite-peak/trails.js
+new file mode 100644
+index 00000000..6855064c
+--- /dev/null
++++ b/lib/resorts/granite-peak/trails.js
+@@ -0,0 +1,21 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++
++// trail rows are nested under each lift's <details>; the difficulty and
++// status icons carry title attributes (occasionally a raw term id, coerced away)
++export default {
++  selector: '.trail.component-row',
++  parse: row => {
++    const title = select(row.children, '.cell.title')[0];
++    const status = select(row.children, '.status .f-icon')[0];
++    const level = title && select(title.children, '.f-icon.level')[0];
++    if (!title || !status) {
++      return;
++    }
++    return {
++      name: allText(title),
++      status: status.attribs.title,
++      level: level?.attribs.title
++    };
++  }
++};
+diff --git a/test/resorts/granite-peak-trails.js b/test/resorts/granite-peak-trails.js
+new file mode 100644
+index 00000000..102be197
+--- /dev/null
++++ b/test/resorts/granite-peak-trails.js
+@@ -0,0 +1,359 @@
++import trails from '../trails/index.js';
++
++trails('granite-peak', [
++  {
++    'name': 'Lower Dusky',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Birch',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Miracle',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Black Bear',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Elk',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Exhibition',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Hawk's Ridge",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Summit Trail',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Rock Pile Woods',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Aspen',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Sky High',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Upper Dusky',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Enchanted Forest',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Meadows',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Mystery',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Whitetail',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Cottonwood',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'MeadowRidge',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Carmie’s Couloir',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'High Traverse',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Slalom',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Sundance',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Woodspur',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Caroline’s Couloir',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Carver',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Charlotte’s Chute',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Mamma Mie',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Superstition',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'The Grom Park',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Adios',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Meadows',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Mystery',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Snowflake',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Whitetail',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Frosty Learning',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Hot Cocoa',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Eastern Escape',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Sidewinder',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Stonebridge',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Wedge Wood',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Wildwood',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Berg's Boundary",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Idle Wild',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Mission Ridge',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Overlook',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Prange's Galde",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Rendezvous',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Robin Hood',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'ShadowRidge',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Sherwood',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'White Wolf',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Silver Birch',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Snowshoe',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Sunset',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Sweet Return',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Timber Pass',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Timberwolf',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Top Notch',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'White Lightning',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Beyond',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Bobcat',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Coyote Gulch',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Infinity',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Kingdom',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Legends',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Main Event',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Panorama',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Western Frontier',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Westwood',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Gem Stone',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Red Quartz',
++    'status': 'closed',
++    'level': 'terrainPark'
++  }
++]);
+-- 
+2.39.5
+

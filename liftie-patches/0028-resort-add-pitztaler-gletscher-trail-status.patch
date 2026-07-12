@@ -1,0 +1,223 @@
+From 682448c9fe7e12e0a481196e037f45c579b8e453 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 09:52:52 -0400
+Subject: [PATCH 28/31] resort: add pitztaler-gletscher trail status
+
+---
+ lib/resorts/pitztaler-gletscher/resort.json |   3 +-
+ lib/resorts/pitztaler-gletscher/trails.js   |  29 ++++
+ test/resorts/pitztaler-gletscher-trails.js  | 154 ++++++++++++++++++++
+ 3 files changed, 185 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/pitztaler-gletscher/trails.js
+ create mode 100644 test/resorts/pitztaler-gletscher-trails.js
+
+diff --git a/lib/resorts/pitztaler-gletscher/resort.json b/lib/resorts/pitztaler-gletscher/resort.json
+index 2edcdec6..bb63090f 100644
+--- a/lib/resorts/pitztaler-gletscher/resort.json
++++ b/lib/resorts/pitztaler-gletscher/resort.json
+@@ -12,5 +12,6 @@
+   "ll": [
+     10.8806,
+     46.9275
+-  ]
++  ],
++  "trails": true
+ }
+diff --git a/lib/resorts/pitztaler-gletscher/trails.js b/lib/resorts/pitztaler-gletscher/trails.js
+new file mode 100644
+index 00000000..10ffec3b
+--- /dev/null
++++ b/lib/resorts/pitztaler-gletscher/trails.js
+@@ -0,0 +1,29 @@
++import { allText, findText } from '../../tools/domutil.js';
++
++// EU piste colors to US-style levels
++const classifications = {
++  leicht: 'green',
++  mittel: 'blue',
++  schwer: 'black'
++};
++
++export default {
++  selector: '#pistenStatus table tbody tr',
++  parse: row => {
++    const tds = row.children.filter(c => c.name === 'td');
++    const byClass = cls => tds.find(td => td.attribs?.class?.split(/\s+/).includes(cls));
++    const name = findText(byClass('workingPeriod'));
++    const dot = byClass('status')?.children.find(c => c.name === 'div' && c.attribs?.class?.includes('tableDot'));
++    if (!name || !dot) {
++      return;
++    }
++    const classification = allText(byClass('classification') ?? {})
++      .trim()
++      .toLowerCase();
++    return {
++      name,
++      status: dot.attribs.class.replace('tableDot', '').trim() || 'open',
++      level: classifications[classification]
++    };
++  }
++};
+diff --git a/test/resorts/pitztaler-gletscher-trails.js b/test/resorts/pitztaler-gletscher-trails.js
+new file mode 100644
+index 00000000..b48d8023
+--- /dev/null
++++ b/test/resorts/pitztaler-gletscher-trails.js
+@@ -0,0 +1,154 @@
++import trails from '../trails/index.js';
++
++trails('pitztaler-gletscher', [
++  {
++    'name': 'GLE || 20 Mittagskogel',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'GLE || 21 WISBI Strecke',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || 22 Brunnenkogel',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'GLE || 23 Brunnenkogel Longline',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || 24 Pitz-Live',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || 25 Gletschersee',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'GLE || 26 Wildspitz',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'GLE || 28 Panorama',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || 29 Downhill',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || 33 Schweizer Weg',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || 34 Hoher Rain',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || 35 Ibex Run',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || 36 Mittelberg',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'GLE || Family Cross',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'GLE || Funline',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'RIFF || 1 Rifflsee Talabfahrt',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'RIFF || 1a Talstation Muttenkopf',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'RIFF || 2 Muttenkopf',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'RIFF || 3 Hüttenabfahrt',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'RIFF || 4 Almrosen',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'RIFF || 5 Steinbock',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'RIFF || 6 Sunnalm',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'RIFF || 7 Hirschtal',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'RIFF || 7a Hirschtal',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'RIFF || 7b Hirschtal',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'RIFF || 8 Seekogel',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'RIFF || 9 Grubengrat',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'RIFF || 10 Grubenkopf',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'RIFF || 10a Plodersee',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'RIFF || 11 Buckelpiste',
++    'status': 'closed',
++    'level': 'black'
++  }
++]);
+-- 
+2.39.5
+

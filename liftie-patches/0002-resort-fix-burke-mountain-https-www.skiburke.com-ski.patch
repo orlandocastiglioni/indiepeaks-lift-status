@@ -1,7 +1,7 @@
 From 13f82c06e968d878585c8a18546e3719f44d5bee Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 07:55:21 -0400
-Subject: [PATCH 02/14] resort: fix burke-mountain
+Subject: [PATCH 02/31] resort: fix burke-mountain
  (https://www.skiburke.com/ski-ride/weather-conditions)
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 02/14] resort: fix burke-mountain
  2 files changed, 14 insertions(+), 16 deletions(-)
 
 diff --git a/lib/resorts/burke-mountain/index.js b/lib/resorts/burke-mountain/index.js
-index 3186825..f3f100b 100644
+index 3186825b..f3f100b2 100644
 --- a/lib/resorts/burke-mountain/index.js
 +++ b/lib/resorts/burke-mountain/index.js
 @@ -1,3 +1,9 @@
@@ -52,7 +52,7 @@ index 3186825..f3f100b 100644
    }
  };
 diff --git a/lib/resorts/burke-mountain/resort.json b/lib/resorts/burke-mountain/resort.json
-index 90db271..6aaa2ff 100644
+index 90db2710..6aaa2ff1 100644
 --- a/lib/resorts/burke-mountain/resort.json
 +++ b/lib/resorts/burke-mountain/resort.json
 @@ -1,8 +1,8 @@
