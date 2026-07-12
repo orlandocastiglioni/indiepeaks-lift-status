@@ -1,0 +1,50 @@
+From aa28732509c3a761573bb88559f7058f3faa6c63 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sat, 11 Jul 2026 22:42:11 -0400
+Subject: [PATCH 1/8] local: bind loopback by default, add LIFTIE_RESORTS
+ registry filter
+
+---
+ app.js        | 6 ++++--
+ lib/loader.js | 8 +++++++-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/app.js b/app.js
+index 222b112..1f352c6 100644
+--- a/app.js
++++ b/app.js
+@@ -83,8 +83,10 @@ app.run = function run() {
+       process.exit(1);
+       return;
+     }
+-    http.createServer(app).listen(PORT, () => {
+-      console.log(`Running on: http://localhost:${PORT}`);
++    // local patch: bind loopback only unless LIFTIE_HOST overrides
++    const host = process.env.LIFTIE_HOST || '127.0.0.1';
++    http.createServer(app).listen(PORT, host, () => {
++      console.log(`Running on: http://${host}:${PORT}`);
+     });
+   });
+ };
+diff --git a/lib/loader.js b/lib/loader.js
+index 67c3e67..e97ef42 100644
+--- a/lib/loader.js
++++ b/lib/loader.js
+@@ -1,7 +1,13 @@
+ import fs from 'node:fs/promises';
+ 
+ export default async function load() {
+-  const names = await fs.readdir(`${import.meta.dirname}/resorts`);
++  let names = await fs.readdir(`${import.meta.dirname}/resorts`);
++  // local patch: LIFTIE_RESORTS=<comma separated ids> limits the registry,
++  // so the background fetcher never scrapes resorts we don't serve
++  const only = process.env.LIFTIE_RESORTS?.split(',').map(s => s.trim()).filter(Boolean);
++  if (only?.length) {
++    names = names.filter(name => only.includes(name));
++  }
+   const entries = names.map(entry);
+   return Object.fromEntries(await Promise.all(entries));
+ }
+-- 
+2.39.5
+

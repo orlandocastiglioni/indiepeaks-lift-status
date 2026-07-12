@@ -1,0 +1,55 @@
+From 7ed88ea38f1772b333a2596657744bae827802eb Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 12 Jul 2026 08:15:22 -0400
+Subject: [PATCH 7/8] resort: fix skiwelt - route JSON endpoint through api
+ instead of dataUrl
+
+dataUrl responses always go through the HTML parser, so the JSON parse
+function received a DOM and returned an empty map. The 'json' flag on
+dataUrl is not implemented anywhere in lib/.
+---
+ lib/resorts/skiwelt/resort.json | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
+
+diff --git a/lib/resorts/skiwelt/resort.json b/lib/resorts/skiwelt/resort.json
+index 185ad6e..76638c6 100644
+--- a/lib/resorts/skiwelt/resort.json
++++ b/lib/resorts/skiwelt/resort.json
+@@ -4,17 +4,6 @@
+     "host": "https://www.skiwelt.at",
+     "pathname": "/en/lift-status-winter.html"
+   },
+-  "dataUrl": {
+-    "host": "https://www.skiwelt.at",
+-    "pathname": "/webapi/micadoweb",
+-    "query": {
+-      "api": "Micado.Ski.Web/Micado.Ski.Web.IO.Api.FacilityApi/List.api",
+-      "region": "skiwelt",
+-      "season": "winter",
+-      "typeIDs": 1
+-    },
+-    "json": true
+-  },
+   "tags": [
+     "Alps",
+     "Austria"
+@@ -22,5 +11,15 @@
+   "ll": [
+     12.25,
+     47.45
+-  ]
++  ],
++  "api": {
++    "host": "https://www.skiwelt.at",
++    "pathname": "/webapi/micadoweb",
++    "query": {
++      "api": "Micado.Ski.Web/Micado.Ski.Web.IO.Api.FacilityApi/List.api",
++      "region": "skiwelt",
++      "season": "winter",
++      "typeIDs": 1
++    }
++  }
+ }
+-- 
+2.39.5
+
