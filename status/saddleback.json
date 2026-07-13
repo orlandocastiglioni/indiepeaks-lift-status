@@ -1,0 +1,50 @@
+{
+  "fetchedAt": "2026-07-13T23:00:32Z",
+  "href": "https://www.saddlebackmaine.com/the-mountain/snow--weather/",
+  "id": "saddleback",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
+  "ll": [
+    -70.632965,
+    44.983387
+  ],
+  "name": "Saddleback",
+  "timestamp": {
+    "lifts": 1783982987587,
+    "opening": 1783949096082,
+    "trails": 1783982987120,
+    "weather": 1783905899204,
+    "webcams": 1783905899032
+  },
+  "weather": {
+    "conditions": "Partly Cloudy",
+    "date": "2026-07-13",
+    "icon": [
+      "icon-cloud",
+      "icon-night"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 51
+    },
+    "text": "Partly cloudy, with a low around 51. Northwest wind around 0 mph."
+  }
+}
