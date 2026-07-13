@@ -1,0 +1,50 @@
+{
+  "fetchedAt": "2026-07-13T23:00:32Z",
+  "href": "http://www.winterplace.com/snow-report",
+  "id": "winterplace",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
+  "ll": [
+    -81.11824,
+    37.59594
+  ],
+  "name": "Winterplace",
+  "timestamp": {
+    "lifts": 1783982989795,
+    "opening": 1783949096082,
+    "trails": 1783982987121,
+    "weather": 1783905899245,
+    "webcams": 1783905899032
+  },
+  "weather": {
+    "conditions": "Chance Showers And Thunderstorms",
+    "date": "2026-07-13",
+    "icon": [
+      "basecloud",
+      "icon-thunder"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=37.59594&lon=-81.11824",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 62
+    },
+    "text": "A chance of showers and thunderstorms. Mostly cloudy, with a low around 62. Southeast wind around 8 mph. Chance of precipitation is 40%."
+  }
+}
