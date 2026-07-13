@@ -1,0 +1,854 @@
+From 77698f0902fb08ee4836e9811a94e09da7ba4477 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:23:37 -0400
+Subject: [PATCH 48/48] resort: add echo-mountain
+ (https://echomtn.com/mountain-conditions)
+
+---
+ lib/resorts/echo-mountain/index.js      |  15 +
+ lib/resorts/echo-mountain/resort.json   |  15 +
+ lib/resorts/echo-mountain/status.js     |   5 +
+ lib/resorts/echo-mountain/trails.js     |  15 +
+ test/resorts/echo-mountain-trails.js    |  52 ++
+ test/resorts/echo-mountain.js           |   7 +
+ test/resorts/example/echo-mountain.html | 677 ++++++++++++++++++++++++
+ 7 files changed, 786 insertions(+)
+ create mode 100644 lib/resorts/echo-mountain/index.js
+ create mode 100644 lib/resorts/echo-mountain/resort.json
+ create mode 100644 lib/resorts/echo-mountain/status.js
+ create mode 100644 lib/resorts/echo-mountain/trails.js
+ create mode 100644 test/resorts/echo-mountain-trails.js
+ create mode 100644 test/resorts/echo-mountain.js
+ create mode 100644 test/resorts/example/echo-mountain.html
+
+diff --git a/lib/resorts/echo-mountain/index.js b/lib/resorts/echo-mountain/index.js
+new file mode 100644
+index 00000000..e496a14e
+--- /dev/null
++++ b/lib/resorts/echo-mountain/index.js
+@@ -0,0 +1,15 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// h4 Lifts section: div.row.lifts > .item with a status icon and the name as text
++export default {
++  selector: '.row.lifts .item',
++  parse: item => {
++    const icon = select(item.children, 'img.lift-status')[0];
++    const name = allText(item).trim();
++    if (name && icon) {
++      return { name, status: status(icon.attribs.src) };
++    }
++  }
++};
+diff --git a/lib/resorts/echo-mountain/resort.json b/lib/resorts/echo-mountain/resort.json
+new file mode 100644
+index 00000000..f6800d97
+--- /dev/null
++++ b/lib/resorts/echo-mountain/resort.json
+@@ -0,0 +1,15 @@
++{
++  "name": "Echo Mountain",
++  "url": {
++    "host": "https://echomtn.com",
++    "pathname": "/mountain-conditions"
++  },
++  "trails": true,
++  "tags": [
++    "Colorado"
++  ],
++  "ll": [
++    -105.5225,
++    39.6842
++  ]
++}
+diff --git a/lib/resorts/echo-mountain/status.js b/lib/resorts/echo-mountain/status.js
+new file mode 100644
+index 00000000..cf68841b
+--- /dev/null
++++ b/lib/resorts/echo-mountain/status.js
+@@ -0,0 +1,5 @@
++// status is an icon image: open.svg / projected.svg / closed.svg
++export default function status(src = '') {
++  const s = src.match(/images\/([a-z]+)\.svg/)?.[1];
++  return s === 'projected' ? 'scheduled' : s;
++}
+diff --git a/lib/resorts/echo-mountain/trails.js b/lib/resorts/echo-mountain/trails.js
+new file mode 100644
+index 00000000..02979802
+--- /dev/null
++++ b/lib/resorts/echo-mountain/trails.js
+@@ -0,0 +1,15 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// h4 Runs section: same items with run-status icons; no difficulty markers
++export default {
++  selector: '.row.runs .item',
++  parse: item => {
++    const icon = select(item.children, 'img.run-status')[0];
++    const name = allText(item).trim();
++    if (name && icon) {
++      return { name, status: status(icon.attribs.src) };
++    }
++  }
++};
+diff --git a/test/resorts/echo-mountain-trails.js b/test/resorts/echo-mountain-trails.js
+new file mode 100644
+index 00000000..dfc8eabd
+--- /dev/null
++++ b/test/resorts/echo-mountain-trails.js
+@@ -0,0 +1,52 @@
++import trails from '../trails/index.js';
++
++trails('echo-mountain', [
++  {
++    'name': 'Yard Sale',
++    'status': 'closed'
++  },
++  {
++    'name': "Traveler's Traverse - Upper",
++    'status': 'closed'
++  },
++  {
++    'name': "Traveler's Traverse - Middle",
++    'status': 'closed'
++  },
++  {
++    'name': "Traveler's Traverse - Lower",
++    'status': 'closed'
++  },
++  {
++    'name': "Lucky's Loop",
++    'status': 'closed'
++  },
++  {
++    'name': 'Full Send - Upper',
++    'status': 'closed'
++  },
++  {
++    'name': 'Full Send - Lower',
++    'status': 'closed'
++  },
++  {
++    'name': 'Hollywood - Upper',
++    'status': 'closed'
++  },
++  {
++    'name': 'Hollywood - Middle',
++    'status': 'closed'
++  },
++  {
++    'name': 'Hollywood - Lower',
++    'status': 'closed'
++  },
++  {
++    'name': 'Gold Digger',
++    'status': 'closed'
++  },
++  {
++    'name': 'The Glades',
++    'status': 'closed'
++  }
++]);
+diff --git a/test/resorts/echo-mountain.js b/test/resorts/echo-mountain.js
+new file mode 100644
+index 00000000..84123a1c
+--- /dev/null
++++ b/test/resorts/echo-mountain.js
+@@ -0,0 +1,7 @@
++import lifts from '../lifts/index.js';
++
++lifts('echo-mountain', 'html', {
++  'Hot Laps Special Triple Chair': 'closed',
++  'Stairway to Shreddin Conveyor': 'closed',
++  'Magic Vista Conveyor': 'closed'
++});
+diff --git a/test/resorts/example/echo-mountain.html b/test/resorts/example/echo-mountain.html
+new file mode 100644
+index 00000000..badb6e57
+--- /dev/null
++++ b/test/resorts/example/echo-mountain.html
+@@ -0,0 +1,677 @@
++<!DOCTYPE html>
++<html lang="en-US">
++<head>
++	<script>
++		dataLayer = [];
++	</script>
++	<!-- make sure the config gets loaded before Klaro -->
++	<script defer type="text/javascript" src="klaro-config.js"></script>
++	<script defer type="text/javascript" src="https://cdn.kiprotect.com/klaro/v0.7.18/klaro.js"></script>
++	
++	<!-- Google Tag Manager -->
++	<script data-type="application/javascript" type="text/plain" data-name="google-tag-manager">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++	})(window,document,'script','dataLayer','GTM-KL3F9P2');</script>
++	<!-- End Google Tag Manager -->
++	<meta charset="utf-8">
++	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
++	<link rel="home" href="https://echomtn.com/">
++	<link rel="icon" href="/favicon.ico">
++	<meta name="viewport" content="width=device-width,initial-scale=1.0">
++	<script src="/js/jquery-3.3.1.min.js"></script>
++	<link rel="stylesheet" href="/css/bootstrap.min.css">
++	<link rel="stylesheet" href="/styles/main.css">
++	<link rel="stylesheet" type="text/css" href="/styles/MyFontsWebfontsKit.css">
++	<link rel="stylesheet" href="https://use.typekit.net/ang3alz.css">
++	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
++<title>Trail Map and Conditions | Echo Mountain</title>
++<script>window.dataLayer = window.dataLayer || [];
++function gtag(){dataLayer.push(arguments)};
++gtag('js', new Date());
++gtag('config', 'G-ZQ3V7BSPEQ', {'send_page_view': true,'anonymize_ip': true,'link_attribution': true,'allow_display_features': true});
++gtag('config', 'AW-17383351080', {'send_page_view': true});
++</script>
++<script>dl = [];
++(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dl','GTM-K8KPKW2J');
++</script>
++<script>/* Plausible script did not render */
++</script><meta name="generator" content="SEOmatic">
++<meta name="description" content="Planning your ski, snowboard, or tubing trip to Echo Mountain? Make sure to check out our weather conditions, maps and more!">
++<meta name="referrer" content="no-referrer-when-downgrade">
++<meta name="robots" content="all">
++<meta content="en_US" property="og:locale">
++<meta content="Echo Mountain" property="og:site_name">
++<meta content="website" property="og:type">
++<meta content="https://echomtn.com/mountain-conditions" property="og:url">
++<meta content="Trail Map and Conditions" property="og:title">
++<meta content="Planning your ski, snowboard, or tubing trip to Echo Mountain? Make sure to check out our weather conditions, maps and more!" property="og:description">
++<meta content="https://echomtn.com/images/uploads/_1200x630_crop_center-center_82_none/ST_echotrailmap2018_FULL_01.14.png?mtime=1547885114" property="og:image">
++<meta content="https://www.tiktok.com/@echomtnco" property="og:see_also">
++<meta content="https://www.instagram.com/echomtnco/" property="og:see_also">
++<meta content="https://www.youtube.com/@EchoMountainColorado" property="og:see_also">
++<meta content="https://www.facebook.com/echomtnco/" property="og:see_also">
++<meta content="https://x.com/echomtnco" property="og:see_also">
++<meta name="twitter:card" content="summary_large_image">
++<meta name="twitter:site" content="@echomtnco">
++<meta name="twitter:creator" content="@echomtnco">
++<meta name="twitter:title" content="Trail Map and Conditions">
++<meta name="twitter:description" content="Planning your ski, snowboard, or tubing trip to Echo Mountain? Make sure to check out our weather conditions, maps and more!">
++<meta name="twitter:image" content="https://echomtn.com/images/uploads/_800x418_crop_center-center_82_none/ST_echotrailmap2018_FULL_01.14.png?mtime=1547885114">
++<link href="https://echomtn.com/mountain-conditions" rel="canonical">
++<link href="https://echomtn.com/" rel="home">
++<link type="text/plain" href="https://echomtn.com/humans.txt" rel="author">
++<link href="/css/jquery-ui.min.css?v=1631812873" rel="stylesheet"></head>
++<body class="entry-mountainConditions slug-mountain-conditions" id="mountainConditions" ><script async src="https://www.googletagmanager.com/gtag/js?id=G-ZQ3V7BSPEQ"></script>
++<!-- Event snippet for Click to call conversion page
++In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
++<script>
++function gtag_report_conversion(url) {
++  var callback = function () {
++    if (typeof(url) != 'undefined') {
++      window.location = url;
++    }
++  };
++  gtag('event', 'conversion', {
++      'send_to': 'AW-17383351080/IE3VCNXDwqAbEKjGg-FA',
++      'value': 1.0,
++      'currency': 'USD',
++      'event_callback': callback
++  });
++  return false;
++}
++</script>
++
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K8KPKW2J"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++
++	<!-- Google Tag Manager (noscript) -->
++	<noscript><iframe data-name="google-tag-manager" data-src="https://www.googletagmanager.com/ns.html?id=GTM-KL3F9P2"height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++	<!-- End Google Tag Manager (noscript) -->
++	
++		<header id="header" >
++				<nav class="navbar navbar-default">
++			<div class="container">
++				<div class="navbar-header">
++		            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navDropdown" aria-expanded="false">
++		            	<p class="menu-text">MENU</p>
++		            	<div class="burger-menu">
++			            	<span class="sr-only">Toggle navigation</span>
++			                <span class="icon-bar"></span>
++					        <span class="icon-bar"></span>
++					        <span class="icon-bar"></span>
++					    </div>
++		            </button>
++		            <h1>
++			            <a href="/" class="navbar-brand">
++			                <img class="svg" src="https://echomtn.com/cpresources/c1551d78/logo.svg?v=1738869384" alt="Echo Mountain Logo">
++			            </a>
++			        </h1>
++		        </div>
++		        <div class="collapse navbar-collapse" id="navDropdown">
++		        			        	<ul class="nav navbar-nav pull-right">
++														<li class="nav-item dropdown ski--snowboard">
++				<a class="dropdown-toggle " href="https://echomtn.com/ski-snowboard" >Ski &amp; Snowboard</a>
++				<div class="dropdown-menu">
++					<ul>
++																<li class="first-timers-guide"><a class="" href="https://echomtn.com/first-timers-guide" >First Timer&#039;s Guide</a></li>
++											<li class="lift-tickets"><a class="" href="https://echomtn.com/lift-tickets" >Lift Tickets</a></li>
++											<li class="season-passes"><a class="" href="https://echomtn.com/season-passes" >Season Passes</a></li>
++											<li class="rental-equipment"><a class="" href="https://echomtn.com/rentals" >Rental Equipment</a></li>
++										</ul>
++				</div>
++
++			</li>
++										<li class="tubing"><a class="" href="https://echomtn.com/tubing" >Tubing</a></li>
++										<li class="nav-item dropdown about">
++				<a class="dropdown-toggle " href="https://echomtn.com/about" >About</a>
++				<div class="dropdown-menu">
++					<ul>
++																<li class="hours"><a class="" href="https://echomtn.com/hours" >Hours</a></li>
++											<li class="getting-here"><a class="" href="https://echomtn.com/getting-here" >Getting Here</a></li>
++											<li class="safety"><a class="" href="https://echomtn.com/safety" >Safety</a></li>
++											<li class="our-story"><a class="" href="https://echomtn.com/our-story" >Our Story</a></li>
++											<li class="merchandise"><a class="" href="https://shop.echomtn.com/"  target="_blank" >Merchandise</a></li>
++											<li class="blog"><a class="" href="https://echomtn.com/blog" >Blog</a></li>
++											<li class="food--drink"><a class="" href="https://echomtn.com/food-drink" >Food &amp; Drink</a></li>
++										</ul>
++				</div>
++
++			</li>
++										<li class="trail-map--conditions"><a class="active" href="https://echomtn.com/mountain-conditions" >Trail Map &amp; Conditions</a></li>
++										<li class="groups--events"><a class="" href="https://echomtn.com/private-events" >Groups &amp; Events</a></li>
++										<li class="weddings"><a class="" href="https://echomtn.com/weddings" >Weddings</a></li>
++								</ul>
++		        </div>
++			</div>
++		</nav>
++	</header>
++
++	<main id="main">
++		
++<h1 class="page-title">Trail Map &amp; Conditions</h1>
++	<div class="container">
++		<div class="breaking-news">
++			<h2>Stop! Don't Scroll Any Further Until You Review The Following Information Carefully</h2>
++<p><em>(Like, pretend you're the teacher's pet and study this stuff. There will be a quiz.)</em></p>
++<p>Here at Echo, we want everyone to enjoy their visit and stay safe, which means understanding what to expect when starting out.</p>
++<p>Here's what you need to know about mountain conditions at Echo:</p>
++<p><strong>1. Echo Is A Mostly Intermediate Mountain</strong></p>
++<p>Say it with us... Echo is a mostly intermediate mountain. Again... Echo is a mostly intermediate mountain. Keep going...<br /></p>
++<p><strong>2. First-Time Guests Should Spend A Lot Of Time In The Beginner Area</strong><br /></p>
++<p>Our beginner area is great for learning the basics (stopping, turning, etc.) and having fun getting to know snow sports. Skiing and snowboarding take a lot of practice! That's why we encourage our first-time guests to spend as much time in the beginner area as possible.</p>
++<p>Please note that we recommend <u>exercising caution</u> when advancing to other areas of the mountain, as the transition to our beginner and intermediate runs can be quite challenging. <br /></p>
++<p><strong>3. Beginner Runs Don't Necessarily Mean Easy Runs</strong></p>
++<p>Our beginner runs (marked by Green Circles) are <em>Echo's</em> easiest way down, but they are not as easy or mellow as greens at other ski and snowboard areas. Since our terrain is more advanced, riding the Hot Laps Special Triple Chair and skiing or snowboarding the terrain around it may not be practical if you're just starting out. There's no shame in spending your day in the beginner area!</p>
++<p><strong>4. Night Skiing Typically Opens in January and May Or May Not Include The Beginner Area. </strong></p>
++<p>Please note, not all trails are available for <a href="https://echomtn.com/night-ski-snowboard">Night Skiing &amp; Snowboarding</a>. Although our beginner area is likely to be open for Night Skiing, <u>all other trails are intermediate terrain only</u> (marked by Blue Squares). That means if you come for Night Skiing be prepared to navigate intermediate terrain.<br /></p>
++		</div>
++	</div>
++<div class="container">
++	<div class="night-switch">
++		<p class="switch-label">Day/Night</p>
++		<input type="checkbox" name="check-1" value="1" class="lcs_check" autocomplete="off" />
++	</div>
++</div>
++<div id="trail-map-wrapper">
++	<img id="trail-map" class="trail-map" src="/images/uploads/Echo-Trail-Map-Day-02.26_2026-03-24-152922_xpyn.JPG" alt="Trail Map" usemap="#trailmap">
++	<map name="trailmap" id="trailmap">
++																			</map>
++	<div class="zoom-controls">
++		<button onclick="$('#trail-map').zoomable({method:'zoomIn'})" title="Zoom in" class="btn btn-primary"><i class="fas fa-search-plus"></i></button>
++		<button onclick="$('#trail-map').zoomable({method:'zoomOut'})" title="Zoom out" class="btn btn-primary"><i class="fas fa-search-minus"></i></button>
++	</div>
++</div>
++<div id="night-trail-map-wrapper" style="display:none;">
++	<img id="night-trail-map" class="night-trail-map" src="/images/uploads/Echo-Trail-Map-Night-02.26_2026-03-24-153047_homy.JPG" alt="Night Trail Map" usemap="#night-trailmap">
++	<map name="night-trailmap" id="night-trailmap">
++													</map>
++	<div class="zoom-controls">
++		<button onclick="$('#night-trail-map').zoomable({method:'zoomIn'})" title="Zoom in" class="btn btn-primary"><i class="fas fa-search-plus"></i></button>
++		<button onclick="$('#night-trail-map').zoomable({method:'zoomOut'})" title="Zoom out" class="btn btn-primary"><i class="fas fa-search-minus"></i></button>
++	</div>
++</div>
++
++<div class="container">
++	<h2>Lifts and Runs Status</h2>
++	<div class="mountain-conditions">
++		<h4>Table Key</h4>
++		<div class="table-key">
++			<span class="key-item"><img class="lift-status" src="/images/open.svg"> Open </span>
++			<span class="key-item"><img class="lift-status" src="/images/projected.svg"> Projected </span>
++			<span class="key-item"><img class="lift-status" src="/images/closed.svg"> Closed</span>
++			<span class="key-item"><img class="lift-status" src="/images/camera.svg"> View Gallery</span>
++			<span class="key-item"><img class="lift-status" src="/images/moon.svg"> Night Run</span>
++		</div>
++		<h4>Lifts</h4>
++		<div class="row lifts">
++																	<div class="col-md-4 item dark odd">
++											<img class="lift-status" src="/images/closed.svg">
++										Hot Laps Special Triple Chair
++				</div>
++															<div class="col-md-4 item dark even">
++											<img class="lift-status" src="/images/closed.svg">
++										Stairway to Shreddin Conveyor
++				</div>
++															<div class="col-md-4 item dark odd">
++											<img class="lift-status" src="/images/closed.svg">
++										Magic Vista Conveyor
++				</div>
++																		</div>
++		<h4>Runs</h4>
++		<div class="row runs">
++																		<div class="col-md-4 item darkodd">
++											<img class="run-status" src="/images/closed.svg">
++										Yard Sale
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++															<div class="col-md-4 item darkeven">
++											<img class="run-status" src="/images/closed.svg">
++										Traveler&#039;s Traverse - Upper
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++															<div class="col-md-4 item darkodd">
++											<img class="run-status" src="/images/closed.svg">
++										Traveler&#039;s Traverse - Middle
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++																								<div class="col-md-4 item liteeven">
++											<img class="run-status" src="/images/closed.svg">
++										Traveler&#039;s Traverse - Lower
++														</div>
++															<div class="col-md-4 item liteodd">
++											<img class="run-status" src="/images/closed.svg">
++										Lucky&#039;s Loop
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++															<div class="col-md-4 item liteeven">
++											<img class="run-status" src="/images/closed.svg">
++										Full Send - Upper
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++																								<div class="col-md-4 item darkodd">
++											<img class="run-status" src="/images/closed.svg">
++										Full Send - Lower
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++															<div class="col-md-4 item darkeven">
++											<img class="run-status" src="/images/closed.svg">
++										Hollywood - Upper
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++															<div class="col-md-4 item darkodd">
++											<img class="run-status" src="/images/closed.svg">
++										Hollywood - Middle
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++																								<div class="col-md-4 item liteeven">
++											<img class="run-status" src="/images/closed.svg">
++										Hollywood - Lower
++																<img class="moon-icon" src="/images/moon.svg">
++									</div>
++															<div class="col-md-4 item liteodd">
++											<img class="run-status" src="/images/closed.svg">
++										Gold Digger
++														</div>
++															<div class="col-md-4 item liteeven">
++											<img class="run-status" src="/images/closed.svg">
++										The Glades
++														</div>
++																		</div>
++	</div>
++	<div class="mountain-conditions mt-5 pt-5">	
++		<h2 class="mt-5">Weather Forecast</h2>
++		<div class="opensnow-poweredby" style="text-align: right;margin-top: -25px;"><span class="attribute-description">Powered by </span><a class="attribute-link" href="https://opensnow.com/location/echomountain/snow-summary?units=imperial&utm_source=echo-mountain&utm_medium=external-api&utm_campaign=2025-2026" target="_black"><img src="https://blizzard.opensnow.com/logos/logo-opensnow-app-text-light.png" style="width:125px;"></a></div><div class="opensnow-forecast accordion mb-5 pb-5">                    <div class="opensnow-day accordion-item">
++                        <button class="opensnow-day-head accordion-button p-3 p-sm-4 d-flex justify-content-between align-items-center " type="button" data-toggle="collapse" data-target="#collapse0" aria-expanded="true" aria-controls="collapse0">
++                            <div class="os-day-content text-left fs-1-75 fs-xs-1-5">
++                                <span class="text-uppercase">Jul 12</span> <span class="mx-sm-2 pipe">|</span> Sun<img class="weather-icon ml-4 ml-sm-5" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" /> 59°F <span class="mx-sm-2 pipe">|</span> 7/11<sup>MPH</sup>                            </div>
++                            <div class="accordion-toggle"></div>
++                        </button>
++                        <div id="collapse0" class="accordion-collapse collapse in">
++                            <div class="opensnow-row-header p-2 d-flex justify-content-between align-items-center fs-1-75 fs-xs-1-5">
++                                <div class="os-daynight"></div>
++                                <div class="os-temphigh">High</div>
++                                <div class="os-templow">Low</div>
++                                <div class="os-snow">Snow</div>
++                                <div class="os-wind">Wind</div>
++                                <div class="os-weather">Weather</div>
++                            </div>
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" /><br />Night                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">71<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">54<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">7/11<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" />
++                                    Clear                                </div>
++                            </div>
++
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/skc.png" /><br />Day                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">73<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">54<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">7/11<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/tsra_sct.png" />
++                                    Scattered T-Storms                                </div>
++                            </div>
++
++                                        </div><!-- close .accordion-collapse -->
++                    </div><!-- close .opensnow-day -->
++                                        <div class="opensnow-day accordion-item">
++                        <button class="opensnow-day-head accordion-button p-3 p-sm-4 d-flex justify-content-between align-items-center collapsed" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
++                            <div class="os-day-content text-left fs-1-75 fs-xs-1-5">
++                                <span class="text-uppercase">Jul 13</span> <span class="mx-sm-2 pipe">|</span> Mon<img class="weather-icon ml-4 ml-sm-5" src="https://blizzard.opensnow.com/icons/wx/night/tsra_sct.png" /> 60°F <span class="mx-sm-2 pipe">|</span> 6/11<sup>MPH</sup>                            </div>
++                            <div class="accordion-toggle"></div>
++                        </button>
++                        <div id="collapse2" class="accordion-collapse collapse ">
++                            <div class="opensnow-row-header p-2 d-flex justify-content-between align-items-center fs-1-75 fs-xs-1-5">
++                                <div class="os-daynight"></div>
++                                <div class="os-temphigh">High</div>
++                                <div class="os-templow">Low</div>
++                                <div class="os-snow">Snow</div>
++                                <div class="os-wind">Wind</div>
++                                <div class="os-weather">Weather</div>
++                            </div>
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" /><br />Night                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">70<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">55<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">6/11<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/tsra_sct.png" />
++                                    Scattered T-Storms                                </div>
++                            </div>
++
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/skc.png" /><br />Day                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">70<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">55<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">7/12<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/skc.png" />
++                                    Sunny                                </div>
++                            </div>
++
++                                        </div><!-- close .accordion-collapse -->
++                    </div><!-- close .opensnow-day -->
++                                        <div class="opensnow-day accordion-item">
++                        <button class="opensnow-day-head accordion-button p-3 p-sm-4 d-flex justify-content-between align-items-center collapsed" type="button" data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
++                            <div class="os-day-content text-left fs-1-75 fs-xs-1-5">
++                                <span class="text-uppercase">Jul 14</span> <span class="mx-sm-2 pipe">|</span> Tue<img class="weather-icon ml-4 ml-sm-5" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" /> 57°F <span class="mx-sm-2 pipe">|</span> 6/11<sup>MPH</sup>                            </div>
++                            <div class="accordion-toggle"></div>
++                        </button>
++                        <div id="collapse4" class="accordion-collapse collapse ">
++                            <div class="opensnow-row-header p-2 d-flex justify-content-between align-items-center fs-1-75 fs-xs-1-5">
++                                <div class="os-daynight"></div>
++                                <div class="os-temphigh">High</div>
++                                <div class="os-templow">Low</div>
++                                <div class="os-snow">Snow</div>
++                                <div class="os-wind">Wind</div>
++                                <div class="os-weather">Weather</div>
++                            </div>
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" /><br />Night                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">69<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">51<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">6/11<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" />
++                                    Clear                                </div>
++                            </div>
++
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/skc.png" /><br />Day                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">70<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">51<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">7/11<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/tsra_sct.png" />
++                                    Scattered T-Storms                                </div>
++                            </div>
++
++                                        </div><!-- close .accordion-collapse -->
++                    </div><!-- close .opensnow-day -->
++                                        <div class="opensnow-day accordion-item">
++                        <button class="opensnow-day-head accordion-button p-3 p-sm-4 d-flex justify-content-between align-items-center collapsed" type="button" data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapse6">
++                            <div class="os-day-content text-left fs-1-75 fs-xs-1-5">
++                                <span class="text-uppercase">Jul 15</span> <span class="mx-sm-2 pipe">|</span> Wed<img class="weather-icon ml-4 ml-sm-5" src="https://blizzard.opensnow.com/icons/wx/night/tsra_sct.png" /> 58°F <span class="mx-sm-2 pipe">|</span> 6/10<sup>MPH</sup>                            </div>
++                            <div class="accordion-toggle"></div>
++                        </button>
++                        <div id="collapse6" class="accordion-collapse collapse ">
++                            <div class="opensnow-row-header p-2 d-flex justify-content-between align-items-center fs-1-75 fs-xs-1-5">
++                                <div class="os-daynight"></div>
++                                <div class="os-temphigh">High</div>
++                                <div class="os-templow">Low</div>
++                                <div class="os-snow">Snow</div>
++                                <div class="os-wind">Wind</div>
++                                <div class="os-weather">Weather</div>
++                            </div>
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" /><br />Night                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">68<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">53<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">6/10<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/tsra_sct.png" />
++                                    Scattered T-Storms                                </div>
++                            </div>
++
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/skc.png" /><br />Day                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">69<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">53<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">8/13<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/skc.png" />
++                                    Sunny                                </div>
++                            </div>
++
++                                        </div><!-- close .accordion-collapse -->
++                    </div><!-- close .opensnow-day -->
++                                        <div class="opensnow-day accordion-item">
++                        <button class="opensnow-day-head accordion-button p-3 p-sm-4 d-flex justify-content-between align-items-center collapsed" type="button" data-toggle="collapse" data-target="#collapse8" aria-expanded="true" aria-controls="collapse8">
++                            <div class="os-day-content text-left fs-1-75 fs-xs-1-5">
++                                <span class="text-uppercase">Jul 16</span> <span class="mx-sm-2 pipe">|</span> Thu<img class="weather-icon ml-4 ml-sm-5" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" /> 57°F <span class="mx-sm-2 pipe">|</span> 6/10<sup>MPH</sup>                            </div>
++                            <div class="accordion-toggle"></div>
++                        </button>
++                        <div id="collapse8" class="accordion-collapse collapse ">
++                            <div class="opensnow-row-header p-2 d-flex justify-content-between align-items-center fs-1-75 fs-xs-1-5">
++                                <div class="os-daynight"></div>
++                                <div class="os-temphigh">High</div>
++                                <div class="os-templow">Low</div>
++                                <div class="os-snow">Snow</div>
++                                <div class="os-wind">Wind</div>
++                                <div class="os-weather">Weather</div>
++                            </div>
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" /><br />Night                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">67<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">52<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">6/10<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/night/skc.png" />
++                                    Clear                                </div>
++                            </div>
++
++                
++                            <div class="opensnow-halfday p-2 d-flex justify-content-between align-items-center">
++                                <div class="os-daynight">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/skc.png" /><br />Day                                    
++                                </div>
++                                <div class="os-temphigh fs-2-5 fs-xs-1-75">68<sup>°F</sup></div>
++                                <div class="os-templow fs-2-5 fs-xs-1-75">52<sup>°F</sup></div>
++                                <div class="os-snow fs-2-5 fs-xs-1-75">0"</div>
++                                <div class="os-wind fs-2-5 fs-xs-1-75">7/11<sup>MPH</sup></div>
++                                <div class="os-weather">
++                                    <img class="weather-icon" src="https://blizzard.opensnow.com/icons/wx/day/tsra_sct.png" />
++                                    Scattered T-Storms                                </div>
++                            </div>
++
++                                        </div><!-- close .accordion-collapse -->
++                    </div><!-- close .opensnow-day -->
++                    </div><div class="opensnow-details" style="text-align: right;margin-top: -50px;margin-bottom: 50px;"><a class="details-link" href="https://opensnow.com/location/echomountain/snow-summary?units=imperial&utm_source=echo-mountain&utm_medium=external-api&utm_campaign=2025-2026" target="_black" style="font-size: 14px;">View Snow Report</a></div>		
++	</div>
++
++	
++				<div class="weather-forecast-wrap">
++		<h2>Snow Stake Cam</h2>
++<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto;">
++ <figure><iframe src="https://www.youtube.com/embed/gFSvN0XiQlM?si=EtLOOVDFdMQDEpQn" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
++ </iframe></figure>
++</div>
++<p><br></p>
++<figure><iframe width="100%" height="600" frameborder="0" src="https://ambientweather.net/dashboard/92116c2a817a4bfbc1923b5db5ab5767/tiles"></iframe></figure>
++		
++		
++	</div>
++	<div class="mountain-conditions">
++		
++					<h4>Snow Fall</h4>
++															<div class="row snowfall">
++							
++					<div class="col-md-6 table-item">
++						<div class="condition-header">
++							Last 24 Hours
++						</div>
++						<div class="condition-content">
++							0 in
++						</div>
++					</div>
++							
++					<div class="col-md-6 table-item">
++						<div class="condition-header">
++							Last 48 Hours
++						</div>
++						<div class="condition-content">
++							0 in.
++						</div>
++					</div>
++							</div>
++															<div class="row surfaces">
++							
++					<div class="col-md-12 table-item">
++						<div class="condition-header">
++							Base
++						</div>
++						<div class="condition-content">
++							0
++						</div>
++					</div>
++							</div>
++		
++					<h4>Mountain Stats</h4>
++															<div class="row mountainStats">
++							
++					<div class="col-md-3 table-item">
++						<div class="condition-header">
++							Open Lift Count
++						</div>
++						<div class="condition-content">
++							0 of 3
++						</div>
++					</div>
++							
++					<div class="col-md-3 table-item">
++						<div class="condition-header">
++							Runs Open
++						</div>
++						<div class="condition-content">
++							0 of 7
++						</div>
++					</div>
++							
++					<div class="col-md-3 table-item">
++						<div class="condition-header">
++							Terrain Parks Open
++						</div>
++						<div class="condition-content">
++							0 of 1
++						</div>
++					</div>
++							
++					<div class="col-md-3 table-item">
++						<div class="condition-header">
++							4 Rails
++						</div>
++						<div class="condition-content">
++							0 of 4
++						</div>
++					</div>
++							</div>
++			</div>
++</div>
++
++
++<div class="modal fade" id="runModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
++	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
++		<div class="modal-content">
++		<div class="modal-header">
++			<h5 class="modal-title">Modal title</h5>
++			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
++				<span aria-hidden="true">&times;</span>
++			</button>
++		</div>
++			<div class="modal-body">
++				<div class="mountain-run-content">This will be the content from the field</div>
++			</div>
++		</div>
++	</div>
++</div>
++	</main>
++		<footer id="footer">
++		<div class="content">
++			<div class="container">
++				<div class="row">
++					        										<div class="col-lg-3 contact-info">
++							<h3 class="footerTitle">Contact Us</h3>
++							<p class="address-info"><span class="address-title">Echo Mountain</span><br>
++								19285 CO-103<br>
++								Idaho Springs, CO 80452 USA<br>
++							</p>
++							<p class="email"><a href="/cdn-cgi/l/email-protection#cea7a0a8a18eabada6a1a3baa0e0ada1a3"><span class="__cf_email__" data-cfemail="aac3c4ccc5eacfc9c2c5c7dec484c9c5c7">[email&#160;protected]</span></a></p>
++															<p class="phone">720-615-0019</p>
++														<div class="social-links-wrap">
++																										<a class="social-link" target="_blank" href="https://www.facebook.com/echomtnco/"><img class="svg" src="/images/uploads/Facebook.svg" alt="Facebook"></a>
++																																		<a class="social-link" target="_blank" href="https://twitter.com/echomtnco"><img class="svg" src="/images/uploads/Twitter.svg" alt="Twitter"></a>
++																																		<a class="social-link" target="_blank" href="https://www.instagram.com/echomtnco/"><img class="svg" src="/images/uploads/Instagram.svg" alt="Instagram"></a>
++															</div>
++						</div>
++						      				        										<div class="col-lg-3 offersUpdates">
++																					<div class="klaviyo-form-VugXQU"></div>
++						</div>
++						      				        										<div class="col-lg-3 footerNav">
++							<nav class="menu footer" role="navigation" aria-label="Footer">
++							<h3 class="footerTitle">Quick Links</h3>
++						      				
++
++																								<li class="jobs"><a class="" href="https://recruiting.paylocity.com/recruiting/jobs/All/e1861ff1-e32b-4122-ae8e-4aef7eec929b/Echo-Mountain-Ski-and-Event-Center-LLC"  target="_blank" >Jobs</a></li>
++										<li class="hours"><a class="" href="https://echomtn.com/hours" >Hours</a></li>
++										<li class="getting-here"><a class="" href="https://echomtn.com/getting-here" >Getting Here</a></li>
++										<li class="accessibility"><a class="" href="https://echomtn.com/accessibility" >Accessibility</a></li>
++										<li class="privacy"><a class="" href="https://echomtn.com/privacy" >Privacy</a></li>
++										<li class="terms--conditions"><a class="" href="https://echomtn.com/terms-conditions" >Terms &amp; Conditions</a></li>
++										</nav>
++					</div>
++				</div>
++			</div>
++		</div>
++	</footer>
++	<div id="klaro-launch"><a class="button is-success" onclick="return klaro.show();">Privacy & Cookies settings</a></div>
++			<style type="text/css">#klaro-launch, #klaro {display: none;}</style>
++		<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
++			$( document ).ready(function() {
++				let manager = klaro.getManager();
++				manager.changeAll(true);
++				manager.saveAndApplyConsents();
++			});
++		</script>
++			<script type="text/javascript" async="" src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=SxprXY"></script>
++<script src="/js/bootstrap.min.js"></script>
++<script src="/js/ei-custom.js"></script>
++<script type="application/ld+json">{"@context":"http://schema.org","@graph":[{"@type":"TouristAttraction","description":"Planning your ski, snowboard, or tubing trip to Echo Mountain? Make sure to check out our weather conditions, maps and more!","image":{"@type":"ImageObject","url":"https://echomtn.com/images/uploads/_1200x630_crop_center-center_82_none/ST_echotrailmap2018_FULL_01.14.png?mtime=1547885114"},"mainEntityOfPage":"https://echomtn.com/mountain-conditions","name":"Trail Map and Conditions","url":"https://echomtn.com/mountain-conditions"},{"@id":"#identity","@type":"LocalBusiness","image":{"@type":"ImageObject","height":"1920","url":"https://echomtn.com/images/uploads/ECHO-Primary-Logo-SQ-g.png","width":"1920"},"logo":{"@type":"ImageObject","height":"60","url":"https://echomtn.com/images/uploads/_600x60_fit_center-center_82_none/ECHO-Primary-Logo-SQ-g.png?mtime=1731782834","width":"60"},"name":"Echo Mountain","priceRange":"$","sameAs":["https://x.com/echomtnco","https://www.facebook.com/echomtnco/","https://www.youtube.com/@EchoMountainColorado","https://www.instagram.com/echomtnco/","https://www.tiktok.com/@echomtnco"],"telephone":"720-615-0019"},{"@id":"#creator","@type":"Organization"},{"@type":"BreadcrumbList","description":"Breadcrumbs list","itemListElement":[{"@type":"ListItem","item":"https://echomtn.com/","name":"Home","position":1},{"@type":"ListItem","item":"https://echomtn.com/mountain-conditions","name":"Trail Map & Conditions","position":2}],"name":"Breadcrumbs"}]}</script><script src="/js/jquery-ui.min.js?v=1631812873"></script>
++<script src="/js/jquery.ui.touch-punch.min.js?v=1631812873"></script>
++<script src="/js/lc_switch.min.js?v=1631812873"></script>
++<script src="/js/ei-map.js?v=1667320815"></script></body>
++</html>
+-- 
+2.39.5
+

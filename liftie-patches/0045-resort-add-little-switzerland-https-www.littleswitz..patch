@@ -1,0 +1,2162 @@
+From bce98866c48f64e3f9784b0615c26d02e4f966b0 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:23:37 -0400
+Subject: [PATCH 45/48] resort: add little-switzerland
+ (https://www.littleswitz.com/mountain-info/snow-report)
+
+---
+ lib/resorts/little-switzerland/index.js      |   14 +
+ lib/resorts/little-switzerland/resort.json   |   16 +
+ lib/resorts/little-switzerland/trails.js     |   19 +
+ test/resorts/example/little-switzerland.html | 1956 ++++++++++++++++++
+ test/resorts/little-switzerland-trails.js    |   84 +
+ test/resorts/little-switzerland.js           |   13 +
+ 6 files changed, 2102 insertions(+)
+ create mode 100644 lib/resorts/little-switzerland/index.js
+ create mode 100644 lib/resorts/little-switzerland/resort.json
+ create mode 100644 lib/resorts/little-switzerland/trails.js
+ create mode 100644 test/resorts/example/little-switzerland.html
+ create mode 100644 test/resorts/little-switzerland-trails.js
+ create mode 100644 test/resorts/little-switzerland.js
+
+diff --git a/lib/resorts/little-switzerland/index.js b/lib/resorts/little-switzerland/index.js
+new file mode 100644
+index 00000000..a4d8d6b8
+--- /dev/null
++++ b/lib/resorts/little-switzerland/index.js
+@@ -0,0 +1,14 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++
++export default {
++  selector: '.Lift.component-row',
++  parse: row => {
++    const title = select(row.children, '.cell.title')[0];
++    const status = select(row.children, '.cell.status')[0];
++    if (!title || !status) {
++      return;
++    }
++    return { name: allText(title), status: status.attribs.title ?? allText(status) };
++  }
++};
+diff --git a/lib/resorts/little-switzerland/resort.json b/lib/resorts/little-switzerland/resort.json
+new file mode 100644
+index 00000000..0565c4f6
+--- /dev/null
++++ b/lib/resorts/little-switzerland/resort.json
+@@ -0,0 +1,16 @@
++{
++  "name": "Little Switzerland",
++  "url": {
++    "host": "https://www.littleswitz.com",
++    "pathname": "/mountain-info/snow-report"
++  },
++  "trails": true,
++  "tags": [
++    "Wisconsin",
++    "Midwest"
++  ],
++  "ll": [
++    -88.2848,
++    43.3327
++  ]
++}
+diff --git a/lib/resorts/little-switzerland/trails.js b/lib/resorts/little-switzerland/trails.js
+new file mode 100644
+index 00000000..db5d2683
+--- /dev/null
++++ b/lib/resorts/little-switzerland/trails.js
+@@ -0,0 +1,19 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++
++export default {
++  selector: '.Trail.component-row',
++  parse: row => {
++    const title = select(row.children, '.cell.title')[0];
++    const status = select(row.children, '.cell.status')[0];
++    const level = title && select(title.children, '.f-icon.level')[0];
++    if (!title || !status) {
++      return;
++    }
++    return {
++      name: allText(title),
++      status: status.attribs.title ?? allText(status),
++      level: level?.attribs.title
++    };
++  }
++};
+diff --git a/test/resorts/example/little-switzerland.html b/test/resorts/example/little-switzerland.html
+new file mode 100644
+index 00000000..f8970cc2
+--- /dev/null
++++ b/test/resorts/example/little-switzerland.html
+@@ -0,0 +1,1956 @@
++
++  <!DOCTYPE html>
++<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#" class="domain-switz" data-domain="switz">
++
++<head>
++
++            <!-- Google Tag Manager -->
++        <link href="https://www.googletagmanager.com" rel="preconnect" crossorigin>
++        <link rel="dns-prefetch" href="https://www.googletagmanager.com">
++        <script>(function(w, d, s, l, i) {
++                w[l] = w[l] || [];
++                w[l].push({
++                    'gtm.start':
++                        new Date().getTime(), event: 'gtm.js',
++                });
++                var f = d.getElementsByTagName(s)[0],
++                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
++                j.async = true;
++                j.src =
++                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
++                f.parentNode.insertBefore(j, f);
++            })(window, document, 'script', 'dataLayer', 'GTM-PCF5DSJ');</script>
++        <!-- End Google Tag Manager -->
++    
++    <link rel="preload"
++      href="https://cdn.jsdelivr.net/combine/npm/@accessible360/accessible-slick@1.0.1/slick/slick.min.css" as="style"
++      onload="this.onload=null;this.rel='stylesheet'">
++<link rel="preload"
++      href="https://cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/accessible-slick-theme.min.css"
++      as="style" onload="this.onload=null;this.rel='stylesheet'">
++
++<noscript>
++    <link rel="stylesheet"
++          href="https://cdn.jsdelivr.net/combine/npm/@accessible360/accessible-slick@1.0.1/slick/slick.min.css">
++    <link rel="stylesheet"
++          href="https://cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/accessible-slick-theme.min.css">
++</noscript>
++
++
++<script>
++    /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
++    /* This file is meant as a standalone workflow for
++    - testing support for link[rel=preload]
++    - enabling async CSS loading in browsers that do not support rel=preload
++    - applying rel preload css once loaded, whether supported or not.
++    */
++    (function(w) {
++        'use strict';
++        // rel=preload support test
++        if (!w.loadCSS) {
++            w.loadCSS = function() {
++            };
++        }
++        // define on the loadCSS obj
++        var rp = loadCSS.relpreload = {};
++        // rel=preload feature support test
++        // runs once and returns a function for compat purposes
++        rp.support = (function() {
++            var ret;
++            try {
++                ret = w.document.createElement('link').relList.supports('preload');
++            } catch (e) {
++                ret = false;
++            }
++            return function() {
++                return ret;
++            };
++        })();
++
++        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
++        // then change that media back to its intended value on load
++        rp.bindMediaToggle = function(link) {
++            // remember existing media attr for ultimate state, or default to 'all'
++            var finalMedia = link.media || 'all';
++
++            function enableStylesheet() {
++                // unbind listeners
++                if (link.addEventListener) {
++                    link.removeEventListener('load', enableStylesheet);
++                } else if (link.attachEvent) {
++                    link.detachEvent('onload', enableStylesheet);
++                }
++                link.setAttribute('onload', null);
++                link.media = finalMedia;
++            }
++
++            // bind load handlers to enable media
++            if (link.addEventListener) {
++                link.addEventListener('load', enableStylesheet);
++            } else if (link.attachEvent) {
++                link.attachEvent('onload', enableStylesheet);
++            }
++
++            // Set rel and non-applicable media type to start an async request
++            // note: timeout allows this to happen async to let rendering continue in IE
++            setTimeout(function() {
++                link.rel = 'stylesheet';
++                link.media = 'only x';
++            });
++            // also enable media after 3 seconds,
++            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
++            setTimeout(enableStylesheet, 3000);
++        };
++
++        // loop through link elements in DOM
++        rp.poly = function() {
++            // double check this to prevent external calls from running
++            if (rp.support()) {
++                return;
++            }
++            var links = w.document.getElementsByTagName('link');
++            for (var i = 0; i < links.length; i++) {
++                var link = links[i];
++                // qualify links to those with rel=preload and as=style attrs
++                if (link.rel === 'preload' && link.getAttribute('as') === 'style' && !link.getAttribute('data-loadcss')) {
++                    // prevent rerunning on link
++                    link.setAttribute('data-loadcss', true);
++                    // bind listeners to toggle media back
++                    rp.bindMediaToggle(link);
++                }
++            }
++        };
++
++        // if unsupported, run the polyfill
++        if (!rp.support()) {
++            // run once at least
++            rp.poly();
++
++            // rerun poly on an interval until onload
++            var run = w.setInterval(rp.poly, 500);
++            if (w.addEventListener) {
++                w.addEventListener('load', function() {
++                    rp.poly();
++                    w.clearInterval(run);
++                });
++            } else if (w.attachEvent) {
++                w.attachEvent('onload', function() {
++                    rp.poly();
++                    w.clearInterval(run);
++                });
++            }
++        }
++
++
++        // commonjs
++        if (typeof exports !== 'undefined') {
++            exports.loadCSS = loadCSS;
++        } else {
++            w.loadCSS = loadCSS;
++        }
++    }(typeof global !== 'undefined' ? global : this));
++
++</script>
++<script></script><!-- here to ensure a non-blocking load still occurs in IE and Edge, even if scripts follow loadCSS in head -->
++    <meta charset="utf-8" />
++<style>/* @see https://github.com/aFarkas/lazysizes#broken-image-symbol */.js img.lazyload:not([src]) { visibility: hidden; }/* @see https://github.com/aFarkas/lazysizes#automatically-setting-the-sizes-attribute */.js img.lazyloaded[data-sizes=auto] { display: block; width: 100%; }/* Transition effect. */.js .lazyload, .js .lazyloading { opacity: 0; }.js .lazyloaded { opacity: 1; -webkit-transition: opacity 2000ms; transition: opacity 2000ms; }</style>
++<link rel="canonical" href="https://www.littleswitz.com/mountain-info/snow-report" />
++<link rel="image_src" href="https://www.littleswitz.com/sites/default/files/styles/max_2600x2600/public/2025-01/20221219_094105-2.jpg?itok=NdHJEnwb" />
++<meta property="og:site_name" content="Little Switzerland" />
++<meta property="og:type" content="website" />
++<meta property="og:url" content="https://www.littleswitz.com/mountain-info/snow-report" />
++<meta property="og:title" content="Snow Report" />
++<meta property="og:image" content="https://www.littleswitz.com/sites/default/files/styles/max_2600x2600/public/2025-01/20221219_094105-2.jpg?itok=NdHJEnwb" />
++<meta name="Generator" content="Drupal 11 (https://www.drupal.org)" />
++<meta name="MobileOptimized" content="width" />
++<meta name="HandheldFriendly" content="true" />
++<meta name="viewport" content="width=device-width, initial-scale=1" />
++<script type="application/ld+json">{
++    "@context": "https://schema.org",
++    "@graph": [
++        {
++            "@type": "Organization",
++            "@id": "https://www.littleswitz.com/#organization",
++            "sameAs": [
++                "https://www.instagram.com/littleswitz",
++                "https://www.facebook.com/LittleSwitzerland",
++                "https://www.youtube.com/channel/UCYw-bH0W-u9eOdCXqGnYDmg"
++            ],
++            "url": "https://www.littleswitz.com/",
++            "name": "Little Switzerland",
++            "telephone": "262 297 9621",
++            "contactPoint": {
++                "@type": "ContactPoint",
++                "telephone": "262 297 9621",
++                "email": "info@littleswitz.com",
++                "url": "https://www.littleswitz.com/"
++            },
++            "logo": {
++                "@type": "ImageObject",
++                "url": "https://www.littleswitz.com//themes/custom/switz/logo.svg"
++            },
++            "image": {
++                "@type": "ImageObject",
++                "url": "https://www.littleswitz.com/sites/default/files/styles/max_2600x2600/public/styles/max_2600x2600/public/2026-07/Ridge%20Graphic%201800x1080%20%289%29.png?itok=1mEscOuW"
++            },
++            "address": {
++                "@type": "PostalAddress",
++                "streetAddress": "105 Cedar Creek Rd",
++                "addressLocality": "Slinger",
++                "addressRegion": "WI",
++                "postalCode": "53086",
++                "addressCountry": "US"
++            }
++        },
++        {
++            "@type": "WebPage",
++            "@id": "https://www.littleswitz.com/mountain-info/snow-report/#webpage",
++            "publisher": {
++                "@type": "Organization",
++                "@id": "https://www.littleswitz.com/#organization"
++            },
++            "inLanguage": "en-US"
++        },
++        {
++            "@type": "WebSite",
++            "@id": "https://www.littleswitz.com/#website",
++            "name": "Little Switzerland",
++            "url": "https://www.littleswitz.com/",
++            "publisher": {
++                "@type": "Organization",
++                "@id": "https://www.littleswitz.com/#organization"
++            },
++            "inLanguage": "en-US"
++        }
++    ]
++}</script>
++<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
++
++        <title>Snow Report | Little Switzerland</title>
++        <link rel="stylesheet" media="all" href="/sites/default/files/css/css_k8dIcP2dReavaORiVOT30MlQkQhj_hYM9qkf5ORrkFQ.css?delta=0&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFJ00pzQAJEpSAUPv6VduqntguiR1blgPJQXqEzCtk48FHfOau0d3QFqRufAbV3RVUhYB6ceINjWdB57lUJqSmliWFRMsSuYtO1Zy0JQpzQ-FODU4kWFna1Pezg_CYako8_oUPXD2Ub0liKZDTgeYju8-62OWtIBAEalS3Sa-Q7X2xnWpfz98jbkZHaod7T6O7NixuBcUXEGucOQ" />
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css_fZQYQovNpxQjFOmO_Gbelzuqx6FtK5U5CpInxJ9Ki5s.css?delta=1&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFJ00pzQAJEpSAUPv6VduqntguiR1blgPJQXqEzCtk48FHfOau0d3QFqRufAbV3RVUhYB6ceINjWdB57lUJqSmliWFRMsSuYtO1Zy0JQpzQ-FODU4kWFna1Pezg_CYako8_oUPXD2Ub0liKZDTgeYju8-62OWtIBAEalS3Sa-Q7X2xnWpfz98jbkZHaod7T6O7NixuBcUXEGucOQ" />
++<link rel="stylesheet" media="all" href="https://unpkg.com/plyr@3.7.8/dist/plyr.css" />
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css_UdgmU33YT1Yf7Zp_2s_b-1xy1VVubL4epNPlPFunmDY.css?delta=3&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFJ00pzQAJEpSAUPv6VduqntguiR1blgPJQXqEzCtk48FHfOau0d3QFqRufAbV3RVUhYB6ceINjWdB57lUJqSmliWFRMsSuYtO1Zy0JQpzQ-FODU4kWFna1Pezg_CYako8_oUPXD2Ub0liKZDTgeYju8-62OWtIBAEalS3Sa-Q7X2xnWpfz98jbkZHaod7T6O7NixuBcUXEGucOQ" />
++
++            <script src="https://app.termly.io/resource-blocker/96a1e676-6c68-45cc-a76c-848925eca76d?autoBlock=on" async></script>
++
++
++                <link rel="preconnect" href="https://fonts.googleapis.com">
++                <link rel="dns-prefetch" href="https://fonts.googleapis.com">
++                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++                <link rel="dns-prefetch" href="https://fonts.gstatic.com">
++
++                <link rel="icon" type="image/svg+xml" href="/themes/custom/switz/images/favicon/favicon.svg">
++                <link rel="apple-touch-icon" sizes="180x180"
++                      href="/themes/custom/switz/images/favicon/apple-touch-icon.png">
++                <link rel="icon" type="image/png" sizes="32x32"
++                      href="/themes/custom/switz/images/favicon/favicon-32x32.png">
++                <link rel="icon" type="image/png" sizes="16x16"
++                      href="/themes/custom/switz/images/favicon/favicon-16x16.png">
++                <link rel="manifest" href="/themes/custom/switz/images/favicon/site.webmanifest">
++                <link rel="mask-icon" href="/themes/custom/switz/images/favicon/safari-pinned-tab.svg"
++                      color="#ed1c24">
++                <link rel="shortcut icon" href="/themes/custom/switz/images/favicon/favicon.ico">
++                <meta name="msapplication-TileColor" content="#ffffff">
++                <meta name="msapplication-config" content="/themes/custom/switz/images/favicon/browserconfig.xml">
++                <meta name="theme-color" content="#ffffff">
++
++</head>
++
++<body class="season--summer path-node page-node-type-page">
++
++    <!-- Google Tag Manager (noscript) -->
++    <noscript>
++        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PCF5DSJ"
++                height="0" width="0" style="display:none;visibility:hidden"></iframe>
++    </noscript>
++    <!-- End Google Tag Manager (noscript) -->
++
++<a href="#main-content" class="center-horizontal pos-fixed opacity-0 focusable button primary skip-link">
++    Skip to main content
++</a>
++
++  <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
++    <div class="d-flex flex-direction-column layout-container">
++
++    <header class="transition-ui pos-fixed z-index-30 w-100 bg-white site-header" role="banner">
++    <div class="container d-flex jc-space-between ai-center header-inner">
++
++                    <a href="/" title="Home" rel="home" class="transition-ui d-block logo">
++                <svg aria-label="Little Switzerland" class="d-block hide-phone" version="1.1" xmlns="http://www.w3.org/2000/svg"
++     x="0" y="0"
++     viewBox="0 0 154 43"
++     xml:space="preserve">
++  <path fill="#231f20"
++        d="M46.6 33.7c0 .8-.3 1.6-.7 2.1-2.8 3.3-3.7 3.9-5.1 3.9-1.3 0-2.7-.5-4.3-1.5l-.1-.1 2.4-2.7.6.5-.4.3c.9.5 2.3 1 3.3 1 .7 0 1.3-.1 1.5-.3.3-.3.5-.8.5-1.5 0-1.3-.8-2.3-2.7-3.3-4.2-2.3-4.9-3.4-4.9-4.8 0-1.2.4-1.8 4.5-5.4l3.3 1c.1 0 .3.1.3.1.1 0 .2-.1.6-.4l.2-.1.5.5-2.6 2.3-2.5-.9c-.4-.1-.7-.2-.9-.2-.6 0-1.1.9-1.1 1.5 0 1 .5 1.7 3.2 3.4 3.7 2.2 4.4 2.9 4.4 4.6zM50.9 39.7zM60.7 28.5c-.3-.4-.7-.8-.9-1.2l-.1-.1-.1.1c-1 .7-2 2-2.7 3.1V29c-.8-.6-1.6-1.2-2.4-1.7h-.2c-.7.6-1.9 1.9-2.7 3.1V28.6c-.4-.5-.9-1-1.5-1.3H50l-2.8 2.1.4.5.6-.5c.8.5.8.6.8 3.3v4.6c0 .6.2 1.1 1.8 2.4h.1l2.9-2.2-.5-.5-.6.5c-1.1-.8-1.1-1-1.1-1.7V33c0-1.1.8-2.6 1.4-3.4 1.3.8 1.4 1 1.4 1.6v6.2c0 .5.4 1.1 2.6 2.3h.1l.1-.1c4.5-3.7 5.4-5.5 5.4-7.3-.1-1.6-1.1-2.8-1.9-3.8zm-3.1 8.1c-.6-.3-.7-.5-.7-.9v-2.6c0-1.3.7-2.6 1.3-3.4 1.4 1.5 2.1 3 2.1 4.5 0 1-.6 2.3-1.5 3.1l-1.2-.7zM68.9 24.2 67 26h-.1l-1.5-1.5 2-1.9zM70.1 37.6l-2.8 2.1-.1-.1c-1-.8-1.4-1.4-1.4-2.4v-4.6c0-2.7-.1-2.9-.8-3.4l-.6.5-.4-.5 2.8-2.1h.1c.5.3 1.1.8 1.5 1.3V36c0 .7.2 1.1.7 1.5l.6-.4.4.5zM77.7 36.8l.5.5-2.3 2.5h-.1c-2.3-1.2-2.6-1.6-2.6-2.5v-8h-.5c-.6 0-1.1.1-1.4.3l-.1.1-.2-.7.1-.1c2.3-1.6 3.2-2.4 4.5-3.9v-.1l.5.1-.1.3c-.1.3-.3 1.6-.3 2.4h1.7c.3 0 .6-.1.9-.4l.1-.1.5.5-1.4 1.5h-1.8v6.3c0 .9 0 1 1.5 1.8l.5-.5zM88.4 36.6l.5.5-2.5 2.6h-.1c-2-.4-4.3-.9-6.3-1.1h-.2l.2-.2c1.7-1.8 4.4-5.4 6-7.9-1-.2-3.3-.5-4.7-.6l-.5.6-.5-.5 2.2-2.8h.1c1.7.4 4.2.8 6.1.9h.2l-.1.2c-1.1 2.1-3.3 5.2-5.8 8.2 1.6.2 3.8.6 4.8.8l.6-.7zM97.8 37.6c-1.4-.5-2.9-1.9-3.3-2.8l4-2.9c.5-.3.7-.5.7-.9 0-.7-.7-2.3-2.1-3.7l-.1-.1c-1.5.9-3.5 2.2-4.9 3.2-.7.6-.8 2.1-.8 2.7 0 2.7 1.9 5.2 4.8 6.5h.1l3-2.4-.4-.5-1 .9zm-2.7-8.3c.8.6 1.6 2.3 1.6 2.7 0 .2 0 .3-.1.4L94.2 34c-.2-.7-.4-1.5-.4-2.4 0-1.2.1-1.7 1.3-2.3zM106.9 32.4c.2-.2.3-.6.3-.8 0-.6-.3-1.3-.8-1.9-.9 1.5-1 2.4-1 3.6v2.4c0 .4.2.7.8 1.1l.9.4.5-.5.5.4-2.3 2.5h-.1c-2.4-1-2.9-1.5-2.9-2.4v-4.6c0-2.7-.1-2.9-.8-3.4l-.6.5-.4-.5 2.8-2.1h.1c.5.3 1 .7 1.5 1.3v1.5c.6-1.1 1.5-2.1 2.5-2.9l.1-.1h.1c.9.5 1.4 1.5 1.4 2.8 0 .4-.1.8-.4 1l-1.7 1.9-.5-.3v.1zM116.7 37.6l-2.8 2.1-.1-.1c-1-.8-1.4-1.4-1.4-2.4V26.6c0-2.7-.1-2.9-.8-3.4l-.6.5-.4-.5 2.8-2.1h.1c.5.3 1 .7 1.5 1.3v13.4c0 .7.2 1.1.7 1.5l.5-.4.5.7zM129 37.1l-.7.4c-.9-1.1-1.9-3.8-3-7.7-.5-1.8-1-2.6-1.8-2.6-.5 0-.9.3-1.8 1l-1.8 1.4.5.5.1-.1c.5-.4 1-.7 1.3-.7.3 0 .6.3.8.7l.8 2.5c-4 3-4.8 3.8-4.8 4.7 0 1.7.8 2.4 1.6 2.4.9 0 2.3-.9 4.5-3.2.4 1 1.1 2.5 1.6 3.1l.1.1.1-.1c.9-.7 1.8-1.2 2.8-1.8l.1-.1-.4-.5zm-7.1.3c-.4 0-.8-.1-.8-1.1 0-.8.1-1.1 1.3-2l1.2-.9c.2.7.5 1.6.7 2.2-.8 1.1-1.7 1.8-2.4 1.8zM142.1 37.6l-2.8 2.1-.1-.1c-1.3-1.2-1.7-1.6-1.7-2.7v-6c0-.3-1.2-1.2-1.6-1.3-1.5 1.6-1.8 2.4-1.8 4.1V36c0 .7.2 1.1.7 1.5l.5-.4.5.5-2.8 2.1-.1-.1c-1-.8-1.4-1.4-1.4-2.4v-4.6c0-2.7-.1-2.9-.8-3.4l-.6.5-.4-.5 2.8-2.1h.1c.5.3 1 .8 1.5 1.3 0 .4-.1.9-.1 1.4v.5c.8-1.2 2.1-2.3 3.3-3.3l.1-.1 2.7 2v.1c-.1 1.1-.2 4.1-.2 6.5 0 .7.1 1 1.1 1.7l.5-.4.6.8zM154 32c0 2.8-1.6 5.2-5.3 7.7h-.2c-2.7-1.4-4.7-4.3-4.7-6.7 0-1.6.7-2.3 3.9-4.8l.1-.1.6.5-.1.1c-1.8 1.5-2.1 2-2.1 2.7 0 2.4 1.6 4.8 4 6.1 1-.9 1.5-2.2 1.5-3.7 0-2.4-.8-3.7-4.1-6.3-2.2-1.8-2.7-2.3-3.1-2.8l-.1-.1 2.5-2.2.6.4-.6.5c.2.3.9.9 3.4 3 2.6 2 3.7 3.8 3.7 5.7zM49.2 18.1c2.5-2.2 3.2-3.3 3.2-4.8 0-1.1-.9-4.6-.9-6.3 0-.8.6-1.6 3.4-3.4L57.3 2l1.6 1c.8.5 1 .8 1 1.1 0 .2-.1.5-.4.7l-2 1.8-.3-.2c.5-.5.6-.7.6-.9 0-.4-.6-.9-2.1-1.8C54.2 4.6 54 5 54 5.9c0 1.7.6 4.4.6 5.8 0 1.1-.5 2.1-2.5 4.2l6.3 1.3c.5.1.9.2 1.3.2s.8-.1 1.1-.5l.3.3-2.4 2.4c-5.5-.8-7.6-1.6-8.1-1.6-.4 0-.7.3-1 .5l-.4-.4z" />
++    <path fill="#231f20"
++          d="M58.7 19.7c-3.8-.6-6-1.1-7.2-1.4-.5-.1-.8-.2-1-.2-.4 0-.7.3-.9.5l-.1.1-.5-.6.1-.1c2.4-2.1 3.1-3.2 3.1-4.7 0-.5-.2-1.5-.4-2.5-.2-1.3-.5-2.8-.5-3.8s.8-1.8 3.4-3.5l2.5-1.6L58.9 3c.7.5 1 .8 1 1.2 0 .2-.2.5-.4.8l-2.1 1.9-.6-.4.2-.2c.5-.4.6-.6.6-.8 0-.4-.6-.8-2-1.6-1.4.9-1.6 1.3-1.6 2 0 .9.2 2 .3 3.1.2 1 .3 1.9.3 2.6 0 1.2-.6 2.2-2.4 4.1l6.2 1.3c.4.1.8.2 1.2.2.4 0 .7-.1 1-.5l.1-.1.5.4-2.5 2.7zm-8.2-1.9c.2 0 .5.1 1 .2 1.2.3 3.3.8 7 1.4l2.2-2.2-.1-.1c-.3.3-.7.4-1.1.4-.4 0-.8-.1-1.2-.2L51.7 16l.2-.2c2.1-2.2 2.5-3.1 2.5-4.1 0-.7-.1-1.6-.3-2.6-.2-1.1-.3-2.3-.3-3.2s.3-1.4 1.8-2.3h.2C57.4 4.5 58 5 58 5.5c0 .3-.1.5-.5.9l.1.1 1.9-1.7c.2-.2.3-.4.3-.6 0-.2-.3-.6-.9-1l-1.5-1-2.3 1.5c-2.8 1.8-3.3 2.5-3.3 3.3 0 1 .3 2.4.5 3.8.2 1.1.4 2.1.4 2.6 0 1.6-.7 2.7-3.1 4.8l.1.1c0-.2.4-.5.8-.5zm15.3 1.8c-1.1-.8-1.3-1.4-1.3-2.3 0-1 .1-2.1.1-4.6 0-2.8-.1-2.9-.9-3.5l-.7.5-.3-.3 2.6-2c.5.3 1 .7 1.4 1.3 0 .4-.1.9-.1 1.4V16c0 .8.3 1.2.8 1.7l.5-.4.3.3-2.4 2zm.1-16.8 1.3 1.4-1.8 1.7-1.3-1.4 1.8-1.7z" />
++    <path fill="#231f20"
++          d="M65.8 19.7c-1.1-.8-1.5-1.5-1.5-2.4v-4.6c0-2.7-.1-2.9-.8-3.4l-.5.5-.4-.5 2.8-2.1h.1c.5.3 1 .8 1.4 1.3 0 .4-.1.9-.1 1.4V16c0 .7.2 1.1.7 1.5l.5-.4.5.5-2.7 2.1zM63.6 9.1c1 .7 1 .8 1 3.7v4.6c0 .7.2 1.3 1.2 2.1l2.4-1.8-.1-.1-.5.4-.1-.1c-.5-.4-.9-.9-.9-1.8V8.6c-.3-.5-.8-.9-1.3-1.1l-2.5 1.8.2.2.6-.4zM65.4 6l-1.5-1.6 2-1.9 1.5 1.6-2 1.9zm-1.1-1.5 1.2 1.2L67 4.2 65.8 3l-1.5 1.5zm10.1 15.1c-2.3-1.3-2.5-1.6-2.5-2.4 0-1.3 0-5.4.1-8.1h-.6c-.6 0-1.1.1-1.4.3l-.2-.3c2.3-1.6 3.3-2.4 4.5-3.9l.2.1c-.2.3-.3 1.8-.3 2.6H76c.4 0 .8-.1 1-.5l.3.3L76 9.1h-1.8v6.4c0 .9.1 1.1 1.7 1.9l.4-.5.3.3-2.2 2.4z" />
++    <path fill="#231f20"
++          d="M74.4 19.7c-2.4-1.3-2.7-1.7-2.7-2.5v-8h-.5c-.6 0-1.1.1-1.3.3l-.1.1-.3-.6h.1c2.3-1.6 3.3-2.4 4.5-3.9l.1-.1.5.1-.1.1c-.1.3-.3 1.6-.3 2.4H76c.3 0 .6-.1.9-.4l.1-.1.5.5L76 9.2h-1.8v6.3c0 .8 0 1 1.5 1.8l.5-.5.5.5-2.3 2.4zM71.2 8.9h.8V9c0 2.8-.1 6.8-.1 8.1 0 .7.1 1 2.4 2.2l2-2.2-.1-.1-.4.5h-.1c-1.6-.8-1.8-1-1.8-2.1V8.9h1.9L77 7.7l-.1-.1c-.2.3-.6.4-1 .4h-2v-.1c0-.6.1-2 .3-2.5C73 6.8 72 7.5 69.8 9.1l.1.1c.3-.2.8-.3 1.3-.3zm11.4 10.7c-2.3-1.3-2.5-1.6-2.5-2.4 0-1.3 0-5.4.1-8.1h-.6c-.6 0-1.1.1-1.4.3l-.2-.3c2.3-1.6 3.3-2.4 4.5-3.9l.2.1c-.2.3-.3 1.8-.3 2.6h1.8c.4 0 .8-.1 1-.5l.3.3-1.3 1.4h-1.8v6.4c0 .9.1 1.1 1.7 1.9l.4-.5.3.3-2.2 2.4z" />
++    <path fill="#231f20"
++          d="M82.7 19.7C80.3 18.4 80 18 80 17.2v-8h-.5c-.6 0-1.1.1-1.3.3H78l-.3-.5h.1c2.3-1.6 3.3-2.4 4.5-3.9l.1-.1.5.1-.1.1c-.1.3-.3 1.6-.3 2.4h1.7c.3 0 .6-.1.9-.4l.1-.1.5.5-1.4 1.5h-1.8v6.3c0 .8 0 1 1.5 1.8l.5-.5.5.5-2.3 2.5zM79.5 8.9h.8V9c0 2.7 0 5.4-.1 8.1 0 .7.1 1 2.4 2.2l2-2.2-.1-.1-.4.5H84c-1.6-.8-1.8-1-1.8-2.1V8.9h1.9l1.2-1.3-.1-.1c-.2.3-.6.4-1 .4h-2c0-.6.1-2 .3-2.5-1.2 1.4-2.2 2.2-4.4 3.8l.1.1c.3-.3.7-.4 1.3-.4zm9.7-7.6c.5.3 1 .7 1.4 1.3 0 1.8-.1 3.6-.1 5.5v8c0 .8.3 1.2.8 1.7l.5-.4.3.3-2.6 2c-1.1-.8-1.3-1.4-1.3-2.3 0-1 .1-2.1.1-4.6V6.7c0-2.8-.1-2.9-.9-3.5l-.6.4-.3-.3c.1 0 2.7-2 2.7-2z" />
++    <path fill="#231f20"
++          d="M89.6 19.7c-1.1-.8-1.5-1.5-1.5-2.4V6.7c0-2.7-.1-2.8-.8-3.3l-.6.5-.4-.5 2.8-2.1h.1c.6.3 1.1.7 1.5 1.3 0 .4-.1 2-.1 5.4v8c0 .7.2 1.1.7 1.5l.5-.4.5.5-2.7 2.1zM87.4 3c1 .7 1 .8 1 3.7v10.7c0 .7.2 1.3 1.2 2.1l2.4-1.8-.1-.1-.5.4-.1-.1c-.5-.4-.9-.9-.9-1.8V2.6c-.3-.5-.8-.9-1.3-1.1l-2.5 1.8.1.1.7-.4zm14.4 14 .2.3-2.8 2.3c-2.8-1.2-4.7-3.7-4.7-6.4 0-1.1.2-2.2.8-2.6 1.2-1 3.2-2.2 4.8-3.2 1.4 1.3 2.1 2.9 2.1 3.6 0 .3-.1.4-.6.8l-4.1 2.9c.4 1 2 2.6 3.5 3l.8-.7zm-2-4.5c.1-.1.2-.2.2-.5 0-.4-.9-2.3-1.7-2.9-1.3.7-1.5 1.2-1.5 2.5 0 .9.2 1.8.5 2.6l2.5-1.7z" />
++    <path fill="#231f20"
++          d="M99.2 19.7c-3-1.3-4.8-3.8-4.8-6.5 0-.6.1-2.1.8-2.7 1.3-1.1 3.4-2.4 4.8-3.2l.1-.1.1.1c1.5 1.4 2.1 3 2.1 3.7 0 .4-.2.5-.7.9l-4 2.9c.4.9 1.9 2.4 3.3 2.9l.9-.8.4.5-3 2.3zm.9-12.2c-1.4.9-3.5 2.1-4.7 3.2-.4.4-.7 1.3-.7 2.5 0 2.6 1.8 5 4.5 6.2l2.7-2.1-.1-.1-.9.7h-.1c-1.4-.5-3.2-2-3.6-3.1v-.1l4.2-3c.5-.4.6-.4.6-.7.1-.7-.6-2.2-1.9-3.5zm-2.9 6.9-.1-.2c-.2-.8-.5-1.6-.5-2.7 0-1.3.1-1.8 1.5-2.6h.2c.8.6 1.8 2.5 1.8 3 0 .2 0 .4-.3.6l-2.6 1.9c0 .1 0 0 0 0zm1-5.1c-1.2.7-1.3 1.1-1.3 2.3 0 .9.2 1.7.4 2.4l2.4-1.7c.1-.1.1-.1.1-.4 0-.3-.8-2-1.6-2.6zM16.1 43l-1.1-.6c-.6-.4-15-8.4-15-21V0h32.2v21.4c0 12.4-14.3 20.6-15 21l-1.1.6zM1.5 1.6v19.8c0 11.7 13.6 19.3 14.2 19.6l.4.2.4-.2c.6-.3 14.2-8.2 14.2-19.6V1.6H1.5z" />
++    <path fill="#ed1c24" d="M25.3 10.1H10.2v3.1h15.1v-3.1z" />
++    <path fill="#ed1c24" d="M14.1 15.8c2.2 0 4.1-1.3 4.1-3s-1.8-3-4.1-3c-2.2 0-4.1 1.3-4.1 3s1.9 3 4.1 3z" />
++    <path fill="#ed1c24"
++          d="M12.6 22.1c0 .6.1 1.2.3 1.6.5 1.5 2.2 1.8 3.6 1.8 1.2 0 3.1-.4 3.1-2.3 0-1.3-1.1-1.6-5.2-2.8-3.9-1.1-8.3-2.2-8.3-7.2 0-5.7 4.8-8.2 9.8-8.2 5.3 0 10 2.1 10.2 8.1H19c.1-.9-.3-1.6-.9-2-.6-.4-1.5-.6-2.2-.6-1 0-2.7.3-2.7 1.7.1 1.8 3.6 2.2 7.1 3.1 3.4 1 6.9 2.6 6.9 7.2 0 6.5-5.8 8.6-11.3 8.6-2.8 0-10.6-1-10.7-8.9l7.4-.1z" />
++    <path fill="#231f20" d="M16.6 6.1h1.8v4.7h4.7v1.9h-6.5V6.1z" />
++    <path d="M16.6 13.1h6.5V15h-4.7v4.7h-1.8v-6.6zm-.6-.4H9.5v-1.9h4.7V6.1H16v6.6zm0 7h-1.8V15H9.5v-1.9H16v6.6z"
++          fill="#fff" /></svg>
++                                    <svg aria-label="Little Switzerland" class="d-block hide-tp" xmlns="http://www.w3.org/2000/svg" fill="none"
++     viewBox="0 0 35 46">
++    <path d="m17.513 46-1.112-.605C15.734 45.031 0 36.361 0 22.907V0h35v22.907c0 13.223-15.708 22.106-16.375 22.48L17.513 46ZM1.165 1.165v21.742c0 12.769 15.139 21.11 15.788 21.457l.551.293.552-.302c.64-.356 15.779-8.91 15.779-21.457V1.165H1.165Z"
++          fill="#231F20" />
++    <path d="m27.57 10.513-16.64.18.036 3.308 16.64-.18-.036-3.308Z" fill="#ED1C24" />
++    <path d="M19.727 13.597c.018 1.77-1.965 3.236-4.438 3.263-2.473.027-4.492-1.387-4.51-3.166-.017-1.778 1.966-3.228 4.439-3.254 2.473-.027 4.491 1.387 4.51 3.165v-.008Z"
++          fill="#ED1C24" />
++    <path d="M13.715 23.689c0 .676.125 1.28.32 1.77.623 1.609 2.429 1.93 3.976 1.911 1.352-.017 3.416-.489 3.398-2.48-.018-1.397-1.183-1.752-5.826-3.024-4.27-1.156-9.135-2.267-9.188-7.692-.071-6.207 5.212-8.937 10.745-8.999 5.834-.062 11.011 2.099 11.305 8.643l-7.828.09c.143-1.014-.32-1.69-1.005-2.135-.684-.48-1.627-.658-2.454-.649-1.13.009-2.971.338-2.954 1.84.17 1.921 4.012 2.286 7.828 3.3 3.815 1.014 7.596 2.739 7.649 7.665.08 6.998-6.333 9.328-12.319 9.39-3.05.036-11.75-.96-11.919-9.541l8.281-.089h-.009Z"
++          fill="#ED1C24" />
++    <path d="m17.913 6.305 2.037-.018.053 5.104 5.177-.053.018 2.054-7.214.08-.08-7.158.01-.01Z" fill="#231F20" />
++    <path d="m17.993 13.952 7.214-.08.017 2.054-5.176.054.053 5.104-2.037.018-.08-7.159.01.01ZM17.352 13.463l-7.213.08-.018-2.054 5.177-.054-.054-5.104 2.037-.018.08 7.159-.009-.01ZM17.433 21.12l-2.037.017-.053-5.104-5.177.053-.018-2.054 7.214-.08.08 7.158-.009.01Z"
++          fill="#fff" />
++</svg>
++                            </a>
++        
++        <button id="main-menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu"
++                class="d-flex ai-center hide-large-layout hamburger hamburger--squeeze">
++            <span class="hamburger-box">
++                <span class="hamburger-inner">
++                </span>
++            </span>
++            <span class="t-t-uppercase text">
++                Menu
++            </span>
++        </button>
++
++        <div class="transition-visibility visibility-hidden opacity-0 border-radius main-menu">
++            <div class="hide-tp utility">
++
++    
++    
++    
++    <ul class="reset d-flex">
++        <li class="weather-icon">
++            <a href="/mountain-info/snow-report" class="d-block f-icon icon-gradient icon--snow" title="Weather Report">
++                <span class="visually-hidden">Weather Report</span>
++            </a>
++        </li>
++        <li>
++            <a href="/mountain-info/snow-report#webcams" class="d-block f-icon icon-gradient icon--webcam" title="Webcams">
++                <span class="visually-hidden">Webcams</span>
++            </a>
++        </li>
++        <li>
++            <a href="https://littleswitz.food/order" target="_blank"
++               class="d-block f-icon icon-gradient icon--burger"
++               title="Dining">
++                <span class="visually-hidden">Dining</span>
++            </a>
++        </li>
++    </ul>
++
++</div>
++            <nav role="navigation" aria-labelledby="block-switz-main-menu-menu" id="block-switz-main-menu" class="block block-menu navigation menu--main">
++            
++  <h2 class="visually-hidden" id="block-switz-main-menu-menu">Little Switz Main</h2>
++  
++
++        
++        <ul class="reset d-flex ai-center jc-center menu">
++                                                <li class="menu-item menu-item--expanded menu-item--active-trail">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-mountain-info"
++                                aria-expanded="false">Mountain Info</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/mountain-info/hours" class="d-flex ai-center" data-drupal-link-system-path="node/235">Hours</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/little-switz-trail-map" class="d-flex ai-center" data-drupal-link-system-path="node/3">Trail Map</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/terrain-parks-little-switz" class="d-flex ai-center" data-drupal-link-system-path="node/4">Terrain Parks</a>
++                                    </li>
++                                            <li class="menu-item menu-item--active-trail">
++                                            <a href="/mountain-info/snow-report" class="d-flex ai-center is-active" data-drupal-link-system-path="node/5" aria-current="page">Snow Report</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/lodging" class="d-flex ai-center" data-drupal-link-system-path="node/137">Lodging</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/blog" class="d-flex ai-center" data-drupal-link-system-path="node/291">Blog</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/events-calendar-0" class="d-flex ai-center" data-drupal-link-system-path="node/7">Events Calendar</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/blog/two-new-independent-quad-chairlifts-to-replace-1-2" class="d-flex ai-center" data-drupal-link-system-path="node/323">New Lift Updates</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/little-switz-safety-responsibility" class="d-flex ai-center" data-drupal-link-system-path="node/233">Safety &amp; Responsibility</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/weddings-and-events" class="d-flex ai-center" data-drupal-link-system-path="node/243">Weddings and Events</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-tickets-passes"
++                                aria-expanded="false">Tickets &amp; Passes</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/tickets-passes/tickets" class="d-flex ai-center" data-drupal-link-system-path="node/236">Tickets</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/tickets-passes/rentals" class="d-flex ai-center" data-drupal-link-system-path="node/237">Rentals</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/tickets-passes/season-passes" class="d-flex ai-center" data-drupal-link-system-path="node/232">Season Passes</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/tickets-passes/group-booking" class="d-flex ai-center" data-drupal-link-system-path="node/22">Group Booking</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/tickets-passes/first-tracks-fridays" class="d-flex ai-center" data-drupal-link-system-path="node/257">First Tracks Fridays</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/tickets-passes/buddy-pass-snow-stash-program" class="d-flex ai-center" data-drupal-link-system-path="node/299">Buddy Pass Snow Stash Program</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-lessons"
++                                aria-expanded="false">Lessons</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/lessons/little-switz-lesson-overview" class="d-flex ai-center" data-drupal-link-system-path="node/238">Lesson Overview</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/multi-week-lessons" class="d-flex ai-center" data-drupal-link-system-path="node/12">Multi-Week Lessons</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/packages" class="d-flex ai-center" data-drupal-link-system-path="node/14">Packages</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/little-switz-private-lessons" class="d-flex ai-center" data-drupal-link-system-path="node/11">Private Lessons</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/little-switz-terrain-based-learning" class="d-flex ai-center" data-drupal-link-system-path="node/231">Terrain Based Learning</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/beginners-guide" class="d-flex ai-center" data-drupal-link-system-path="node/241">Beginner&#039;s Guide</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-contact"
++                                aria-expanded="false">Contact</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/employment" class="d-flex ai-center" data-drupal-link-system-path="node/15">Employment</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/contact/ski-patrol" class="d-flex ai-center" data-drupal-link-system-path="node/16">Ski Patrol</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/contact/ski-racing" class="d-flex ai-center" data-drupal-link-system-path="node/239">Ski Racing</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/contact/little-switz-general" class="d-flex ai-center" data-drupal-link-system-path="node/240">General</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/contact/faqs-1" class="d-flex ai-center" data-drupal-link-system-path="node/8">FAQ&#039;s</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/contact/press-room" class="d-flex ai-center" data-drupal-link-system-path="node/324">Press Room</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                    </ul>
++                
++
++
++  </nav>
++
++        </div>
++
++        <div class="show-tp utility">
++
++    
++    
++    
++    <ul class="reset d-flex">
++        <li class="weather-icon">
++            <a href="/mountain-info/snow-report" class="d-block f-icon icon-gradient icon--snow" title="Weather Report">
++                <span class="visually-hidden">Weather Report</span>
++            </a>
++        </li>
++        <li>
++            <a href="/mountain-info/snow-report#webcams" class="d-block f-icon icon-gradient icon--webcam" title="Webcams">
++                <span class="visually-hidden">Webcams</span>
++            </a>
++        </li>
++        <li>
++            <a href="https://littleswitz.food/order" target="_blank"
++               class="d-block f-icon icon-gradient icon--burger"
++               title="Dining">
++                <span class="visually-hidden">Dining</span>
++            </a>
++        </li>
++    </ul>
++
++</div>
++
++        
++        <a href="https://shop.littleswitz.com" target="_blank" class="button primary">Buy</a>
++
++    </div>
++</header>
++
++<div id="block-alert-bar" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++    <div class="config_pages config_pages--type--alert-bar config_pages--view-mode--full config_pages--alert-bar--full bg-dark rte">
++
++        <div class="container t-body-small pos-relative">
++
++                
++
++
++
++    
++        
++                        
++            <div class="clearfix text-formatted field field--name-field-copy field--type-text-long field--label-hidden field__item"
++                        >
++
++            
++                                    <p>Roaring 20s Jazz Night is This Friday!</p>
++
++                
++            
++            </div>
++
++        
++    
++
++
++                            <p class="m-b-0 button-wrap">
++                    <a href="/mountain-info/events-calendar-0"
++                       target="" class="button-arrow">
++                        BUY TICKETS NOW
++                    </a>
++                </p>
++            
++            <button aria-label="Close alert bar" type="button" class="reset-button pos-absolute reset f-icon close"
++                    aria-controls="block-alert-bar">
++                <span class="visibility-hidden">Close</span>
++            </button>
++
++        </div>
++
++    </div>
++
++  </div>
++
++
++    
++
++    <main id="main-content" role="main"
++          class="  main-content">
++
++        <div class="  layout-content">
++
++            
++                      <div class="region region-content">
++    <div id="block-switz-content" class="block block-system block-system-main-block">
++  
++    
++      
++
++<div data-history-node-id="5" class="node node--type-page node--view-mode-full no-hero-image" id="node-5">
++
++    
++
++<div class=" component-node">
++
++    
++    <div data-drupal-messages-fallback class="hidden"></div>
++
++
++    
++
++<div class="container pos-relative row-padding p-t-0 inner-grid row-gap-0 hero no-image ">
++
++        
++        <h1 class="z-index-20 grid-inner-full">Snow Report</h1>
++
++    
++                <img class="fade-in z-index-10 pos-absolute arrow" aria-hidden="true" alt="" loading="lazy"
++     src="/themes/custom/switz/images/arrow-down-default.webp"  />
++    
++    <div class="parallax pos-absolute fade-in bg-img trees" data-offset="-40"></div>
++
++</div>
++
++    
++            <div class="node-content">
++
++                <div id="block-mountain-report" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++<div class="config_pages config_pages--type--mountain-report config_pages--view-mode--full config_pages--mountain-report--full">
++
++    <div class="container  component-mountain-report">
++
++    
++    <div class="fade-in row m-b-row inner-grid mountain-info">
++
++        
++        
++        
++            <div class="content-container">
++                <h2 class="h3">Mountain Info</h2>
++                                    <div class="border-top border-bottom border-grey d-flex ai-center item">
++                        <div class="h2 m-0 value t-c-status-closed">
++                            Closed
++                        </div>
++                        <div class="label">
++                            
++                        </div>
++                    </div>
++                                    <div class=" border-bottom border-grey d-flex ai-center item">
++                        <div class="h2 m-0 value ">
++                            0/9
++                        </div>
++                        <div class="label">
++                            Lifts are open today
++                        </div>
++                    </div>
++                                    <div class=" border-bottom border-grey d-flex ai-center item">
++                        <div class="h2 m-0 value ">
++                            0/19
++                        </div>
++                        <div class="label">
++                            Ski trails are open today
++                        </div>
++                    </div>
++                            </div>
++
++        
++    </div>
++
++</div>
++
++</div>
++
++  </div>
++
++                <div id="block-snow-report" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++<div class="config_pages config_pages--type--snow-report config_pages--view-mode--full config_pages--snow-report--full">
++
++    <div class="f-icon icon-gradient bg-highlight row row-padding  component-snow-report">
++
++    <div class="inner-grid container">
++
++        <div class="grid-inner-full t-align-right content-wrap">
++            <h2>Snow Report</h2>
++
++            
++            <div class="d-flex flex-wrap snow-values">
++                                    <div class="item">
++                        <h3 class="h4">Snow Base</h3>
++                        <div class="value h1">30"</div>
++                    </div>
++                                    <div class="item">
++                        <h3 class="h4">Snow Last 24 Hrs</h3>
++                        <div class="value h1">0"</div>
++                    </div>
++                                    <div class="item">
++                        <h3 class="h4">Snow Last 7 Days</h3>
++                        <div class="value h1">1"</div>
++                    </div>
++                                    <div class="item">
++                        <h3 class="h4">Season Snowfall</h3>
++                        <div class="value h1">28"</div>
++                    </div>
++                            </div>
++
++            <p class="d-flex jc-flex-end">
++                <span class="f-icon icon-gradient tag">
++                    <strong>Updated:</strong>
++                     March 1 - 8:28pm
++                </span>
++            </p>
++
++        </div>
++
++    </div>
++
++</div>
++
++</div>
++
++  </div>
++
++
++                                        <div class="row container inner-grid listing  simple lifts-trails">
++
++    <div class="grid-inner-3-8-large">
++
++        
++        <div class="content ">
++            <div class="fade-in row half"><h2>Trail Status</h2><div class="component-row d-flex ai-center border-bottom border-top f-w-bold header"><div class="cell title">Name</div><div class="cell status">Status</div></div>
++
++<div data-history-node-id="63" class="node node--type-lift-trail node--view-mode-row" id="node-63">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++            
++        
++        Beginner Area
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="77" class="node node--type-lift-trail node--view-mode-row" id="node-77">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++            
++        
++        Bomber Bowl
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="80" class="node node--type-lift-trail node--view-mode-row" id="node-80">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++            
++        
++        Easy Cheesy
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="79" class="node node--type-lift-trail node--view-mode-row" id="node-79">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++            
++        
++        Grandpa&#039;s Run
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="78" class="node node--type-lift-trail node--view-mode-row" id="node-78">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++            
++        
++        Sno Bowl
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="76" class="node node--type-lift-trail node--view-mode-row" id="node-76">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++            
++        
++        Turnpike
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="84" class="node node--type-lift-trail node--view-mode-row" id="node-84">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level intermediate"
++                     title="Intermediate">
++                    Intermediate
++                </div>
++            
++            
++        
++        Death Valley
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="64" class="node node--type-lift-trail node--view-mode-row" id="node-64">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level intermediate"
++                     title="Intermediate">
++                    Intermediate
++                </div>
++            
++            
++        
++        Jane&#039;s Deal
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="83" class="node node--type-lift-trail node--view-mode-row" id="node-83">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level intermediate"
++                     title="Intermediate">
++                    Intermediate
++                </div>
++            
++            
++        
++        Matterhorn
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="82" class="node node--type-lift-trail node--view-mode-row" id="node-82">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level intermediate"
++                     title="Intermediate">
++                    Intermediate
++                </div>
++            
++            
++        
++        Southern Comfort
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="85" class="node node--type-lift-trail node--view-mode-row" id="node-85">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level intermediate"
++                     title="Intermediate">
++                    Intermediate
++                </div>
++            
++            
++        
++        Wineskin
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="65" class="node node--type-lift-trail node--view-mode-row" id="node-65">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level advanced"
++                     title="Advanced">
++                    Advanced
++                </div>
++            
++            
++        
++        Big Deal
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="88" class="node node--type-lift-trail node--view-mode-row" id="node-88">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level advanced"
++                     title="Advanced">
++                    Advanced
++                </div>
++            
++            
++        
++        Holy Switz!
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="86" class="node node--type-lift-trail node--view-mode-row" id="node-86">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level advanced"
++                     title="Advanced">
++                    Advanced
++                </div>
++            
++            
++        
++        Schuss
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="87" class="node node--type-lift-trail node--view-mode-row" id="node-87">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level advanced"
++                     title="Advanced">
++                    Advanced
++                </div>
++            
++            
++        
++        Shorty&#039;s
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="89" class="node node--type-lift-trail node--view-mode-row" id="node-89">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level advanced"
++                     title="Advanced">
++                    Advanced
++                </div>
++            
++            
++        
++        Slingshot
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++</div><div class="fade-in row half"><h2>Lift Status</h2><div class="component-row d-flex ai-center border-bottom border-top f-w-bold header"><div class="cell title">Name</div><div class="cell status">Status</div></div>
++
++<div data-history-node-id="72" class="node node--type-lift-trail node--view-mode-row" id="node-72">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon conveyor"
++                     title="Conveyor">
++                    Conveyor
++                </div>
++            
++        
++        Beginner Conveyor 2
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="71" class="node node--type-lift-trail node--view-mode-row" id="node-71">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon conveyor"
++                     title="Conveyor">
++                    Conveyor
++                </div>
++            
++        
++        Beginner Conveyor Lift
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="73" class="node node--type-lift-trail node--view-mode-row" id="node-73">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon rope-tow"
++                     title="Rope Tow">
++                    Rope Tow
++                </div>
++            
++        
++        Big Deal Rope Tow
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="67" class="node node--type-lift-trail node--view-mode-row" id="node-67">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon double"
++                     title="Double">
++                    Double
++                </div>
++            
++        
++        Double Chairlift 1
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="68" class="node node--type-lift-trail node--view-mode-row" id="node-68">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon double"
++                     title="Double">
++                    Double
++                </div>
++            
++        
++        Double Chairlift 2
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="69" class="node node--type-lift-trail node--view-mode-row" id="node-69">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon double"
++                     title="Double">
++                    Double
++                </div>
++            
++        
++        Double Chairlift 3
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="70" class="node node--type-lift-trail node--view-mode-row" id="node-70">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon double"
++                     title="Double">
++                    Double
++                </div>
++            
++        
++        Double Chairlift 4
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="75" class="node node--type-lift-trail node--view-mode-row" id="node-75">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon rope-tow"
++                     title="Rope Tow">
++                    Rope Tow
++                </div>
++            
++        
++        Happy Rope Tow
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="74" class="node node--type-lift-trail node--view-mode-row" id="node-74">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon rope-tow"
++                     title="Rope Tow">
++                    Rope Tow
++                </div>
++            
++        
++        Park Rope Tow
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++</div><div class="fade-in row half"><h2>Terrain parks</h2><div class="component-row d-flex ai-center border-bottom border-top f-w-bold header"><div class="cell title">Name</div><div class="cell status">Status</div></div>
++
++<div data-history-node-id="90" class="node node--type-lift-trail node--view-mode-row" id="node-90">
++
++    
++
++    <div class="Terrain Park d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Happy Little Park (Small)
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="91" class="node node--type-lift-trail node--view-mode-row" id="node-91">
++
++    
++
++    <div class="Terrain Park d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Expedition Supply Park (Medium)
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="92" class="node node--type-lift-trail node--view-mode-row" id="node-92">
++
++    
++
++    <div class="Terrain Park d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        41 Park (Large)
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++</div>
++        </div>
++        
++    </div>
++
++</div>
++
++
++
++
++                
++
++                
++
++                
++
++                <div class="row-padding bg-dark row inner-grid webcams" id="webcams">
++                    <div class="container grid-inner-2-10-large">
++                        <h2 class="fade-in">Live Cams</h2>
++                        <div id="block-webcams" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++<div class="config_pages config_pages--type--webcams config_pages--view-mode--full config_pages--webcams--full">
++
++    
++
++<div class=" component-webcams">
++
++    <div class="columns columns-2">
++
++                    
++            
++            
++                    
++            
++                            <div class="fade-in webcam">
++
++                    <h3>Beginner Area</h3>
++
++                    <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
++                        <img src="https://wms.apt9stream.com/littleswitz/beginner-cam_output/dvr_thumbnail.jpg?timestamp=1783623568"
++                             alt="Webcam: Beginner Area" />
++                    </button>
++
++                    <video class="webcam-video" data-src="https://wms.apt9stream.com/littleswitz/beginner-cam_output/playlist_dvr.m3u8" autoplay muted controls
++                           crossorigin playsinline
++                           poster=""></video>
++
++                </div>
++            
++                    
++            
++                            <div class="fade-in webcam">
++
++                    <h3>Happy Trail Park</h3>
++
++                    <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
++                        <img src="https://wms.apt9stream.com/littleswitz/happy-trail_output/dvr_thumbnail.jpg?timestamp=1783623568"
++                             alt="Webcam: Happy Trail Park" />
++                    </button>
++
++                    <video class="webcam-video" data-src="https://wms.apt9stream.com/littleswitz/happy-trail_output/playlist_dvr.m3u8" autoplay muted controls
++                           crossorigin playsinline
++                           poster=""></video>
++
++                </div>
++            
++                    
++            
++                            <div class="fade-in webcam">
++
++                    <h3>Back Cam</h3>
++
++                    <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
++                        <img src="https://wms.apt9stream.com/littleswitz/back-cam_output/dvr_thumbnail.jpg?timestamp=1783623568"
++                             alt="Webcam: Back Cam" />
++                    </button>
++
++                    <video class="webcam-video" data-src="https://wms.apt9stream.com/littleswitz/back-cam_output/playlist_dvr.m3u8" autoplay muted controls
++                           crossorigin playsinline
++                           poster=""></video>
++
++                </div>
++            
++                    
++            
++                            <div class="fade-in webcam">
++
++                    <h3>Tower Cam</h3>
++
++                    <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
++                        <img src="https://wms.apt9stream.com/littleswitz/tower-cam_output/dvr_thumbnail.jpg?timestamp=1783623568"
++                             alt="Webcam: Tower Cam" />
++                    </button>
++
++                    <video class="webcam-video" data-src="https://wms.apt9stream.com/littleswitz/tower-cam_output/playlist_dvr.m3u8" autoplay muted controls
++                           crossorigin playsinline
++                           poster=""></video>
++
++                </div>
++            
++                    
++            
++                            <div class="fade-in webcam">
++
++                    <h3>Southern Comfort</h3>
++
++                    <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
++                        <img src="https://wms.apt9stream.com/littleswitz/southern-cam_out/dvr_thumbnail.jpg?timestamp=1783623568"
++                             alt="Webcam: Southern Comfort" />
++                    </button>
++
++                    <video class="webcam-video" data-src="https://wms.apt9stream.com/littleswitz/southern-cam_out/playlist_dvr.m3u8" autoplay muted controls
++                           crossorigin playsinline
++                           poster=""></video>
++
++                </div>
++            
++                    
++            
++                            <div class="fade-in webcam">
++
++                    <h3>41 Park</h3>
++
++                    <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
++                        <img src="https://wms.apt9stream.com/littleswitz/41-park-cam_outpu/dvr_thumbnail.jpg?timestamp=1783623568"
++                             alt="Webcam: 41 Park" />
++                    </button>
++
++                    <video class="webcam-video" data-src="https://wms.apt9stream.com/littleswitz/41-park-cam_outpu/playlist_dvr.m3u8" autoplay muted controls
++                           crossorigin playsinline
++                           poster=""></video>
++
++                </div>
++            
++        
++    </div>
++
++</div>
++
++</div>
++
++  </div>
++
++                    </div>
++                </div>
++
++            </div>
++
++            
++
++        
++</div>
++
++</div>
++
++  </div>
++
++  </div>
++
++
++                
++        </div>
++    </main>
++
++    <div class="fade-in row m-b-0 bg-img footer-trees"></div>
++
++<footer class="container site-footer" role="contentinfo">
++    <div class="rte inner-grid row-gap-0">
++
++        <div class="grid-inner-full logo">
++            <a href="/" title="Home" rel="home" class="transition-ui d-block">
++                <img loading="lazy" class="w-100" src="/themes/custom/switz/logo.svg" alt="Home" />
++            </a>
++        </div>
++
++        <div class="grid-inner-full lh-1 address">
++                
++
++
++
++    
++        
++                        
++            <div class="clearfix text-formatted field field--name-field-address field--type-text-long field--label-hidden field__item"
++                        >
++
++            
++                                    <p>105 Cedar Creek Rd<br>Slinger, WI 53086</p>
++
++                
++            
++            </div>
++
++        
++    
++
++        </div>
++
++        <div class="grid-inner-full hours">
++                
++
++
++
++    
++        <div class="field field--name-field-opening-hours field--type-entity-reference-revisions field--label-hidden field__items">
++
++            
++                
++                                        
++                                            <div class="field__item">
++                            
++
++<div class="paragraph paragraph--type--hours paragraph--view-mode--default" id="paragraph-139">
++
++    <div class=" component-hours">
++
++    <h2>
++        Hours
++    </h2>
++
++    <ul class="reset days">
++
++                                                <li class="d-flex">
++                    <div class="day">
++                        Monday-Sunday
++                    </div>
++                    <div class="t-t-uppercase value">
++                        Closed for the season
++                    </div>
++                </li>
++                    
++    </ul>
++
++</div>
++
++</div>
++
++                        </div>
++                    
++                
++                
++        </div>
++
++    
++
++        </div>
++
++        <nav role="navigation" aria-labelledby="block-switz-footer-menu" id="block-switz-footer" class="block block-menu navigation menu--footer">
++            
++  <h2 class="visually-hidden" id="block-switz-footer-menu">Little Switz Footer</h2>
++  
++
++        
++        <ul class="menu reset d-flex flex-wrap">
++                                    <li class="menu-item">
++                <a href="https://shop.littleswitz.com/" target="_blank" class="button-arrow">Buy</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="https://shop.littleswitz.com/forms" target="_blank" class="button-arrow">Waivers</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/directions" class="button-arrow" data-drupal-link-system-path="node/228">Directions</a>
++                            </li>
++                                <li class="menu-item menu-item--collapsed">
++                <a href="/employment" class="button-arrow" data-drupal-link-system-path="node/15">Employment</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/lost-items" class="button-arrow" data-drupal-link-system-path="node/50">Lost Items</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="https://www.littleswitz.com/mountain-info/snow-report#webcams" class="button-arrow">Live Cams</a>
++                            </li>
++            </ul>
++        
++
++
++  </nav>
++
++
++        <div class="copyright-social">
++            <nav role="navigation" aria-labelledby="block-switz-copyright-menu" id="block-switz-copyright" class="block block-menu navigation menu--little-switz-copyright">
++            
++  <h2 class="visually-hidden" id="block-switz-copyright-menu">Little Switz Copyright</h2>
++  
++
++        
++        <ul class="menu reset d-flex">
++                                    <li class="menu-item">
++                <a href="/little-switz-privacy-policy" class="button-arrow-secondary" data-drupal-link-system-path="node/56">Privacy Policy</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/terms-conditions" class="button-arrow-secondary" data-drupal-link-system-path="node/57">Terms &amp; Conditions</a>
++                            </li>
++            </ul>
++        
++
++
++  </nav>
++
++            <nav role="navigation" aria-labelledby="block-switz-social-menu" id="block-switz-social" class="block block-menu navigation menu--little-switz-social">
++            
++  <h2 class="visually-hidden" id="block-switz-social-menu">Little Switz Social</h2>
++  
++
++        
++              <ul class="reset d-flex ai-center menu">
++                    <li class="menu-item">
++        <a href="https://www.instagram.com/littleswitz/" target="_blank" class="f-icon"><span class="visually-hidden">Instagram</span></a>
++              </li>
++                <li class="menu-item">
++        <a href="https://www.facebook.com/LittleSwitzerland/" target="_blank" class="f-icon"><span class="visually-hidden">Facebook</span></a>
++              </li>
++                <li class="menu-item">
++        <a href="https://www.youtube.com/channel/UCYw-bH0W-u9eOdCXqGnYDmg" target="_blank" class="f-icon"><span class="visually-hidden">YouTube</span></a>
++              </li>
++        </ul>
++  
++
++
++  </nav>
++
++        </div>
++
++        <div class="grid-inner-full resorts">
++            <h2 class="t-t-uppercase t-body t-c-text f-w-normal">
++                Explore our other partner resorts
++            </h2>
++            <ul class="reset d-grid column-gap-base buttons">
++                <li class="switz">
++                    <a href="https://www.littleswitz.com/" class="button large switz" target="_blank">
++                        <img class=""  alt="Little Switz" loading="lazy"
++     src="/themes/custom/switz/logo.svg"  />
++                    </a>
++                </li>
++                <li class="nordic">
++                    <a href="https://www.nordicmountain.com/" class="button large nordic" target="_blank">
++                        <img class=""  alt="Nordic Mountain" loading="lazy"
++     src="/themes/custom/origin/images/logo-nordic-horizontal.svg"  />
++                    </a>
++                </li>
++                <li class="crystal">
++                    <a href="https://crystalridge.com" class="button large crystal" target="_blank">
++                        <img class=""  alt="Crystal Ridge" loading="lazy"
++     src="/themes/custom/crystal/logo.svg"  />
++                    </a>
++                </li>
++            </ul>
++        </div>
++
++        <p class="grid-inner-full t-small t-align-center copyright">
++            &copy; 2026 Schmitz Brothers, LLC., Inc. <br class="hide-tp"> All Rights Reserved
++        </p>
++
++    </div>
++</footer>
++
++
++</div>
++  </div>
++
++
++<script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/5","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"lazy":{"lazysizes":{"lazyClass":"lazyload","loadedClass":"lazyloaded","loadingClass":"lazyloading","preloadClass":"lazypreload","errorClass":"lazyerror","autosizesClass":"lazyautosizes","srcAttr":"data-src","srcsetAttr":"data-srcset","sizesAttr":"data-sizes","minSize":40,"customMedia":[],"init":true,"expFactor":1.5,"hFac":0.8,"loadMode":2,"loadHidden":true,"ricTimeout":0,"throttleDelay":125,"plugins":{"object-fit":"object-fit\/ls.object-fit","parent-fit":"parent-fit\/ls.parent-fit"}},"placeholderSrc":"data:image\/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==","preferNative":false,"minified":true,"libraryPath":"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/lazysizes\/5.3.2"},"user":{"uid":0,"permissionsHash":"c8f0cb91bca7f84fe42e29ba50533fe7b7a78fbf16f320bd29fdd9ee6c541667"}}</script>
++<script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
++<script src="/sites/default/files/js/js_yN4l1hWVo-66HFBHhyLvqQFwl195QDLaSgeuO9Egajo.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=switz&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8cXlmSVVMDEIBeOVpyYlJ-YWAwDY_huc"></script>
++<script src="https://cdn.jsdelivr.net/npm/jquery-inview@1.1.2/jquery.inview.min.js"></script>
++<script src="/sites/default/files/js/js_C2y2D8BjRfkBg9YpWdHhy-T2CG1OVgQaRrVUIYLR_3Y.js?scope=footer&amp;delta=3&amp;language=en&amp;theme=switz&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8cXlmSVVMDEIBeOVpyYlJ-YWAwDY_huc"></script>
++<script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
++<script src="https://cdn.jsdelivr.net/npm/hls-video-element@1.0/+esm" type="module"></script>
++<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es6,Array.prototype.includes,CustomEvent,Object.entries,Object.values,URL"></script>
++<script src="https://unpkg.com/plyr@3"></script>
++<script src="/sites/default/files/js/js_IoAD7F8niDzuD5AGktzl-wgF7rTNto7xnLSW8Tj6bxM.js?scope=footer&amp;delta=8&amp;language=en&amp;theme=switz&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8cXlmSVVMDEIBeOVpyYlJ-YWAwDY_huc"></script>
++
++
++</body>
++
++</html>
+diff --git a/test/resorts/little-switzerland-trails.js b/test/resorts/little-switzerland-trails.js
+new file mode 100644
+index 00000000..dd8e39e8
+--- /dev/null
++++ b/test/resorts/little-switzerland-trails.js
+@@ -0,0 +1,84 @@
++import trails from '../trails/index.js';
++
++trails('little-switzerland', [
++  {
++    'name': 'Beginner Area',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Bomber Bowl',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Easy Cheesy',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': "Grandpa's Run",
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Sno Bowl',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Turnpike',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Death Valley',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Jane's Deal",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Matterhorn',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Southern Comfort',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Wineskin',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Big Deal',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Holy Switz!',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Schuss',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Shorty's",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Slingshot',
++    'status': 'closed',
++    'level': 'black'
++  }
++]);
+diff --git a/test/resorts/little-switzerland.js b/test/resorts/little-switzerland.js
+new file mode 100644
+index 00000000..8013f576
+--- /dev/null
++++ b/test/resorts/little-switzerland.js
+@@ -0,0 +1,13 @@
++import lifts from '../lifts/index.js';
++
++lifts('little-switzerland', 'html', {
++  'Beginner Conveyor 2': 'closed',
++  'Beginner Conveyor Lift': 'closed',
++  'Big Deal Rope Tow': 'closed',
++  'Double Chairlift 1': 'closed',
++  'Double Chairlift 2': 'closed',
++  'Double Chairlift 3': 'closed',
++  'Double Chairlift 4': 'closed',
++  'Happy Rope Tow': 'closed',
++  'Park Rope Tow': 'closed'
++});
+-- 
+2.39.5
+

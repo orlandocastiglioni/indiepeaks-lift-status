@@ -1,0 +1,2511 @@
+From 805df1da079ba561267002b6f0d2f3766fda35e6 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:23:37 -0400
+Subject: [PATCH 47/48] resort: add saskadena-six
+ (https://www.saskadenasix.com/winter/conditions)
+
+---
+ lib/resorts/saskadena-six/index.js      |    6 +
+ lib/resorts/saskadena-six/resort.json   |   16 +
+ lib/resorts/saskadena-six/sections.js   |   24 +
+ lib/resorts/saskadena-six/trails.js     |    5 +
+ test/resorts/example/saskadena-six.html | 2254 +++++++++++++++++++++++
+ test/resorts/saskadena-six-trails.js    |  132 ++
+ test/resorts/saskadena-six.js           |    6 +
+ 7 files changed, 2443 insertions(+)
+ create mode 100644 lib/resorts/saskadena-six/index.js
+ create mode 100644 lib/resorts/saskadena-six/resort.json
+ create mode 100644 lib/resorts/saskadena-six/sections.js
+ create mode 100644 lib/resorts/saskadena-six/trails.js
+ create mode 100644 test/resorts/example/saskadena-six.html
+ create mode 100644 test/resorts/saskadena-six-trails.js
+ create mode 100644 test/resorts/saskadena-six.js
+
+diff --git a/lib/resorts/saskadena-six/index.js b/lib/resorts/saskadena-six/index.js
+new file mode 100644
+index 00000000..62a061d0
+--- /dev/null
++++ b/lib/resorts/saskadena-six/index.js
+@@ -0,0 +1,6 @@
++import coerce from '../../tools/coerce.js';
++import sections from './sections.js';
++
++export default function parse(dom) {
++  return Object.fromEntries(sections(dom, 'Lifts').map(({ name, status }) => [name, coerce(status)]));
++}
+diff --git a/lib/resorts/saskadena-six/resort.json b/lib/resorts/saskadena-six/resort.json
+new file mode 100644
+index 00000000..fa60bba5
+--- /dev/null
++++ b/lib/resorts/saskadena-six/resort.json
+@@ -0,0 +1,16 @@
++{
++  "name": "Saskadena Six",
++  "url": {
++    "host": "https://www.saskadenasix.com",
++    "pathname": "/winter/conditions"
++  },
++  "trails": true,
++  "tags": [
++    "Vermont",
++    "New England"
++  ],
++  "ll": [
++    -72.5464,
++    43.6702
++  ]
++}
+diff --git a/lib/resorts/saskadena-six/sections.js b/lib/resorts/saskadena-six/sections.js
+new file mode 100644
+index 00000000..30d3027f
+--- /dev/null
++++ b/lib/resorts/saskadena-six/sections.js
+@@ -0,0 +1,24 @@
++import select from '../../select.js';
++import { allText, findText } from '../../tools/domutil.js';
++
++// lifts and trails share node--type-lift-trail articles, split by the
++// preceding h2 section heading (Lifts / Trails)
++export default function sections(dom, wanted) {
++  const rows = [];
++  let section;
++  for (const node of select(dom, 'h2, article.node--type-lift-trail')) {
++    if (node.name === 'h2') {
++      section = findText(node)?.trim();
++      continue;
++    }
++    if (section !== wanted) {
++      continue;
++    }
++    const title = select(node.children, '.cell.title')[0];
++    const status = select(node.children, '.cell.status .field__item')[0];
++    if (title && status) {
++      rows.push({ name: allText(title).trim(), status: findText(status) });
++    }
++  }
++  return rows;
++}
+diff --git a/lib/resorts/saskadena-six/trails.js b/lib/resorts/saskadena-six/trails.js
+new file mode 100644
+index 00000000..64bb15a7
+--- /dev/null
++++ b/lib/resorts/saskadena-six/trails.js
+@@ -0,0 +1,5 @@
++import sections from './sections.js';
++
++export default function parse(dom) {
++  return sections(dom, 'Trails');
++}
+diff --git a/test/resorts/example/saskadena-six.html b/test/resorts/example/saskadena-six.html
+new file mode 100644
+index 00000000..b284da10
+--- /dev/null
++++ b/test/resorts/example/saskadena-six.html
+@@ -0,0 +1,2254 @@
++<!DOCTYPE html>
++<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
++    <head>
++
++        <link rel="preload"
++      href="https://cdn.jsdelivr.net/combine/npm/slick-carousel@1.8.1/slick/slick.min.css,npm/nanoscroller@0.8.7/bin/css/nanoscroller.css"
++      as="style" onload="this.onload=null;this.rel='stylesheet'">
++<link rel="preload" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.min.css" as="style"
++      onload="this.onload=null;this.rel='stylesheet'">
++<noscript>
++    <link rel="stylesheet"
++          href="https://cdn.jsdelivr.net/combine/npm/slick-carousel@1.8.1/slick/slick.min.css,npm/nanoscroller@0.8.7/bin/css/nanoscroller.css">
++    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.min.css">
++</noscript>
++
++        <!-- Google Tag Manager -->
++        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++            })(window,document,'script','dataLayer','GTM-KGKMZFX');</script>
++        <!-- End Google Tag Manager -->
++
++        <meta charset="utf-8" />
++<style>/* @see https://github.com/aFarkas/lazysizes#broken-image-symbol */.js img.lazyload:not([src]) { visibility: hidden; }/* @see https://github.com/aFarkas/lazysizes#automatically-setting-the-sizes-attribute */.js img.lazyloaded[data-sizes=auto] { display: block; width: 100%; }/* Transition effect. */.js .lazyload, .js .lazyloading { opacity: 0; }.js .lazyloaded { opacity: 1; -webkit-transition: opacity 2000ms; transition: opacity 2000ms; }</style>
++<meta name="description" content="Saskadena Six Trails are Currently Closed to all traffic due to the ongoing snowmaking pipeline project. Please enjoy the other local biking and hiking trail networks this summer!" />
++<link rel="canonical" href="https://www.saskadenasix.com/winter/conditions" />
++<meta property="og:site_name" content="Saskadena Six Ski Area" />
++<meta property="og:url" content="https://www.saskadenasix.com/winter/conditions" />
++<meta property="og:title" content="Conditions" />
++<meta property="og:description" content="Saskadena Six Trails are Currently Closed to all traffic due to the ongoing snowmaking pipeline project. Please enjoy the other local biking and hiking trail networks this summer!" />
++<meta property="og:image" content="https://www.saskadenasix.com/sites/default/files/styles/max_2600x2600/public/2026-03/S6-Drone-90th-Badge.jpg?itok=QNlc0RaL" />
++<meta name="Generator" content="Drupal 11 (https://www.drupal.org)" />
++<meta name="MobileOptimized" content="width" />
++<meta name="HandheldFriendly" content="true" />
++<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3" />
++<script type="application/ld+json">{
++    "@context": "https://schema.org",
++    "@graph": [
++        {
++            "@type": "SkiResort",
++            "@id": "https://www.saskadenasix.com/#organization",
++            "url": "https://www.saskadenasix.com/",
++            "sameAs": [
++                "https://www.facebook.com/suicidesixvt",
++                "https://www.instagram.com/suicidesixvt"
++            ],
++            "name": "Saskadena Six Ski Area",
++            "telephone": "888 338 2745",
++            "contactPoint": {
++                "@type": "ContactPoint",
++                "telephone": "888 338 2745",
++                "email": "email@woodstockinn.com",
++                "url": "https://www.saskadenasix.com/"
++            },
++            "logo": {
++                "@type": "ImageObject",
++                "url": "https://www.saskadenasix.com/themes/custom/suicidesix/images/logo-blue.svg"
++            },
++            "image": {
++                "@type": "ImageObject",
++                "url": "https://www.saskadenasix.com/sites/default/files/styles/max_2600x2600/public/2026-03/S6-Drone-90th-Badge.jpg?itok=QNlc0RaL"
++            },
++            "address": {
++                "@type": "PostalAddress",
++                "streetAddress": "247 Stage Rd",
++                "addressLocality": "South Pomfret",
++                "addressRegion": "VT",
++                "postalCode": "05067",
++                "addressCountry": "USA"
++            },
++            "geo": {
++                "@type": "GeoCoordinates",
++                "latitude": "43.66510756666869",
++                "longitude": "-72.54326599999999"
++            }
++        },
++        {
++            "@type": "WebPage",
++            "@id": "https://www.saskadenasix.com/winter/conditions/#webpage",
++            "description": "Saskadena Six Trails are Currently Closed to all traffic due to the ongoing snowmaking pipeline project. Please enjoy the other local biking and hiking trail networks this summer!",
++            "publisher": {
++                "@type": "SkiResort",
++                "@id": "https://www.saskadenasix.com/#organization"
++            },
++            "inLanguage": "en-US"
++        },
++        {
++            "@type": "WebSite",
++            "@id": "https://www.saskadenasix.com/#website",
++            "name": "Saskadena Six Ski Area",
++            "url": "https://www.saskadenasix.com/",
++            "publisher": {
++                "@type": "SkiResort",
++                "@id": "https://www.saskadenasix.com/#organization"
++            },
++            "inLanguage": "en-US"
++        }
++    ]
++}</script>
++<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
++
++        <title>Conditions | Saskadena Six Ski Area</title>
++        <script src="https://www.navistechnologies.info/JavascriptPhoneNumber/js.aspx?account=14491&jspass=dyxbyiqy8f10dhnzc2jn&dflt=8883382745"></script>
++        <link rel="stylesheet" media="all" href="/sites/default/files/css/css_PNwP0TzimpxO0slhYg7ENd7CLieRa5oxz-hitsyptek.css?delta=0&amp;language=en&amp;theme=suicidesix&amp;include=eJxFy2sKwzAMA-ALhfhIQ03cxOA8sBtYd_p1jNJf_iRhCEFeRccGDQmp8q7LKz2MjfsKSeF-0i7Ktxu7o7DfuY98bcP4kjWofDg0zoLf18EWE-Yho4dhUqTT_4QJQzHM6pRtTWh8mrj6XJuKV87BlyTJ7PKmh8FPP7jRBucvbuFPNQ" />
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css_rC7M9trBxuulUhePlLm_fyuXdZ6dqJMVmoRoWEL02qc.css?delta=1&amp;language=en&amp;theme=suicidesix&amp;include=eJxFy2sKwzAMA-ALhfhIQ03cxOA8sBtYd_p1jNJf_iRhCEFeRccGDQmp8q7LKz2MjfsKSeF-0i7Ktxu7o7DfuY98bcP4kjWofDg0zoLf18EWE-Yho4dhUqTT_4QJQzHM6pRtTWh8mrj6XJuKV87BlyTJ7PKmh8FPP7jRBucvbuFPNQ" />
++
++        
++
++        <link rel="apple-touch-icon" sizes="180x180" href="/themes/custom/suicidesix/images/favicon/apple-touch-icon.png">
++        <link rel="icon" type="image/png" sizes="32x32" href="/themes/custom/suicidesix/images/favicon/favicon-32x32.png">
++        <link rel="icon" type="image/png" sizes="16x16" href="/themes/custom/suicidesix/images/favicon/favicon-16x16.png">
++        <link rel="manifest" href="/themes/custom/suicidesix/images/favicon/site.webmanifest">
++        <link rel="mask-icon" href="/themes/custom/suicidesix/images/favicon/safari-pinned-tab.svg" color="#c14e5d">
++        <link rel="shortcut icon" href="/themes/custom/suicidesix/images/favicon/favicon.ico">
++        <meta name="msapplication-TileColor" content="#ffffff">
++        <meta name="msapplication-config" content="/themes/custom/suicidesix/images/favicon/browserconfig.xml">
++        <meta name="theme-color" content="#ffffff">
++
++        <meta name="facebook-domain-verification" content="dxu27ocrhit76dpvydajt3zhbhlpt9" />
++
++    </head>
++
++    <body class="path-node page-node-type-page has-hero-image">
++
++        <!-- Google Tag Manager (noscript) -->
++            <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KGKMZFX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++        <!-- End Google Tag Manager (noscript) -->
++
++                <a href="#main-content" class="focusable skip-link">
++            Skip to main content
++        </a>
++
++        
++          <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
++    
++<header class="header" role="banner">
++
++    <div class="header-bar">
++        <div class="container">
++
++            <a class="logo" href="/">
++
++                
++
++<img src="/themes/custom/suicidesix/images/logo-white.svg" alt="Saskadena Six Ski Area">
++
++                
++<img class="lazyload" data-src="/themes/custom/suicidesix/logo.svg" alt="Saskadena Six Ski Area" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="">
++
++            </a>
++
++            <a id="booking-button" href="#" class="button book">
++                                    Book Your Stay
++                            </a>
++
++            <!--<script type="text/javascript">AppendNavisKeywordToLink("booking-button");</script>-->
++
++            <button id="main-toggle" class="main hamburger hamburger--squeeze" type="button">
++                <span class="text">Menu</span>
++                <span class="hamburger-box">
++                    <span class="hamburger-inner"></span>
++                </span>
++            </button>
++
++        </div>
++    </div>
++
++
++    
++<div class="main-menu">
++    <div class="container">
++
++        <div class="menu-wrapper">
++
++            <div id="main-menu" class="first-level nano">
++                <div class="nano-content">
++                    <nav role="navigation" aria-labelledby="block-main-menu-menu" id="block-main-menu" class="block block-menu navigation menu--main">
++            
++  <h2 class="visually-hidden" id="block-main-menu-menu">Main navigation</h2>
++  
++
++        
++              <ul class="reset menu">
++                    <li class="menu-item menu-item--expanded">
++
++        
++                  <div class="f-w-medium t-c-blue heading">The Mountain</div>
++        
++                                <ul class="reset menu">
++                    <li class="menu-item">
++
++                              <a href="/the-mountain/mountain-info" class="d-block menu-link" data-drupal-link-system-path="node/305">Mountain Info</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/the-mountain/our-new-name" class="d-block menu-link" data-drupal-link-system-path="node/576">Our New Name</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/the-mountain/outdoors-for-all" class="d-block menu-link" data-drupal-link-system-path="node/530">Outdoors for All</a>
++                  
++        
++        
++      </li>
++        </ul>
++  
++        
++      </li>
++                <li class="menu-item menu-item--expanded menu-item--active-trail">
++
++        
++                  <div class="f-w-medium t-c-blue heading">Winter</div>
++        
++                                <ul class="reset menu">
++                    <li class="menu-item menu-item--active-trail">
++
++                              <a href="/winter/conditions" class="d-block menu-link is-active" data-drupal-link-system-path="node/307" aria-current="page">Conditions</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/winter/lift-tickets-passes" class="d-block menu-link" data-drupal-link-system-path="node/309">Lift Tickets &amp; Passes</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/winter/winter-lessons-programs" class="d-block menu-link" data-drupal-link-system-path="node/310">Lessons &amp; Programs</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/winter/rentals" class="d-block menu-link" data-drupal-link-system-path="node/761">Rentals</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/winter/retail-shop" class="d-block menu-link" data-drupal-link-system-path="node/762">Retail Ski Shop</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/winter/uphill-travel" class="d-block menu-link" data-drupal-link-system-path="node/774">Uphill Travel</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/winter/winter-activities" class="d-block menu-link" data-drupal-link-system-path="node/311">Winter Activities</a>
++                  
++        
++        
++      </li>
++        </ul>
++  
++        
++      </li>
++                <li class="menu-item menu-item--expanded">
++
++        
++                  <div class="f-w-medium t-c-blue heading">Summer</div>
++        
++                                <ul class="reset menu">
++                    <li class="menu-item">
++
++                              <a href="/summer/mountain-biking" class="d-block menu-link" data-drupal-link-system-path="node/312">Mountain Biking</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/summer/orvisr-endorsed-fly-fishing" class="d-block menu-link" data-drupal-link-system-path="node/314">Fly-Fishing</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/summer/summer-activities" class="d-block menu-link" data-drupal-link-system-path="node/315">Summer Activities</a>
++                  
++        
++        
++      </li>
++        </ul>
++  
++        
++      </li>
++                <li class="menu-item menu-item--expanded">
++
++        
++                  <div class="f-w-medium t-c-blue heading">More</div>
++        
++                                <ul class="reset menu">
++                    <li class="menu-item">
++
++                              <a href="/more/events" class="d-block menu-link" data-drupal-link-system-path="node/316">Events</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/more/dining" class="d-block menu-link" data-drupal-link-system-path="node/317">Dining</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/more/weddings-groups" class="d-block menu-link" data-drupal-link-system-path="node/318">Weddings &amp; Groups</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/more/the-woodstock-inn-resort" class="d-block menu-link" data-drupal-link-system-path="node/319">The Woodstock Inn &amp; Resort</a>
++                  
++        
++        
++      </li>
++        </ul>
++  
++        
++      </li>
++                <li class="menu-item menu-item--expanded">
++
++        
++                  <div class="f-w-medium t-c-blue heading">Shop</div>
++        
++                                <ul class="reset menu">
++                    <li class="menu-item">
++
++                              <a href="https://woodstockinn.ltibooking.com/" target="_blank" class="d-block menu-link">Lift Tickets</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="https://store.woodstockinn.com/collections/alpine-passes" target="_blank" class="d-block menu-link">Passes</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/shop/packages" class="d-block menu-link" data-drupal-link-system-path="node/308">Packages</a>
++                  
++        
++        
++      </li>
++                <li class="menu-item">
++
++                              <a href="/shop/gift-cards" class="d-block menu-link" data-drupal-link-system-path="node/320">Gift Cards</a>
++                  
++        
++        
++      </li>
++        </ul>
++  
++        
++      </li>
++        </ul>
++  
++
++
++  </nav>
++
++                </div>
++            </div>
++
++            
++        </div>
++
++    </div>
++</div>
++    
++
++<div id="booking-widget" class="booking-widget">
++    <div class="container">
++
++        <div class="widget-wrapper">
++
++            <div class="nano">
++                <div class="nano-content">
++
++                    
++<img class="lazyload" data-src="/themes/custom/suicidesix/images/logo-white.svg" alt="Woodstock Inn and Resort" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="">
++
++                    <form action="https://reservations.woodstockinn.com" method="get" target="_blank" class="booking-form">
++
++                        <input type="hidden" name="hotel" value="27335" />
++                        <input type="hidden" name="childages" value="" />
++
++                                                    <input type="hidden" name="configcode" value="LEBWI2" />
++                            <input type="hidden" name="themecode" value="LEBWI2" />
++                        
++                        <div class="form-item arrival">
++                                <label for="arrivalDate">Check In</label>
++                                <input id="arrivalDate" name="arrive" class="booking-date active" readonly="true" type="text" value="Fri 10th Jul">
++                        </div>
++
++                        <div class="form-item departure">
++                            <label for="departureDate">Check Out</label>
++                            <input id="departureDate" name="depart" class="booking-date" readonly="true" type="text" >
++                        </div>
++
++                        <div class="pickers">
++                            <div class="arrivalDate"></div>
++                            <div class="departureDate"></div>
++                        </div>
++
++                        <h5>Guests</h5>
++
++                        <div class="form-item number">
++                            <label for="numberOfAdults">Adults</label>
++                            <div class="incrementor">
++                                <div class="increment minus"></div>
++                                <input id="numberOfAdults" name="adult" type="text" data-min="0" data-max="4" value="2">
++                                <div class="increment plus"></div>
++                            </div>
++                        </div>
++
++                        <div class="form-item number children">
++                            <label for="numberOfChildren">Children</label>
++                            <div class="incrementor">
++                                <div class="increment minus"></div>
++                                <input id="numberOfChildren" name="child" type="text" data-min="0" data-max="4" value="0">
++                                <div class="increment plus"></div>
++                            </div>
++                        </div>
++
++                        <div class="children-ages">
++
++                        </div>
++
++                        <div class="form-actions">
++                            <input class="form-submit" value="Search" type="submit">
++                        </div>
++
++                        <p>
++                            Or call to make your reservation <br />
++                            <a class="tel" href='tel:800-448-7900' tabIndex="-1" rel='nofollow'>800-448-7900</a>
++                            <!--<a class="tel" href='#' tabIndex="-1" rel='nofollow'><script type="text/javascript">ShowNavisNCPhoneNumber();</script></a>-->
++                        </p>
++                        <!--<p>
++                            <a id="push-to-talk" class="push-to-talk" href="https://www.thenavisway.com/p2talk/P2Talk.aspx?account=14491&dnis=8883382745&contactid=null" target="_blank">Push<span class="two">2</span>Talk</a>
++                            <script type="text/javascript">SetNavisP2TalkLink("push-to-talk");</script>
++                            <br />
++                            9am-5pm EST
++                            <script type="text/javascript">NavisSetHiddenKeywordFieldD('booking-field','8883382745');</script>
++                        </p>-->
++
++                    </form>
++
++                </div>
++            </div>
++
++        </div>
++
++    </div>
++</div>
++
++
++</header>
++
++
++
++<div class="layout-container">
++
++    <main id="main-content" role="main">
++
++        <div class="layout-content">
++
++            
++                
++        <div class="region region-content">
++        <div class="wrapper-region">
++            <div id="block-suicidesix-content" class="block block-system block-system-main-block">
++  
++    
++      
++    
++
++
++
++<article id="node-307"  data-history-node-id="307" class="node node--type-page node-307 node--view-mode-full">
++
++    
++
++        
++    
++
++    
++
++<div class="hero with-image light  ">
++<div class="inner">
++
++            
++    
++
++<article class="media media--type-image media--view-mode-hero">
++
++    
++
++                
++
++
++                        <div class="field field--name-field-media-image field--type-image field--label-hidden focus-middle-center field__item">
++
++                                <img loading="lazy" width="1200" height="675" data-parent-fit="cover" data-aspectratio="1.7777777777778" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Snowy mountain ski slopes under a clear blue sky." class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2026-03/S6-Drone-90th-Badge.jpg?itok=sLvkVzXT" data-srcset="/sites/default/files/styles/scale_320/public/2026-03/S6-Drone-90th-Badge.jpg?itok=O0qvVHCu 320w, /sites/default/files/styles/scale_480/public/2026-03/S6-Drone-90th-Badge.jpg?itok=_FEv_8eR 480w, /sites/default/files/styles/scale_640/public/2026-03/S6-Drone-90th-Badge.jpg?itok=I8g_VvJ5 640w, /sites/default/files/styles/scale_800/public/2026-03/S6-Drone-90th-Badge.jpg?itok=Zr196F0c 800w, /sites/default/files/styles/scale_1024/public/2026-03/S6-Drone-90th-Badge.jpg?itok=1QGaaLi0 1024w, /sites/default/files/styles/scale_1920/public/2026-03/S6-Drone-90th-Badge.jpg?itok=mczZmZTF 1200w" data-sizes="auto" />
++
++
++
++            
++
++            </div>
++            
++    
++</article>
++    
++    <div class="content">
++
++        <h1><span class="field field--name-title field--type-string field--label-hidden">Conditions</span>
++</h1>
++
++        
++        
++        
++    </div>
++
++
++</div>
++</div>
++
++    <div data-drupal-messages-fallback class="hidden"></div>
++
++
++
++    
++        <div class="intro">
++            <div class="content-container">
++
++                
++                                        
++
++
++                        <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
++
++                            <h4><strong>Saskadena Six Trails are Currently Closed to all traffic due to the ongoing snowmaking pipeline project.&nbsp;</strong></h4><p><em>Please enjoy the other local biking and hiking trail networks this summer!</em></p><p><a name="_Hlk211255736"></a></p>
++            
++
++            </div>
++            
++                
++            </div>
++        </div>
++
++    
++
++    
++
++    
++
++    <div class="node__content">
++
++
++        
++
++        
++
++        
++            
++
++
++            <div class="field field--name-field-paragraphs field--type-entity-reference-revisions field--label-hidden field__items">
++
++            
++                
++                                            <div class="field__item">    
++
++    
++
++
++    
++
++
++    <div class="paragraph paragraph--type--full-width-media-slideshow paragraph--view-mode--default" data-id="paragraph-277">
++
++        <div class="inner">
++
++            
++                
++<div  class="content">
++    
++<h2 >
++        
++
++
++                        <div class="field field--name-field-heading field--type-string field--label-hidden field__item">
++
++                            Ski Area Trail Map
++            
++
++            </div>
++            
++  </h2>    
++
++
++                        <div class="clearfix text-formatted field field--name-field-copy-first-column field--type-text-long field--label-hidden field__item">
++
++                            <p>Download:&nbsp;</p>
++    
++
++<article class="media media--type-file media--view-mode-inline">
++
++    
++
++                
++
++
++                        <div class="field field--name-field-media-file field--type-file field--label-hidden field__item">
++
++                            
++<span class="file file--mime-application-pdf file--application-pdf"> <a href="/sites/default/files/2025-11/S6%20Trail%20Map%202025-26.pdf" type="application/pdf" title="S6 Trail Map 2025-26.pdf">Saskadena Six Trail Map</a></span>
++
++            
++
++            </div>
++            
++    
++</article>
++            
++
++            </div>
++            
++  </div>    
++
++
++            <div class="field field--name-field-medias field--type-entity-reference field--label-hidden field__items">
++
++            
++                
++                                            <div class="field__item">
++    
++
++<article class="media media--type-image media--view-mode-with-caption">
++
++    
++
++                
++
++
++                        <div class="field field--name-field-media-image field--type-image field--label-hidden focus-top-left field__item">
++
++                                <img loading="lazy" width="3287" height="1996" data-parent-fit="cover" data-aspectratio="1.6467935871743" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Ski resort map with labeled trails and lifts in blue and white." class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=M5H4rx44" data-srcset="/sites/default/files/styles/scale_320/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=rXb34doy 320w, /sites/default/files/styles/scale_480/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=yBUVjJsL 480w, /sites/default/files/styles/scale_640/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=IIOO1odZ 640w, /sites/default/files/styles/scale_800/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=QAuOtFK5 800w, /sites/default/files/styles/scale_1024/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=Eh6_YQAv 1024w, /sites/default/files/styles/scale_1280/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=KTUdy8Wn 1280w, /sites/default/files/styles/scale_1440/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=M5H4rx44 1440w, /sites/default/files/styles/scale_1920/public/2025-11/S6%20Trail%20Map%202025-26_0.jpg?itok=dSTTVLqm 1920w" data-sizes="auto" />
++
++
++
++            
++
++            </div>
++            
++    
++</article></div>
++                    
++                
++            
++        </div>
++    
++
++                
++            
++        </div>
++
++    </div>
++</div>
++                    
++                
++            
++        </div>
++    
++
++
++        
++
++    </div>
++
++
++    
++            
++
++<div class="listing listing-row content-container lifts-trails">
++
++    <div class="content">
++
++        <h2>Lifts</h2>
++    
++<article  data-history-node-id="345" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++    
++<div class="cell title">
++    Chair 1 </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="343" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++    
++<div class="cell title">
++    Conveyor Lift </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++<h2>Trails</h2>
++    
++<article  data-history-node-id="653" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++    
++<div class="cell title">
++    UPHILL - Backdoor&gt;Gully&gt;Summit </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="650" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++    
++<div class="cell title">
++    UPHILL - Easy Mile </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="651" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++    
++<div class="cell title">
++    UPHILL - Easy Mile Woods Route </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="652" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++    
++<div class="cell title">
++    UPHILL - Milky Way&gt;Top of Chair 2 </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="621" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level easy">
++            Easy
++        </div>
++    
++<div class="cell title">
++    Begin-A-Glade </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="367" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level easy">
++            Easy
++        </div>
++    
++<div class="cell title">
++    Easy Mile </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="392" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level easy">
++            Easy
++        </div>
++    
++<div class="cell title">
++    Milky Way </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="370" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level easy">
++            Easy
++        </div>
++    
++<div class="cell title">
++    Pearson&#039;s Path </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="393" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level easy">
++            Easy
++        </div>
++    
++<div class="cell title">
++    Standard </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="394" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Back Door </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="395" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Bee Line </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="383" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Bourdon&#039;s Bowl </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="360" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Bunny&#039;s Boulevard </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="396" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Chimney </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="397" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Double Dip </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="619" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Duane&#039;s Drop </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="398" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Lasky Lot </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="359" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Perley&#039;s Peril </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="622" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Road Way </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="361" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Skyline </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="620" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    Spring Pine Glade </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="357" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    The Chute </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="384" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level intermediate">
++            Intermediate
++        </div>
++    
++<div class="cell title">
++    The Gully </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="385" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level advanced">
++            Advanced
++        </div>
++    
++<div class="cell title">
++    Crystal </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="386" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level advanced">
++            Advanced
++        </div>
++    
++<div class="cell title">
++    Jug Handle </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="388" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level advanced">
++            Advanced
++        </div>
++    
++<div class="cell title">
++    Showoff </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="356" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level advanced">
++            Advanced
++        </div>
++    
++<div class="cell title">
++    The Face </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="546" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level expert">
++            Expert
++        </div>
++    
++<div class="cell title">
++    Back Scratcher </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="351" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level expert">
++            Expert
++        </div>
++    
++<div class="cell title">
++    Mid Face </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="387" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level expert">
++            Expert
++        </div>
++    
++<div class="cell title">
++    Pomfret Plunge </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="389" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level expert">
++            Expert
++        </div>
++    
++<div class="cell title">
++    Porcupine </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++    
++<article  data-history-node-id="391" class="node node--type-lift-trail node--view-mode-row">
++
++
++
++
++
++            <div class="cell level expert">
++            Expert
++        </div>
++    
++<div class="cell title">
++    The Glade </div>
++
++
++<div class="cell status closed">
++        
++
++
++                        <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
++
++                            Closed
++            
++
++            </div>
++            
++</div>
++
++
++</article>
++
++
++
++
++    </div>
++</div>
++
++
++
++
++    
++
++    
++
++    
++
++    
++
++
++</article>
++
++
++
++
++
++  </div>
++
++        </div>
++    </div>
++
++
++        </div>
++    </main>
++
++    
++
++
++<div class="shin">
++
++    <div class="inner featured-packages">
++
++        <div class="content">
++
++            <div class="header">
++
++                <h2>Exclusive Packages</h2>
++                <div class="field--name-field-link">
++                    <a href="/shop/packages">View All packages</a>
++                </div>
++
++            </div>
++
++            <div id="block-featured-packages" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++
++
++<div class="config_pages config_pages--type--site-settings config_pages--view-mode--full config_pages--site-settings--full">
++
++        
++
++    
++            <div class="field field--name-field-featured-packages field--type-entity-reference field--label-hidden three-col field__items">
++
++            
++                
++                                            <div class="field__item">
++    
++    
++
++<article  data-history-node-id="327" class="node node--type-package node--view-mode-card iso-item term-3 term-10 term-15">
++
++    <div class="wrapper">
++        <a href="/shop/packages/wake-up-in-woodstock" class="image">
++            
++
++                            
++    
++
++<article class="media media--type-image media--view-mode-medium">
++
++    
++
++                
++
++
++                        <div class="field field--name-field-media-image field--type-image field--label-hidden focus-middle-center field__item">
++
++                                <img loading="lazy" width="4000" height="2250" data-parent-fit="cover" data-aspectratio="1.7777777777778" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Spa Room at the Woodstock Inn &amp; Resort" class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=bz1b54iP" data-srcset="/sites/default/files/styles/scale_320/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=ATC4psBF 320w, /sites/default/files/styles/scale_480/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=ymAyYGW9 480w, /sites/default/files/styles/scale_640/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=d4WqDKYJ 640w, /sites/default/files/styles/scale_800/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=Zdna-0jh 800w, /sites/default/files/styles/scale_1024/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=1WqNpHNQ 1024w, /sites/default/files/styles/scale_1280/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=5v1Dl6Dz 1280w, /sites/default/files/styles/scale_1440/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=bz1b54iP 1440w, /sites/default/files/styles/scale_1920/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=Mb39ynQ9 1920w" data-sizes="auto" />
++
++
++
++            
++
++            </div>
++            
++    
++</article>
++            
++            <div class="copy">
++
++                <h4>Wake Up In Woodstock</h4>
++
++                                    <h6>Wake Up In Woodstock ~ This special offer is a great way to get away and relax!</h6>
++                
++                    
++
++
++                        <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
++
++                              Relax with a freshly-made breakfast and luxurious accommodations.
++
++
++            
++
++            </div>
++            
++
++            </div>
++
++        </a>
++    </div>
++
++
++</article>
++
++</div>
++                    
++                
++                                            <div class="field__item">
++    
++
++
++<article  data-history-node-id="760" class="node node--type-package node--view-mode-card iso-item">
++
++    <div class="wrapper">
++        <a href="/shop/packages/woodstock-experience-package" class="image">
++            
++
++                            
++    
++
++<article class="media media--type-image media--view-mode-medium">
++
++    
++
++                
++
++
++                        <div class="field field--name-field-media-image field--type-image field--label-hidden focus-middle-center field__item">
++
++                                <img loading="lazy" width="7564" height="3569" data-parent-fit="cover" data-aspectratio="2.1193611655926" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="The Woodstock Inn &amp; Resort" class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=ouLXP-V-" data-srcset="/sites/default/files/styles/scale_320/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=8ECIASdO 320w, /sites/default/files/styles/scale_480/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=2LBQ04T0 480w, /sites/default/files/styles/scale_640/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=p-2Hkxxx 640w, /sites/default/files/styles/scale_800/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=cBRQoa31 800w, /sites/default/files/styles/scale_1024/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=-v0iUaiY 1024w, /sites/default/files/styles/scale_1280/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=C_QbKa_- 1280w, /sites/default/files/styles/scale_1440/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=ouLXP-V- 1440w, /sites/default/files/styles/scale_1920/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=P1xrdqOu 1920w" data-sizes="auto" />
++
++
++
++            
++
++            </div>
++            
++    
++</article>
++            
++            <div class="copy">
++
++                <h4>Woodstock Experience Package</h4>
++
++                                    <h6>Your Vermont getaway, your way.</h6>
++                
++                    
++
++
++                        <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
++
++                              Make your stay uniquely yours with the Resort Credit Package at the Woodstock Inn &amp; Resort.
++
++
++            
++
++            </div>
++            
++
++            </div>
++
++        </a>
++    </div>
++
++
++</article>
++
++</div>
++                    
++                
++            
++        </div>
++    
++
++</div>
++
++  </div>
++
++
++        </div>
++
++    </div>
++
++</div>
++
++<footer class="footer" role="contentinfo">
++
++    
++    
++
++
++
++<div class="newsletter">
++    <div class="inner">
++
++        <div class="content">
++
++            <div class="table">
++
++                <h3>Subscribe &amp; stay tuned!</h3>
++                <p>Sign up to receive special deals, packages and information about Saskadena Six Ski Area.</p>
++
++
++                <form action="https://www.thenavisway.com/reach/WebServicePost/SubscribeToList.aspx" class="email-signup-form">
++
++                    <input type="hidden" name="SubscriptionLists" value="Suicide 6 website">
++
++                    <input type="hidden" name="RedirectURL" value="https://www.saskadenasix.com/email-signup-thankyou" />
++
++                    <label for="email-signup-textfield-footer" class="visually-hidden">Email Address</label>
++
++                    <input name="email" class="textfield" id="email-signup-textfield-footer" type="email" value="Email" required aria-required="true">
++
++                    <button type="submit">
++                        <span class="visually-hidden">Sign Up</span>
++                    </button>
++
++                </form>
++
++            </div>
++
++        </div>
++
++    </div>
++</div>
++
++    <!--<div class="contest">
++        <div class="inner">
++
++            <div class="content">
++
++                <h4>
++                    <a href="/10yearsthespa">#10YearsTheSpa</a>
++                </h4>
++                <a href="/10yearsthespa" class="button-arrow">Enter Now</a>
++
++            </div>
++
++        </div>
++    </div>-->
++
++    <div class="awards">
++        <div class="inner">
++
++            <div class="content">
++
++                <h5>Awards &amp; Recognition</h5>
++
++                <ul class="logos">
++                    <li class="tripadvisor">
++                        <a href="http://www.tripadvisor.ca/Hotel_Review-g60897-d115891-Reviews-Woodstock_Inn_and_Resort-Woodstock_Vermont.html" target="_blank">
++                            
++<img class="lazyload" data-src="/themes/custom/suicidesix/images/logo-trip-advisor-2023.svg" alt="2021 Travelers Choice Award - Trip Advisor" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="80">
++                        </a>
++                    </li>
++                    <li class="lvx">
++                        <a href="https://preferredhotels.com/hotels/united-states/woodstock-inn-resort" target="_blank">
++                            
++<img class="lazyload" data-src="/themes/custom/suicidesix/images/logo-LVX-preferred.svg" alt="LVX Preferred Hotels &amp;amp; Resorts logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="110">
++                        </a>
++                    </li>
++                    <li class="four-diamond">
++                        <a href="https://www.aaa.com/travelinfo/vermont/woodstock/hotels/woodstock-inn--resort-17734.html" target="_blank">
++                            
++<img class="lazyload" data-src="/themes/custom/suicidesix/images/logo-four-diamonds.svg" alt="Four Diamond Award logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="90">
++                        </a>
++                    </li>
++                    <li class="historic-hotel">
++                        <a href="http://www.historichotels.org/hotels-resorts/woodstock-inn-and-resort/?from=rezconsole&amp;mon=198154-A1" target="_blank">
++                            
++<img class="lazyload" data-src="/themes/custom/suicidesix/images/logo-historic-hotels.svg" alt="Historic Hotels of America logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="120">
++                        </a>
++                    </li>
++                    <li class="iprefer">
++                        <a href="https://preferredhotels.com/hotels/united-states/woodstock-inn-resort" target="_blank">
++                            
++<img class="lazyload" data-src="/themes/custom/suicidesix/images/logo-iprefer-2023.png" alt="I Prefer Hotel Rewards - Members Choice Award Winner 2020" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="80">
++                        </a>
++                    </li>
++                    <li class="fhr">
++                      <a href="https://www.americanexpress.com/en-us/travel/fine-hotels-resorts/property/Woodstock-Inn--Resort?linknav=US-travel-dd-fhr-PropertyResults-UnitedStates-WoodstockInnResort" target="_blank">
++                        
++<img class="lazyload" data-src="/themes/custom/suicidesix/images/fhr_logo.svg" alt="Fine Hotels &amp;amp; Resorts logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="150">
++                      </a>
++                    </li>
++                </ul>
++
++            </div>
++
++        </div>
++    </div>
++
++    <div class="sole">
++        <div class="inner">
++
++            <div class="content">
++
++                <nav role="navigation" aria-labelledby="block-footer-menu-menu" id="block-footer-menu" class="block block-menu navigation menu--footer">
++            
++  <h2 class="visually-hidden" id="block-footer-menu-menu">Footer Menu</h2>
++  
++
++        
++                <ul class="menu menu--level-1">
++                    <li class="menu-item">
++        <a href="/contact-us" data-drupal-link-system-path="node/321">Contact Us</a>
++              </li>
++                <li class="menu-item menu-item--collapsed">
++        <a href="/careers" data-drupal-link-system-path="node/322">Careers</a>
++              </li>
++                <li class="menu-item">
++        <a href="/partners" data-drupal-link-system-path="node/324">Partners</a>
++              </li>
++                <li class="menu-item">
++        <a href="https://store.woodstockinn.com" target="_blank">Store</a>
++              </li>
++        </ul>
++  
++
++
++  </nav>
++
++
++                <div class="contact-information">
++
++                    <div id="block-address" class="block block-simple-block block-simple-blockaddress">
++  
++    
++      <p><strong>Saskadena Six Ski Area</strong><br>
++247 Stage Rd, South Pomfret, Vermont, 05067<br>
++Toll free: 888.338.2745<br>
++Local: 802.457.6661</p>
++
++<p><span>Saskadena Six:&nbsp;</span><a href="mailto:S6info@woodstockinn.com">S6info@woodstockinn.com</a></p>
++  </div>
++
++
++                    
++
++                    <nav role="navigation" aria-labelledby="block-social-menu-menu" id="block-social-menu" class="block block-menu navigation menu--social">
++            
++  <h2 class="visually-hidden" id="block-social-menu-menu">Social</h2>
++  
++
++        
++                <ul class="menu menu--level-1">
++                    <li class="menu-item">
++        <a href="https://www.facebook.com/saskadenasix" target="_blank" class="facebook">Facebook</a>
++              </li>
++                <li class="menu-item">
++        <a href="https://www.instagram.com/saskadenasix/" target="_blank" class="instagram">Instagram</a>
++              </li>
++        </ul>
++  
++
++
++  </nav>
++
++
++                </div>
++
++                <div class="ground">
++                    <nav role="navigation" aria-labelledby="block-privacy-menu-menu" id="block-privacy-menu" class="block block-menu navigation menu--privacy-menu">
++            
++  <h2 class="visually-hidden" id="block-privacy-menu-menu">Privacy Menu</h2>
++  
++
++        
++                <ul class="menu menu--level-1">
++                    <li class="menu-item">
++        <a href="/privacy-policy" data-drupal-link-system-path="node/60">Privacy</a>
++              </li>
++                <li class="menu-item">
++        <a href="/experiencing-accessibility-issues" data-drupal-link-system-path="node/61">Accessibility</a>
++              </li>
++        </ul>
++  
++
++
++  </nav>
++
++
++                    <p class="copyright">
++                        All rights reserved. <br /> &copy; 2026 Saskadena Six Ski Area
++                    </p>
++                </div>
++
++            </div>
++
++        </div>
++    </div>
++
++
++
++</footer>
++
++</div>
++
++  </div>
++
++        
++
++        <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/307","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"lazy":{"lazysizes":{"lazyClass":"lazyload","loadedClass":"lazyloaded","loadingClass":"lazyloading","preloadClass":"lazypreload","errorClass":"lazyerror","autosizesClass":"lazyautosizes","srcAttr":"data-src","srcsetAttr":"data-srcset","sizesAttr":"data-sizes","minSize":40,"customMedia":[],"init":true,"expFactor":1.5,"hFac":0.8,"loadMode":2,"loadHidden":true,"ricTimeout":0,"throttleDelay":124,"plugins":{"object-fit":"object-fit\/ls.object-fit","parent-fit":"parent-fit\/ls.parent-fit"}},"placeholderSrc":"data:image\/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==","preferNative":false,"minified":true,"libraryPath":"\/libraries\/lazysizes"},"field_group":{"html_element":{"mode":"default","context":"view","settings":{"classes":"","id":"","element":"h2","show_label":false,"label_element":"h3","attributes":"","effect":"none","speed":"fast"}}},"user":{"uid":0,"permissionsHash":"880344b5b1b4c3cc5a925ccd8f61682a161480db015cffcc01a792286b4ae4ef"}}</script>
++<script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
++<script src="/sites/default/files/js/js_eeKOxy1FRpjPjwvmmhEYxLVlxU_LYR-jiPtB5U3eamQ.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=suicidesix&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6iXnJGflFxTAuhILxinMyk7MBGhEYpA"></script>
++<script src="https://cdn.jsdelivr.net/combine/npm/jquery.cookie@1.4.1/jquery.cookie.min.js,npm/nanoscroller@0.8.7/bin/javascripts/jquery.nanoscroller.min.js,npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
++<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
++<script src="/sites/default/files/js/js_Zt0ZjptcYpVPyeMIVEzRGVr52Thm2JG4HliMjdu9P-Q.js?scope=footer&amp;delta=4&amp;language=en&amp;theme=suicidesix&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6iXnJGflFxTAuhILxinMyk7MBGhEYpA"></script>
++
++
++    </body>
++
++</html>
+diff --git a/test/resorts/saskadena-six-trails.js b/test/resorts/saskadena-six-trails.js
+new file mode 100644
+index 00000000..836b3585
+--- /dev/null
++++ b/test/resorts/saskadena-six-trails.js
+@@ -0,0 +1,132 @@
++import trails from '../trails/index.js';
++
++trails('saskadena-six', [
++  {
++    'name': 'UPHILL - Backdoor>Gully>Summit',
++    'status': 'closed'
++  },
++  {
++    'name': 'UPHILL - Easy Mile',
++    'status': 'closed'
++  },
++  {
++    'name': 'UPHILL - Easy Mile Woods Route',
++    'status': 'closed'
++  },
++  {
++    'name': 'UPHILL - Milky Way>Top of Chair 2',
++    'status': 'closed'
++  },
++  {
++    'name': 'Begin-A-Glade',
++    'status': 'closed'
++  },
++  {
++    'name': 'Easy Mile',
++    'status': 'closed'
++  },
++  {
++    'name': 'Milky Way',
++    'status': 'closed'
++  },
++  {
++    'name': "Pearson's Path",
++    'status': 'closed'
++  },
++  {
++    'name': 'Standard',
++    'status': 'closed'
++  },
++  {
++    'name': 'Back Door',
++    'status': 'closed'
++  },
++  {
++    'name': 'Bee Line',
++    'status': 'closed'
++  },
++  {
++    'name': "Bourdon's Bowl",
++    'status': 'closed'
++  },
++  {
++    'name': "Bunny's Boulevard",
++    'status': 'closed'
++  },
++  {
++    'name': 'Chimney',
++    'status': 'closed'
++  },
++  {
++    'name': 'Double Dip',
++    'status': 'closed'
++  },
++  {
++    'name': "Duane's Drop",
++    'status': 'closed'
++  },
++  {
++    'name': 'Lasky Lot',
++    'status': 'closed'
++  },
++  {
++    'name': "Perley's Peril",
++    'status': 'closed'
++  },
++  {
++    'name': 'Road Way',
++    'status': 'closed'
++  },
++  {
++    'name': 'Skyline',
++    'status': 'closed'
++  },
++  {
++    'name': 'Spring Pine Glade',
++    'status': 'closed'
++  },
++  {
++    'name': 'The Chute',
++    'status': 'closed'
++  },
++  {
++    'name': 'The Gully',
++    'status': 'closed'
++  },
++  {
++    'name': 'Crystal',
++    'status': 'closed'
++  },
++  {
++    'name': 'Jug Handle',
++    'status': 'closed'
++  },
++  {
++    'name': 'Showoff',
++    'status': 'closed'
++  },
++  {
++    'name': 'The Face',
++    'status': 'closed'
++  },
++  {
++    'name': 'Back Scratcher',
++    'status': 'closed'
++  },
++  {
++    'name': 'Mid Face',
++    'status': 'closed'
++  },
++  {
++    'name': 'Pomfret Plunge',
++    'status': 'closed'
++  },
++  {
++    'name': 'Porcupine',
++    'status': 'closed'
++  },
++  {
++    'name': 'The Glade',
++    'status': 'closed'
++  }
++]);
+diff --git a/test/resorts/saskadena-six.js b/test/resorts/saskadena-six.js
+new file mode 100644
+index 00000000..56cec7a3
+--- /dev/null
++++ b/test/resorts/saskadena-six.js
+@@ -0,0 +1,6 @@
++import lifts from '../lifts/index.js';
++
++lifts('saskadena-six', 'html', {
++  'Chair 1': 'closed',
++  'Conveyor Lift': 'closed'
++});
+-- 
+2.39.5
+

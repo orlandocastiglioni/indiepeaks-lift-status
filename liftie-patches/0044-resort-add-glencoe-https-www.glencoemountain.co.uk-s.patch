@@ -1,0 +1,1433 @@
+From a69b3f2a5afabbd529a197c74beb2f6cf9e7d1a2 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:20:54 -0400
+Subject: [PATCH 44/48] resort: add glencoe
+ (https://www.glencoemountain.co.uk/snow-report)
+
+---
+ lib/resorts/glencoe/index.js      |   16 +
+ lib/resorts/glencoe/resort.json   |   16 +
+ lib/resorts/glencoe/status.js     |    6 +
+ lib/resorts/glencoe/trails.js     |   24 +
+ test/resorts/example/glencoe.html | 1213 +++++++++++++++++++++++++++++
+ test/resorts/glencoe-trails.js    |   75 ++
+ test/resorts/glencoe.js           |   14 +
+ 7 files changed, 1364 insertions(+)
+ create mode 100644 lib/resorts/glencoe/index.js
+ create mode 100644 lib/resorts/glencoe/resort.json
+ create mode 100644 lib/resorts/glencoe/status.js
+ create mode 100644 lib/resorts/glencoe/trails.js
+ create mode 100644 test/resorts/example/glencoe.html
+ create mode 100644 test/resorts/glencoe-trails.js
+ create mode 100644 test/resorts/glencoe.js
+
+diff --git a/lib/resorts/glencoe/index.js b/lib/resorts/glencoe/index.js
+new file mode 100644
+index 00000000..0ebc9b5b
+--- /dev/null
++++ b/lib/resorts/glencoe/index.js
+@@ -0,0 +1,16 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// table.snow-lift under the Lift Status header: name td + status image td
++export default {
++  selector: 'table.snow-lift tbody tr',
++  parse: row => {
++    const tds = row.children.filter(c => c.name === 'td');
++    const img = select(tds[1]?.children ?? [], 'img')[0];
++    const name = findText(tds[0])?.trim();
++    if (name && img) {
++      return { name, status: status(img.attribs.src) };
++    }
++  }
++};
+diff --git a/lib/resorts/glencoe/resort.json b/lib/resorts/glencoe/resort.json
+new file mode 100644
+index 00000000..eca92564
+--- /dev/null
++++ b/lib/resorts/glencoe/resort.json
+@@ -0,0 +1,16 @@
++{
++  "name": "Glencoe Mountain",
++  "url": {
++    "host": "https://www.glencoemountain.co.uk",
++    "pathname": "/snow-report"
++  },
++  "trails": true,
++  "tags": [
++    "Scotland"
++  ],
++  "ll": [
++    -4.8253,
++    56.6266
++  ],
++  "twitter": "GlencoeMountain"
++}
+diff --git a/lib/resorts/glencoe/status.js b/lib/resorts/glencoe/status.js
+new file mode 100644
+index 00000000..6749e592
+--- /dev/null
++++ b/lib/resorts/glencoe/status.js
+@@ -0,0 +1,6 @@
++// status is an image: 2.jpg shows on the summer-running access chair (open),
++// 0.jpg on everything shut; 1.jpg presumed hold
++export default function status(src = '') {
++  const code = src.match(/images\/(\d)\.jpg/)?.[1];
++  return { 0: 'closed', 1: 'hold', 2: 'open' }[code];
++}
+diff --git a/lib/resorts/glencoe/trails.js b/lib/resorts/glencoe/trails.js
+new file mode 100644
+index 00000000..bb587fe5
+--- /dev/null
++++ b/lib/resorts/glencoe/trails.js
+@@ -0,0 +1,24 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// runs list rows: name td + td with "Difficulty:<span>green</span>" and a status image
++export default {
++  selector: 'table tr',
++  parse: row => {
++    const tds = row.children.filter(c => c.name === 'td');
++    if (tds.length !== 2) {
++      return;
++    }
++    const div = select(tds[1].children, 'div')[0];
++    if (!/Difficulty:/.test(findText(div) ?? '')) {
++      return;
++    }
++    const level = findText(select(tds[1].children, 'span')[0]);
++    const img = select(tds[1].children, 'img')[0];
++    const name = findText(tds[0])?.trim();
++    if (name && img) {
++      return { name, status: status(img.attribs.src), level };
++    }
++  }
++};
+diff --git a/test/resorts/example/glencoe.html b/test/resorts/example/glencoe.html
+new file mode 100644
+index 00000000..f999bdec
+--- /dev/null
++++ b/test/resorts/example/glencoe.html
+@@ -0,0 +1,1213 @@
++<!DOCTYPE html>
++<!--[if IE 7]>
++<html class="ie ie7" lang="en-US">
++<![endif]-->
++<!--[if IE 8]>
++<html class="ie ie8" lang="en-US">
++<![endif]-->
++<!--[if !(IE 7) & !(IE 8)]><!-->
++<html lang="en-US">
++<!--<![endif]-->
++<head>
++    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
++	<meta charset="UTF-8">
++    <meta name="viewport" content="width=device-width, initial-scale=1">
++    <link rel="apple-touch-icon" href="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/apple-touch-icon.png">
++    <title>Snow Report - Glencoe Mountain Resort</title>
++	<link rel="profile" href="http://gmpg.org/xfn/11">
++	<link rel="pingback" href="https://www.glencoemountain.co.uk/xmlrpc.php">
++	<!--[if lt IE 9]>
++	<script src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/js/html5.js"></script>
++	<![endif]-->
++     <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
++
++  
++
++<!-- font -->
++
++<link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
++
++<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400italic,700italic' rel='stylesheet' type='text/css'>
++
++<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
++    
++	
++<!-- MapPress Easy Google Maps Version:2.53.8 (http://www.mappresspro.com/mappress) -->
++<script type='text/javascript'>mapp = window.mapp || {}; mapp.data = [];</script>
++<meta name='robots' content='max-image-preview:large' />
++
++<!-- This site is optimized with the Yoast SEO plugin v13.3 - https://yoast.com/wordpress/plugins/seo/ -->
++<meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
++<link rel="canonical" href="https://www.glencoemountain.co.uk/snow-report/" />
++<meta property="og:locale" content="en_US" />
++<meta property="og:type" content="article" />
++<meta property="og:title" content="Snow Report - Glencoe Mountain Resort" />
++<meta property="og:url" content="https://www.glencoemountain.co.uk/snow-report/" />
++<meta property="og:site_name" content="Glencoe Mountain Resort" />
++<meta name="twitter:card" content="summary" />
++<meta name="twitter:title" content="Snow Report - Glencoe Mountain Resort" />
++<script type='application/ld+json' class='yoast-schema-graph yoast-schema-graph--main'>{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://www.glencoemountain.co.uk/#website","url":"https://www.glencoemountain.co.uk/","name":"Glencoe Mountain Resort","inLanguage":"en-US","description":"Glencoe Mountain Resort Stunning scenery in summer and winter","potentialAction":[{"@type":"SearchAction","target":"https://www.glencoemountain.co.uk/?s={search_term_string}","query-input":"required name=search_term_string"}]},{"@type":"WebPage","@id":"https://www.glencoemountain.co.uk/snow-report/#webpage","url":"https://www.glencoemountain.co.uk/snow-report/","name":"Snow Report - Glencoe Mountain Resort","isPartOf":{"@id":"https://www.glencoemountain.co.uk/#website"},"inLanguage":"en-US","datePublished":"2015-12-01T10:51:22+00:00","dateModified":"2016-06-02T14:47:03+00:00","potentialAction":[{"@type":"ReadAction","target":["https://www.glencoemountain.co.uk/snow-report/"]}]}]}</script>
++<!-- / Yoast SEO plugin. -->
++
++<link rel='dns-prefetch' href='//ajax.googleapis.com' />
++<link rel='dns-prefetch' href='//maps.googleapis.com' />
++<link rel='dns-prefetch' href='//s.w.org' />
++<link rel="alternate" type="application/rss+xml" title="Glencoe Mountain Resort &amp;raquo; Feed" href="https://www.glencoemountain.co.uk/feed/" />
++<link rel="alternate" type="application/rss+xml" title="Glencoe Mountain Resort &amp;raquo; Comments Feed" href="https://www.glencoemountain.co.uk/comments/feed/" />
++<script type="text/javascript">
++window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.glencoemountain.co.uk\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.0.12"}};
++/*! This file is auto-generated */
++!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode,e=(p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0),i.toDataURL());return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([129777,127995,8205,129778,127999],[129777,127995,8203,129778,127999])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
++</script>
++<style type="text/css">
++img.wp-smiley,
++img.emoji {
++	display: inline !important;
++	border: none !important;
++	box-shadow: none !important;
++	height: 1em !important;
++	width: 1em !important;
++	margin: 0 0.07em !important;
++	vertical-align: -0.1em !important;
++	background: none !important;
++	padding: 0 !important;
++}
++</style>
++	<link rel='stylesheet' id='camera_style-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/solidres-camera/assets/css/camera.min.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='invoice_style-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/solidres-invoice/assets/css/style.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='solidres_colorbox-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/solidres/assets/lib/colorbox/colorbox.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='roomtype_style-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/solidres-roomtypes/assets/js/tinycircleslider/website.min.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='bootstrap-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/easy-bootstrap-shortcodes/styles/bootstrap.min.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='bootstrap-fa-icon-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/easy-bootstrap-shortcodes/styles/font-awesome.min.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='wp-block-library-css'  href='https://www.glencoemountain.co.uk/wp-includes/css/dist/block-library/style.min.css?ver=6.0.12' type='text/css' media='all' />
++<style id='global-styles-inline-css' type='text/css'>
++body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--duotone--dark-grayscale: url('#wp-duotone-dark-grayscale');--wp--preset--duotone--grayscale: url('#wp-duotone-grayscale');--wp--preset--duotone--purple-yellow: url('#wp-duotone-purple-yellow');--wp--preset--duotone--blue-red: url('#wp-duotone-blue-red');--wp--preset--duotone--midnight: url('#wp-duotone-midnight');--wp--preset--duotone--magenta-yellow: url('#wp-duotone-magenta-yellow');--wp--preset--duotone--purple-green: url('#wp-duotone-purple-green');--wp--preset--duotone--blue-orange: url('#wp-duotone-blue-orange');--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
++</style>
++<link rel='stylesheet' id='contact-form-7-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=4.4.2' type='text/css' media='all' />
++<link rel='stylesheet' id='mappress-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/mappress-google-maps-for-wordpress/css/mappress.css?ver=2.53.8' type='text/css' media='all' />
++<link rel='stylesheet' id='rs-plugin-settings-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/revslider/public/assets/css/settings.css?ver=5.1' type='text/css' media='all' />
++<style id='rs-plugin-settings-inline-css' type='text/css'>
++#rs-demo-id {}
++</style>
++<link rel='stylesheet' id='sidebar-login-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/sidebar-login/assets/css/sidebar-login.css?ver=2.7.3' type='text/css' media='all' />
++<link rel='stylesheet' id='cookie-consent-style-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/uk-cookie-consent/assets/css/style.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='bootstrapstyle-css'  href='https://www.glencoemountain.co.uk/wp-content/themes/glencoe/css/bootstrap.min.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='bootstrapthemestyle-css'  href='https://www.glencoemountain.co.uk/wp-content/themes/glencoe/css/bootstrap-theme.min.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='glencoe-style-css'  href='https://www.glencoemountain.co.uk/wp-content/themes/glencoe/css/imports.css?ver=2015-10-01' type='text/css' media='all' />
++<link rel='stylesheet' id='tablepress-default-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/tablepress/css/default.min.css?ver=1.7' type='text/css' media='all' />
++<link rel='stylesheet' id='ubermenu-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/ubermenu/pro/assets/css/ubermenu.min.css?ver=3.2.1.1' type='text/css' media='all' />
++<link rel='stylesheet' id='ubermenu-trans-black-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/ubermenu/pro/assets/css/skins/trans_black.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='ubermenu-font-awesome-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/ubermenu/assets/css/fontawesome/css/font-awesome.min.css?ver=4.3' type='text/css' media='all' />
++<link rel='stylesheet' id='ebs_dynamic_css-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/easy-bootstrap-shortcodes/styles/ebs_dynamic_css.php?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='shiftnav-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/shiftnav-responsive-mobile-menu/assets/css/shiftnav.min.css?ver=1.6.3' type='text/css' media='all' />
++<link rel='stylesheet' id='shiftnav-font-awesome-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/shiftnav-responsive-mobile-menu/assets/css/fontawesome/css/font-awesome.min.css?ver=1.6.3' type='text/css' media='all' />
++<link rel='stylesheet' id='shiftnav-standard-dark-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/shiftnav-responsive-mobile-menu/assets/css/skins/standard-dark.css?ver=1.6.3' type='text/css' media='all' />
++<link rel='stylesheet' id='fancybox-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/easy-fancybox/fancybox/jquery.fancybox-1.3.7.min.css?ver=1.5.7' type='text/css' media='screen' />
++<link rel='stylesheet' id='style.owl.carousel-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/owl-carousel/css/owl.carousel.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='style.owl.carousel.theme-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/owl-carousel/css/owl.theme.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='style.owl.carousel.transitions-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/owl-carousel/css/owl.transitions.css?ver=6.0.12' type='text/css' media='all' />
++<link rel='stylesheet' id='style.owl.carousel.styles-css'  href='https://www.glencoemountain.co.uk/wp-content/plugins/owl-carousel/css/styles.css?ver=6.0.12' type='text/css' media='all' />
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-includes/js/jquery/jquery.js?ver=3.6.0' id='jquery-core-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2' id='jquery-migrate-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/solidres-camera/assets/js/camera/jquery.mobile.customized.min.js?ver=6.0.12' id='camera_mobile_script-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/solidres-camera/assets/js/camera/jquery.easing.1.3.js?ver=6.0.12' id='easing_script-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/solidres-camera/assets/js/camera/camera.min.js?ver=6.0.12' id='camera_script-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/solidres/assets/lib/colorbox/jquery.colorbox.min.js?ver=6.0.12' id='solidres_colorbox-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/solidres-roomtypes/assets/js/tinycircleslider/jquery.tinycircleslider.min.js?ver=6.0.12' id='tinycircleslider_script-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/easy-bootstrap-shortcodes/js/bootstrap.min.js?ver=6.0.12' id='bootstrap-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/revslider/public/assets/js/jquery.themepunch.tools.min.js?ver=5.1' id='tp-tools-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/revslider/public/assets/js/jquery.themepunch.revolution.min.js?ver=5.1' id='revmin-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/sidebar-login/assets/js/jquery.blockUI.min.js?ver=2.70' id='jquery-blockui-js'></script>
++<script type='text/javascript' id='sidebar-login-js-extra'>
++/* <![CDATA[ */
++var sidebar_login_params = {"ajax_url":"https:\/\/www.glencoemountain.co.uk\/wp-admin\/admin-ajax.php","force_ssl_admin":"1","is_ssl":"1","i18n_username_required":"Please enter your username","i18n_password_required":"Please enter your password","error_class":"sidebar_login_error"};
++/* ]]> */
++</script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/sidebar-login/assets/js/sidebar-login.min.js?ver=2.7.3' id='sidebar-login-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/wonderplugin-lightbox-trial/engine/wonderpluginlightbox.js?ver=9.3' id='wonderplugin-lightbox-script-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/themes/glencoe/js/vendor/bootstrap.min.js?ver=6.0.12' id='boostrap-script-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/themes/glencoe/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js?ver=6.0.12' id='modernizer-script-js'></script>
++<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js?ver=6.0.12' id='jquery-ui-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/owl-carousel/js/owl.carousel.js?ver=6.0.12' id='js.owl.carousel-js'></script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/owl-carousel/js/script.js?ver=6.0.12' id='js.owl.carousel.script-js'></script>
++<link rel="https://api.w.org/" href="https://www.glencoemountain.co.uk/wp-json/" /><link rel="alternate" type="application/json" href="https://www.glencoemountain.co.uk/wp-json/wp/v2/pages/94" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.glencoemountain.co.uk/xmlrpc.php?rsd" />
++<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.glencoemountain.co.uk/wp-includes/wlwmanifest.xml" /> 
++<meta name="generator" content="WordPress 6.0.12" />
++<link rel='shortlink' href='https://www.glencoemountain.co.uk/?p=94' />
++<link rel="alternate" type="application/json+oembed" href="https://www.glencoemountain.co.uk/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.glencoemountain.co.uk%2Fsnow-report%2F" />
++<link rel="alternate" type="text/xml+oembed" href="https://www.glencoemountain.co.uk/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.glencoemountain.co.uk%2Fsnow-report%2F&#038;format=xml" />
++<!-- <meta name="NextGEN" version="3.3.0" /> -->
++
++	<!-- ShiftNav CSS
++	================================================================ -->
++	<style type="text/css" id="shiftnav-dynamic-css">
++
++	@media only screen and (min-width:960px){ #shiftnav-toggle-main, .shiftnav-toggle-mobile{ display:none; } .shiftnav-wrap { padding-top:0 !important; } }
++	@media only screen and (max-width:959px){ #navigationmain{ display:none !important; } }
++
++/** ShiftNav Custom Tweaks (General Settings) **/
++.shiftnav-toggle-main,#shiftnav-toggle-main {background:none !important;}
++.shiftnav-wrap {padding-top:0px !important;}
++.logo {margin-top:3px; margin-left:20px;}
++.shiftnav ul.shiftnav-menu ul.sub-menu ,.shiftnav ul.shiftnav-menu ul.sub-menu  .sub-menu { display:none;}
++.current-menu-item .sub-menu , .current_page_parent,.current-menu-parent ul,.current_page_parent ul {display:block !important}
++/* Status: Loaded from Transient */
++
++	</style>
++	<!-- end ShiftNav CSS -->
++
++	<style id="ubermenu-custom-generated-css">
++/** UberMenu Custom Menu Styles (Customizer) **/
++/* main */
++.ubermenu.ubermenu-main { background:none; border:none; box-shadow:none; }
++.ubermenu.ubermenu-main .ubermenu-item-level-0 > .ubermenu-target { border:none; box-shadow:none; }
++.ubermenu.ubermenu-main.ubermenu-horizontal .ubermenu-submenu-drop.ubermenu-submenu-align-left_edge_bar, .ubermenu.ubermenu-main.ubermenu-horizontal .ubermenu-submenu-drop.ubermenu-submenu-align-full_width { left:0; }
++.ubermenu.ubermenu-main.ubermenu-horizontal .ubermenu-item-level-0.ubermenu-active > .ubermenu-submenu-drop, .ubermenu.ubermenu-main.ubermenu-horizontal:not(.ubermenu-transition-shift) .ubermenu-item-level-0 > .ubermenu-submenu-drop { margin-top:0; }
++
++
++/* Status: Loaded from Transient */
++
++</style><style id="ctcc-css" type="text/css" media="screen">
++				#catapult-cookie-bar {
++					box-sizing: border-box;
++					max-height: 0;
++					opacity: 0;
++					z-index: 99999;
++					overflow: hidden;
++					color: #ddd;
++					position: fixed;
++					left: 0;
++					top: 0;
++					width: 100%;
++					background-color: #464646;
++				}
++				#catapult-cookie-bar a {
++					color: ;
++				}
++				#catapult-cookie-bar .x_close span {
++					background-color: #000000;
++				}
++				button#catapultCookie {
++					background:#6193bf;
++					color: #000000;
++					border: 0; padding: 6px 9px; border-radius: 3px;
++				}
++				#catapult-cookie-bar h3 {
++					color: #ddd;
++				}
++				.has-cookie-bar #catapult-cookie-bar {
++					opacity: 1;
++					max-height: 999px;
++					min-height: 30px;
++				}</style><meta name="generator" content="Powered by Slider Revolution 5.1 - responsive, Mobile-Friendly Slider Plugin for WordPress with comfortable drag and drop interface." />
++
++<!-- Easy FancyBox 1.5.7 using FancyBox 1.3.7 - RavanH (http://status301.net/wordpress-plugins/easy-fancybox/) -->
++<!-- Nothing enabled under Settings > Media > FancyBox. -->
++
++	    
++   
++ 
++<link rel="stylesheet" href="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/css/prettyPhoto.css" type="text/css" media="screen" title="prettyPhoto main stylesheet" charset="utf-8" />
++
++<script src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
++
++		
++     
++ </head>
++
++<body>
++
++<div id="newsfloat" ><a href="https://www.glencoemountain.co.uk/signup.php?iframe=true&amp;width=400&amp;height=95%" rel="prettyPhoto[iframe]"><img border="0"  src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe//images/alerts.png"></a> </div>
++
++ <div id="snowfloat"><a href="/snow-report/"><img  src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/images/snow-report.png"></a></div>
++    <div id="buytickets"><a href="https://glencoe.axess.shop/" target="_blank"><img  src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/images/buy_tickets.png"></a></div>
++
++  
++
++ <div id="fb-root"></div>
++<script>(function(d, s, id) {
++  var js, fjs = d.getElementsByTagName(s)[0];
++  if (d.getElementById(id)) return;
++  js = d.createElement(s); js.id = id;
++  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=699481416745424";
++  fjs.parentNode.insertBefore(js, fjs);
++}(document, 'script', 'facebook-jssdk'));</script> 
++  
++  <header>
++
++<div class="container">
++
++	<section class="section">
++
++	<!--LOGO -->
++
++	<div class="col-md-3 col-sm-4 columns">
++
++ 		<a href="https://www.glencoemountain.co.uk/" title="Glencoe Mountain Resort" rel="home"><img src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/preview/logogc.png" class="logo img-responsive" alt="logo"></a>
++
++	</div>
++
++	<!--END LOGO -->
++
++	<!-- NAVIGATION -->
++
++	<div class="col-md-9 col-sm-8 columns">
++
++		<nav id="navigationmain">
++
++		 
++         
++        
++<!-- UberMenu [Configuration:main] [Theme Loc:primary-winter] [Integration:auto] -->
++<a class="ubermenu-responsive-toggle ubermenu-responsive-toggle-main ubermenu-skin-trans-black ubermenu-loc-primary-winter ubermenu-responsive-toggle-content-align-left ubermenu-responsive-toggle-align-full " data-ubermenu-target="ubermenu-main-29-primary-winter"><i class="fa fa-bars"></i>Menu</a><nav id="ubermenu-main-29-primary-winter" class="ubermenu ubermenu-nojs ubermenu-main ubermenu-menu-29 ubermenu-loc-primary-winter ubermenu-responsive ubermenu-responsive-default ubermenu-responsive-collapse ubermenu-horizontal ubermenu-transition-shift ubermenu-trigger-hover_intent ubermenu-skin-trans-black  ubermenu-bar-align-full ubermenu-items-align-left ubermenu-bound ubermenu-disable-submenu-scroll ubermenu-retractors-responsive"><ul id="ubermenu-nav-main-29-primary-winter" class="ubermenu-nav"><li id="menu-item-1242" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-has-children ubermenu-item-1242 ubermenu-item-level-0 ubermenu-column ubermenu-column-auto ubermenu-has-submenu-drop ubermenu-has-submenu-flyout" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/winter/" tabindex="0"><span class="ubermenu-target-title ubermenu-target-text">Winter Activities</span></a><ul class="ubermenu-submenu ubermenu-submenu-id-1242 ubermenu-submenu-type-flyout ubermenu-submenu-drop ubermenu-submenu-align-left_edge_item" ><li id="menu-item-1253" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-has-children ubermenu-item-1253 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1 ubermenu-has-submenu-drop ubermenu-has-submenu-flyout" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/lessons/"><span class="ubermenu-target-title ubermenu-target-text">Snow Sports School</span></a><ul class="ubermenu-submenu ubermenu-submenu-id-1253 ubermenu-submenu-type-auto ubermenu-submenu-type-flyout ubermenu-submenu-drop ubermenu-submenu-align-left_edge_item" ><li id="menu-item-1324" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1324 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-2" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/lessons/"><span class="ubermenu-target-title ubermenu-target-text">Lessons</span></a></li><li id="menu-item-1315" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1315 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-2" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/schools/"><span class="ubermenu-target-title ubermenu-target-text">Schools and Youth Groups</span></a></li><li id="menu-item-1316" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1316 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-2" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/lessons/recruitment/"><span class="ubermenu-target-title ubermenu-target-text">Recruitment</span></a></li><li class="ubermenu-retractor ubermenu-retractor-mobile"><i class="fa fa-times"></i> Close</li></ul></li><li id="menu-item-1583" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1583 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/equipment-hire/"><span class="ubermenu-target-title ubermenu-target-text">Equipment Hire</span></a></li><li id="menu-item-1344" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1344 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/sledging/"><span class="ubermenu-target-title ubermenu-target-text">Sledging at Glencoe Mountain</span></a></li><li id="menu-item-1247" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1247 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/about-us/transceiver-park/"><span class="ubermenu-target-title ubermenu-target-text">Transceiver Park</span></a></li><li id="menu-item-1245" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1245 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/chairlift-rides/"><span class="ubermenu-target-title ubermenu-target-text">Chairlift Rides</span></a></li><li id="menu-item-1248" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1248 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/events/"><span class="ubermenu-target-title ubermenu-target-text">Events</span></a></li><li class="ubermenu-retractor ubermenu-retractor-mobile"><i class="fa fa-times"></i> Close</li></ul></li><li id="menu-item-1241" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-has-children ubermenu-item-1241 ubermenu-item-level-0 ubermenu-column ubermenu-column-auto ubermenu-has-submenu-drop ubermenu-has-submenu-flyout" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/summer/" tabindex="0"><span class="ubermenu-target-title ubermenu-target-text">Summer Activities</span></a><ul class="ubermenu-submenu ubermenu-submenu-id-1241 ubermenu-submenu-type-flyout ubermenu-submenu-drop ubermenu-submenu-align-left_edge_item" ><li id="menu-item-1246" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1246 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/chairlift-rides/"><span class="ubermenu-target-title ubermenu-target-text">Chairlift Rides</span></a></li><li id="menu-item-3558" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-3558 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/disc-golf/"><span class="ubermenu-target-title ubermenu-target-text">Disc Golf</span></a></li><li id="menu-item-1250" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-has-children ubermenu-item-1250 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1 ubermenu-has-submenu-drop ubermenu-has-submenu-flyout" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/mountain-biking/"><span class="ubermenu-target-title ubermenu-target-text">Biking</span></a><ul class="ubermenu-submenu ubermenu-submenu-id-1250 ubermenu-submenu-type-flyout ubermenu-submenu-drop ubermenu-submenu-align-left_edge_item" ><li id="menu-item-2806" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-2806 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-2" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/mountain-biking/"><span class="ubermenu-target-title ubermenu-target-text">Mountain Biking Trails</span></a></li><li id="menu-item-1277" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1277 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-2" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/bike-hire/"><span class="ubermenu-target-title ubermenu-target-text">Bike Hire</span></a></li><li id="menu-item-1278" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1278 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-2" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/mountain-bike-coaching/"><span class="ubermenu-target-title ubermenu-target-text">Mountain Bike Coaching</span></a></li><li id="menu-item-1279" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1279 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-2" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/code-of-practice/"><span class="ubermenu-target-title ubermenu-target-text">Code of Practice</span></a></li><li class="ubermenu-retractor ubermenu-retractor-mobile"><i class="fa fa-times"></i> Close</li></ul></li><li id="menu-item-1251" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1251 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/tubing/"><span class="ubermenu-target-title ubermenu-target-text">Tubing</span></a></li><li id="menu-item-1252" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1252 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/treasure-hunt/"><span class="ubermenu-target-title ubermenu-target-text">Treasure Hunt</span></a></li><li id="menu-item-1249" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1249 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/events/"><span class="ubermenu-target-title ubermenu-target-text">Events</span></a></li><li class="ubermenu-retractor ubermenu-retractor-mobile"><i class="fa fa-times"></i> Close</li></ul></li><li id="menu-item-2644" class="ubermenu-item ubermenu-item-type-custom ubermenu-item-object-custom ubermenu-item-2644 ubermenu-item-level-0 ubermenu-column ubermenu-column-auto" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://glencoe.axess.shop" tabindex="0"><span class="ubermenu-target-title ubermenu-target-text">Buy Tickets</span></a></li><li id="menu-item-1239" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-has-children ubermenu-item-1239 ubermenu-item-level-0 ubermenu-column ubermenu-column-auto ubermenu-has-submenu-drop ubermenu-has-submenu-flyout" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/about-us/" tabindex="0"><span class="ubermenu-target-title ubermenu-target-text">About</span></a><ul class="ubermenu-submenu ubermenu-submenu-id-1239 ubermenu-submenu-type-flyout ubermenu-submenu-drop ubermenu-submenu-align-left_edge_item" ><li id="menu-item-1254" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1254 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/about-us/"><span class="ubermenu-target-title ubermenu-target-text">About us</span></a></li><li id="menu-item-3720" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-3720 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/employment-opportunities/"><span class="ubermenu-target-title ubermenu-target-text">Employment Opportunities</span></a></li><li id="menu-item-1259" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1259 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/piste-map-2/"><span class="ubermenu-target-title ubermenu-target-text">Piste Map</span></a></li><li id="menu-item-2296" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-2296 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/mountain-biking/"><span class="ubermenu-target-title ubermenu-target-text">Mountain Biking Trails</span></a></li><li id="menu-item-1255" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1255 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/gallery/"><span class="ubermenu-target-title ubermenu-target-text">Gallery</span></a></li><li id="menu-item-1256" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1256 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/videos/"><span class="ubermenu-target-title ubermenu-target-text">Videos</span></a></li><li id="menu-item-1524" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1524 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/supporters/"><span class="ubermenu-target-title ubermenu-target-text">Supporters</span></a></li><li id="menu-item-1261" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1261 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/contact/"><span class="ubermenu-target-title ubermenu-target-text">Contact</span></a></li><li class="ubermenu-retractor ubermenu-retractor-mobile"><i class="fa fa-times"></i> Close</li></ul></li><li id="menu-item-1243" class="ubermenu-item ubermenu-item-type-custom ubermenu-item-object-custom ubermenu-item-has-children ubermenu-item-1243 ubermenu-item-level-0 ubermenu-column ubermenu-column-auto ubermenu-has-submenu-drop ubermenu-has-submenu-flyout" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/shop/" tabindex="0"><span class="ubermenu-target-title ubermenu-target-text">Plan Trip</span></a><ul class="ubermenu-submenu ubermenu-submenu-id-1243 ubermenu-submenu-type-flyout ubermenu-submenu-drop ubermenu-submenu-align-left_edge_item" ><li id="menu-item-1264" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1264 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/prices/"><span class="ubermenu-target-title ubermenu-target-text">Summer Price list</span></a></li><li id="menu-item-1318" class="ubermenu-item ubermenu-item-type-custom ubermenu-item-object-custom ubermenu-item-1318 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="http://www.glencoemountain.co.uk/shop"><span class="ubermenu-target-title ubermenu-target-text">Winter Price List</span></a></li><li id="menu-item-1263" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1263 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/shop/"><span class="ubermenu-target-title ubermenu-target-text">Season Passes</span></a></li><li id="menu-item-1265" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1265 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/summer-commercial-pricelis/"><span class="ubermenu-target-title ubermenu-target-text">Commercial Pricelist</span></a></li><li id="menu-item-1266" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1266 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/location/"><span class="ubermenu-target-title ubermenu-target-text">Location</span></a></li><li id="menu-item-1262" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1262 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/cafe/"><span class="ubermenu-target-title ubermenu-target-text">Cafe</span></a></li><li class="ubermenu-retractor ubermenu-retractor-mobile"><i class="fa fa-times"></i> Close</li></ul></li><li id="menu-item-1240" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-has-children ubermenu-item-1240 ubermenu-item-level-0 ubermenu-column ubermenu-column-auto ubermenu-has-submenu-drop ubermenu-has-submenu-flyout" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/accommodation/" tabindex="0"><span class="ubermenu-target-title ubermenu-target-text">Accommodation</span></a><ul class="ubermenu-submenu ubermenu-submenu-id-1240 ubermenu-submenu-type-flyout ubermenu-submenu-drop ubermenu-submenu-align-left_edge_item" ><li id="menu-item-1270" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1270 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/accommodation/"><span class="ubermenu-target-title ubermenu-target-text">Accommodation at Glencoe</span></a></li><li id="menu-item-4171" class="ubermenu-item ubermenu-item-type-custom ubermenu-item-object-custom ubermenu-item-4171 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://booking-directly.com/widgets/fSQrJ0YrnN1e2I3eFelyNACJ24vklC5UNBl6FWGPXfxQ5ohjGHyp2UNf1IxVg/properties"><span class="ubermenu-target-title ubermenu-target-text">Book Accommodation</span></a></li><li id="menu-item-1269" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1269 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/local-accommodation/"><span class="ubermenu-target-title ubermenu-target-text">Local Accommodation</span></a></li><li class="ubermenu-retractor ubermenu-retractor-mobile"><i class="fa fa-times"></i> Close</li></ul></li><li id="menu-item-1244" class="ubermenu-item ubermenu-item-type-custom ubermenu-item-object-custom ubermenu-current-menu-item ubermenu-current-menu-ancestor ubermenu-current-menu-parent ubermenu-item-has-children ubermenu-item-1244 ubermenu-item-level-0 ubermenu-column ubermenu-column-auto ubermenu-has-submenu-drop ubermenu-has-submenu-flyout" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/snow-report/" tabindex="0"><span class="ubermenu-target-title ubermenu-target-text">Mountain Conditions</span></a><ul class="ubermenu-submenu ubermenu-submenu-id-1244 ubermenu-submenu-type-flyout ubermenu-submenu-drop ubermenu-submenu-align-left_edge_item" ><li id="menu-item-1271" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-current-menu-item ubermenu-page_item ubermenu-page-item-94 ubermenu-current_page_item ubermenu-item-1271 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/snow-report/"><span class="ubermenu-target-title ubermenu-target-text">Snow Report</span></a></li><li id="menu-item-1283" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1283 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/bike-track-report/"><span class="ubermenu-target-title ubermenu-target-text">Bike Track Report</span></a></li><li id="menu-item-1272" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-1272 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/webcams/"><span class="ubermenu-target-title ubermenu-target-text">Webcams</span></a></li><li id="menu-item-2792" class="ubermenu-item ubermenu-item-type-post_type ubermenu-item-object-page ubermenu-item-2792 ubermenu-item-auto ubermenu-item-normal ubermenu-item-level-1" ><a class="ubermenu-target ubermenu-item-layout-default ubermenu-item-layout-text_only" href="https://www.glencoemountain.co.uk/weather/"><span class="ubermenu-target-title ubermenu-target-text">Weather</span></a></li><li class="ubermenu-retractor ubermenu-retractor-mobile"><i class="fa fa-times"></i> Close</li></ul></li></ul></nav>
++<!-- End UberMenu -->
++
++		</nav>
++
++		<!-- END NAVIGATION -->
++
++	</div>
++
++	</section>
++
++</div>
++
++</header>
++
++<!-- END HEADER -->
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++  
++   
++
++
++
++ 
++
++ 
++
++
++
++
++
++<!--  BORDER -->
++
++<div class="smallpadding" style="background:url(https://www.glencoemountain.co.uk/wp-content/themes/glencoe/images/bottom-image-effect.png) repeat bottom; margin-top:0px; position:relative">
++
++</div>
++
++<!-- Boxes CONTAINER -->
++<section class=" midbottompadding white">
++
++  <div class="container white bigpadding">
++        <div class="row">
++            <div class="col-md-8 page-text">
++<h1>Snow Report</h1>            
++            
++    
++
++<table border="0" class="contentpaneopen snow-top" >
++
++<tbody>
++
++ 
++<tr>
++<!--<iframe width="560" height="315" src="https://www.youtube.com/embed/PITot-HElb0?si=tEnmgSKjR5YVRSKB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
++-->
++<td valign="top">
++
++<p><strong>Snow Level:</strong><span style="color: #008000"> <strong>1000 ft </strong></span><strong>Vertical Runs:<span style="color: #008000"> </span><span style="color: #008000">1400 ft </span></strong><br />
++
++          <strong>Lifts Operating: </strong><span style="color: #008000"><strong>0 of 
++
++         10 Available Uplifts</strong></span><strong><br />
++
++        Last Update <span style="color: #008000">12/07/2026 at 04:33 pm</p>
++ <p><b>NEWS: Access chair opens at 9am.<br /><br />Bike Tracks, bike hire, disc Golf, Summer tubing and Plateau cafe open daily from Saturday 4th July.<br /><br />White Corries cafe at the base open daily from 8am until 8pm.<br /><br /><br /><br /></b></p>
++
++<p><strong><span style="color: #ff0000;">Chairlift open from 9am.<br /><br />Bike tracks, bike hire, disc Golf, summer tubing and Plateau cafe open daily.<br /><br /></p>
++
++<p><span style="color: #ff0000"><span style="color: #008000">For the very latest snow updates check out our new Twitter feed at <a target="_blank" href="https://www.twitter.com/glencoemountain">www.twitter.com/glencoemountain</a><br /></span></span></p>
++
++
++</td></tr></table>
++
++<table border="0"  id="rounded-corner" class="snow-lift" >  
++
++<thead><th class="rounded-company"><span style="font-size:16px;">Lift Status</span></th><th class="rounded-q4" ></th></thead>  
++
++<tbody>  
++
++<tr  >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Access Chairlift</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/2.jpg"></span></td>  
++
++</tr>  
++
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Plateau Poma<br /></span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/0.jpg"></span></td>  
++
++</tr>  
++
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Cliffhanger Chairlift</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/0.jpg"></span></td>  
++
++</tr>  
++
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Main Basin T-Bar</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/0.jpg"></span></td>  
++
++</tr>  
++
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Wall Tow</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/0.jpg"></span></td>  
++
++</tr>  
++
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Top Button Tow</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/0.jpg"></span></td>  
++
++</tr>  
++
++<!--<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Beginners' Tow</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/0.jpg"></span></td>  
++
++</tr>  -->
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Coire Pollach Tow</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/0.jpg"></span></td>  
++
++</tr>  
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Rannoch Chairlift</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/0.jpg"></span></td>  
++
++</tr> 
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Dry Slope Magic Carpet</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/2.jpg"></span></td>  
++
++</tr> 
++
++<tr >  
++
++<td ><strong><span style="font-family: arial,helvetica,sans-serif">Sledging Magic Carpet</span></strong></td>  
++
++<td ><span style="color: #008000;"><img src="/images/2.jpg"></span></td>  
++
++</tr> 
++
++</tbody><tfoot><tr><td class="rounded-foot-left"><em>Glencoe Lifts status </em></td><td class="rounded-foot-right">&nbsp;</td></tr></tfoot>  
++
++</table> 
++
++</td>
++
++</tr>
++
++</tbody>
++
++</table>
++<table  cellpadding="0" cellspacing="0" border="0"  id="rounded-corner" class="snow-forecast">    <thead>    <th class="rounded-company" valign="middle" width="50%" style="text-align: left; "><strong>Forecast </strong></th>    <th class="rounded-q4" valign="middle" width="50%" style="text-align: left; "><strong>Vertical Descent</strong></th>    </thead><tbody>    <tr >    <td ><table ><tr><td>Monday 13th July, Sunshine </td>
++
++</tr>  <tr>                            <td  width="50%" style="text-align: left; background-color:#B9C9FE "> 
++                            <strong>Snow Fall Last 24hrs</strong></td>    </tr>    <tr>  <td valign="top" width="50%">    0cm    </td>    </tr> <tr>  <td  width="50%" style="text-align: left; background-color:#B9C9FE ">    <strong>Upper Depth</strong></td>    </tr>    <tr>  <td valign="top" width="50%">    0cm    </td>    </tr> 
++
++<tr>  <td  width="50%" style="text-align: left; background-color:#B9C9FE ">    <strong>Lower Depth</strong></td>    </tr>    <tr>  <td valign="top" width="50%">    0cm    </td>    </tr>  
++
++</table>
++
++</td>
++
++<td width="60%" >  <table><tr><td>  1450ftft    </td>    </tr>      <tr >    <td  width="50%" style="text-align: left; background-color:#B9C9FE ">    <strong>Current Weather Conditions</strong></td>    </tr>    <tr >    <td width="50%" >sunny</td>    </tr>    <tr >    <td  width="50%" style="text-align: left; background-color:#B9C9FE ">    <strong>Road Status</strong></td>    </tr>    <tr >    <td valign="top" width="50%" >    Access road is clear.    </td>    </tr>    <tr>  <td  width="50%" style="text-align: left; background-color:#B9C9FE ">    <strong>Snow Level</strong></td>    </tr>    <tr>  <td valign="top" width="50%">    2150ft    </td>    </tr>    </table></td>    </tbody><tfoot><tr><td class="rounded-foot-left">&nbsp;</td><td class="rounded-foot-right">&nbsp;</td></tr></tfoot>        </table>
++
++ 
++<div class="col-md-12"><span style="font-size:16px;">Runs Status</span></div>
++
++<div class="col-xs-12 col-sm-6 col-md-6"><table cellspacing="0" cellpadding="0" border="0">
++  <tr>  
++
++    <td width="35%"><div align="left">Access Return</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:green">green</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">Bunny Run</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:blue">blue</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">Canyon</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:black">black</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  <tr>  
++
++    <td><div align="left">Happy Valley</div>
++                    </th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:">blue</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr> 
++
++  <tr>  
++
++    <td><div align="left">Etive Glades</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:blue">blue</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">Fly Paper</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:black">black</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">Main Basin</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:blue">blue</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++<tr>  
++
++    <td><div align="left">Mugs Alley</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:green">green</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++    <td align="left" height="30">Sledging Area</div></th>
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++    <td  align="right" ><div align="right">Difficulty:<span style="color:"></span>   &nbsp;<img  src="/images/0.jpg" /></div></td>
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++  </tr>
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++  <tr>
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++    <td align="left" height="30">Coire Pollach Run</div></th>
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++    <td  align="right" ><div align="right">Difficulty:<span style="color:green">green</span>   &nbsp;<img  src="/images/0.jpg" /></div></td>
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++  </tr>
++  
++  </table></div><div class="col-xs-12 col-sm-6 col-md-6"><table cellspacing="0" cellpadding="0" border="0">
++
++
++  <tr>  
++
++    <td><div align="left">Plateau Run</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:green">green</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++  <tr>  
++
++    <td><div align="left">Rannoch Glades</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:red">red</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">Spring Run</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:red">red</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">The High Road</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:blue">blue</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">The Low Road</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:green">green</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">The Wall</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:red">red</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td><div align="left">Thrombosis</div></th>  
++
++    <td valign="middle"><div align="right">Difficulty:<span style="color:red">red</span>   &nbsp;<img src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++
++  <tr>  
++
++    <td align="left" height="30">Wall Crossover</div></th>  
++
++    <td  align="right" ><div align="right">Difficulty:<span style="color:red">red</span>   &nbsp;<img  src="/images/0.jpg" /></div></td>  
++
++  </tr>  
++  
++  <tr>
++
++
++
++
++
++    <td align="left" height="30">Beginners Run</div></th>
++
++
++
++    <td  align="right" ><div align="right">Difficulty:<span style="color:green">green</span>   &nbsp;<img  src="/images/0.jpg" /></div></td>
++
++
++
++
++
++
++  </tr>
++
++<tr>
++
++
++    <td align="left" height="30">Old Mugs Alley</div></th>
++
++
++
++    <td  align="right" ><div align="right">Difficulty:<span style="color:green">green</span>   &nbsp;<img  src="/images/0.jpg" /></div></td>
++
++ 
++
++  </tr>
++</table></div>
++
++<div class="col-md-12" style="text-align:center; margin-top:20px"><a href="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/images/fondGlencoe2016.jpg" rel="prettyPhoto" class="snow-map"><img border="0" src="/images/webcams_sm.jpg"   /></a></div>
++
++   
++ 
++ 
++         
++    </div>
++            
++            <div class="col-md-4">
++             
++
++<div class="sidetickets center">                    <h5>Buy Tickets Online</h5>
++
++                    <a href="https://glencoe.axess.shop">
++  <div style="width:100%;position:relative"><img src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/images/buyt.jpg"/> 
++    <span style="position:absolute; width:100%;left:0; text-align:right; top:70%"><img src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/images/buy_tickets.png"/> 
++    <!--<h3 style="color:#ba1212; text-shadow: 1px 1px #ff0000;text-transform:uppercase;font-size:36px">Buy Tickets Online</h3>-->
++    </span></span></div>
++  </a>
++</div>                    
++<div class="webcam center">
++                    <h5>Webcam</h5>
++                    
++                    <div id="owl-carousel-1845209126" class="owl-carousel owl-carousel-webcam"  data-singleItem="true"  data-autoPlay="false"  data-responsive="true"  data-pagination="false"  data-lazyLoad="true"  data-stopOnHover="true"  data-navigation="true"  data-navigationText="<i class='glyphicon glyphicon-chevron-left'>,<i class='glyphicon glyphicon-chevron-right'>" ><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/summit.jpeg"></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/mainbasin.jpeg"></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/spring.jpeg"></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/wall.jpeg"></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/access2200.jpeg"></div></div><div class="item"><div class="owl-carousel-item-text"><p><img src="https://www.winterhighland.info/cams/glencoe/newchair.jpeg" /></p></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/cliffy.jpeg"></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/pollach.jpeg" alt="" /></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/dryslope.jpeg" /></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/base1200.jpeg" /></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/base.jpeg" /></div></div><div class="item"><div class="owl-carousel-item-text"><img src="https://www.winterhighland.info/cams/glencoe/flypaper.jpeg"></div></div></div>                    
++                    </div>
++                  
++                  <div class="tabs">
++	<ul>
++		<li class="active"><a href="#tab1">Weather</a></li>
++		<li><a href="#tab2">Snow Report</a></li>
++		<!--<li><a href="#tab3">Events</a></li>-->
++	</ul>
++	<!-- TAB 1 -->
++	<div class="active" data-tab="tab1">
++		<span class="weather">    
++ 
++							
++                            <strong>Weather forecast:</strong> Monday 13th July, Sunshine <br> 
++                            
++                            <br> 
++                            
++                             
++                            <strong>Current Weather conditions:</strong>  
++                             
++                            
++                           sunny<br><br> 
++                             
++                            
++                            <strong>Road status:</strong>Access road is clear. &nbsp;&nbsp; 
++                             
++                            
++                          
++                             
++                             
++                            
++                                <strong>Temperature:</strong> 11.0&deg; <br> 
++                             
++                            
++                            
++                            <br> 
++                             
++                             
++                             
++                            <strong>Wind:</strong>  6mph &nbsp;&nbsp; 
++                             
++                           
++                            <strong>Wind Direction:</strong> 319&deg; NW</span>  
++                             <br>
++                             <br>
++
++                          <span style="width:100%; text-align:center;display:block"><a href="https://www.glencoemountain.co.uk/weather/">Live Weather Station Feeds</a> <br></span>
++
++					</span>   
++	</div>
++	
++	<!-- TAB 2-->
++	<div data-tab="tab2">
++		 <span class="snowreport">
++ 
++                                <strong>Lifts Operating:</strong>0 of 8 Available Uplifts.<br />
++                                <br />
++                                 
++                                <strong>Lifts Opening:</strong>1 of 8 Available Uplifts.<br />
++                                <br />
++                                <strong>Runs Open:</strong>Chairlift open from 9am.<br /><br />Bike tracks, bike hire, disc Golf, summer tubing and Plateau cafe open daily.<br /><br />		
++                                <br>                                <br>
++
++                                  <strong>News:</strong> Access chair opens at 9am.<br /><br />Bike Tracks, bike hire, disc Golf, Summer tubing and Plateau cafe open daily from Saturday 4th July.<br /><br />White Corries cafe at the base open daily from 8am until 8pm.<br /><br /><br /><br />                                                                <span style="width:100%; text-align:center;display:block"><a href="https://www.glencoemountain.co.uk/snow-report/">View Full Report</a> <br></span>
++</span> 
++ 	</div>
++	
++	<!-- TAB 3 -->
++<!--	<div data-tab="tab3">
++		 
++ 		 
++ 
++	</div>-->
++</div>
++<!-- END TABS -->
++                  
++<div style="margin-top:15px;" class="fb-page" data-href="https://www.facebook.com/GlencoeMountain/" data-tabs="timeline" data-height="550"  data-border-color="#fff" data-small-header="false" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/GlencoeMountain/"><a href="https://www.facebook.com/GlencoeMountain/">Glencoe Mountain Resort</a></blockquote></div></div>                    
++                    
++                   
++               
++                    
++         
++                </div>
++    </div>
++   </div>
++</section>
++
++ 
++     
++
++
++
++<footer class="black">
++
++<div class="container nopadding">
++
++	<div class=" bigtoppadding">
++
++
++
++<div class="col-md-2 col-sm-3  col-xs-6 footer-links">
++
++		
++          
++                       
++                    <h5  class="whitetext light">Winter Activities</h5><div class="menu-footer1-container"><ul id="menu-footer1" class="menu"><li id="menu-item-1284" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1284"><a href="https://www.glencoemountain.co.uk/winter/">Snow Sports</a></li>
++<li id="menu-item-1286" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1286"><a href="https://www.glencoemountain.co.uk/lessons/">Lessons</a></li>
++<li id="menu-item-1346" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1346"><a href="https://www.glencoemountain.co.uk/sledging/">Sledging at Glencoe Mountain</a></li>
++<li id="menu-item-1285" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1285"><a href="https://www.glencoemountain.co.uk/about-us/transceiver-park/">Transceiver Park</a></li>
++<li id="menu-item-1287" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1287"><a href="https://www.glencoemountain.co.uk/chairlift-rides/">Chairlift Rides</a></li>
++<li id="menu-item-1288" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1288"><a href="https://www.glencoemountain.co.uk/events/">Events</a></li>
++</ul></div>             
++			        
++       
++
++		</div>
++
++<div class="col-md-2 col-sm-3  col-xs-6 footer-links">
++
++		
++          
++                       
++                    <h5  class="whitetext light">Summer Activities</h5><div class="menu-footer2-container"><ul id="menu-footer2" class="menu"><li id="menu-item-1289" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1289"><a href="https://www.glencoemountain.co.uk/summer/">Summer</a></li>
++<li id="menu-item-1290" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1290"><a href="https://www.glencoemountain.co.uk/chairlift-rides/">Chairlift Rides</a></li>
++<li id="menu-item-1294" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1294"><a href="https://www.glencoemountain.co.uk/mountain-biking/">Mountain Biking</a></li>
++<li id="menu-item-1292" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1292"><a href="https://www.glencoemountain.co.uk/tubing/">Tubing</a></li>
++<li id="menu-item-1291" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1291"><a href="https://www.glencoemountain.co.uk/treasure-hunt/">Treasure Hunt</a></li>
++<li id="menu-item-1293" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1293"><a href="https://www.glencoemountain.co.uk/events/">Events</a></li>
++</ul></div>             
++			        
++       
++
++		</div>
++<div class="col-md-2 col-sm-3  col-xs-6 footer-links">
++
++		
++          
++                       
++                    <h5  class="whitetext light">About Glencoe</h5><div class="menu-footer3-container"><ul id="menu-footer3" class="menu"><li id="menu-item-1295" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1295"><a href="https://www.glencoemountain.co.uk/about-us/">About us</a></li>
++<li id="menu-item-1296" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1296"><a href="https://www.glencoemountain.co.uk/piste-map-2/">Piste Map</a></li>
++<li id="menu-item-1297" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1297"><a href="https://www.glencoemountain.co.uk/bike-trails/">Bike trails</a></li>
++<li id="menu-item-1298" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1298"><a href="https://www.glencoemountain.co.uk/gallery/">Gallery</a></li>
++<li id="menu-item-1299" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1299"><a href="https://www.glencoemountain.co.uk/videos/">Videos</a></li>
++<li id="menu-item-1300" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1300"><a href="https://www.glencoemountain.co.uk/contact/">Contact</a></li>
++</ul></div>             
++			        
++       
++
++		</div>
++<div class="col-md-2 col-sm-3  col-xs-6 footer-links">
++
++		
++          
++                       
++                    <h5  class="whitetext light">Plan Trip</h5><div class="menu-footer4-container"><ul id="menu-footer4" class="menu"><li id="menu-item-2697" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2697"><a href="https://glencoe.axess.shop/">Buy Tickets</a></li>
++<li id="menu-item-1301" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1301"><a href="https://www.glencoemountain.co.uk/cafe/">Cafe</a></li>
++<li id="menu-item-1302" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1302"><a href="https://www.glencoemountain.co.uk/shop/">Winter Pricelist</a></li>
++<li id="menu-item-1303" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1303"><a href="https://www.glencoemountain.co.uk/prices/">Summer Prices</a></li>
++<li id="menu-item-1304" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1304"><a href="https://www.glencoemountain.co.uk/summer-commercial-pricelis/">Commercial Pricelist</a></li>
++<li id="menu-item-1305" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1305"><a href="https://www.glencoemountain.co.uk/location/">Location</a></li>
++</ul></div>             
++			        
++       
++
++		</div>
++<div class="col-md-2 col-sm-3  col-xs-6 footer-links">
++
++		
++          
++                       
++                    <h5  class="whitetext light">Accommodation</h5><div class="menu-footer5-container"><ul id="menu-footer5" class="menu"><li id="menu-item-4255" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4255"><a href="https://booking-directly.com/widgets/fSQrJ0YrnN1e2I3eFelyNACJ24vklC5UNBl6FWGPXfxQ5ohjGHyp2UNf1IxVg/properties">Book Accommodation</a></li>
++<li id="menu-item-1310" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1310"><a href="https://www.glencoemountain.co.uk/accommodation/">Accommodation at Glencoe</a></li>
++<li id="menu-item-1309" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1309"><a href="https://www.glencoemountain.co.uk/local-accommodation/">Local Accommodation</a></li>
++</ul></div>             
++			        
++       
++
++		</div>
++<div class="col-md-2 col-sm-3  col-xs-6 footer-links">
++
++		
++          
++                       
++                    <h5  class="whitetext light">Mountain Conditions</h5><div class="menu-footer6-container"><ul id="menu-footer6" class="menu"><li id="menu-item-1312" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-94 current_page_item menu-item-1312"><a href="https://www.glencoemountain.co.uk/snow-report/" aria-current="page">Snow Report</a></li>
++<li id="menu-item-1313" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1313"><a href="https://www.glencoemountain.co.uk/bike-track-report/">Bike Track Report</a></li>
++<li id="menu-item-1314" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1314"><a href="https://www.glencoemountain.co.uk/webcams/">Webcams</a></li>
++</ul></div>             
++			        
++       
++
++		</div>
++
++<div style="clear:both;"><!-- GREY HORIZONTAL -->
++
++	<div class="greyhorizontal midmargin">
++
++	</div>
++</div>
++
++		
++          	<div class="col-md-4 col-sm-4  col-xs-12 ">
++
++                       
++                    <h5  class="whitetext light">About Us</h5>			<div class="textwidget"><p class="greytext midmargin meta">
++			  The centre offers mountain biking , orienteering, hill-walking, climbing, chairlift rides, photography, trail building, guided walks and home cooked food in the log cabin cafe,In winter skiing, snowboarding, sledging and avalanche rescue training are available.  </p></div>
++		             
++			        
++       
++
++		</div>
++
++ 		<div class="col-md-2  col-sm-2  col-xs-6 activities">
++
++			            
++                    <h5  class="whitetext light">Activities</h5><div class="menu-footeractivitieshome-container"><ul id="menu-footeractivitieshome" class="menu"><li id="menu-item-28" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28"><a href="https://www.glencoemountain.co.uk/accommodation/">Accommodation</a></li>
++<li id="menu-item-112" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-112"><a href="https://www.glencoemountain.co.uk/summer/">Summer activities</a></li>
++<li id="menu-item-391" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-391"><a href="https://www.glencoemountain.co.uk/winter/">Snow Sports</a></li>
++<li id="menu-item-407" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-407"><a href="https://www.glencoemountain.co.uk/mountain-biking/">Mountain Biking</a></li>
++<li id="menu-item-34" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-34"><a href="https://www.glencoemountain.co.uk/tubing/">Tubing</a></li>
++</ul></div>             
++			 
++
++			
++
++		</div>
++
++ 		<div class="col-md-2  col-sm-2   col-xs-6">
++
++				            
++                    <h5  class="whitetext light">Find Us</h5>			<div class="textwidget"><p class="greytext midmargin meta">
++
++Kingshouse<br>
++
++Glencoe<br>
++
++PH49 4HZ<br>
++
++Scotland
++
++	</p></div>
++		             
++		     				 
++			
++		</div>
++
++ 		<div class="col-md-2  col-sm-2   col-xs-6">
++
++				            
++                    <h5  class="whitetext light">Contact Us</h5>			<div class="textwidget"><p class="greytext midmargin meta">
++<span>01855 851 226
++</span><br><br>
++				  <a href="mailto:admin@glencoemountain.co.uk" class="whitetext " style="font-size:11px;">admin@glencoemountain.co.uk</a>
++
++			</p>
++</div>
++		             
++		     				 
++			
++		</div>
++
++ 		<div class="col-md-2  col-sm-2  col-xs-6 columns  footer-social">
++			            
++                    <h5  class="whitetext light">Social</h5>			<div class="textwidget">		<a href="https://www.twitter.com/glencoemountain"><img src="https://www.glencoemountain.co.uk/images/twitter.png"></a> 
++					<a href="https://www.facebook.com/pages/Glencoe-Mountain-Resort/111429118884878?ref=nf"><img src="https://www.glencoemountain.co.uk/images/facebook.png" border="0"></a> 
++<a href="/rss/"><img src="https://glencoemountain.co.uk/images/rss.png"></a>
++<br><br>
++<br><a style="color:#ba1212" href="https://www.glencoemountain.co.uk/signup.php?iframe=true&amp;width=400&amp;height=95%" rel="prettyPhoto[iframe]">Sign up for News Alerts !</a></div>
++		             
++						 
++
++
++
++ 		</div>
++
++	</div>
++
++	<!-- END TOP ROW -->
++
++	
++
++	<!-- GREY HORIZONTAL -->
++
++	<div class="greyhorizontal midmargin">
++
++	</div>
++
++	
++
++	<div class="">
++
++	
++
++	<!-- COPYRIGHT -->
++
++		<div class="col-md-6  ">
++
++			<p class="greytext meta">
++
++				 Copyright 2016 GlencoeMountain.co.uk. All Rights Reserved
++
++			</p>
++
++		</div>
++
++		
++
++		<!-- NAVIGATION -->
++
++		<div class="col-md-6  ">
++
++			<p class="meta footer-menu">
++        <a href="https://www.glencoemountain.co.uk/">Home</a> / 
++<a href="https://www.glencoemountain.co.uk/contact/">Contact</a> / 
++<a href="https://www.glencoemountain.co.uk/privacy-policy/">Privacy Policy</a> / 
++<a href="https://www.glencoemountain.co.uk/cookie-policy/">Cookie Policy</a> / 
++
++
++			</p>
++
++		</div>
++
++		
++
++		<!-- LINKS -->
++
++		 
++
++	</div>
++
++</div>
++
++</footer>
++
++
++  
++
++
++	 
++	<!-- ngg_resource_manager_marker --><script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/contact-form-7/includes/js/jquery.form.min.js?ver=3.51.0-2014.06.20' id='jquery-form-js'></script>
++<script type='text/javascript' id='contact-form-7-js-extra'>
++/* <![CDATA[ */
++var _wpcf7 = {"loaderUrl":"https:\/\/www.glencoemountain.co.uk\/wp-content\/plugins\/contact-form-7\/images\/ajax-loader.gif","recaptchaEmpty":"Please verify that you are not a robot.","sending":"Sending ..."};
++/* ]]> */
++</script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/contact-form-7/includes/js/scripts.js?ver=4.4.2' id='contact-form-7-js'></script>
++<script type='text/javascript' id='cookie-consent-js-extra'>
++/* <![CDATA[ */
++var ctcc_vars = {"expiry":"30","method":"","version":"1"};
++/* ]]> */
++</script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/uk-cookie-consent/assets/js/uk-cookie-consent-js.js?ver=2.3.0' id='cookie-consent-js'></script>
++<script type='text/javascript' src='//maps.googleapis.com/maps/api/js?sensor=false&#038;ver=6.0.12' id='google-maps-js'></script>
++<script type='text/javascript' id='ubermenu-js-extra'>
++/* <![CDATA[ */
++var ubermenu_data = {"remove_conflicts":"on","reposition_on_load":"off","intent_delay":"300","intent_interval":"100","intent_threshold":"7","scrollto_offset":"50","scrollto_duration":"1000","responsive_breakpoint":"959","accessible":"on","retractor_display_strategy":"responsive","touch_off_close":"on","v":"3.2.1.1","configurations":["main"],"ajax_url":"https:\/\/www.glencoemountain.co.uk\/wp-admin\/admin-ajax.php"};
++/* ]]> */
++</script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/ubermenu/assets/js/ubermenu.min.js?ver=3.2.1.1' id='ubermenu-js'></script>
++<script type='text/javascript' id='shiftnav-js-extra'>
++/* <![CDATA[ */
++var shiftnav_data = {"shift_body":"on","shift_body_wrapper":"","lock_body":"on","lock_body_x":"off","open_current":"on","collapse_accordions":"on","scroll_panel":"off","breakpoint":"960","v":"1.6.3","touch_off_close":"on","scroll_offset":"100","disable_transforms":"off"};
++/* ]]> */
++</script>
++<script type='text/javascript' src='https://www.glencoemountain.co.uk/wp-content/plugins/shiftnav-responsive-mobile-menu/assets/js/shiftnav.min.js?ver=1.6.3' id='shiftnav-js'></script>
++	<!-- ShiftNav Main Toggle -->
++		<div id="shiftnav-toggle-main" class="shiftnav-toggle-main-align-center shiftnav-toggle-style-full_bar shiftnav-togglebar-gap-auto shiftnav-toggle-edge-left shiftnav-toggle-icon-x shiftnav-toggle-position-absolute shiftnav-toggle-main-align-center shiftnav-toggle-style-full_bar shiftnav-togglebar-gap-auto shiftnav-toggle-edge-left shiftnav-toggle-icon-x shiftnav-toggle-position-absolute" data-shiftnav-target="shiftnav-main"><div id="shiftnav-toggle-main-button" class="shiftnav-toggle shiftnav-toggle-shiftnav-main shiftnav-toggle-burger" data-shiftnav-target="shiftnav-main"><i class="fa fa-bars"></i></div>	<div class="shiftnav-main-toggle-content shiftnav-toggle-main-block"></div></div>	
++	<!-- /#shiftnav-toggle-main --> 
++
++
++	<!-- ShiftNav #shiftnav-main -->
++	<div class="shiftnav shiftnav-nojs shiftnav-shiftnav-main shiftnav-left-edge shiftnav-skin-standard-dark shiftnav-transition-standard" id="shiftnav-main" data-shiftnav-id="shiftnav-main">
++		<div class="shiftnav-inner">
++
++		
++			<h3 class="shiftnav-menu-title shiftnav-site-title"><a href="https://www.glencoemountain.co.uk">Glencoe Mountain Resort</a></h3>
++	<nav class="shiftnav-nav"><ul id="menu-mobilemenu" class="shiftnav-menu shiftnav-targets-default shiftnav-targets-text-default shiftnav-targets-icon-default shiftnav-indent-subs"><li id="menu-item-176" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-176 shiftnav-depth-0"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/">Home</a></li><li id="menu-item-2906" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2906 shiftnav-depth-0"><a class="shiftnav-target"  href="https://glencoe.axess.shop">Buy Tickets</a></li><li id="menu-item-1424" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1424 shiftnav-sub-always shiftnav-depth-0"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/winter/">Winter</a>
++<ul class="sub-menu sub-menu-1">
++<li id="menu-item-183" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-183 shiftnav-sub-always shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/lessons/">Snowsports School</a>
++	<ul class="sub-menu sub-menu-2">
++<li id="menu-item-1467" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1467 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/lessons/">Lessons</a></li><li id="menu-item-1465" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1465 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/?page_id=1452">Coaching</a></li><li id="menu-item-1469" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1469 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/schools/">Schools and Youth Groups</a></li><li id="menu-item-1468" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1468 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/lessons/recruitment/">Recruitment</a></li><li id="menu-item-1470" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1470 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/wp-content/uploads/2017/10/Instructors-Application-Form-2018-2.pdf">Instructor Application Form</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li>	</ul>
++</li><li id="menu-item-1584" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1584 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/equipment-hire/">Equipment Hire</a></li><li id="menu-item-1426" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1426 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/sledging/">Sledging at Glencoe Mountain</a></li><li id="menu-item-1427" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1427 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/about-us/transceiver-park/">Transceiver Park</a></li><li id="menu-item-188" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-188 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/chairlift-rides/">Chairlift Rides</a></li><li id="menu-item-1428" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1428 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/events/">Events</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li></ul>
++</li><li id="menu-item-180" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-180 shiftnav-sub-always shiftnav-depth-0"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/summer/">Summer Activities</a>
++<ul class="sub-menu sub-menu-1">
++<li id="menu-item-3559" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3559 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/disc-golf/">Disc Golf</a></li><li id="menu-item-189" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-189 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/tubing/">Tubing</a></li><li id="menu-item-1430" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1430 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/chairlift-rides/">Chairlift Rides</a></li><li id="menu-item-186" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-186 shiftnav-sub-always shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/mountain-biking/">Biking</a>
++	<ul class="sub-menu sub-menu-2">
++<li id="menu-item-1447" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1447 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/mountain-biking/">Mountain Biking</a></li><li id="menu-item-593" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-593 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/mountain-bike-coaching/">Mountain Bike Coaching</a></li><li id="menu-item-591" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-591 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/bike-trails/">Bike trails</a></li><li id="menu-item-590" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-590 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/bike-hire/">Bike Hire</a></li><li id="menu-item-592" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-592 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/code-of-practice/">Code of Practice</a></li><li id="menu-item-595" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-595 shiftnav-depth-2"><a class="shiftnav-target"  href="http://www.glencoemountain.co.uk/wp-content/uploads/2016/06/Participation-statement.pdf">Participation</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li>	</ul>
++</li><li id="menu-item-1431" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1431 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/treasure-hunt/">Treasure Hunt</a></li><li id="menu-item-1432" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1432 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/events/">Events</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li></ul>
++</li><li id="menu-item-598" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-598 shiftnav-sub-always shiftnav-depth-0"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/about-us/">About Glencoe</a>
++<ul class="sub-menu sub-menu-1">
++<li id="menu-item-1434" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1434 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/about-us/">About us</a></li><li id="menu-item-602" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-602 shiftnav-depth-1"><a class="shiftnav-target"  href="http://www.glencoemountain.co.uk/wp-content/themes/glencoe/images/fondGlencoe2016.jpg://">Piste Map</a></li><li id="menu-item-1435" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1435 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/bike-trails/">Bike trails</a></li><li id="menu-item-601" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-601 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/gallery/">Gallery</a></li><li id="menu-item-603" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-603 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/videos/">Videos</a></li><li id="menu-item-1523" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1523 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/supporters/">Supporters</a></li><li id="menu-item-599" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-599 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/contact/">Contact</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li></ul>
++</li><li id="menu-item-1437" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1437 shiftnav-sub-always shiftnav-depth-0"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/prices/">Plan Trip</a>
++<ul class="sub-menu sub-menu-1">
++<li id="menu-item-606" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-606 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/prices/">Summer Prices</a></li><li id="menu-item-604" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-604 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/shop/">Winter Prices</a></li><li id="menu-item-1436" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1436 shiftnav-sub-always shiftnav-depth-1"><a class="shiftnav-target"  href="http://www.glencoemountain.co.uk/shop">Season Passes</a>
++	<ul class="sub-menu sub-menu-2">
++<li id="menu-item-605" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-605 shiftnav-depth-2"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/summer-commercial-pricelis/">Commercial Pricelist</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li>	</ul>
++</li><li id="menu-item-178" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-178 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/location/">Location</a></li><li id="menu-item-1438" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1438 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/cafe/">Cafe</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li></ul>
++</li><li id="menu-item-177" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-177 shiftnav-sub-always shiftnav-depth-0"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/accommodation/">Accommodation</a>
++<ul class="sub-menu sub-menu-1">
++<li id="menu-item-1441" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1441 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/accommodation/">Accommodation at Glencoe</a></li><li id="menu-item-4170" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4170 shiftnav-depth-1"><a class="shiftnav-target"  href="https://booking-directly.com/widgets/fSQrJ0YrnN1e2I3eFelyNACJ24vklC5UNBl6FWGPXfxQ5ohjGHyp2UNf1IxVg/properties">Book Accommodation</a></li><li id="menu-item-596" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-596 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/local-accommodation/">Local Accommodation</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li></ul>
++</li><li id="menu-item-1445" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-ancestor current-menu-parent menu-item-has-children menu-item-1445 shiftnav-sub-always shiftnav-depth-0"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/weather/">Mountain Conditions</a>
++<ul class="sub-menu sub-menu-1">
++<li id="menu-item-597" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-597 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/weather/">Weather</a></li><li id="menu-item-185" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-94 current_page_item menu-item-185 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/snow-report/">Snow Report</a></li><li id="menu-item-1446" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1446 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/bike-track-report/">Bike Track Report</a></li><li id="menu-item-184" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-184 shiftnav-depth-1"><a class="shiftnav-target"  href="https://www.glencoemountain.co.uk/webcams/">Webcams</a></li><li class="shiftnav-retract"><a class="shiftnav-target"><i class="fa fa-chevron-left"></i> Back</a></li></ul>
++</li></ul></nav>		</div><!-- /.shiftnav-inner -->
++	</div><!-- /.shiftnav #shiftnav-main -->
++
++
++	<div id="wonderpluginlightbox_options" data-skinsfoldername="skins/default/"  data-jsfolder="https://www.glencoemountain.co.uk/wp-content/plugins/wonderplugin-lightbox-trial/engine/" data-autoslide="false" data-showall="false" data-slideinterval="5000" data-showtimer="true" data-timerposition="bottom" data-timerheight="2" data-timercolor="#dc572e" data-timeropacity="1" data-navarrowspos="inside" data-closepos="outside" data-enteranimation="" data-exitanimation="" data-showplaybutton="false" data-alwaysshownavarrows="false" data-bordersize="8" data-showtitleprefix="false" data-responsive="true" data-fullscreenmode="false" data-fullscreentextoutside="true" data-closeonoverlay="true" data-videohidecontrols="false" data-mutevideo="false" data-nativehtml5controls="false" data-titlestyle="bottom" data-imagepercentage="75" data-enabletouchswipe="true" data-autoplay="true" data-html5player="true" data-overlaybgcolor="#000" data-overlayopacity="0.8" data-defaultvideovolume="1" data-bgcolor="#FFF" data-borderradius="0" data-thumbwidth="96" data-thumbheight="72" data-thumbtopmargin="12" data-thumbbottommargin="12" data-barheight="64" data-showtitle="true" data-titleprefix="%NUM / %TOTAL" data-titlebottomcss="color:#333; font-size:14px; font-family:Armata,sans-serif,Arial; overflow:hidden; text-align:left;" data-showdescription="true" data-descriptionbottomcss="color:#333; font-size:12px; font-family:Arial,Helvetica,sans-serif; overflow:hidden; text-align:left; margin:4px 0px 0px; padding: 0px;" data-titleinsidecss="color:#fff; font-size:16px; font-family:Arial,Helvetica,sans-serif; overflow:hidden; text-align:left;" data-descriptioninsidecss="color:#fff; font-size:12px; font-family:Arial,Helvetica,sans-serif; overflow:hidden; text-align:left; margin:4px 0px 0px; padding: 0px;" data-titleoutsidecss="color:#fff; font-size:18px; font-family:Arial,Helvetica,sans-serif; overflow:hidden; text-align:center; margin: 8px;" data-descriptionoutsidecss="color:#fff; font-size:14px; font-family:Arial,Helvetica,sans-serif; overflow:hidden; text-align:center; margin:8px; padding: 0px;" data-videobgcolor="#000" data-html5videoposter="" data-responsivebarheight="false" data-smallscreenheight="415" data-barheightonsmallheight="64" data-notkeepratioonsmallheight="false" data-showsocial="false" data-socialposition="position:absolute;top:100%;right:0;" data-socialpositionsmallscreen="position:absolute;top:100%;right:0;left:0;" data-socialdirection="horizontal" data-socialbuttonsize="32" data-socialbuttonfontsize="18" data-socialrotateeffect="true" data-showfacebook="true" data-showtwitter="true" data-showpinterest="true" data-bordertopmargin="48" data-shownavigation="true" data-navbgcolor="rgba(0,0,0,0.2)" data-shownavcontrol="true" data-hidenavdefault="false" data-hidenavigationonmobile="false" data-hidenavigationonipad="false" style="display:none;"></div><div class="wonderplugin-engine"><a href="http://www.wonderplugin.com/wordpress-lightbox/" title="WordPress Video Lightbox Plugin">WordPress Video Lightbox Plugin</a></div>			
++				<script type="text/javascript">
++					jQuery(document).ready(function($){
++												if(!catapultReadCookie("catAccCookies")){ // If the cookie has not been set then show the bar
++							$("html").addClass("has-cookie-bar");
++							$("html").addClass("cookie-bar-top-bar");
++							$("html").addClass("cookie-bar-bar");
++															// Wait for the animation on the html to end before recalculating the required top margin
++								$("html").on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {
++									// code to execute after transition ends
++									var barHeight = $('#catapult-cookie-bar').outerHeight();
++									$("html").css("margin-top",barHeight);
++									$("body.admin-bar").css("margin-top",barHeight-32); // Push the body down if the admin bar is active
++								});
++													}
++																	});
++				</script>
++			
++			<div id="catapult-cookie-bar" class=""><div class="ctcc-inner "><span class="ctcc-left-side">This site uses cookies:  <a class="ctcc-more-info-link" tabindex=0 target="_blank" href="https://www.glencoemountain.co.uk/cookie-policy/">Find out more.</a></span><span class="ctcc-right-side"><button id="catapultCookie" tabindex=0 onclick="catapultAcceptCookies();">Okay, thanks</button></span></div><!-- custom wrapper class --></div><!-- #catapult-cookie-bar -->    
++    
++    <script src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/js/libs/gumby.min.js"></script>
++
++<script src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/js/plugins.js"></script>
++
++<script src="https://www.glencoemountain.co.uk/wp-content/themes/glencoe/js/main.js"></script>
++
++ <script type="text/javascript">  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));  </script>  <script type="text/javascript">  try {  var pageTracker = _gat._getTracker("UA-3202712-54");  pageTracker._trackPageview();  } catch(err) {}</script> 
++ 
++ 
++ 
++ 
++</body>
++</html>
+\ No newline at end of file
+diff --git a/test/resorts/glencoe-trails.js b/test/resorts/glencoe-trails.js
+new file mode 100644
+index 00000000..6cf66030
+--- /dev/null
++++ b/test/resorts/glencoe-trails.js
+@@ -0,0 +1,75 @@
++import trails from '../trails/index.js';
++
++trails('glencoe', [
++  {
++    'name': 'Access Return',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Bunny Run',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Canyon',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Happy Valley',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Etive Glades',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Fly Paper',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Main Basin',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Mugs Alley',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Plateau Run',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Rannoch Glades',
++    'status': 'closed'
++  },
++  {
++    'name': 'Spring Run',
++    'status': 'closed'
++  },
++  {
++    'name': 'The High Road',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'The Low Road',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'The Wall',
++    'status': 'closed'
++  },
++  {
++    'name': 'Thrombosis',
++    'status': 'closed'
++  }
++]);
+diff --git a/test/resorts/glencoe.js b/test/resorts/glencoe.js
+new file mode 100644
+index 00000000..88186389
+--- /dev/null
++++ b/test/resorts/glencoe.js
+@@ -0,0 +1,14 @@
++import lifts from '../lifts/index.js';
++
++lifts('glencoe', 'html', {
++  'Access Chairlift': 'open',
++  'Plateau Poma': 'closed',
++  'Cliffhanger Chairlift': 'closed',
++  'Main Basin T-Bar': 'closed',
++  'Wall Tow': 'closed',
++  'Top Button Tow': 'closed',
++  'Coire Pollach Tow': 'closed',
++  'Rannoch Chairlift': 'closed',
++  'Dry Slope Magic Carpet': 'open',
++  'Sledging Magic Carpet': 'open'
++});
+-- 
+2.39.5
+

@@ -1,7 +1,7 @@
 From dbb7ca369f82be3f4f035df5ac455356902e76ff Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 09:40:18 -0400
-Subject: [PATCH 15/41] trails: optional per-resort trail status plugin
+Subject: [PATCH 15/48] trails: optional per-resort trail status plugin
 
 Resorts opt in with "trails" in resort.json (true = same page as lifts,
 or a {host, pathname} url object) plus a lib/resorts/<id>/trails.js parse
