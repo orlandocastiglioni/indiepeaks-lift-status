@@ -1,0 +1,957 @@
+From 8774bb6eded2c0e3c1619c9c3076dcd91eeeb3c6 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:01:09 -0400
+Subject: [PATCH 40/41] resort: add washigatake
+ (https://ski.washigatake.jp/condition/)
+
+---
+ lib/resorts/washigatake/index.js      |  23 +
+ lib/resorts/washigatake/resort.json   |  15 +
+ lib/resorts/washigatake/status.js     |  14 +
+ lib/resorts/washigatake/trails.js     |  39 ++
+ test/resorts/example/washigatake.html | 791 ++++++++++++++++++++++++++
+ test/resorts/washigatake-trails.js    |   3 +
+ test/resorts/washigatake.js           |   3 +
+ 7 files changed, 888 insertions(+)
+ create mode 100644 lib/resorts/washigatake/index.js
+ create mode 100644 lib/resorts/washigatake/resort.json
+ create mode 100644 lib/resorts/washigatake/status.js
+ create mode 100644 lib/resorts/washigatake/trails.js
+ create mode 100644 test/resorts/example/washigatake.html
+ create mode 100644 test/resorts/washigatake-trails.js
+ create mode 100644 test/resorts/washigatake.js
+
+diff --git a/lib/resorts/washigatake/index.js b/lib/resorts/washigatake/index.js
+new file mode 100644
+index 00000000..8ff4bdd4
+--- /dev/null
++++ b/lib/resorts/washigatake/index.js
+@@ -0,0 +1,23 @@
++import select from '../../select.js';
++import coerce from '../../tools/coerce.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// lift table columns: リフト名 | 運行時間 | 運行可否 | お知らせ
++export default function parse(dom) {
++  const liftStatus = {};
++  for (const table of select(dom, 'table')) {
++    const rows = select(table.children, 'tr');
++    const header = rows[0] && select(rows[0].children, 'th, td').map(findText);
++    if (!header?.[0]?.includes('リフト名')) {
++      continue;
++    }
++    for (const row of rows.slice(1)) {
++      const cells = select(row.children, 'th, td').map(findText);
++      if (cells[0] && cells[2]) {
++        liftStatus[cells[0].trim()] = coerce(status(cells[2]));
++      }
++    }
++  }
++  return liftStatus;
++}
+diff --git a/lib/resorts/washigatake/resort.json b/lib/resorts/washigatake/resort.json
+new file mode 100644
+index 00000000..634ba764
+--- /dev/null
++++ b/lib/resorts/washigatake/resort.json
+@@ -0,0 +1,15 @@
++{
++  "name": "Washigatake",
++  "url": {
++    "host": "https://ski.washigatake.jp",
++    "pathname": "/condition/"
++  },
++  "trails": true,
++  "tags": [
++    "Japan"
++  ],
++  "ll": [
++    136.9276,
++    35.9808
++  ]
++}
+diff --git a/lib/resorts/washigatake/status.js b/lib/resorts/washigatake/status.js
+new file mode 100644
+index 00000000..5559df28
+--- /dev/null
++++ b/lib/resorts/washigatake/status.js
+@@ -0,0 +1,14 @@
++// shared status glyph translation for the Japanese condition tables
++export default function status(text = '') {
++  const t = text.trim();
++  if (/^[○◯〇]/.test(t) || /運行中|営業中/.test(t)) {
++    return 'open';
++  }
++  if (/^[△▲]/.test(t)) {
++    return 'hold';
++  }
++  if (/^[×✕✖-]/.test(t) || /運休|終了/.test(t)) {
++    return 'closed';
++  }
++  return t;
++}
+diff --git a/lib/resorts/washigatake/trails.js b/lib/resorts/washigatake/trails.js
+new file mode 100644
+index 00000000..76785d2a
+--- /dev/null
++++ b/lib/resorts/washigatake/trails.js
+@@ -0,0 +1,39 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++const sections = { 初級: 'green', 中級: 'blue', 上級: 'black' };
++
++// course tables: [section row like 初級コース] コース名 | 滑走状況 | お知らせ;
++// park tables use パーク名 in the header instead
++export default function parse(dom) {
++  const rows = [];
++  for (const table of select(dom, 'table')) {
++    const trs = select(table.children, 'tr');
++    const caption = select(table.children, 'caption')[0];
++    let level = caption && sections[Object.keys(sections).find(k => (findText(caption) ?? '').includes(k))];
++    let headerIdx = -1;
++    for (const [i, tr] of trs.entries()) {
++      const cells = select(tr.children, 'th, td').map(findText);
++      const joined = cells.filter(Boolean).join(' ');
++      if (/コース名|パーク名/.test(joined)) {
++        headerIdx = i;
++        if (/パーク名/.test(joined)) {
++          level = 'terrainPark';
++        }
++        continue;
++      }
++      if (headerIdx < 0) {
++        const section = Object.keys(sections).find(k => joined.includes(k));
++        if (section) {
++          level = sections[section];
++        }
++        continue;
++      }
++      if (cells[0] && cells[1]) {
++        rows.push({ name: cells[0].trim(), status: status(cells[1]), level });
++      }
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/example/washigatake.html b/test/resorts/example/washigatake.html
+new file mode 100644
+index 00000000..5cd356d9
+--- /dev/null
++++ b/test/resorts/example/washigatake.html
+@@ -0,0 +1,791 @@
++<!doctype html>
++<html><!-- InstanceBegin template="/Templates/base.dwt" codeOutsideHTMLIsLocked="false" -->
++<head>
++<meta charset="utf-8">
++<meta name="viewport" content="width=device-width">
++<!-- InstanceBeginEditable name="doctitle" -->
++  <title>最新ゲレンデ情報 ｜ 岐阜県・中部エリアの鷲ヶ岳スキー場は関西・名古屋からも好アクセス</title>
++<link rel="canonical" href="https://ski.washigatake.jp/condition/">
++  <!-- InstanceEndEditable -->
++<meta name="description" content="高鷲ICから5分！抜群のアクセスを誇る岐阜県奥美濃エリアの鷲ヶ岳スキー場は、最大幅400mのワイドバーンでファミリーから上級者まで満足。ナイター・オールナイト営業とゲレンデ直結のホテルで１日中スキー・スノーボードを満喫できます。">
++
++<!-- Google Tag Manager -->
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-N97XPSP');</script>
++<!-- End Google Tag Manager -->
++
++<!-- Google Tag Manager -->
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-WJ62RRXQ');</script>
++<!-- End Google Tag Manager -->
++    
++<meta name="format-detection" content="telephone=no">
++<link href="favicon.ico" rel="shortcut icon" />
++<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/yakuhanjp@4.1.1/dist/css/yakuhanjp.css">
++<link rel="preconnect" href="https://fonts.googleapis.com">
++<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Source+Sans+3:wght@200..900&display=swap" rel="stylesheet">
++<link rel="stylesheet" type="text/css" href="../assets/css/reset.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/common_2022.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/common.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/module.css" media="all" />
++<!-- InstanceBeginEditable name="head" -->
++
++  <link rel="stylesheet" href="../assets/css/layout.css">
++  <link rel="stylesheet" href="../assets/css/condition.css">
++  <link rel="stylesheet" href="../assets/css/zoom.css">
++  <!-- ライブカメラ映像用 -->
++	<script src="https://lnbgtscw.user.webaccel.jp/assets/js/web-acc/index.async.taka.js"></script>
++  <!-- ライブカメラ映像用 ここまで-->
++  <!-- InstanceEndEditable -->
++<!-- InstanceParam name="pagetype" type="text" value="" -->
++
++<script src="https://d.shutto-translation.com/trans.js?id=1327"></script>
++    
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@graph": [
++    {
++      "@type": "Organization",
++      "@id": "https://ski.washigatake.jp/#organization",
++      "name": "鷲ヶ岳スキー場",
++      "url": "https://ski.washigatake.jp/",
++      "logo": {
++        "@type": "ImageObject",
++        "url": "https://ski.washigatake.jp/assets/img/common/logo.png"
++      },
++      "sameAs": [
++        "https://www.facebook.com/%E9%B7%B2%E3%83%B6%E5%B2%B3%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4-351539064928070/",
++        "https://twitter.com/washigatake",
++        "https://www.instagram.com/washigatake5105/",
++        "https://line.me/R/ti/p/-fz6_N6stp"
++      ]
++    },
++    {
++      "@type": "SkiResort",
++      "@id": "https://ski.washigatake.jp/#place",
++      "name": "鷲ヶ岳スキー場",
++      "url": "https://ski.washigatake.jp/",
++      "image": {
++        "@type": "ImageObject",
++        "url": "https://ski.washigatake.jp/assets/img/common/main_visual.jpg"
++      },
++      "address": {
++        "@type": "PostalAddress",
++        "postalCode": "501-5303",
++        "addressCountry": "JP",
++        "addressRegion": "岐阜県",
++        "addressLocality": "郡上市高鷲町大鷲",
++        "streetAddress": "3250"
++      },
++      "telephone": "0575-72-5105",
++  "priceRange": "¥¥",
++      "geo": {
++        "@type": "GeoCoordinates",
++        "latitude": 35.94302311,
++        "longitude": 136.9196817
++      },
++      "sameAs": [
++        "https://www.facebook.com/%E9%B7%B2%E3%83%B6%E5%B2%B3%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4-351539064928070/",
++        "https://twitter.com/washigatake",
++        "https://www.instagram.com/washigatake5105/",
++        "https://line.me/R/ti/p/-fz6_N6stp"
++      ]
++    },
++    {
++      "@type": "WebSite",
++      "@id": "https://ski.washigatake.jp/#website",
++      "name": "鷲ヶ岳スキー場",
++      "url": "https://ski.washigatake.jp/",
++      "publisher": { "@id": "https://ski.washigatake.jp/#organization" },
++      "inLanguage": "ja"
++    }
++  ]
++}
++</script>
++    <!-- InstanceBeginEditable name="schema" -->
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@graph": [
++    {
++      "@type": "WebPage",
++      "@id": "https://ski.washigatake.jp/condition/#webpage",
++      "url": "https://ski.washigatake.jp/condition/",
++      "name": "最新ゲレンデ情報 ｜ 岐阜県・中部エリアにあるアクセス抜群のスキー場は鷲ヶ岳スキー場",
++      "isPartOf": { "@id": "https://ski.washigatake.jp/#website" },
++      "about": { "@id": "https://ski.washigatake.jp/#place" },
++      "inLanguage": "ja"
++    },
++    {
++      "@type": "BreadcrumbList",
++      "@id": "https://ski.washigatake.jp/condition/#breadcrumb",
++      "itemListElement": [
++        {
++          "@type": "ListItem",
++          "position": 1,
++          "name": "ホーム",
++          "item": "https://ski.washigatake.jp/"
++        },
++        {
++          "@type": "ListItem",
++          "position": 2,
++          "name": "最新ゲレンデ情報",
++          "item": "https://ski.washigatake.jp/condition/"
++        }
++      ]
++    }
++  ]
++}
++</script>
++<!-- InstanceEndEditable -->
++
++</head>
++
++<body>
++<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N97XPSP"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WJ62RRXQ"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++    
++<header class="header">
++    
++
++  <p class="logo"><a href="../"><img src="../assets/img/common/logo_color.svg" alt="鷲ヶ岳スキー場"/></a></p>
++
++  <nav class="header-nav">
++    <div class="header-nav-sub">
++      <ul>
++        <li><a href="https://chubu-snow.com/member/login.php" target="_blank">会員ログイン</a></li>
++        <li><a href="https://chubu-snow.com/register/" target="_blank">新規会員登録</a></li>
++        <li><a href="https://www.takasumountains.com/" target="_blank">TAKASU MOUNTAINS</a></li>
++      </ul>
++    </div>
++    <div class="header-nav-sns">
++      <ul>
++			<li><a href="https://www.facebook.com/%E9%B7%B2%E3%83%B6%E5%B2%B3%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4-351539064928070/" target="_blank"><img src="../assets/img/common/ico_fb_c.png" width="80" height="80" alt="Facebook"/></a></li>
++			<li><a href="https://twitter.com/washigatake" target="_blank"><img src="../assets/img/common/ico_tw_c.png" width="80" height="80" alt="X"/></a></li>
++			<li><a href="https://www.instagram.com/washigatake5105/" target="_blank"><img src="../assets/img/common/ic_ig_c.png" width="80" height="80" alt="Instagram"/></a></li>
++			<li><a href="https://line.me/R/ti/p/-fz6_N6stp" target="_blank"><img src="../assets/img/common/ico_ln_c.png" width="80" height="80" alt="LINE"/></a></li>
++      </ul>
++    </div>
++    <ul class="header-nav-link">
++      <li class="translate">
++        <p class="translate-title">Languages</p>
++        <div class="translate-list"> <a href="?stt_lang=en">English</a> <a href="?stt_lang=th">Thai</a> <a href="?stt_lang=zh-CN">中国語(簡体)</a> <a href="?stt_lang=zh-TW">中国語(繁体)</a> <a href="?stt_lang=ja">日本語</a> </div>
++      </li>
++      <li class="green"><a href="https://www.washigatakealpsadventure.com/" target="_blank"><img src="../assets/img/common/ico_green.png" alt=""/>グリーンシーズン</a></li>
++    </ul>
++  </nav>
++  <button type="button" class="global-nav-menu">
++  <div class="global-nav-menu-outer"> <span class="global-nav-menu-item"></span> </div>
++  </button>
++</header>
++<nav class="global-nav">
++  <ul class="global-nav-list">
++    <li class="global-nav-top"><a href="../">ホーム</a></li>
++    <li><a href="../condition/">最新ゲレンデ情報</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>		
++			
++        <li><a href="../condition/">最新ゲレンデ情報</a></li>
++        <li><a href="../gelande/">コースガイド</a></li>
++        <li><a href="#lift_anch">リフト運行状況</a></li>
++        <li><a href="#course_anch">各コース<wbr>
++          利用状況</a></li>
++        <li><a href="#park_anch">パーク状況</a></li>
++        <li><a href="#kids_anch">ホワイトアドベンチャー</a></li>
++          <li><a href="../manners/" target="_blank">はじめてのスキー・スノボ講座</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../facilities/" class="">施設案内</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++            <li><a href="../facilities/#facilities01">レストラン</a></li>
++            <li><a href="../facilities/#facilities02">その他施設</a></li>
++            <li><a href="../facilities/#facilities03">大浴場 鷲の湯</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../charge/">時間・料金</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++            <li><a href="../charge/#charge01">リフト料金</a></li>
++            <li><a href="../charge/#charge02">駐車料金</a></li>
++            <li><a href="../charge/#charge03">シーズン券</a></li>
++            <li><a href="../charge/#calendar">リフト営業カレンダー</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../rental" class="">レンタル</a></li>
++    <li><a href="../school/" class="">スクール</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++              <li><a href="../school/#school01">SAJスキー・スノーボード</a></li>
++              <li><a href="../school/#school02">ウエストスノーボードスクール</a></li>
++              <li><a href="../school/#school06">Directline Ski School</a></li>
++              <li><a href="../school/#school03">WOOTパークスクール</a></li>
++              <li><a href="../school/#school04">feg freeski park school</a></li>
++              <li><a href="../school/#school05">クレヨンしんちゃんキッズスキースクール</a></li>
++              <li><a href="../school/#gujoiss">郡上インターナショナルスノースクール</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../stay/">宿泊</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++              <li><a href="../stay/#stay01">鷲ヶ岳高原ホテル レインボー</a></li>
++              <li><a href="../stay/#stay02">鷲ヶ岳高原ホテル 新館</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../access/">アクセス</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++              <li><a href="../access/#access01">最新道路交通状況</a></li>
++              <li><a href="../access/#access02">アクセスマップ</a></li>
++              <li><a href="../access/#access03">駐車料金</a></li>
++              <li><a href="../access/#access04">ツアーバスをご利用の場合</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../news/">お知らせ・イベント</a>
++      </li>
++        <li class="sp"><a href="../about/" class="">鷲ヶ岳スキー場はこんなところ！</a></li>
++        <li class="sp"><a href="../young/" class="">ヤング応援キャンペーン</a></li>
++        <li class="sp"><a href="../special/" class="">イベント＆キャンペーン</a></li>
++        <li class="sp"><a href="../family/" class="">ファミリーキャンペーン</a></li>
++  </ul>
++  <nav class="sp-nav">
++    <div class="sp-nav-sub">
++      <ul>
++        <li><a href="https://chubu-snow.com/member/login.php" target="_blank">会員ログイン</a></li>
++        <li><a href="https://chubu-snow.com/register/" target="_blank">新規会員登録</a></li>
++        <li><a href="https://www.takasumountains.com/">TAKASU MOUNTAINS</a></li>
++          <li class="sp"><a href="../safety/"><span>安全報告書</span></a></li>
++          <li class="sp"><a href="../assets/pdf/agreement.pdf" target="_blank">スキー場利用約款</a></li>
++          <li class="sp"><a href="../assets/pdf/cableway.pdf" target="_blank">索道事業運送約款</a></li>
++          <li class="sp"><a href="../contact/"><span>お問い合わせ</span></a></li>
++          <li class="sp"><a href="../privacy/"><span>個人情報保護方針</span></a></li>
++      </ul>
++    </div>
++    <div class="sp-nav-sns">
++      <ul>
++			<li><a href="https://www.facebook.com/%E9%B7%B2%E3%83%B6%E5%B2%B3%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4-351539064928070/" target="_blank"><img src="../assets/img/common/ico_fb_w.png" width="80" height="80" alt="Facebook"/></a></li>
++			<li><a href="https://twitter.com/washigatake" target="_blank"><img src="../assets/img/common/ico_tw_w.png" width="80" height="80" alt="X"/></a></li>
++			<li><a href="https://www.instagram.com/washigatake5105/" target="_blank"><img src="../assets/img/common/ic_ig_w.png" width="80" height="80" alt="Instagram"/></a></li>
++			<li><a href="https://line.me/R/ti/p/-fz6_N6stp" target="_blank"><img src="../assets/img/common/ico_ln_w.png" width="80" height="80" alt="LINE"/></a></li>
++      </ul>
++    </div>
++    <ul class="sp-nav-languages">
++      <li class="translate">
++        <div class="translate-list"> <a href="?stt_lang=en">English</a> <a href="?stt_lang=th">Thai</a> <a href="?stt_lang=zh-CN">中国語(簡体)</a> <a href="?stt_lang=zh-TW">中国語(繁体)</a> <a href="?stt_lang=ja">日本語</a> </div>
++      </li>
++    </ul>
++  </nav>
++</nav>
++<main class="main"> <!-- InstanceBeginEditable name="main" -->
++<input class="serialNumber" type="hidden" value="SPRE202412070002,00000000b3073acc,00000000d941848e" />
++    <section id="page_ttl">
++      <div class="inner">
++        <p class="en">CONDITION</p>
++        <h1 class="jp">最新ゲレンデ情報</h1>
++      </div>
++    </section>
++    <div id="page_head">
++      <section id="pankuzu">
++        <div class="inner">
++          <ol>
++            <li><a href="../">ホーム</a></li>
++            <li>最新ゲレンデ情報</li>
++          </ol>
++        </div>
++      </section>
++    </div>
++    <section class="date">
++      <div class="inner">
++        <time>2026-04-07 10:00 更新</time>
++      </div>
++    </section>
++    <section class="page_nav">
++      <div class="inner">
++        <ul>
++          <li><a href="#gelande_anch">ライブカメラ</a></li>
++          <li><a href="#comment_anch">鷲ヶ岳ナウ</a></li>
++          <li><a href="#lift_anch">リフト運行状況</a></li>
++          <li><a href="#course_anch">各コース<wbr>
++              利用状況</a></li>
++          <li><a href="#park_anch">パーク状況</a></li>
++          <li><a href="#kids_anch">キッズパーク<wbr>
++              状況</a></li>
++        </ul>
++      </div>
++    </section>
++
++    <section id="gelande" class="content">
++      <a id="gelande_anch" class="anchor"></a>
++      <div class="inner">
++        <h2>ライブカメラ映像配信中</h2>
++        <div class="content_inner">
++          <figure class="live-img"><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000b3073acc" alt="ライブカメラの画像" width="100%" class="image"/></figure>
++          <div class="weather">
++                            <ul>
++              <li class="ico">
++                <img src="../assets/img/condition/ico_mid_info_02.png" alt=""></figure>
++              </li>
++              <li>曇り</li>
++              <li class="condition">滑走不可</li></ul>
++            <dl class="snow">
++              <dt>積雪</dt>
++              <dd>0cm&nbsp;</dd>
++              <dt>気温</dt>
++              <dd>5&#8451;&nbsp;</dd>
++              <dt>雪質</dt>
++              <dd>土と解け残りの雪</dd>
++            </dl>
++            <ul>
++              <li class="btn"><a href="https://cdn.wgis.jp/white-eyes/?q=Bbn3ZHv0T6jidm4OPcXnFB8an1waB6kO" class="takezo" target="_blank">タケゾーくんのピンポイント予報 </a></li>
++              <li class="btn"><a href="http://weathernews.jp/s/ski/spot/35205/" target="_blank">週間天気予報</a></li>
++            </ul>
++          </div>
++        </div>
++      </div>
++    </section>
++    <section id="livecamera" class="content bg-blue10 livecamera">
++      <div class="inner">
++        <h2 class="lttl">ライブカメラ</h2>
++        <div class="content_inner">
++
++          <div class="flex-wrap col2-wrap">
++            <div class="body">
++              <h4 class="sttl center">ゲレンデカメラ</h4>
++              <div style="position: relative">
++                <figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000b3073acc"
++                    alt="ライブカメラの画像" width="100%" class="image" /></figure>
++                <div class="taken_at center" data-id="00000000b3073acc" data-show-sec="0"></div>
++              </div>
++            </div>
++            <div class="body">
++              <h4 class="sttl center"><!--キッズパーク-->第１クワッド乗り場前</h4>
++              <div style="position: relative">
++                <figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000d941848e"
++                    alt="ライブカメラの画像" width="100%" class="image" /></figure>
++                <div class="taken_at center" data-id="00000000d941848e" data-show-sec="0"></div>
++              </div>
++            </div>
++            </div>
++            
++            <div class="youtube-container">
++                <iframe width="560" height="315" src="https://www.youtube.com/embed/HN7HF5dF1d8?si=o6NNHLoAUiBzD_ZG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
++            </div>
++        </div>
++      </div>
++    </section>
++    <section class="content bg-blue10 livecamera line-top">
++      <div class="inner">
++        <h2 class="lttl">交通情報</h2>
++        <div class="content_inner">
++
++          <div id="road-informaion" class="road">
++            <dl class="road-condition">
++              <dt>道路状況</dt>
++              <dd>走りやすいアスファルト路面です。&nbsp;</dd>
++            </dl>
++            <ul class="road-bnr">
++              <li><a href="http://www.jartic.or.jp/" target="_blank">・日本道路交通情報センター
++                  <figure><img src="../assets/img/condition/bnr_jartic.png" alt="" /></figure>
++                </a></li>
++              <li><a href="https://www.c-ihighway.jp/pcsite/" target="_blank">・iHighway 中日本
++                  <figure><img src="../assets/img/condition/bnr_ihightway.png" alt="" /></figure>
++                </a></li>
++            </ul>
++          </div>
++
++
++          <div class="flex-wrap col2-wrap mgb80">
++            <div class="body">
++              <h4 class="sttl center">料金所カメラ</h4>
++              <div style="position: relative">
++                <figure><div class="image" data-id="SPRE202412070002"></div></figure>
++                <div class="taken_at center" data-id="SPRE202412070002"></div>
++              </div>
++            </div>
++            <div class="body">
++              <h4 class="sttl center"><!--除雪情報-->駐車場案内</h4>
++              <div style="position: relative">
++                <figure>
++                <img src="../assets/img/common/dammy_photo.jpg" alt=""/> </figure>
++              </div>
++            </div>
++          </div>
++        </div>
++      </div>
++    </section>
++	
++    <section id="comment" class="content">
++      <a id="comment_anch" class="anchor"></a>
++      <div class="inner">
++        <h2 class="lttl">鷲ヶ岳ナウ</h2>
++        <div class="content_inner">
++          <div class="cm-line"><br />
++<br />
++<span style="font-size: 18pt;">25-26シーズンもついにファイナル！<br />
++ご来場いただいた皆様、誠にありがとうございました。</span><br />
++<br />
++<span style="font-size: 18pt;">また26-27シーズンのご来場をお待ちしております。</span><br />
++<br />
++</div>        </div>
++      </div>
++    </section>
++
++
++    <section id="lift" class="content">
++      <a id="lift_anch" class="anchor"></a>
++      <div class="inner">
++        <h2 class="lttl">リフト運行状況</h2>
++        <div class="content_inner">
++          <table class="table_basic">
++            <tr>
++              <th>リフト名</th>
++              <th>運行時間</th>
++              <th>運行可否</th>
++              <th class="info">お知らせ</th>
++            </tr>
++                                              <tr>
++                    <th class="name"></th>
++                    <td></td>
++                    <td>×</td>
++                    <td class="info">25-26シーズンの運行は終了いたしました。ご利用いただき、ありがとうございました！</td>
++                  </tr>
++                                                                                                                                                                                                                                                                                                              </table>
++
++<ul class="flex-wrap terms-wrap sp-flex-wrap">
++<li class="btn"><a href="../assets/pdf/agreement.pdf" target="_blank">スキー場利用約款</a></li>
++<li class="btn"><a href="../assets/pdf/cableway.pdf" target="_blank">索道事業運送約款</a></li>
++</ul>
++        </div>
++      </div>
++    </section>
++    <section id="course" class="content">
++      <a id="course_anch" class="anchor"></a>
++      <div class="inner">
++        <h2 class="lttl">各コース利用状況</h2>
++        <div class="content_inner">
++
++
++
++
++          <!-- 最新ゲレンデ情報マップ ここから// -->
++                    <figure class="condition_map js-pinch-hint">
++
++                            <img src="/assets/img/condition/map/lift_01_00.png" alt="×" class="map-lift">
++                                                                                                                                                                                                                                                                                                                                <script>
++                                  lift01_status="×";
++                                  lift02_status="×";
++                                  lift03_status="×";
++                                  lift04_status="×";
++                                  lift05_status="×";
++                                  lift06_status="×";
++                                  lift07_status="×";
++                              </script>
++            
++                                                                                                                                                                                                                                                                                                                                                                            
++                                                                                                                                                                                                                                                                                                                                
++                                                                                                                                                                                            
++                                                                                                                                                                                                                                                                                    
++                            <img src="/assets/img/condition/map/kidspark_01_00.png" alt="×" class="map-kidspark">
++                                                                                                                                                            <img src="/assets/img/condition/map/course_name.png" alt="コース名" class="map-name">
++            <img src="/assets/img/condition/map/course_base.jpg" alt="コースマップ" class="map-base">
++          </figure>
++          <!-- //最新ゲレンデ情報マップ ここまで -->
++
++
++          <!-- <figure><img src="../assets/img/condition/course_map.jpg" alt="コースマップ"></figure>-->
++          <h2 class="lttl">滑走可能コース</h2>
++
++
++                    
++
++
++
++                    
++
++
++                    
++        </div>
++      </div>
++    </section>
++
++    <section id="park" class="content line-top">
++      <a id="park_anch" class="anchor"></a>
++      <div class="inner">
++        <h2 class="lttl">パーク状況</h2>
++        <div class="content_inner">
++
++
++          <figure class="yukiyama"><img src="" alt="yukiyama パークマップ" /></figure>
++          <p class="bnr-insta"><a href="https://www.instagram.com/the_active_park/" target="_blank"><img
++                src="../assets/img/condition/insta_bnr_park.jpg" width="602" height="152" alt="" /></a></p>
++
++          
++          
++        </div>
++      </div>
++    </section>
++
++    <section id="kids" class="content line-top">
++      <a id="kids_anch" class="anchor"></a>
++      <div class="inner">
++        <h2 class="lttl">ホワイトアドベンチャー</h2>
++        <div class="content_inner">
++
++                                <table class="table_basic">
++              <tr>
++                <th class="cell1">パーク名</th>
++                <th class="status">滑走状況</th>
++                <th class="info">パーク・アイテム情報</th>
++              </tr>
++            </table>
++                                              <table class="table_basic">
++                    <tr>
++                      <th class="name"></th>
++                      <td class="status">×</td>
++                      <td class="info">25-26シーズンの営業は終了いたしました。
++ご来場いただき、ありがとうございました。
++</td>
++                    </tr>
++                  </table>
++                                                                                                                                                                        </div>
++            </div>
++    </section>
++
++
++    <section class="page_nav">
++      <div class="inner">
++        <ul>
++          <li><a href="#gelande_anch">ライブカメラ</a></li>
++          <li><a href="#comment_anch">鷲ヶ岳ナウ</a></li>
++          <li><a href="#lift_anch">リフト運行状況</a></li>
++          <li><a href="#course_anch">各コース<wbr>
++              利用状況</a></li>
++          <li><a href="#park_anch">パーク状況</a></li>
++          <li><a href="#kids_anch">キッズパーク<wbr>
++              状況</a></li>
++        </ul>
++      </div>
++    </section>
++
++    <!-- InstanceEndEditable --> </main>
++<div class="bg-footer"></div>
++<div class="floating-items">
++  <ul class="floating-list">
++	  
++
++
++    <li class="lift"><a href="https://ski.washigatake.jp/ec/" target="_blank">
++      <figure><img src="../assets/img/common/ico_lift.png" alt=""/></figure>
++      リフト券<br class="sp">
++      購入</a></li>
++      <li class="rental"><a href="../rental/" target="_blank">
++      <figure><img src="../assets/img/common/ico_rental.png" alt=""/></figure>
++      レンタル<br class="sp">
++      予約</a></li>
++      <li class="hotel"><a href="https://hotel.washigatake.jp/rainbow/" target="_blank">
++      <figure><img src="../assets/img/common/ico_hotel.png" alt=""/></figure>
++      HOTEL<br class="sp">
++      予約</a></li>
++    <li class="calendar"><a href="../charge/#calendar">
++      <figure><img src="../assets/img/common/ico_calendar.png" alt=""/></figure>
++      イベント<br class="sp">カレンダー</a></li>
++
++
++    
++  </ul>
++</div>
++<section class="pr-bnr">
++  <div class="inner">
++      <div class="pr-bnr_container">
++          <h3 class="pr-bnr_title">高鷲・郡上エリア</h3>
++    <ul class="pr-bnr-list">
++          <li><a href="https://www.takasumountains.com/" target="_blank"><img src="../assets/img/common/bnr_takasumts.png" alt="タカスマウンテンズ"></a></li>
++          <li class="bnr-gujo"><a href="https://tabitabigujo.com/outdoor/?utm_source=dmo&utm_medium=banner&utm_campaign=website_washigatake" target="_blank"><img src="../assets/img/common/bnr_gujo.jpg" alt="GUJO Outdoor Experiences"/></a></li>
++          <li><a href="https://tabitabigujo.com" target="_blank"><img src="../assets/img/common/bnr_tabitabi.png" alt="TABITABI郡上"></a></li>
++          <li><a href="https://gujotakasu.com/" target="_blank"><img src="../assets/img/common/bnr_takasukk.jpg" alt="たかすひるがの観光WEB"></a></li>
++          <li><a href="https://高鷲.net/" target="_blank"><img src="../assets/img/common/bnr_takasu.gif" alt="TAKASUポータルサイト"/></a></li>
++          <li><a href="https://protectourwinters.jp/sustainableresort/" target="_blank"><img src="../assets/img/common/bnr_protectourwinters.png" alt="SUSTAINABLE RESORT ALLIANCE"></a></li>
++          <li><a href="https://yuki-yama.com/" target="_blank"><img src="../assets/img/common/bnr_yukiyama.png" alt="スキー・スノーボードライフをより豊かにするアプリサービス yukiyama"></a></li>
++          <li><a href="https://www.snowjapan.com/japan-ski-resorts/gifu/gujo/washigatake" target="_blank"><img src="../assets/img/common/bnr_snowjapan.jpg" alt="SNOW JAPAN"></a></li>
++          <li><a href="https://www.pandaruman.biz/w-shinchan" target="_blank"><img src="../assets/img/common/bnr_shinchan.png" alt="クレヨンしんちゃんキッズスクール"></a></li>
++          <!--<li><a href="../manners/" target="_blank"><img src="../assets/img/common/bnr_manner.png" alt="カッコよく！カワイく！ゲレンデを楽しむ方法"></a></li>-->
++    </ul></div>
++      <div class="pr-bnr_container">
++          <h3 class="pr-bnr_title">ツアーバス・エージェント</h3>
++    <ul class="pr-bnr-list">
++          <li><a href="../access/#access04"><img src="../assets/img/common/bnr_bus.png" alt="ツアーバスご利用の場合"></a></li>
++          <li><a href="https://www.quickliner.com/ski/gelende/washi/" target="_blank"><img src="../assets/img/common/bnr_rado.png" alt="ラド観光"></a></li>
++          <li><a href="https://www.sanq-tripal.com/item/ski/gelande/washigatake.html" target="_blank"><img src="../assets/img/common/bnr_tripal.png" alt="トライパルツアー"></a></li>
++          <li><a href="https://hayatabi.c-nexco.co.jp/setplan/detail.html?id=1164" target="_blank"><img src="../assets/img/common/bnr_nexco.jpg" alt="NEXCO中日本"/></a></li>
++    </ul>
++          </div>
++  </div>
++</section>
++<footer class="footer">
++  <div class="inner">
++    <nav class="footer-nav">
++      <ul class="footer-nav-list">
++        <li><a href="../">ホーム</a></li>
++        <li><a href="../condition/">最新ゲレンデ情報</a>
++          <ul class="footer-nav-sub">
++        <li><a href="../gelande/">コースガイド</a></li>
++        <li><a href="#lift_anch">リフト運行状況</a></li>
++        <li><a href="#course_anch">各コース<wbr>
++          利用状況</a></li>
++        <li><a href="#park_anch">パーク状況</a></li>
++        <li><a href="#kids_anch">ホワイトアドベンチャー</a></li>
++          <li><a href="../manners/" target="_blank">はじめてのスキー・スノボ講座</a></li>
++          </ul>
++        </li>
++        <li><a href="../facilities/" class="">施設案内</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../facilities/#facilities01">レストラン</a></li>
++            <li><a href="../facilities/#facilities02">その他施設</a></li>
++            <li><a href="../facilities/#facilities03">大浴場 鷲の湯</a></li>
++          </ul>
++        </li>
++        <li><a href="../charge/">時間・料金</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../charge/#charge01">リフト料金</a></li>
++            <li><a href="../charge/#charge02">駐車料金</a></li>
++            <li><a href="../charge/#charge03">シーズン券</a></li>
++            <li><a href="../charge/#calendar">リフト営業カレンダー</a></li>
++          </ul>
++        </li>
++        <li><a href="../rental/" class="">レンタル</a>
++        </li>
++        <li><a href="../school/" class="">スクール</a>
++          <ul class="footer-nav-sub">
++              <li><a href="../school/#school01">SAJスキー・スノーボード</a></li>
++              <li><a href="../school/#school02">ウエストスノーボードスクール</a></li>
++              <li><a href="../school/#school06">Directline Ski School</a></li>
++              <li><a href="../school/#school03">WOOTパークスクール</a></li>
++              <li><a href="../school/#school04">feg freeski park school</a></li>
++              <li><a href="../school/#school05">クレヨンしんちゃんキッズスキースクール</a></li>
++              <li><a href="../school/#gujoiss">郡上インターナショナルスノースクール</a></li>
++          </ul>
++        </li>
++        <li><a href="../access/">アクセス・宿泊</a>
++          <ul class="footer-nav-sub">
++              <li><a href="../access/#access01">最新道路交通状況</a></li>
++              <li><a href="../access/#access02">アクセスマップ</a></li>
++              <li><a href="../access/#access03">駐車料金</a></li>
++              <li><a href="../access/#access04">ツアーバスをご利用の場合</a></li>
++              <li><a href="../stay">宿泊・近隣情報</a></li>
++          </ul>
++        </li>
++      </ul>
++      <ul class="footer-nav-bottom">
++        <li><a href="../about/" class="">鷲ヶ岳スキー場はこんなところ！</a></li>
++        <li><a href="../young/" class="">ヤング応援キャンペーン</a></li>
++        <li><a href="../special/" class="">イベント＆キャンペーン</a></li>
++        <li><a href="../family/" class="">ファミリーキャンペーン</a></li>
++        <li><a href="../news/">お知らせ・イベント</a></li>
++          <li><a href="../charge/#calendar">イベントカレンダー</a></li>
++          <li><a href="http://ameblo.jp/washigatake-blog/" target="_blank">スタッフブログ</a></li>
++          <li><a href="https://ski.washigatake.jp/recruit/" target="_blank">採用情報</a></li>
++          <li><a href="../safety/">安全報告書</a></li>
++          <li><a href="../assets/pdf/agreement.pdf" target="_blank">スキー場利用約款</a></li>
++          <li><a href="../assets/pdf/cableway.pdf" target="_blank">索道事業運送約款</a></li>
++        <li><a href="https://www.takasumountains.com/" target="_blank">TAKASU MOUNTAINS</a></li>
++        <li><a href="https://chubu-snow.com/member/login.php" target="_blank">会員ログイン</a></li>
++        <li><a href="https://chubu-snow.com/register/" target="_blank">新規会員登録</a></li>
++          <li><a href="../contact/">お問い合わせ</a></li>
++          <li><a href="../privacy/">個人情報保護方針</a></li>
++      </ul>
++    </nav>
++  </div>
++  <div class="footer-related">
++    <div class="inner">
++      <div class="footer-company">
++        <h3 class="logo"><a href="../"><img src="../assets/img/common/logo_color_w.svg" alt="鷲ヶ岳スキー場"/></a></h3>
++        <address>
++        〒501-5303 岐阜県郡上市高鷲町大鷲3250<br>
++        東海北陸自動車道「高鷲IC」より3km!
++        </address>
++        <p class="tel">TEL:0575-72-5105</p>
++        <div class="sns">
++          <ul>
++			<li><a href="https://www.facebook.com/%E9%B7%B2%E3%83%B6%E5%B2%B3%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4-351539064928070/" target="_blank"><img src="../assets/img/common/ico_fb_w.png" width="80" height="80" alt="Facebook"/></a></li>
++			<li><a href="https://twitter.com/washigatake" target="_blank"><img src="../assets/img/common/ico_tw_w.png" width="80" height="80" alt="X"/></a></li>
++			<li><a href="https://www.instagram.com/washigatake5105/" target="_blank"><img src="../assets/img/common/ico_ig_w.png" width="80" height="80" alt="Instagram"/></a></li>
++			<li><a href="https://line.me/R/ti/p/-fz6_N6stp" target="_blank"><img src="../assets/img/common/ico_ln_w.png" width="80" height="80" alt="LINE"/></a></li>
++            <li class="green"><a href="https://www.washigatakealpsadventure.com/" target="_blank"><img src="../assets/img/common/ico_green.png" width="80" height="50" alt=""/>グリーンシーズン</a></li>
++          </ul>
++        </div>
++        <p class="copyright">&copy; 2025 WASHIGATAKE GELANDE</p>
++      </div>
++      <div class="footer-related-list">
++		  <!--
++        <h4>近くのスキー場</h4>
++        <ul>
++          <li><a href="https://www.dynaland.co.jp/" target="_blank">ダイナランド</a></li>
++          <li><a href="http://www.hiruganokogen.com/" target="_blank">ひるがの高原スキー場</a></li>
++        </ul>
++-->
++      </div>
++      <div class="footer-related-list">
++        <h4>近くの宿泊施設</h4>
++        <ul>
++            <li><a href="http://hotel.washigatake.jp/kogen/" target="_blank">鷲ヶ岳高原ホテル</a></li>
++            <li><a href="http://hotel.washigatake.jp/rainbow/" target="_blank">鷲ヶ岳高原ホテルレインボー</a></li>
++            <li><a href="http://www.iiiii.jp/mukaizumi/" target="_blank">向鷲見民宿組合</a></li>
++        </ul>
++      </div>
++    </div>
++  </div>
++</footer>
++
++<div class="floating-bnr">
++	<div class="btn-close">×</div>
++	<div class="bnr-item"></div>
++	</div>
++
++<script src="../assets/js/lib/jquery-3.2.1.min.js"></script> 
++<script src="../assets/js/common.js"></script> 
++<script src="../assets/js/module.js"></script> 
++<!-- InstanceBeginEditable name="foot" -->
++  <script src="../new_parts/js/park.js"></script>
++  <script src="../new_parts/js/map.js"></script>
++  <script src="../assets/js/zoom.js"></script>
++  <script src="//cdn.wgis.jp/eagle-eyes/api/wv1-o.js"></script>
++  <script src="https://powdercam.net/assets/js/web-acc/index.async.param.net.js"></script>
++  <script>
++    (function(d, s, id) {
++      var js, fjs = d.getElementsByTagName(s)[0];
++      if (d.getElementById(id)) return;
++      js = d.createElement(s);
++      js.id = id;
++      js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.5";
++      fjs.parentNode.insertBefore(js, fjs);
++    }(document, 'script', 'facebook-jssdk'));
++  </script>
++  <!-- InstanceEndEditable -->
++</body>
++<!-- InstanceEnd --></html>
+\ No newline at end of file
+diff --git a/test/resorts/washigatake-trails.js b/test/resorts/washigatake-trails.js
+new file mode 100644
+index 00000000..ea29d6be
+--- /dev/null
++++ b/test/resorts/washigatake-trails.js
+@@ -0,0 +1,3 @@
++import trails from '../trails/index.js';
++
++trails('washigatake', []);
+diff --git a/test/resorts/washigatake.js b/test/resorts/washigatake.js
+new file mode 100644
+index 00000000..4673850c
+--- /dev/null
++++ b/test/resorts/washigatake.js
+@@ -0,0 +1,3 @@
++import lifts from '../lifts/index.js';
++
++lifts('washigatake', 'html', {});
+-- 
+2.39.5
+

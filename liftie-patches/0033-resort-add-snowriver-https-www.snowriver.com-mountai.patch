@@ -1,0 +1,4253 @@
+From 9e3fcf81a9493f59bacb5de09d0b62d5b4ce5a24 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 18:54:48 -0400
+Subject: [PATCH 33/41] resort: add snowriver
+ (https://www.snowriver.com/mountain-info/mountain-report)
+
+---
+ lib/resorts/snowriver/index.js      |   15 +
+ lib/resorts/snowriver/resort.json   |   16 +
+ lib/resorts/snowriver/trails.js     |   19 +
+ test/resorts/example/snowriver.html | 3765 +++++++++++++++++++++++++++
+ test/resorts/snowriver-trails.js    |  364 +++
+ test/resorts/snowriver.js           |   14 +
+ 6 files changed, 4193 insertions(+)
+ create mode 100644 lib/resorts/snowriver/index.js
+ create mode 100644 lib/resorts/snowriver/resort.json
+ create mode 100644 lib/resorts/snowriver/trails.js
+ create mode 100644 test/resorts/example/snowriver.html
+ create mode 100644 test/resorts/snowriver-trails.js
+ create mode 100644 test/resorts/snowriver.js
+
+diff --git a/lib/resorts/snowriver/index.js b/lib/resorts/snowriver/index.js
+new file mode 100644
+index 00000000..bb4aa392
+--- /dev/null
++++ b/lib/resorts/snowriver/index.js
+@@ -0,0 +1,15 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++
++// same platform as granite-peak: flat component rows, status icon title attr
++export default {
++  selector: '.lift.component-row',
++  parse: row => {
++    const title = select(row.children, '.cell.title')[0];
++    const status = select(row.children, '.status .f-icon')[0];
++    if (!title || !status) {
++      return;
++    }
++    return { name: allText(title), status: status.attribs.title };
++  }
++};
+diff --git a/lib/resorts/snowriver/resort.json b/lib/resorts/snowriver/resort.json
+new file mode 100644
+index 00000000..b6062eff
+--- /dev/null
++++ b/lib/resorts/snowriver/resort.json
+@@ -0,0 +1,16 @@
++{
++  "name": "Snowriver Mountain Resort",
++  "url": {
++    "host": "https://www.snowriver.com",
++    "pathname": "/mountain-info/mountain-report"
++  },
++  "trails": true,
++  "tags": [
++    "Michigan",
++    "Midwest"
++  ],
++  "ll": [
++    -89.899,
++    46.49
++  ]
++}
+diff --git a/lib/resorts/snowriver/trails.js b/lib/resorts/snowriver/trails.js
+new file mode 100644
+index 00000000..f060bf90
+--- /dev/null
++++ b/lib/resorts/snowriver/trails.js
+@@ -0,0 +1,19 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++
++export default {
++  selector: '.trail.component-row',
++  parse: row => {
++    const title = select(row.children, '.cell.title')[0];
++    const status = select(row.children, '.status .f-icon')[0];
++    const level = title && select(title.children, '.f-icon.level')[0];
++    if (!title || !status) {
++      return;
++    }
++    return {
++      name: allText(title),
++      status: status.attribs.title,
++      level: level?.attribs.title
++    };
++  }
++};
+diff --git a/test/resorts/example/snowriver.html b/test/resorts/example/snowriver.html
+new file mode 100644
+index 00000000..8a8e0c8d
+--- /dev/null
++++ b/test/resorts/example/snowriver.html
+@@ -0,0 +1,3765 @@
++
++  <!DOCTYPE html>
++<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
++<head>
++    <!-- Google Tag Manager -->
++            <link href="https://www.googletagmanager.com" rel="preconnect" crossorigin>
++            <link rel="dns-prefetch" href="https://www.googletagmanager.com">
++            <script>(function (w, d, s, l, i) {
++                    w[l] = w[l] || [];
++                    w[l].push({"gtm.start": new Date().getTime(), event: "gtm.js"});
++                    var f = d.getElementsByTagName(s)[0], j = d.createElement(s),
++                        dl = l != "dataLayer" ? "&l=" + l : "";
++                    j.async = true;
++                    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
++                    f.parentNode.insertBefore(j, f);
++                })(window, document, "script", "dataLayer", "GTM-5F9DZ99B");</script>
++            <!-- End Google Tag Manager -->
++            
++    
++    <link rel="preload"
++      href="https://cdn.jsdelivr.net/npm/@splidejs/splide/dist/css/splide.min.css"
++      as="style"
++      onload="this.onload=null;this.rel='stylesheet'">
++<noscript>
++    <link rel="stylesheet"
++          href="https://cdn.jsdelivr.net/npm/@splidejs/splide/dist/css/splide.min.css">
++</noscript>
++    <meta charset="utf-8" />
++<style>/* @see https://github.com/aFarkas/lazysizes#broken-image-symbol */.js img.lazyload:not([src]) { visibility: hidden; }/* @see https://github.com/aFarkas/lazysizes#automatically-setting-the-sizes-attribute */.js img.lazyloaded[data-sizes=auto] { display: block; width: 100%; }/* Transition effect. */.js .lazyload, .js .lazyloading { opacity: 0; }.js .lazyloaded { opacity: 1; -webkit-transition: opacity 2000ms; transition: opacity 2000ms; }</style>
++<meta name="description" content="Explore our mountain report page for the latest conditions, terrain and lift updates, snowfall highlights, and on‑mountain happenings to help you make the most of your day on the slopes." />
++<link rel="canonical" href="https://www.snowriver.com/mountain-info/mountain-report" />
++<meta property="og:site_name" content="Snowriver Mountain Resort" />
++<meta property="og:type" content="website" />
++<meta property="og:url" content="https://www.snowriver.com/mountain-info/mountain-report" />
++<meta property="og:title" content="Mountain Report" />
++<meta property="og:description" content="Explore our mountain report page for the latest conditions, terrain and lift updates, snowfall highlights, and on‑mountain happenings to help you make the most of your day on the slopes." />
++<meta name="Generator" content="Drupal 11 (https://www.drupal.org)" />
++<meta name="MobileOptimized" content="width" />
++<meta name="HandheldFriendly" content="true" />
++<meta name="viewport" content="width=device-width, initial-scale=1" />
++<script type="application/ld+json">{
++    "@context": "https://schema.org",
++    "@graph": [
++        {
++            "@type": "Organization",
++            "@id": "https://www.snowriver.com/#organization",
++            "name": "Snowriver Mountain Resort",
++            "url": "https://www.snowriver.com/",
++            "sameAs": [
++                "https://www.facebook.com/SnowriverMountain",
++                "https://twitter.com/SnowriverMtn/",
++                "https://www.instagram.com/snowrivermountain/"
++            ],
++            "telephone": "906-229-5181",
++            "contactPoint": {
++                "@type": "ContactPoint",
++                "telephone": "906-229-5181",
++                "email": "ski@snowriver.com",
++                "url": "https://www.snowriver.com/"
++            },
++            "image": {
++                "@type": "ImageObject",
++                "url": "https://www.snowriver.com/sites/default/files/styles/scale_1920/public/styles/scale_1920/public/2025-12/Family-Lift-4000x2668-d376df91-fed6-4c29-a7a8-0cdb01715d0e.jpg?itok=ZCDAipll"
++            },
++            "logo": {
++                "@type": "ImageObject",
++                "url": "https://www.snowriver.com/themes/custom/snowriver/logo.svg"
++            },
++            "address": {
++                "@type": "PostalAddress",
++                "streetAddress": "500 Indianhead Road",
++                "addressLocality": "Wakefield",
++                "addressRegion": "MI",
++                "postalCode": "49968"
++            }
++        },
++        {
++            "@type": "WebPage",
++            "@id": "https://www.snowriver.com/mountain-info/mountain-report/#webpage",
++            "description": "Explore our mountain report page for the latest conditions, terrain and lift updates, snowfall highlights, and on‑mountain happenings to help you make the most of your day on the slopes.",
++            "publisher": {
++                "@type": "Organization",
++                "@id": "https://www.snowriver.com/#organization"
++            },
++            "inLanguage": "en-US"
++        },
++        {
++            "@type": "WebSite",
++            "@id": "https://www.snowriver.com/#website",
++            "name": "Snowriver Mountain Resort",
++            "url": "https://www.snowriver.com/",
++            "publisher": {
++                "@type": "Organization",
++                "@id": "https://www.snowriver.com/#organization"
++            },
++            "inLanguage": "en-US"
++        }
++    ]
++}</script>
++<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
++
++        <title>Mountain Report | Snowriver Mountain Resort</title>
++        <link rel="stylesheet" media="all" href="/sites/default/files/css/css_IUTDrTNqH2GGuc7n92sbfXAwLI97pyFPlGp3Jefen0Q.css?delta=0&amp;language=en&amp;theme=snowriver&amp;include=eJx9jFEOgzAMQy9UyJGmUEKJ1CZTDEPs9ENCY1_sz_Z7MiuxPkr1gWvKnGeZ6oqZfrFvYmvKlYGdmgBcBN9uPkrKHkLZ29NNbEHvoUWt6zgfZFS3W6MqFrWCW-Hvf_h2MvNoXPUt6UQ0HQMSzLfQlwRdKWHHIo0GhnwAevFhCA" />
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css_CZ76t0S9lDB2CqmZtML8oFwOWRYjBBVWQPWQR0rbgqc.css?delta=1&amp;language=en&amp;theme=snowriver&amp;include=eJx9jFEOgzAMQy9UyJGmUEKJ1CZTDEPs9ENCY1_sz_Z7MiuxPkr1gWvKnGeZ6oqZfrFvYmvKlYGdmgBcBN9uPkrKHkLZ29NNbEHvoUWt6zgfZFS3W6MqFrWCW-Hvf_h2MvNoXPUt6UQ0HQMSzLfQlwRdKWHHIo0GhnwAevFhCA" />
++
++            
++
++                <!-- Adobe Fonts -->
++                <link rel="preconnect" href="https://p.typekit.net">
++                <link rel="dns-prefetch" href="https://p.typekit.net">
++                <link rel="preconnect" href="https://use.typekit.net" crossorigin>
++                <link rel="dns-prefetch" href="https://use.typekit.net">
++
++                <!-- Favicons -->
++                <link rel="icon" type="image/png" href="/themes/custom/snowriver/images/favicon/favicon-96x96.png"
++                      sizes="96x96">
++                <link rel="icon" type="image/svg+xml" href="/themes/custom/snowriver/images/favicon/favicon.svg">
++                <link rel="shortcut icon" href="/themes/custom/snowriver/images/favicon/favicon.ico">
++                <link rel="apple-touch-icon" sizes="180x180"
++                      href="/themes/custom/snowriver/images/favicon/apple-touch-icon.png">
++                <link rel="manifest" href="/themes/custom/snowriver/images/favicon/site.webmanifest">
++                <meta name="msapplication-TileColor" content="#ffffff">
++                <meta name="theme-color" content="#ffffff">
++                <meta name="apple-mobile-web-app-title" content=""/>
++</head>
++<body class="domain--snowriver path-node page-node-type-page">
++<!-- Google Tag Manager (noscript) -->
++        <noscript>
++            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5F9DZ99B" height="0" width="0"
++                    style="display:none;visibility:hidden"></iframe>
++        </noscript>
++        <!-- End Google Tag Manager (noscript) -->
++    
++<a href="#main-content" class="center-horizontal pos-fixed opacity-0 focusable button white skip-link">
++    Skip to main content
++</a>
++
++  <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
++    <div class="d-flex flex-direction-column layout-container">
++
++    <header class="transition-ui bg-primary z-index-100 pos-fixed w-100 site-header" role="banner">
++    <div class="container d-flex ai-center jc-space-between header-inner">
++        <a rel="home" class="logo" href="/" title="Home">
++            <svg role="img" aria-label="Snowriver Mountain Resort" width="209" height="45" viewBox="0 0 209 45" fill="none"
++     xmlns="http://www.w3.org/2000/svg">
++
++    <path d="M82.5455 39.3451H80.9823V36.5628L81.0571 33.7431H81.0197L79.7258 37.0714H78.731L77.4521 33.7917H77.4147L77.5007 36.5104V39.3451H75.9375V30.9346H77.7139L79.2696 35.022L80.8253 30.9346H82.553V39.3451H82.5455Z"
++          fill="white"/>
++    <path d="M84.8633 35.2095C84.8633 32.3524 86.0675 30.748 88.2066 30.748C90.3457 30.748 91.5012 32.3262 91.5012 35.1235C91.5012 37.9208 90.297 39.5326 88.1729 39.5326C86.0488 39.5326 84.867 37.9806 84.867 35.2095H84.8633ZM89.7997 35.1347C89.7997 33.2723 89.2275 32.229 88.1953 32.229C87.1632 32.229 86.5686 33.2761 86.5686 35.1347C86.5686 36.9933 87.1669 38.0666 88.1953 38.0666C89.2238 38.0666 89.7997 37.012 89.7997 35.1347Z"
++          fill="white"/>
++    <path d="M96.5106 39.5321C94.6445 39.5321 93.7656 38.4513 93.7656 36.1664V30.9346H95.3812V36.316C95.3812 37.5089 95.7664 38.0699 96.5741 38.0699C97.3819 38.0699 97.7409 37.5239 97.7409 36.3422V30.9346H99.3452V36.1776C99.3452 38.4663 98.4365 39.5321 96.5106 39.5321Z"
++          fill="white"/>
++    <path d="M103.564 33.8554H103.542V39.349H101.938V30.9385H103.826L105.988 36.1329H105.999V30.9385H107.603V39.349H105.849L103.561 33.8554H103.564Z"
++          fill="white"/>
++    <path d="M113.064 39.3451H111.437V32.4491H109.586V30.9346H114.904V32.4491H113.064V39.3451Z" fill="white"/>
++    <path d="M119.745 37.5465H117.621L117.236 39.349H115.609L117.771 30.9385H119.686L121.836 39.349H120.146L119.745 37.5465ZM119.424 36.0544L118.68 32.6475H118.657L117.935 36.0544H119.428H119.424Z"
++          fill="white"/>
++    <path d="M125.478 30.9346V39.3451H123.852V30.9346H125.478Z" fill="white"/>
++    <path d="M129.783 33.8554H129.761V39.349H128.156V30.9385H130.045L132.206 36.1329H132.218V30.9385H133.822V39.349H132.068L129.779 33.8554H129.783Z"
++          fill="white"/>
++    <path d="M143.481 39.3451L142.228 36.1514H141.431V39.3451H139.805V30.9346H142.179C143.918 30.9346 144.801 31.7797 144.801 33.3691C144.801 34.3115 144.39 35.0968 143.731 35.568L145.332 39.3451H143.481ZM143.17 33.5075C143.17 32.8007 142.849 32.4379 142.149 32.4379H141.431V34.6892H142.142C142.838 34.6892 143.17 34.2891 143.17 33.5075Z"
++          fill="white"/>
++    <path d="M147.301 30.9346H151.601V32.4491H148.927V34.2629H151.25V35.7775H148.927V37.8306H151.635V39.3451H147.297V30.9346H147.301Z"
++          fill="white"/>
++    <path d="M157.872 32.6629C157.225 32.3525 156.727 32.2179 156.29 32.2179C155.733 32.2179 155.422 32.5021 155.422 32.9883C155.422 34.544 158.205 34.5664 158.205 37.0645C158.205 38.6427 157.236 39.5365 155.695 39.5365C155.048 39.5365 154.375 39.3495 153.803 39.0428V37.4385C154.401 37.7975 155.108 38.0855 155.632 38.0855C156.226 38.0855 156.548 37.7489 156.548 37.2029C156.548 35.621 153.766 35.5612 153.766 33.0893C153.766 31.5971 154.697 30.752 156.189 30.752C156.787 30.752 157.322 30.8641 157.868 31.111V32.6667L157.872 32.6629Z"
++          fill="white"/>
++    <path d="M160.102 35.2095C160.102 32.3524 161.306 30.748 163.445 30.748C165.584 30.748 166.74 32.3262 166.74 35.1235C166.74 37.9208 165.535 39.5326 163.411 39.5326C161.287 39.5326 160.105 37.9806 160.105 35.2095H160.102ZM165.034 35.1347C165.034 33.2723 164.462 32.229 163.43 32.229C162.398 32.229 161.803 33.2761 161.803 35.1347C161.803 36.9933 162.401 38.0666 163.43 38.0666C164.458 38.0666 165.034 37.012 165.034 35.1347Z"
++          fill="white"/>
++    <path d="M172.735 39.3451L171.482 36.1514H170.685V39.3451H169.059V30.9346H171.433C173.172 30.9346 174.055 31.7797 174.055 33.3691C174.055 34.3115 173.643 35.0968 172.985 35.568L174.586 39.3451H172.735ZM172.424 33.5075C172.424 32.8007 172.103 32.4379 171.403 32.4379H170.685V34.6892H171.396C172.091 34.6892 172.424 34.2891 172.424 33.5075Z"
++          fill="white"/>
++    <path d="M179.326 39.3451H177.699V32.4491H175.848V30.9346H181.165V32.4491H179.326V39.3451Z" fill="white"/>
++    <path d="M153.633 19.1512V8.35473L154.288 5.70703H148.027L148.656 8.35473V18.5828C149.677 18.8483 151.771 19.3045 153.633 19.1512Z"
++          fill="white"/>
++    <path d="M57.0197 12.4157C54.1365 11.7089 53.5605 11.1068 53.5605 10.1121C53.5605 9.11734 54.66 8.53768 56.3391 8.53768C57.4386 8.53768 58.4333 8.66857 59.4543 8.93035L62.7826 10.6057L62.0758 5.88999C60.1873 5.5235 58.2239 5.26172 55.9203 5.26172C50.8904 5.26172 48.5082 7.46065 48.5082 10.5534C48.5082 13.6461 50.5239 15.1906 54.8208 16.2377C57.7041 16.9445 58.3586 17.4942 58.3586 18.5675C58.3586 19.6408 57.4162 20.2953 55.6061 20.2953C54.4543 20.2953 53.4035 20.1382 51.8889 19.7455L48.4297 17.8607L49.1926 22.7859C50.7632 23.0738 52.8575 23.5488 55.8978 23.5488C60.7445 23.575 63.4146 21.3461 63.4146 18.0477C63.4146 15.1681 61.4775 13.5152 57.0235 12.4157H57.0197Z"
++          fill="white"/>
++    <path d="M78.2628 8.35375L78.3675 18.8585L72.3952 5.70605H65.2188L65.8732 8.35375V20.4554L65.2188 23.1031H70.4543L69.826 20.4554L69.7213 10.003L75.6712 23.1031H82.2455V8.35375L82.8738 5.70605H77.6345L78.2628 8.35375Z"
++          fill="white"/>
++    <path d="M93.7939 5.20898C88.0797 5.20898 84.7812 8.51113 84.7812 14.4049C84.7812 20.2986 88.3414 23.6269 93.7939 23.6269C99.2464 23.6269 102.754 20.2986 102.754 14.4049C102.754 8.51113 99.4782 5.20898 93.7939 5.20898ZM93.7154 19.9845C91.3818 19.9845 89.9682 18.5185 89.9682 14.4049C89.9682 10.2912 91.4641 8.79908 93.7939 8.79908C96.1237 8.79908 97.5635 10.295 97.5635 14.4049C97.5635 18.5148 96.0975 19.9845 93.7154 19.9845Z"
++          fill="white"/>
++    <path d="M123.836 8.35375L121.323 18.2303L118.911 8.35375L118.806 5.70605H113.331L113.933 8.35375L111.417 18.2303L108.956 8.35375L108.851 5.70605H102.879L108.193 23.1031H113.331L116.001 13.2004L118.597 23.1031H123.574L128.814 5.70605H123.941L123.836 8.35375Z"
++          fill="white"/>
++    <path d="M168.283 8.35375L164.853 18.8062L161.656 8.35375L161.525 5.70605H155.422L161.682 23.1031H167L173.6 5.70605H168.414L168.283 8.35375Z"
++          fill="white"/>
++    <path d="M180.173 19.6962V15.9229H184.784L186.538 16.3193V12.258L184.784 12.6469H180.173V9.11291H186.751L189.395 9.81971L188.793 5.70605H174.594L175.222 8.35375V20.4554L174.594 23.1031H189.081L189.71 18.9894L187.036 19.6962H180.173Z"
++          fill="white"/>
++    <path d="M203.749 15.8443C206.184 15.1114 207.313 13.4098 207.313 11.181C207.313 7.61703 205.346 5.70605 200.709 5.70605H191.277L191.932 8.35375V20.4554L191.277 23.1031H197.564L196.909 20.4554V16.8167H199.291L201.756 20.878L201.992 23.1031H208.674L203.749 15.8443ZM199.583 13.4883H196.805V8.92966H199.92C201.756 8.92966 202.463 9.66264 202.463 11.2595C202.463 12.8563 201.416 13.4846 199.583 13.4846V13.4883Z"
++          fill="white"/>
++    <path d="M142.905 16.7757L142.359 15.9679C142.337 15.9305 142.31 15.8931 142.288 15.8557H142.284V15.8483C144.715 15.1153 145.844 13.4137 145.844 11.1849C145.844 7.62094 143.877 5.70996 139.24 5.70996H129.809L130.463 8.35766V20.4593L129.809 23.107H136.095L135.441 20.4593V16.8206H137.812C137.969 17.1534 139.053 19.3411 141.278 21.1436C144.835 24.0232 152.74 25.923 157.03 20.8183C157.03 20.7884 147.299 22.5834 142.909 16.7794L142.905 16.7757ZM135.332 13.4885V8.92983H138.447C140.283 8.92983 140.99 9.66281 140.99 11.2597C140.99 12.8565 139.943 13.4848 138.107 13.4848H135.328L135.332 13.4885Z"
++          fill="white"/>
++    <path d="M56.3068 35.6656H61.5498C66.4376 35.6656 67.4548 35.6656 69.5453 35.2468C67.4548 34.8018 66.4339 34.8018 61.5498 34.8018H56.3068C51.419 34.8018 50.3756 34.8018 48.2852 35.2468C50.4018 35.6656 51.419 35.6656 56.3068 35.6656Z"
++          fill="white"/>
++    <path d="M195.295 35.6656H200.538C205.426 35.6656 206.443 35.6656 208.534 35.2468C206.443 34.8018 205.422 34.8018 200.538 34.8018H195.295C190.407 34.8018 189.364 34.8018 187.273 35.2468C189.39 35.6656 190.407 35.6656 195.295 35.6656Z"
++          fill="white"/>
++    <path d="M20.2615 44.73C25.871 44.9993 32.9876 44.2887 37.7221 40.9268C42.6173 37.5124 43.9075 28.8326 38.8814 24.7937C37.3144 23.5372 36.0429 23.0361 34.7378 22.6472C41.2 28.5147 38.3765 33.223 38.3578 33.2417C37.7221 27.6995 33.5261 23.4213 25.2352 18.6681C18.6497 14.8873 16.7312 13.0063 16.7312 9.16186C16.7312 9.16186 16.5704 5.59794 19.7416 4.33018C19.7416 4.33018 18.3542 6.30474 18.7918 9.00479C19.1545 11.2523 20.3736 12.7146 21.9107 13.5074C21.1814 12.2434 20.785 11.1289 20.6092 10.1753C20.0819 7.31445 22.3819 4.41245 25.2764 4.20677C28.6234 3.97117 31.4618 7.76695 31.4618 10.8522C31.4618 10.8522 41.3682 11.4618 41.8133 0.186608C41.8133 0.186608 37.636 3.77671 31.402 1.63013C27.6025 0.321237 23.5561 -0.265894 19.5509 0.111814C16.1815 0.429688 12.6549 1.28982 9.80903 3.17088C6.81728 5.14917 4.44632 8.1671 4.44632 11.903C4.44632 13.9711 5.51961 15.912 6.77988 16.7908C6.39096 14.7639 6.54055 11.7759 8.17105 9.91727C7.79334 17.3892 11.0169 19.8611 17.4604 22.5462C24.6144 25.5267 30.8522 32.06 30.8522 36.1474C30.8522 37.9761 30.295 40.1639 28.2083 41.0876C28.9226 40.0592 29.1432 39.0719 29.1432 37.5461C29.1432 35.0592 27.9091 33.511 25.9869 32.1572C27.0527 34.8759 27.2435 38.0173 24.9099 40.1339C23.9862 40.9716 21.4095 42.0636 17.9765 40.1601C17.5726 39.8796 17.165 39.6141 16.7648 39.2925C16.1067 38.769 15.4373 38.1706 14.7604 37.5012C14.0349 36.7757 13.4103 36.0614 12.8531 35.3509C13.7469 35.4743 14.6781 35.6613 15.6691 35.9268C16.5853 36.1774 17.438 36.4541 18.2233 36.7645C19.0049 37.0711 19.7491 37.4114 20.4484 37.7779L22.9279 34.5468L20.4484 31.3158C19.7491 31.6822 19.0049 32.0226 18.2233 32.3292C17.438 32.6396 16.5853 32.9163 15.6691 33.1669C14.6781 33.4324 13.7469 33.6157 12.8531 33.7428C13.4103 33.0323 14.0349 32.3143 14.7604 31.5888C15.4373 30.9194 16.1029 30.321 16.7648 29.7974C17.423 29.2739 18.0887 28.799 18.7544 28.3764L17.1949 24.6142L13.1598 25.1453C13.1261 25.9344 13.0476 26.7496 12.9242 27.5798C12.8008 28.4138 12.6138 29.2889 12.3745 30.2088C12.1089 31.1998 11.8023 32.1011 11.4657 32.935C11.1291 32.1011 10.8187 31.1998 10.5532 30.2088C10.3101 29.2889 10.1269 28.4138 10.0035 27.5798C9.88009 26.7496 9.80155 25.9344 9.7679 25.1453L5.73277 24.6142L4.17332 28.3764C4.84273 28.799 5.50465 29.2739 6.16284 29.7974C6.82102 30.3247 7.49043 30.9231 8.16731 31.5888C8.89281 32.3143 9.51734 33.0323 10.0708 33.7428C9.18076 33.6194 8.24584 33.4324 7.25483 33.1669C6.3386 32.9163 5.48595 32.6359 4.70062 32.3292C3.91902 32.0226 3.17483 31.6822 2.47551 31.3158L-0.00390625 34.5468L2.47551 37.7779C3.17483 37.4114 3.91902 37.0711 4.70062 36.7645C5.48595 36.4541 6.3386 36.1774 7.25483 35.9268C8.24584 35.6613 9.17702 35.478 10.0708 35.3509C9.51734 36.0614 8.88907 36.7757 8.16731 37.5012C7.49043 38.1706 6.82476 38.769 6.16284 39.2925C5.50465 39.8161 4.83899 40.291 4.17332 40.7136L5.73277 44.4757L9.7679 43.9447C9.80155 43.1556 9.88009 42.3404 10.0035 41.5101C10.1269 40.6762 10.3139 39.8011 10.5532 38.8774C10.8187 37.8864 11.1254 36.9851 11.4657 36.1512C11.8023 36.9851 12.1127 37.8864 12.3745 38.8774C12.6175 39.7974 12.8008 40.6725 12.9242 41.5101C13.0476 42.3366 13.1 43.1444 13.1673 43.926C13.1673 43.926 16.3161 44.5356 20.2577 44.7263L20.2615 44.73ZM11.0506 10.1192C11.0506 8.59342 12.2136 5.63159 14.1994 4.52838C13.3767 6.52538 13.4029 9.06089 13.6385 10.1716C14.6257 14.7751 16.5405 16.9853 20.5008 20.7399C15.1156 17.6958 11.0506 14.5021 11.0506 10.1192ZM34.0759 38.8662C33.9263 31.5888 31.1252 28.5372 24.4013 23.2418C33.3616 27.2208 37.6398 31.6561 34.0759 38.8662Z"
++          fill="white"/>
++    <path d="M57.0197 12.446C54.1365 11.7392 53.5605 11.1371 53.5605 10.1424C53.5605 9.14761 54.66 8.56796 56.3391 8.56796C57.4386 8.56796 58.4333 8.69885 59.4543 8.96062L62.7826 10.636L62.0758 5.92026C60.1873 5.55377 58.2239 5.29199 55.9203 5.29199C50.8904 5.29199 48.5082 7.49093 48.5082 10.5836C48.5082 13.6764 50.5239 15.2209 54.8208 16.268C57.7041 16.9748 58.3586 17.5245 58.3586 18.5978C58.3586 19.6711 57.4162 20.3255 55.6061 20.3255C54.4543 20.3255 53.4035 20.1685 51.8889 19.7758L48.4297 17.891L49.1926 22.8162C50.7632 23.1041 52.8575 23.5791 55.8978 23.5791C60.7445 23.6052 63.4146 21.3764 63.4146 18.078C63.4146 15.1984 61.4775 13.5455 57.0235 12.446H57.0197Z"
++          fill="white"/>
++    <path d="M78.2628 8.38403L78.3675 18.8888L72.3952 5.73633H65.2188L65.8732 8.38403V20.4857L65.2188 23.1334H70.458L69.8298 20.4857L69.7251 10.0332L75.6712 23.1334H82.2455V8.38403L82.8738 5.73633H77.6345L78.2628 8.38403Z"
++          fill="white"/>
++    <path d="M93.7939 5.23926C88.0797 5.23926 84.7812 8.5414 84.7812 14.4351C84.7812 20.3289 88.3414 23.6572 93.7939 23.6572C99.2464 23.6572 102.754 20.3289 102.754 14.4351C102.754 8.5414 99.4782 5.23926 93.7939 5.23926ZM93.7154 20.0148C91.3818 20.0148 89.9682 18.5488 89.9682 14.4351C89.9682 10.3215 91.4641 8.82936 93.7939 8.82936C96.1237 8.82936 97.5635 10.3252 97.5635 14.4351C97.5635 18.5451 96.0975 20.0148 93.7154 20.0148Z"
++          fill="white"/>
++    <path d="M123.836 8.38403L121.323 18.2605L118.911 8.38403L118.806 5.73633H113.331L113.933 8.38403L111.417 18.2605L108.956 8.38403L108.851 5.73633H102.879L108.197 23.1334H113.331L116.001 13.2307L118.597 23.1334H123.574L128.814 5.73633H123.945L123.836 8.38403Z"
++          fill="white"/>
++    <path d="M168.286 8.38403L164.853 18.8365L161.656 8.38403L161.525 5.73633H155.422L161.682 23.1334H167L173.6 5.73633H168.414L168.286 8.38403Z"
++          fill="white"/>
++    <path d="M180.173 19.7265V15.9532H184.784L186.538 16.3458V12.2883L184.784 12.6772H180.173V9.14318H186.751L189.395 9.84998L188.793 5.73633H174.594L175.222 8.38403V20.4857L174.594 23.1334H189.081L189.71 19.0197L187.036 19.7265H180.173Z"
++          fill="white"/>
++    <path d="M203.749 15.8746C206.184 15.1416 207.313 13.4401 207.313 11.2112C207.313 7.64731 205.346 5.73633 200.709 5.73633H191.277L191.932 8.38403V20.4857L191.277 23.1334H197.564L196.909 20.4857V16.8469H199.291L201.756 20.9082L201.992 23.1334H208.674L203.749 15.8746ZM199.583 13.5186H196.805V8.95994H199.92C201.756 8.95994 202.463 9.69292 202.463 11.2898C202.463 12.8866 201.416 13.5149 199.583 13.5149V13.5186Z"
++          fill="white"/>
++    <path d="M142.905 16.806L142.359 15.9982C142.337 15.9608 142.31 15.9234 142.288 15.886H142.284V15.8785C144.715 15.1455 145.844 13.444 145.844 11.2151C145.844 7.65121 143.877 5.74023 139.24 5.74023H129.809L130.463 8.38793V20.4896L129.809 23.1373H136.095L135.441 20.4896V16.8508H137.812C137.969 17.1837 139.053 19.3714 141.278 21.1739C144.835 24.0535 152.74 25.9532 157.03 20.8486C157.03 20.8187 147.299 22.6137 142.909 16.8097L142.905 16.806ZM135.332 13.5188V8.9601H138.447C140.283 8.9601 140.99 9.69308 140.99 11.2899C140.99 12.8868 139.943 13.515 138.107 13.515H135.328L135.332 13.5188Z"
++          fill="white"/>
++
++
++</svg>
++        </a>
++
++        <div id="main-menu"
++             class="transition-visibility visibility-hidden z-index-10 h-100vh-header-admin opacity-0 main-menu">
++            <nav role="navigation" aria-labelledby="block-snowriver-main-menu" id="block-snowriver-main" class="block block-menu navigation menu--snowriver-main">
++            
++  <h2 class="visually-hidden" id="block-snowriver-main-menu">Snowriver Main</h2>
++  
++
++        
++                <ul class="reset d-flex ai-center jc-center menu">
++    
++                                            <li class="menu-item menu-item--expanded">
++                                            <button
++                                class="reset-button f-icon t-small-caps" data-url="/"
++                                aria-expanded="false">
++                            Discover
++                        </button>
++                                            <div class="submenu observer bg-decorative transition-visibility visibility-hidden opacity-0">
++        <ul class="reset menu">
++            
++                                            <li class="menu-item">
++                                            <a href="/discover/why-snowriver" class="d-block link-arrow" data-drupal-link-system-path="node/47">Why Snowriver</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/discover/winter-at-snowriver" class="d-block link-arrow" data-drupal-link-system-path="node/48">Winter at Snowriver</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/discover/summer-at-snowriver-0" class="d-block link-arrow" data-drupal-link-system-path="node/983">Summer At Snowriver</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/discover/history-improvements" class="d-block link-arrow" data-drupal-link-system-path="node/50">History &amp; Improvements</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/discover/our-blog" class="d-block link-arrow" data-drupal-link-system-path="node/690">Our Blog</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/discover/our-family-of-resorts" class="d-block link-arrow" data-drupal-link-system-path="node/25">Our Family of Resorts</a>
++                                    </li>
++                    </ul>
++
++                    </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button
++                                class="reset-button f-icon t-small-caps" data-url="/"
++                                aria-expanded="false">
++                            Plan &amp; Purchase
++                        </button>
++                                            <div class="submenu observer bg-decorative transition-visibility visibility-hidden opacity-0">
++        <ul class="reset menu">
++            
++                                            <li class="menu-item">
++                                            <a href="/plan-purchase/lift-tickets-flex-3-packs/lift-ticket-reloads" class="d-block link-arrow" data-drupal-link-system-path="node/812">Lift Ticket Reloads</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/plan-purchase/packages-specials" class="d-block link-arrow" data-drupal-link-system-path="node/688">Packages &amp; Specials</a>
++                                    </li>
++                                            <li class="menu-item menu-item--collapsed">
++                                            <a href="/plan-purchase/lodging" class="d-block link-arrow" data-drupal-link-system-path="node/552">Lodging</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/plan-purchase/lift-tickets-flex-3-packs" class="d-block link-arrow" data-drupal-link-system-path="node/873">Lift Tickets</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/season-passes" class="d-block link-arrow" data-drupal-link-system-path="node/956">Season Passes</a>
++                                    </li>
++                                            <li class="menu-item menu-item--collapsed">
++                                            <a href="/plan-purchase/equipment-rentals" class="d-block link-arrow" data-drupal-link-system-path="node/750">Equipment Rentals</a>
++                                    </li>
++                                            <li class="menu-item menu-item--collapsed">
++                                            <a href="/plan-purchase/lessons" class="d-block link-arrow" data-drupal-link-system-path="node/170">Lessons</a>
++                                    </li>
++                                            <li class="menu-item menu-item--collapsed">
++                                            <a href="/plan-purchase/weddings-groups" class="d-block link-arrow" data-drupal-link-system-path="node/778">Weddings &amp; Groups</a>
++                                    </li>
++                    </ul>
++
++                    </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded menu-item--active-trail">
++                                            <button
++                                class="reset-button f-icon t-small-caps" data-url="/"
++                                aria-expanded="false">
++                            Mountain Info
++                        </button>
++                                            <div class="submenu observer bg-decorative transition-visibility visibility-hidden opacity-0">
++        <ul class="reset menu">
++            
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/hours-of-operation" class="d-block link-arrow" data-drupal-link-system-path="node/58">Hours of Operation</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/trail-map-mountain-stats" class="d-block link-arrow" data-drupal-link-system-path="node/633">Trail Map &amp; Mountain Stats</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/snow-weather" class="d-block link-arrow" data-drupal-link-system-path="node/483"> Snow &amp; Weather</a>
++                                    </li>
++                                            <li class="menu-item menu-item--active-trail">
++                                            <a href="/mountain-info/mountain-report" class="d-block link-arrow is-active" data-drupal-link-system-path="node/874" aria-current="page">Mountain Report</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/our-webcams" class="d-block link-arrow" data-drupal-link-system-path="node/62">Our Webcams</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/mountain-safety" class="d-block link-arrow" data-drupal-link-system-path="node/64">Mountain Safety</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/first-timers-guide" class="d-block link-arrow" data-drupal-link-system-path="node/65">First Timers Guide</a>
++                                    </li>
++                                            <li class="menu-item menu-item--collapsed">
++                                            <a href="/mountain-info/resort-dining" class="d-block link-arrow" data-drupal-link-system-path="node/782">Resort Dining</a>
++                                    </li>
++                    </ul>
++
++                    </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button
++                                class="reset-button f-icon t-small-caps" data-url="/"
++                                aria-expanded="false">
++                            Things to Do
++                        </button>
++                                            <div class="submenu observer bg-decorative transition-visibility visibility-hidden opacity-0">
++        <ul class="reset menu">
++            
++                                            <li class="menu-item">
++                                            <a href="/things-to-do/local-area" class="d-block link-arrow" data-drupal-link-system-path="node/763">Local Area</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/things-to-do/attractions" class="d-block link-arrow" data-drupal-link-system-path="node/66">Attractions</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/things-to-do/live-music" class="d-block link-arrow" data-drupal-link-system-path="node/67">Live Music</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/things-to-do/upcoming-events" class="d-block link-arrow" data-drupal-link-system-path="node/43">Upcoming Events</a>
++                                    </li>
++                    </ul>
++
++                    </div>
++            
++                                    </li>
++                    </ul>
++
++                
++
++
++  </nav>
++
++
++            <div class="hide-large-layout">
++                <div id="block-solr-search-mobile" class="block block-search-api-block block-search-api-form-block">
++  
++    
++      
++<form class="search-api-form" data-drupal-selector="search-api-form" action="/search" method="get" id="search-api-form" accept-charset="UTF-8">
++    <div class="js-form-item form-item js-form-type-search form-type-search js-form-item-keywords form-item-keywords form-no-label">
++      <label for="edit-keywords" class="visually-hidden">Search</label>
++        <input title="Enter the terms you wish to search for." data-drupal-selector="edit-keywords" type="search" id="edit-keywords" name="keywords" value="" size="15" maxlength="128" placeholder="Search" class="form-search" />
++
++        </div>
++<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions"><button data-drupal-selector="edit-submit" type="submit" id="edit-submit" value="Search" class="button js-form-submit form-submit" >
++    Search
++</button>
++</div>
++
++</form>
++
++  </div>
++
++            </div>
++
++                    </div>
++
++        <details class="hide-condensed-layout pos-relative search-toggle">
++            <summary class="cover d-block f-icon icon-search">
++                <span class="visually-hidden">Search</span>
++            </summary>
++            <div class="pos-absolute bg-white transition search-panel">
++                <div id="block-solr-search" class="block block-search-api-block block-search-api-form-block">
++  
++    
++      
++<form class="search-api-form" data-drupal-selector="search-api-form-2" action="/search" method="get" id="search-api-form--2" accept-charset="UTF-8">
++    <div class="js-form-item form-item js-form-type-search form-type-search js-form-item-keywords form-item-keywords form-no-label">
++      <label for="edit-keywords--2" class="visually-hidden">Search</label>
++        <input title="Enter the terms you wish to search for." data-drupal-selector="edit-keywords" type="search" id="edit-keywords--2" name="keywords" value="" size="15" maxlength="128" placeholder="" class="form-search" />
++
++        </div>
++<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions--2"><button data-drupal-selector="edit-submit" type="submit" id="edit-submit--2" value="Search" class="button js-form-submit form-submit" >
++    Search
++</button>
++</div>
++
++</form>
++
++  </div>
++
++            </div>
++        </details>
++
++                    <div class="d-flex utility">
++                
++                                    <div id="block-mountain-report-widget" class="block block-config-pages block-config-pages-block">
++  
++    
++      <button id="weather-widget-toggle"
++        aria-expanded="false"
++        aria-controls="weather-overlay"
++        data-unit="imperial"
++        class="reset-button lh-1 f-icon icon-chevron-down weather-widget-toggle">
++        <span class="t-align-center jc-center d-grid weather-icon">
++            <span class="wi wi-day-sunny"></span>
++            <span class="temp">
++                
++<span class="imperial-value">
++    <span class="value ">
++        84
++    </span>
++    <span class="unit">
++                    &deg;F
++            </span>
++</span>
++
++<span class="metric-value">
++     <span class="value ">
++                          29
++                </span>
++    <span class="unit">
++                    &deg;C
++            </span>
++</span>
++            </span>
++        </span>
++</button>
++
++
++  </div>
++
++                            </div>
++        
++        <button id="main-menu-toggle"
++                class="reset-button d-grid jc-center hide-large-layout pos-relative z-index-40 hamburger hamburger--squeeze"
++                type="button" aria-expanded="false" aria-controls="main-menu">
++            <span class="hamburger-box"><span class="hamburger-inner"></span></span>
++            <span class="d-block text t-t-uppercase">Menu</span>
++        </button>
++
++
++        <div id="weather-overlay"
++             aria-labelledby="weather-overlay-title"
++             class="transition-visibility overflow-scroll pos-absolute w-100 top-header left-0 h-100vh-header-admin opacity-0 visibility-hidden bg-white z-index-100">
++            <div class="container">
++                <h2 id="weather-overlay-title" class="d-none">Mountain Report Overview</h2>
++                <div id="block-mountain-report-overlay" class="block block-config-pages block-config-pages-block">
++  
++    
++      <div class="season-winter snow-weather mountain-report-overlay"
++     data-unit="imperial">
++
++    <button
++        class="reset-button d-flex outline-offset jc-center unit-toggle "
++        data-unit="imperial">
++    <span class="transition d-block pos-relative type imperial">
++        <sup class="transition">&deg;</sup>F/in
++    </span>
++    <span class="transition d-block pos-relative type metric">
++        <sup class="transition">&deg;</sup>C/cm
++    </span>
++</button>
++
++    
++    
++    <div class="fade-in rte">
++
++        <div class="weather-snowfall overlay-block">
++            <div class="columns columns-2 pos-relative pseudo-before">
++
++                <div class="weather condition-block">
++                    <h2>Weather</h2>
++                    <div class="d-flex items-wrap">
++                        <div class="item">
++                            <h3 class="h4">
++                                Sunny
++                            </h3>
++                            <div class="data h3 d-flex ai-center">
++                                <div class="weather-icon-wrapper">
++                                    <span class="wi wi-day-sunny"></span>
++                                </div>
++                                <div class="data h3">
++                                    
++<span class="imperial-value">
++    <span class="value h2 m-0">
++        84
++    </span>
++    <span class="unit">
++                    &deg;F
++            </span>
++</span>
++
++<span class="metric-value">
++     <span class="value h2 m-0">
++                          29
++                </span>
++    <span class="unit">
++                    &deg;C
++            </span>
++</span>
++                                </div>
++                            </div>
++                        </div>
++                        <div class="item">
++                            <h3 class="h4">
++                                Wind Speed
++                            </h3>
++                            <div class="data h3 d-flex ai-center">
++                                <div class="weather-icon-wrapper">
++                                    <span class="wi wi-strong-wind"></span>
++                                </div>
++                                <div class="data h3">
++                                    
++<span class="imperial-value">
++    <span class="value h2 m-0">
++        12
++    </span>
++    <span class="unit">
++                    mph
++            </span>
++</span>
++
++<span class="metric-value">
++     <span class="value h2 m-0">
++                          19
++                </span>
++    <span class="unit">
++                    kph
++            </span>
++</span>
++                                </div>
++                            </div>
++                        </div>
++                    </div>
++
++                </div>
++
++                                    <div class="winter snowfall condition-block">
++                        <h2>Snowfall</h2>
++                        <div class="d-flex items-wrap">
++                            <div class="item">
++                                <h3 class="h4">24 Hours</h3>
++                                <div class="data h3">
++                                        
++<span class="imperial-value">
++    <span class="value h2 m-0">
++        0
++    </span>
++    <span class="unit">
++                    in
++            </span>
++</span>
++
++<span class="metric-value">
++     <span class="value h2 m-0">
++                          0
++                </span>
++    <span class="unit">
++                    cm
++            </span>
++</span>
++                                </div>
++                            </div>
++                            <div class="item">
++                                <h3 class="h4">7 Days</h3>
++                                <div class="data h3">
++                                        
++<span class="imperial-value">
++    <span class="value h2 m-0">
++        0
++    </span>
++    <span class="unit">
++                    in
++            </span>
++</span>
++
++<span class="metric-value">
++     <span class="value h2 m-0">
++                          0
++                </span>
++    <span class="unit">
++                    cm
++            </span>
++</span>
++                                </div>
++                            </div>
++                            <div class="item">
++                                <h3 class="h4">Season</h3>
++                                <div class="data h3">
++                                    
++<span class="imperial-value">
++    <span class="value h2 m-0">
++        188
++    </span>
++    <span class="unit">
++                    in
++            </span>
++</span>
++
++<span class="metric-value">
++     <span class="value h2 m-0">
++                          478
++                </span>
++    <span class="unit">
++                    cm
++            </span>
++</span>
++                                </div>
++                            </div>
++                        </div>
++
++                    </div>
++                
++            </div>
++
++                    <p class="t-align-center buttons">
++            <a href="/mountain-info/snow-weather" class="button">
++                Snow & Weather
++            </a>
++        </p>
++    
++
++        </div>
++
++                    <div class="winter trails-lifts overlay-block">
++                <div class="columns columns-2 pos-relative pseudo-before">
++
++
++                    <div class="lifts condition-block">
++                        <h2>Lifts</h2>
++                        <div class="d-flex items-wrap">
++                            <div class="item">
++                                <h3 class="h4">Open</h3>
++                                <div class="data h3">
++                                    <span class="value h2">1</span>
++                                    <span class="unit h3">/10</span>
++                                </div>
++                            </div>
++                        </div>
++                    </div>
++
++                    <div class="trails condition-block">
++                        <h2>Trails</h2>
++                        <div class="d-flex items-wrap">
++                            <div class="item">
++                                <h3 class="h4">Primary</h3>
++                                <div class="data h3">
++                                    <span class="value h2">0</span>
++                                    <span class="unit h3">/53</span>
++                                </div>
++                            </div>
++                            <div class="item">
++                                <h3 class="h4">Sidecountry</h3>
++                                <div class="data h3">
++                                    <span class="value h2">0</span>
++                                    <span class="unit h3">/19</span>
++                                </div>
++                            </div>
++                            <div class="item">
++                                <h3 class="h4">Terrain Parks</h3>
++                                <div class="data h3">
++                                    <span class="value h2">0</span>
++                                    <span class="unit h3">/2</span>
++                                </div>
++                            </div>
++                        </div>
++                    </div>
++
++                </div>
++
++                        <p class="t-align-center buttons">
++            <a href="/mountain-info/mountain-report" class="button">
++                Lift & Trail Status
++            </a>
++        </p>
++    
++
++            </div>
++        
++
++    </div>
++</div>
++
++  </div>
++
++            </div>
++        </div>
++
++    </div>
++</header>
++
++<div id="block-alert-bar" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++    <div class="config_pages config_pages--type--alert-bar config_pages--view-mode--full config_pages--alert-bar--full pos-relative rte bg-secondary t-c-white">
++        <div class="container inner-grid">
++            
++
++
++
++    
++        
++                        
++            <div class="clearfix text-formatted field field--name-field-richcopy field--type-text-long field--label-hidden field__item"
++                        >
++
++            
++                                    <p><a href="https://book.legendarymidwest.com/ecomm/package/packagebuilder/27552890/en-us/?packageid=91244&amp;_gl=1*1h2q8qk*_gcl_au*MTkzNTA4NjgyNC4xNzc3MzAyNzUy*_ga*MTg1MjczOTc1MS4xNzY5NTQ1NjE5*_ga_7YFSCZVQKR*czE3NzkyODcyMDUkbzEwNSRnMSR0MTc3OTI4NzIyNSRqNDAkbDAkaDA.&amp;resort=snowriver"><span>Explore the U.P. this spring. Stay 2 nights, get the 3rd FREE + breakfast.</span></a></p>
++
++                
++            
++            </div>
++
++        
++    
++
++
++            <button type="button" class="reset-button pos-absolute reset f-icon icon-close" aria-controls="block-alert-bar">
++                <span class="visibility-hidden">Close</span>
++            </button>
++        </div>
++    </div>
++
++  </div>
++
++
++    
++
++    <main id="main-content" class="main-content"
++          role="main">
++        <div class="  layout-content">
++
++            
++                      <div class="region region-content">
++    <div id="block-snowriver-content" class="block block-system block-system-main-block">
++  
++    
++      <div id="node-874" data-history-node-id="874" class="node node--type-page node--view-mode-full no-hero-image">
++    
++
++<div class=" component-node">
++    
++    <div data-drupal-messages-fallback class="hidden"></div>
++
++
++    
++<div class="pos-relative hero no-image bg-decorative observer d-flex ai-center ">
++    
++                    <div class="pos-relative container z-index-10 bg-dark border-radius w-100 copy">
++            <h1>Mountain Report</h1>
++        </div>
++    </div>
++
++                
++            
++            
++            
++            
++            
++
++                                                <div class="row custom-block container">
++                                                    <div id="block-mountain-report-stats" class="block block-config-pages block-config-pages-block">
++  
++    
++      <div class="row inner-grid">
++    <div class="content-container">
++        
++
++
++
++    
++        
++                        
++            <div class="clearfix text-formatted field field--name-field-daily-report field--type-text-long field--label-hidden field__item"
++                        >
++
++            
++                                    <p><strong><span>Snowriver Operations Update</span></strong></p>
++<p>Winter operations at Snowriver have come to a close for the 2025/26 season.</p>
++<p>We want to thank each and every one of our guests for choosing Snowriver as your ski destination &amp; home resort—it means the world to us to be part of your winter memories.</p>
++<p>As one door closes, another opens. While the lifts have stopped spinning, Snowriver remains open for lodging, weddings, and special events in the seasons ahead.</p>
++<p>Whether you’re looking for classic Upper Michigan rustic charm or a more elevated lodging experience, we offer a variety of options for your next summer getaway.</p>
++<p>We can’t wait to welcome you back—see you soon!</p>
++
++                
++            
++            </div>
++
++        
++    
++
++    </div>
++</div>
++
++<div class="inner-grid">
++    <div class="grid-inner-2-10-large">
++
++        <div class="snow-weather page mountain-stats">
++
++            <div class="bg-primary border-radius condition-block">
++                <div class="d-flex flex-wrap-wrap flex-50-25 items-wrap">
++                    <div class="item">
++                        <h3 class="h4">Lifts</h3>
++                        <div class="data h3">
++                            <span class="value h2 m-0"> 1</span>
++                            <span class="unit">/10</span>
++                        </div>
++                    </div>
++                    <div class="item">
++                        <h3 class="h4">Primary Trails</h3>
++                        <div class="data h3">
++                            <span class="value h2 m-0">0</span>
++                            <span class="unit">/53</span>
++                        </div>
++                    </div>
++                    <div class="item">
++                        <h3 class="h4">Sidecountry Trails</h3>
++                        <div class="data h3">
++                            <span class="value h2 m-0">0</span>
++                            <span class="unit">/19</span>
++                        </div>
++                    </div>
++                    <div class="item">
++                        <h3 class="h4">Terrain Parks</h3>
++                        <div class="data h3">
++                            <span class="value h2 m-0">0</span>
++                            <span class="unit">/2</span>
++                        </div>
++                    </div>
++                </div>
++            </div>
++
++
++        </div>
++
++    </div>
++</div>
++
++
++
++  </div>
++
++                                                </div>
++                            
++                                    
++
++
++      <div class="container inner-grid lifts-trails-header">
++    <div class="grid-inner-2-10-large">
++
++        <h2 class="t-align-center">Lift & Trail Status</h2>
++
++        <div class="bg-background d-grid legend">
++
++            <h3 class="visually-hidden">Table Key</h3>
++
++            
++                                        <div class="data-row">
++                    <h4>Status</h4>
++                    <ul class="reset w-100 d-flex flex-wrap-wrap data">
++                                                    <li class="f-icon icon-open">Open</li>
++                                                    <li class="f-icon icon-closed">Closed</li>
++                                                    <li class="f-icon icon-projected">Projected</li>
++                                                    <li class="f-icon icon-on-hold">On Hold</li>
++                                            </ul>
++                </div>
++                            <div class="data-row">
++                    <h4>Difficulty</h4>
++                    <ul class="reset w-100 d-flex flex-wrap-wrap data">
++                                                    <li class="f-icon icon-beginner">Beginner</li>
++                                                    <li class="f-icon icon-intermediate">Intermediate</li>
++                                                    <li class="f-icon icon-advanced">Advanced</li>
++                                                    <li class="f-icon icon-expert">Expert</li>
++                                                    <li class="f-icon icon-terrain-park">Terrain Park</li>
++                                            </ul>
++                </div>
++                            <div class="data-row">
++                    <h4>Condition</h4>
++                    <ul class="reset w-100 d-flex flex-wrap-wrap data">
++                                                    <li class="f-icon icon-groomed">Groomed</li>
++                                                    <li class="f-icon icon-snowmaking">Snowmaking</li>
++                                                    <li class="f-icon icon-tree-run">Tree run</li>
++                                                    <li class="f-icon icon-ski-race">Ski race</li>
++                                                    <li class="f-icon icon-moguls">Moguls</li>
++                                            </ul>
++                </div>
++            
++        </div>
++
++    </div>
++</div>
++
++ 
++
++<div class="row container inner-grid listing accordion lifts-trails">
++    <div class="grid-inner-4-6-large">
++        
++        <div class="content ">
++            <div class="mountain-list row"><h2 class="m-0">Black River Basin</h2><details><summary class="f-icon m-0 h3">Frontside</summary><h2 class="h4 ">Lifts</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell status t-align-center">Status</div></div><div class="details-wrapper">
++
++<div data-history-node-id="321" class="node node--type-lift node--view-mode-row" id="node-321">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Ascender
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="323" class="node node--type-lift node--view-mode-row" id="node-323">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Birgantine
++
++                    <span class="t-micetype">(1:00pm-4:00pm)</span>
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-open"
++             title="Open"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Primary Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="324" class="node node--type-trail node--view-mode-row" id="node-324">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Lost Tarn
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="325" class="node node--type-trail node--view-mode-row" id="node-325">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Maiden Voyage
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="326" class="node node--type-trail node--view-mode-row" id="node-326">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Oxbow
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="328" class="node node--type-trail node--view-mode-row" id="node-328">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        River Drive
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="329" class="node node--type-trail node--view-mode-row" id="node-329">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        River Guide
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="330" class="node node--type-trail node--view-mode-row" id="node-330">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Nautical Mile
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="331" class="node node--type-trail node--view-mode-row" id="node-331">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Portside
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="332" class="node node--type-trail node--view-mode-row" id="node-332">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Sailor&#039;s Delight
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="333" class="node node--type-trail node--view-mode-row" id="node-333">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Starboard
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="327" class="node node--type-trail node--view-mode-row" id="node-327">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-terrain-park"
++                 title="Terrain Park">
++                Terrain Park
++            </div>
++        
++        Privateer
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Sidecountry Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="345" class="node node--type-trail node--view-mode-row" id="node-345">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Treasure Trove
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="346" class="node node--type-trail node--view-mode-row" id="node-346">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Blimey Bluff
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="347" class="node node--type-trail node--view-mode-row" id="node-347">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Red Night
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++</div></details><details><summary class="f-icon m-0 h3">Westside</summary><h2 class="h4 ">Lifts</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell status t-align-center">Status</div></div><div class="details-wrapper">
++
++<div data-history-node-id="334" class="node node--type-lift node--view-mode-row" id="node-334">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Capstan
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="335" class="node node--type-lift node--view-mode-row" id="node-335">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Draw Stroke
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Primary Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="336" class="node node--type-trail node--view-mode-row" id="node-336">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Tintalle Turnout
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="337" class="node node--type-trail node--view-mode-row" id="node-337">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Brookeside
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="338" class="node node--type-trail node--view-mode-row" id="node-338">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Powder Pank
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="339" class="node node--type-trail node--view-mode-row" id="node-339">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Upper Spillway
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="340" class="node node--type-trail node--view-mode-row" id="node-340">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Whitesides Crossing
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="341" class="node node--type-trail node--view-mode-row" id="node-341">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Draw Stroke
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="342" class="node node--type-trail node--view-mode-row" id="node-342">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Log Jam
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="343" class="node node--type-trail node--view-mode-row" id="node-343">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Yooperlite
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="344" class="node node--type-trail node--view-mode-row" id="node-344">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Lower Spillway
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Sidecountry Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="348" class="node node--type-trail node--view-mode-row" id="node-348">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Cool Runnings
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="349" class="node node--type-trail node--view-mode-row" id="node-349">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Boomer&#039;s Hideout
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="350" class="node node--type-trail node--view-mode-row" id="node-350">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Glader&#039;s Gulch
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="351" class="node node--type-trail node--view-mode-row" id="node-351">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Microburst
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="352" class="node node--type-trail node--view-mode-row" id="node-352">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Paddle Shaft
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++</div></details></div><div class="mountain-list row"><h2 class="m-0">Jackson Creek Summit</h2><details><summary class="f-icon m-0 h3">Main Face</summary><h2 class="h4 ">Lifts</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell status t-align-center">Status</div></div><div class="details-wrapper">
++
++<div data-history-node-id="354" class="node node--type-lift node--view-mode-row" id="node-354">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Cloudfront Double
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="356" class="node node--type-lift node--view-mode-row" id="node-356">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Maple Tow
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="355" class="node node--type-lift node--view-mode-row" id="node-355">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Sugar Hills Conveyor
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="353" class="node node--type-lift node--view-mode-row" id="node-353">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Voyageur Express
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Primary Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="357" class="node node--type-trail node--view-mode-row" id="node-357">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Maple
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="358" class="node node--type-trail node--view-mode-row" id="node-358">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Sugar Hills
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="359" class="node node--type-trail node--view-mode-row" id="node-359">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Voyageur&#039;s Highway
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="360" class="node node--type-trail node--view-mode-row" id="node-360">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Alpenglow
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="361" class="node node--type-trail node--view-mode-row" id="node-361">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Jack&#039;s Cutoff
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="362" class="node node--type-trail node--view-mode-row" id="node-362">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Sundance
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="363" class="node node--type-trail node--view-mode-row" id="node-363">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Superior
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="364" class="node node--type-trail node--view-mode-row" id="node-364">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Borealis
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="365" class="node node--type-trail node--view-mode-row" id="node-365">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        F.I.S.
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="366" class="node node--type-trail node--view-mode-row" id="node-366">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Nimbus
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="367" class="node node--type-trail node--view-mode-row" id="node-367">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Stormfront
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="368" class="node node--type-trail node--view-mode-row" id="node-368">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Supercell
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="369" class="node node--type-trail node--view-mode-row" id="node-369">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Torrent
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="370" class="node node--type-trail node--view-mode-row" id="node-370">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        U.S.2
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="371" class="node node--type-trail node--view-mode-row" id="node-371">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Artesian Alley
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="372" class="node node--type-trail node--view-mode-row" id="node-372">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Gitchee Gumee Gulch
++
++        
++                                <div class="cell f-icon detail icon-moguls"
++                 title="Moguls">
++                Moguls
++            </div>
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="373" class="node node--type-trail node--view-mode-row" id="node-373">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Stratus Wall
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="374" class="node node--type-trail node--view-mode-row" id="node-374">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Voyageur&#039;s Headwall
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="376" class="node node--type-trail node--view-mode-row" id="node-376">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-terrain-park"
++                 title="Terrain Park">
++                Terrain Park
++            </div>
++        
++        Voyageur Funpark
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Sidecountry Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="395" class="node node--type-trail node--view-mode-row" id="node-395">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        River Ridge
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="396" class="node node--type-trail node--view-mode-row" id="node-396">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Coriolis Effect
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="397" class="node node--type-trail node--view-mode-row" id="node-397">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Flash Flood
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="398" class="node node--type-trail node--view-mode-row" id="node-398">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        U.P. A Creek
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="399" class="node node--type-trail node--view-mode-row" id="node-399">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Gully Washer
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="400" class="node node--type-trail node--view-mode-row" id="node-400">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Hailstrike
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++</div></details><details><summary class="f-icon m-0 h3">Bear Creek</summary><h2 class="h4 ">Lifts</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell status t-align-center">Status</div></div><div class="details-wrapper">
++
++<div data-history-node-id="377" class="node node--type-lift node--view-mode-row" id="node-377">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Bear Creek
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Primary Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="378" class="node node--type-trail node--view-mode-row" id="node-378">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Bear Creek Access
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="379" class="node node--type-trail node--view-mode-row" id="node-379">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Bear Creek Egress
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="380" class="node node--type-trail node--view-mode-row" id="node-380">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Deer Track
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="381" class="node node--type-trail node--view-mode-row" id="node-381">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-beginner"
++                 title="Beginner">
++                Beginner
++            </div>
++        
++        Running Bear
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="383" class="node node--type-trail node--view-mode-row" id="node-383">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Elkhorn
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="384" class="node node--type-trail node--view-mode-row" id="node-384">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Kodiak Crossing
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="385" class="node node--type-trail node--view-mode-row" id="node-385">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Bear
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="386" class="node node--type-trail node--view-mode-row" id="node-386">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Buffalo
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="387" class="node node--type-trail node--view-mode-row" id="node-387">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Grizzly
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Sidecountry Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="401" class="node node--type-trail node--view-mode-row" id="node-401">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Goldi&#039;s Glade
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="402" class="node node--type-trail node--view-mode-row" id="node-402">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Papa&#039;s
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++</div></details><details><summary class="f-icon m-0 h3">The East</summary><h2 class="h4 ">Lifts</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell status t-align-center">Status</div></div><div class="details-wrapper">
++
++<div data-history-node-id="388" class="node node--type-lift node--view-mode-row" id="node-388">
++
++    
++
++            <div class="lift d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        East T
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Primary Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="389" class="node node--type-trail node--view-mode-row" id="node-389">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Cascade
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="390" class="node node--type-trail node--view-mode-row" id="node-390">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Channel
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="391" class="node node--type-trail node--view-mode-row" id="node-391">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Confluence
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="392" class="node node--type-trail node--view-mode-row" id="node-392">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-intermediate"
++                 title="Intermediate">
++                Intermediate
++            </div>
++        
++        Current
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="393" class="node node--type-trail node--view-mode-row" id="node-393">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Capsize
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="394" class="node node--type-trail node--view-mode-row" id="node-394">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Chute
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++<h2 class="h4 ">Sidecountry Runs</h2><div class="d-flex jc-flex-end t-micetype row-header "><div class="cell condition t-align-center">Condition</div><div class="cell status t-align-center">Status</div></div>
++
++<div data-history-node-id="403" class="node node--type-trail node--view-mode-row" id="node-403">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Bowline Bluff
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="404" class="node node--type-trail node--view-mode-row" id="node-404">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-advanced"
++                 title="Advanced">
++                Advanced
++            </div>
++        
++        Densow&#039;s Dream
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++
++
++<div data-history-node-id="405" class="node node--type-trail node--view-mode-row" id="node-405">
++
++    
++
++            <div class="trail d-flex ai-center border-bottom pos-relative  component-row">
++
++    <div class="cell title">
++
++                                <div class="cell f-icon level icon-expert"
++                 title="Expert">
++                Expert
++            </div>
++        
++        Catamaran Cliffs
++
++        
++        
++    </div>
++
++    
++
++    <div class="cell icon-cell status">
++                <div class="f-icon icon-closed"
++             title="Closed"></div>
++    </div>
++
++</div>
++    
++</div>
++</div></details></div>
++        </div>
++    </div>
++</div>
++
++
++            
++                    
++        <div class="related-content">
++            </div>
++</div>
++</div>
++
++  </div>
++
++  </div>
++
++
++                
++        </div>    </main>
++
++    <div class="row m-b-0 pos-relative media-radius-none shin">
++    <div class="container bg-primary border-radius rte pos-relative z-index-20 copy">
++        
++
++
++
++    
++        
++                                                    
++            <h2 class="field field--name-field-heading field--type-string field--label-hidden field__item"
++                        >
++
++            
++                                    The Legendary Midwest, delivered to your inbox
++                
++            
++            </h2>
++
++        
++    
++
++        
++
++
++
++    
++        
++                        
++            <div class="field field--name-field-copy field--type-string-long field--label-hidden field__item"
++                        >
++
++            
++                                    A weekly round up of the top news, best specials and maybe the odd giveaway.
++                
++            
++            </div>
++
++        
++    
++
++        <p>
++            <a href="/newsletter/sign-up" class="button white">
++                Signup for updates
++            </a>
++        </p>
++    </div>
++    <div class="media-cover pos-relative z-index-10 image">
++        
++
++
++
++    
++        
++                        
++            <div class="field field--name-field-image field--type-entity-reference field--label-hidden field__item"
++                        >
++
++            
++                                    
++    <figure class="media media--type-image media--view-mode-default">
++    
++
++                        
++            
++
++
++
++    
++        
++                        
++            <div class="field field--name-field-media-image field--type-image field--label-hidden field__item"
++                        >
++
++            
++                                        <picture>
++                  <source type="image/webp" width="800" height="533" data-srcset="/sites/default/files/styles/scale_320/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.webp?itok=mupmaA9N 320w, /sites/default/files/styles/scale_480/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.webp?itok=GvuLq4QY 480w, /sites/default/files/styles/scale_640/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.webp?itok=QEl7_4k6 640w, /sites/default/files/styles/scale_800/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.webp?itok=ELX_R-Ch 800w, /sites/default/files/styles/scale_1024/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.webp?itok=j9vR93XA 1024w, /sites/default/files/styles/scale_1280/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.webp?itok=FgoKn9vx 1280w, /sites/default/files/styles/scale_1440/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.webp?itok=YH2kew68 1440w, /sites/default/files/styles/scale_1920/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.webp?itok=wwhJpQOl 1920w" data-sizes="auto"/>
++              <source type="image/jpeg" width="800" height="533" data-srcset="/sites/default/files/styles/scale_320/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=mupmaA9N 320w, /sites/default/files/styles/scale_480/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=GvuLq4QY 480w, /sites/default/files/styles/scale_640/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=QEl7_4k6 640w, /sites/default/files/styles/scale_800/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=ELX_R-Ch 800w, /sites/default/files/styles/scale_1024/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=j9vR93XA 1024w, /sites/default/files/styles/scale_1280/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=FgoKn9vx 1280w, /sites/default/files/styles/scale_1440/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=YH2kew68 1440w, /sites/default/files/styles/scale_1920/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=wwhJpQOl 1920w" data-sizes="auto"/>
++                  <img loading="lazy" width="3194" height="2129" data-x="53.005635566688" data-y="64.020666979803" style="--focal-point: 53.005635566688% 64.020666979803%;--intrinsic: 0.6665623043206" data-aspectratio="1.5002348520432" data-parent-fit="cover" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Skiers glide through snowy forest trail in winter setting." class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=YH2kew68" data-srcset="/sites/default/files/styles/scale_320/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=mupmaA9N 320w, /sites/default/files/styles/scale_480/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=GvuLq4QY 480w, /sites/default/files/styles/scale_640/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=QEl7_4k6 640w, /sites/default/files/styles/scale_800/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=ELX_R-Ch 800w, /sites/default/files/styles/scale_1024/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=j9vR93XA 1024w, /sites/default/files/styles/scale_1280/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=FgoKn9vx 1280w, /sites/default/files/styles/scale_1440/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=YH2kew68 1440w, /sites/default/files/styles/scale_1920/public/2025-09/8ebebe0ebf9329a0ab83ed60b28c4d7ab1b91fbb.jpg?itok=wwhJpQOl 1920w" data-sizes="auto" />
++
++  </picture>
++
++
++                
++            
++            </div>
++
++        
++    
++
++
++                        </figure>
++
++                
++            
++            </div>
++
++        
++    
++
++    </div>
++</div>
++
++<footer class="bg-primary row-padding site-footer" role="contentinfo">
++    <div class="container inner-grid">
++        <div class="grid-inner-2-10-large d-grid footer-grid">
++            <div class="bg-dark border-radius d-grid contact">
++                <div class="address">
++                    <a href="/" title="Home" rel="home" class="d-block logo">
++                        <svg role="img" aria-label="Snowriver Mountain Resort" width="209" height="45" viewBox="0 0 209 45" fill="none"
++     xmlns="http://www.w3.org/2000/svg">
++
++    <path d="M82.5455 39.3451H80.9823V36.5628L81.0571 33.7431H81.0197L79.7258 37.0714H78.731L77.4521 33.7917H77.4147L77.5007 36.5104V39.3451H75.9375V30.9346H77.7139L79.2696 35.022L80.8253 30.9346H82.553V39.3451H82.5455Z"
++          fill="white"/>
++    <path d="M84.8633 35.2095C84.8633 32.3524 86.0675 30.748 88.2066 30.748C90.3457 30.748 91.5012 32.3262 91.5012 35.1235C91.5012 37.9208 90.297 39.5326 88.1729 39.5326C86.0488 39.5326 84.867 37.9806 84.867 35.2095H84.8633ZM89.7997 35.1347C89.7997 33.2723 89.2275 32.229 88.1953 32.229C87.1632 32.229 86.5686 33.2761 86.5686 35.1347C86.5686 36.9933 87.1669 38.0666 88.1953 38.0666C89.2238 38.0666 89.7997 37.012 89.7997 35.1347Z"
++          fill="white"/>
++    <path d="M96.5106 39.5321C94.6445 39.5321 93.7656 38.4513 93.7656 36.1664V30.9346H95.3812V36.316C95.3812 37.5089 95.7664 38.0699 96.5741 38.0699C97.3819 38.0699 97.7409 37.5239 97.7409 36.3422V30.9346H99.3452V36.1776C99.3452 38.4663 98.4365 39.5321 96.5106 39.5321Z"
++          fill="white"/>
++    <path d="M103.564 33.8554H103.542V39.349H101.938V30.9385H103.826L105.988 36.1329H105.999V30.9385H107.603V39.349H105.849L103.561 33.8554H103.564Z"
++          fill="white"/>
++    <path d="M113.064 39.3451H111.437V32.4491H109.586V30.9346H114.904V32.4491H113.064V39.3451Z" fill="white"/>
++    <path d="M119.745 37.5465H117.621L117.236 39.349H115.609L117.771 30.9385H119.686L121.836 39.349H120.146L119.745 37.5465ZM119.424 36.0544L118.68 32.6475H118.657L117.935 36.0544H119.428H119.424Z"
++          fill="white"/>
++    <path d="M125.478 30.9346V39.3451H123.852V30.9346H125.478Z" fill="white"/>
++    <path d="M129.783 33.8554H129.761V39.349H128.156V30.9385H130.045L132.206 36.1329H132.218V30.9385H133.822V39.349H132.068L129.779 33.8554H129.783Z"
++          fill="white"/>
++    <path d="M143.481 39.3451L142.228 36.1514H141.431V39.3451H139.805V30.9346H142.179C143.918 30.9346 144.801 31.7797 144.801 33.3691C144.801 34.3115 144.39 35.0968 143.731 35.568L145.332 39.3451H143.481ZM143.17 33.5075C143.17 32.8007 142.849 32.4379 142.149 32.4379H141.431V34.6892H142.142C142.838 34.6892 143.17 34.2891 143.17 33.5075Z"
++          fill="white"/>
++    <path d="M147.301 30.9346H151.601V32.4491H148.927V34.2629H151.25V35.7775H148.927V37.8306H151.635V39.3451H147.297V30.9346H147.301Z"
++          fill="white"/>
++    <path d="M157.872 32.6629C157.225 32.3525 156.727 32.2179 156.29 32.2179C155.733 32.2179 155.422 32.5021 155.422 32.9883C155.422 34.544 158.205 34.5664 158.205 37.0645C158.205 38.6427 157.236 39.5365 155.695 39.5365C155.048 39.5365 154.375 39.3495 153.803 39.0428V37.4385C154.401 37.7975 155.108 38.0855 155.632 38.0855C156.226 38.0855 156.548 37.7489 156.548 37.2029C156.548 35.621 153.766 35.5612 153.766 33.0893C153.766 31.5971 154.697 30.752 156.189 30.752C156.787 30.752 157.322 30.8641 157.868 31.111V32.6667L157.872 32.6629Z"
++          fill="white"/>
++    <path d="M160.102 35.2095C160.102 32.3524 161.306 30.748 163.445 30.748C165.584 30.748 166.74 32.3262 166.74 35.1235C166.74 37.9208 165.535 39.5326 163.411 39.5326C161.287 39.5326 160.105 37.9806 160.105 35.2095H160.102ZM165.034 35.1347C165.034 33.2723 164.462 32.229 163.43 32.229C162.398 32.229 161.803 33.2761 161.803 35.1347C161.803 36.9933 162.401 38.0666 163.43 38.0666C164.458 38.0666 165.034 37.012 165.034 35.1347Z"
++          fill="white"/>
++    <path d="M172.735 39.3451L171.482 36.1514H170.685V39.3451H169.059V30.9346H171.433C173.172 30.9346 174.055 31.7797 174.055 33.3691C174.055 34.3115 173.643 35.0968 172.985 35.568L174.586 39.3451H172.735ZM172.424 33.5075C172.424 32.8007 172.103 32.4379 171.403 32.4379H170.685V34.6892H171.396C172.091 34.6892 172.424 34.2891 172.424 33.5075Z"
++          fill="white"/>
++    <path d="M179.326 39.3451H177.699V32.4491H175.848V30.9346H181.165V32.4491H179.326V39.3451Z" fill="white"/>
++    <path d="M153.633 19.1512V8.35473L154.288 5.70703H148.027L148.656 8.35473V18.5828C149.677 18.8483 151.771 19.3045 153.633 19.1512Z"
++          fill="white"/>
++    <path d="M57.0197 12.4157C54.1365 11.7089 53.5605 11.1068 53.5605 10.1121C53.5605 9.11734 54.66 8.53768 56.3391 8.53768C57.4386 8.53768 58.4333 8.66857 59.4543 8.93035L62.7826 10.6057L62.0758 5.88999C60.1873 5.5235 58.2239 5.26172 55.9203 5.26172C50.8904 5.26172 48.5082 7.46065 48.5082 10.5534C48.5082 13.6461 50.5239 15.1906 54.8208 16.2377C57.7041 16.9445 58.3586 17.4942 58.3586 18.5675C58.3586 19.6408 57.4162 20.2953 55.6061 20.2953C54.4543 20.2953 53.4035 20.1382 51.8889 19.7455L48.4297 17.8607L49.1926 22.7859C50.7632 23.0738 52.8575 23.5488 55.8978 23.5488C60.7445 23.575 63.4146 21.3461 63.4146 18.0477C63.4146 15.1681 61.4775 13.5152 57.0235 12.4157H57.0197Z"
++          fill="white"/>
++    <path d="M78.2628 8.35375L78.3675 18.8585L72.3952 5.70605H65.2188L65.8732 8.35375V20.4554L65.2188 23.1031H70.4543L69.826 20.4554L69.7213 10.003L75.6712 23.1031H82.2455V8.35375L82.8738 5.70605H77.6345L78.2628 8.35375Z"
++          fill="white"/>
++    <path d="M93.7939 5.20898C88.0797 5.20898 84.7812 8.51113 84.7812 14.4049C84.7812 20.2986 88.3414 23.6269 93.7939 23.6269C99.2464 23.6269 102.754 20.2986 102.754 14.4049C102.754 8.51113 99.4782 5.20898 93.7939 5.20898ZM93.7154 19.9845C91.3818 19.9845 89.9682 18.5185 89.9682 14.4049C89.9682 10.2912 91.4641 8.79908 93.7939 8.79908C96.1237 8.79908 97.5635 10.295 97.5635 14.4049C97.5635 18.5148 96.0975 19.9845 93.7154 19.9845Z"
++          fill="white"/>
++    <path d="M123.836 8.35375L121.323 18.2303L118.911 8.35375L118.806 5.70605H113.331L113.933 8.35375L111.417 18.2303L108.956 8.35375L108.851 5.70605H102.879L108.193 23.1031H113.331L116.001 13.2004L118.597 23.1031H123.574L128.814 5.70605H123.941L123.836 8.35375Z"
++          fill="white"/>
++    <path d="M168.283 8.35375L164.853 18.8062L161.656 8.35375L161.525 5.70605H155.422L161.682 23.1031H167L173.6 5.70605H168.414L168.283 8.35375Z"
++          fill="white"/>
++    <path d="M180.173 19.6962V15.9229H184.784L186.538 16.3193V12.258L184.784 12.6469H180.173V9.11291H186.751L189.395 9.81971L188.793 5.70605H174.594L175.222 8.35375V20.4554L174.594 23.1031H189.081L189.71 18.9894L187.036 19.6962H180.173Z"
++          fill="white"/>
++    <path d="M203.749 15.8443C206.184 15.1114 207.313 13.4098 207.313 11.181C207.313 7.61703 205.346 5.70605 200.709 5.70605H191.277L191.932 8.35375V20.4554L191.277 23.1031H197.564L196.909 20.4554V16.8167H199.291L201.756 20.878L201.992 23.1031H208.674L203.749 15.8443ZM199.583 13.4883H196.805V8.92966H199.92C201.756 8.92966 202.463 9.66264 202.463 11.2595C202.463 12.8563 201.416 13.4846 199.583 13.4846V13.4883Z"
++          fill="white"/>
++    <path d="M142.905 16.7757L142.359 15.9679C142.337 15.9305 142.31 15.8931 142.288 15.8557H142.284V15.8483C144.715 15.1153 145.844 13.4137 145.844 11.1849C145.844 7.62094 143.877 5.70996 139.24 5.70996H129.809L130.463 8.35766V20.4593L129.809 23.107H136.095L135.441 20.4593V16.8206H137.812C137.969 17.1534 139.053 19.3411 141.278 21.1436C144.835 24.0232 152.74 25.923 157.03 20.8183C157.03 20.7884 147.299 22.5834 142.909 16.7794L142.905 16.7757ZM135.332 13.4885V8.92983H138.447C140.283 8.92983 140.99 9.66281 140.99 11.2597C140.99 12.8565 139.943 13.4848 138.107 13.4848H135.328L135.332 13.4885Z"
++          fill="white"/>
++    <path d="M56.3068 35.6656H61.5498C66.4376 35.6656 67.4548 35.6656 69.5453 35.2468C67.4548 34.8018 66.4339 34.8018 61.5498 34.8018H56.3068C51.419 34.8018 50.3756 34.8018 48.2852 35.2468C50.4018 35.6656 51.419 35.6656 56.3068 35.6656Z"
++          fill="white"/>
++    <path d="M195.295 35.6656H200.538C205.426 35.6656 206.443 35.6656 208.534 35.2468C206.443 34.8018 205.422 34.8018 200.538 34.8018H195.295C190.407 34.8018 189.364 34.8018 187.273 35.2468C189.39 35.6656 190.407 35.6656 195.295 35.6656Z"
++          fill="white"/>
++    <path d="M20.2615 44.73C25.871 44.9993 32.9876 44.2887 37.7221 40.9268C42.6173 37.5124 43.9075 28.8326 38.8814 24.7937C37.3144 23.5372 36.0429 23.0361 34.7378 22.6472C41.2 28.5147 38.3765 33.223 38.3578 33.2417C37.7221 27.6995 33.5261 23.4213 25.2352 18.6681C18.6497 14.8873 16.7312 13.0063 16.7312 9.16186C16.7312 9.16186 16.5704 5.59794 19.7416 4.33018C19.7416 4.33018 18.3542 6.30474 18.7918 9.00479C19.1545 11.2523 20.3736 12.7146 21.9107 13.5074C21.1814 12.2434 20.785 11.1289 20.6092 10.1753C20.0819 7.31445 22.3819 4.41245 25.2764 4.20677C28.6234 3.97117 31.4618 7.76695 31.4618 10.8522C31.4618 10.8522 41.3682 11.4618 41.8133 0.186608C41.8133 0.186608 37.636 3.77671 31.402 1.63013C27.6025 0.321237 23.5561 -0.265894 19.5509 0.111814C16.1815 0.429688 12.6549 1.28982 9.80903 3.17088C6.81728 5.14917 4.44632 8.1671 4.44632 11.903C4.44632 13.9711 5.51961 15.912 6.77988 16.7908C6.39096 14.7639 6.54055 11.7759 8.17105 9.91727C7.79334 17.3892 11.0169 19.8611 17.4604 22.5462C24.6144 25.5267 30.8522 32.06 30.8522 36.1474C30.8522 37.9761 30.295 40.1639 28.2083 41.0876C28.9226 40.0592 29.1432 39.0719 29.1432 37.5461C29.1432 35.0592 27.9091 33.511 25.9869 32.1572C27.0527 34.8759 27.2435 38.0173 24.9099 40.1339C23.9862 40.9716 21.4095 42.0636 17.9765 40.1601C17.5726 39.8796 17.165 39.6141 16.7648 39.2925C16.1067 38.769 15.4373 38.1706 14.7604 37.5012C14.0349 36.7757 13.4103 36.0614 12.8531 35.3509C13.7469 35.4743 14.6781 35.6613 15.6691 35.9268C16.5853 36.1774 17.438 36.4541 18.2233 36.7645C19.0049 37.0711 19.7491 37.4114 20.4484 37.7779L22.9279 34.5468L20.4484 31.3158C19.7491 31.6822 19.0049 32.0226 18.2233 32.3292C17.438 32.6396 16.5853 32.9163 15.6691 33.1669C14.6781 33.4324 13.7469 33.6157 12.8531 33.7428C13.4103 33.0323 14.0349 32.3143 14.7604 31.5888C15.4373 30.9194 16.1029 30.321 16.7648 29.7974C17.423 29.2739 18.0887 28.799 18.7544 28.3764L17.1949 24.6142L13.1598 25.1453C13.1261 25.9344 13.0476 26.7496 12.9242 27.5798C12.8008 28.4138 12.6138 29.2889 12.3745 30.2088C12.1089 31.1998 11.8023 32.1011 11.4657 32.935C11.1291 32.1011 10.8187 31.1998 10.5532 30.2088C10.3101 29.2889 10.1269 28.4138 10.0035 27.5798C9.88009 26.7496 9.80155 25.9344 9.7679 25.1453L5.73277 24.6142L4.17332 28.3764C4.84273 28.799 5.50465 29.2739 6.16284 29.7974C6.82102 30.3247 7.49043 30.9231 8.16731 31.5888C8.89281 32.3143 9.51734 33.0323 10.0708 33.7428C9.18076 33.6194 8.24584 33.4324 7.25483 33.1669C6.3386 32.9163 5.48595 32.6359 4.70062 32.3292C3.91902 32.0226 3.17483 31.6822 2.47551 31.3158L-0.00390625 34.5468L2.47551 37.7779C3.17483 37.4114 3.91902 37.0711 4.70062 36.7645C5.48595 36.4541 6.3386 36.1774 7.25483 35.9268C8.24584 35.6613 9.17702 35.478 10.0708 35.3509C9.51734 36.0614 8.88907 36.7757 8.16731 37.5012C7.49043 38.1706 6.82476 38.769 6.16284 39.2925C5.50465 39.8161 4.83899 40.291 4.17332 40.7136L5.73277 44.4757L9.7679 43.9447C9.80155 43.1556 9.88009 42.3404 10.0035 41.5101C10.1269 40.6762 10.3139 39.8011 10.5532 38.8774C10.8187 37.8864 11.1254 36.9851 11.4657 36.1512C11.8023 36.9851 12.1127 37.8864 12.3745 38.8774C12.6175 39.7974 12.8008 40.6725 12.9242 41.5101C13.0476 42.3366 13.1 43.1444 13.1673 43.926C13.1673 43.926 16.3161 44.5356 20.2577 44.7263L20.2615 44.73ZM11.0506 10.1192C11.0506 8.59342 12.2136 5.63159 14.1994 4.52838C13.3767 6.52538 13.4029 9.06089 13.6385 10.1716C14.6257 14.7751 16.5405 16.9853 20.5008 20.7399C15.1156 17.6958 11.0506 14.5021 11.0506 10.1192ZM34.0759 38.8662C33.9263 31.5888 31.1252 28.5372 24.4013 23.2418C33.3616 27.2208 37.6398 31.6561 34.0759 38.8662Z"
++          fill="white"/>
++    <path d="M57.0197 12.446C54.1365 11.7392 53.5605 11.1371 53.5605 10.1424C53.5605 9.14761 54.66 8.56796 56.3391 8.56796C57.4386 8.56796 58.4333 8.69885 59.4543 8.96062L62.7826 10.636L62.0758 5.92026C60.1873 5.55377 58.2239 5.29199 55.9203 5.29199C50.8904 5.29199 48.5082 7.49093 48.5082 10.5836C48.5082 13.6764 50.5239 15.2209 54.8208 16.268C57.7041 16.9748 58.3586 17.5245 58.3586 18.5978C58.3586 19.6711 57.4162 20.3255 55.6061 20.3255C54.4543 20.3255 53.4035 20.1685 51.8889 19.7758L48.4297 17.891L49.1926 22.8162C50.7632 23.1041 52.8575 23.5791 55.8978 23.5791C60.7445 23.6052 63.4146 21.3764 63.4146 18.078C63.4146 15.1984 61.4775 13.5455 57.0235 12.446H57.0197Z"
++          fill="white"/>
++    <path d="M78.2628 8.38403L78.3675 18.8888L72.3952 5.73633H65.2188L65.8732 8.38403V20.4857L65.2188 23.1334H70.458L69.8298 20.4857L69.7251 10.0332L75.6712 23.1334H82.2455V8.38403L82.8738 5.73633H77.6345L78.2628 8.38403Z"
++          fill="white"/>
++    <path d="M93.7939 5.23926C88.0797 5.23926 84.7812 8.5414 84.7812 14.4351C84.7812 20.3289 88.3414 23.6572 93.7939 23.6572C99.2464 23.6572 102.754 20.3289 102.754 14.4351C102.754 8.5414 99.4782 5.23926 93.7939 5.23926ZM93.7154 20.0148C91.3818 20.0148 89.9682 18.5488 89.9682 14.4351C89.9682 10.3215 91.4641 8.82936 93.7939 8.82936C96.1237 8.82936 97.5635 10.3252 97.5635 14.4351C97.5635 18.5451 96.0975 20.0148 93.7154 20.0148Z"
++          fill="white"/>
++    <path d="M123.836 8.38403L121.323 18.2605L118.911 8.38403L118.806 5.73633H113.331L113.933 8.38403L111.417 18.2605L108.956 8.38403L108.851 5.73633H102.879L108.197 23.1334H113.331L116.001 13.2307L118.597 23.1334H123.574L128.814 5.73633H123.945L123.836 8.38403Z"
++          fill="white"/>
++    <path d="M168.286 8.38403L164.853 18.8365L161.656 8.38403L161.525 5.73633H155.422L161.682 23.1334H167L173.6 5.73633H168.414L168.286 8.38403Z"
++          fill="white"/>
++    <path d="M180.173 19.7265V15.9532H184.784L186.538 16.3458V12.2883L184.784 12.6772H180.173V9.14318H186.751L189.395 9.84998L188.793 5.73633H174.594L175.222 8.38403V20.4857L174.594 23.1334H189.081L189.71 19.0197L187.036 19.7265H180.173Z"
++          fill="white"/>
++    <path d="M203.749 15.8746C206.184 15.1416 207.313 13.4401 207.313 11.2112C207.313 7.64731 205.346 5.73633 200.709 5.73633H191.277L191.932 8.38403V20.4857L191.277 23.1334H197.564L196.909 20.4857V16.8469H199.291L201.756 20.9082L201.992 23.1334H208.674L203.749 15.8746ZM199.583 13.5186H196.805V8.95994H199.92C201.756 8.95994 202.463 9.69292 202.463 11.2898C202.463 12.8866 201.416 13.5149 199.583 13.5149V13.5186Z"
++          fill="white"/>
++    <path d="M142.905 16.806L142.359 15.9982C142.337 15.9608 142.31 15.9234 142.288 15.886H142.284V15.8785C144.715 15.1455 145.844 13.444 145.844 11.2151C145.844 7.65121 143.877 5.74023 139.24 5.74023H129.809L130.463 8.38793V20.4896L129.809 23.1373H136.095L135.441 20.4896V16.8508H137.812C137.969 17.1837 139.053 19.3714 141.278 21.1739C144.835 24.0535 152.74 25.9532 157.03 20.8486C157.03 20.8187 147.299 22.6137 142.909 16.8097L142.905 16.806ZM135.332 13.5188V8.9601H138.447C140.283 8.9601 140.99 9.69308 140.99 11.2899C140.99 12.8868 139.943 13.515 138.107 13.515H135.328L135.332 13.5188Z"
++          fill="white"/>
++
++
++</svg>
++                    </a>
++                    
++
++
++
++    
++        
++                        
++            <div class="clearfix text-formatted field field--name-field-address field--type-text-long field--label-hidden field__item"
++                        >
++
++            
++                                    <p>500 Indianhead Road,&nbsp;<br>Wakefield, MI 49968<br><a href="tel:9062295181">906-229-5181</a><br><a href="mailto:ski@snowriver.com">ski@snowriver.com</a></p>
++
++                
++            
++            </div>
++
++        
++    
++
++                </div>
++                <nav role="navigation" aria-labelledby="block-snowriver-social-menu" id="block-snowriver-social" class="block block-menu navigation menu--snowriver-social">
++            
++  <h2 class="visually-hidden" id="block-snowriver-social-menu">Snowriver Social</h2>
++  
++
++        
++        <ul class="reset d-flex ai-center menu">
++                                    <li class="menu-item">
++                <a href="https://www.facebook.com/SnowriverMountain" target="_blank" class="f-icon outline-offset"><span
++                            class="visually-hidden">Facebook</span></a>
++                            </li>
++                                <li class="menu-item">
++                <a href="https://x.com/SnowriverMtn" target="_blank" class="f-icon outline-offset"><span
++                            class="visually-hidden">X</span></a>
++                            </li>
++                                <li class="menu-item">
++                <a href="https://www.instagram.com/snowrivermountain/" target="_blank" class="f-icon outline-offset"><span
++                            class="visually-hidden">Instagram</span></a>
++                            </li>
++                                <li class="menu-item">
++                <a href="https://www.linkedin.com/showcase/snowriver-mountain-resort/" target="_blank" class="f-icon outline-offset"><span
++                            class="visually-hidden">LinkedIn</span></a>
++                            </li>
++            </ul>
++        
++
++
++  </nav>
++
++                <nav role="navigation" aria-labelledby="block-snowriver-footer-menu" id="block-snowriver-footer" class="block block-menu navigation menu--snowriver-footer">
++            
++  <h2 class="visually-hidden" id="block-snowriver-footer-menu">Snowriver Footer</h2>
++  
++
++        
++        <ul class="menu reset jc-center d-grid-phone">
++                                    <li class="menu-item">
++                <a href="/careers" class="d-block t-small-caps" data-drupal-link-system-path="node/91">Careers</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/contact-us" class="d-block t-small-caps" data-drupal-link-system-path="node/94">Contact Us</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/gift-cards" class="d-block t-small-caps" data-drupal-link-system-path="node/538">Gift Cards</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/waivers" class="d-block t-small-caps" data-drupal-link-system-path="node/93">Waivers</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/donation-request" class="d-block t-small-caps" data-drupal-link-system-path="node/92">Donation Request</a>
++                            </li>
++            </ul>
++        
++
++
++  </nav>
++
++            </div>
++
++            <div class="logos">
++                                <h2 class="h4 t-align-center">Check out our sister resorts</h2>
++                <ul class="reset d-flex jc-space-around ai-center resorts">
++                                            <li>
++                            <a href="https://www.lutsen.com/" target="_blank">
++                                <img loading="lazy" src="/themes/custom/origin/images/logo/logo--lutsen.svg" alt="Lutsen Mountains"/>
++                            </a>
++                        </li>
++                                                                                    <li>
++                            <a href="https://www.skigranitepeak.com/" target="_blank">
++                                <img loading="lazy" src="/themes/custom/origin/images/logo/logo--granitepeak.svg" alt="Granite Peak"/>
++                            </a>
++                        </li>
++                                    </ul>
++
++                            </div>
++
++            <div class="t-align-center copyright-menu">
++                <nav role="navigation" aria-labelledby="block-snowriver-copyright-menu" id="block-snowriver-copyright" class="block block-menu navigation menu--snowriver-copyright">
++            
++  <h2 class="visually-hidden" id="block-snowriver-copyright-menu">Snowriver Copyright</h2>
++  
++
++        
++        <ul class="menu reset d-flex flex-wrap-wrap jc-center d-grid-phone">
++                                    <li class="menu-item">
++                <a href="/cashless-resort" class="d-block" data-drupal-link-system-path="node/95">Cashless Resort</a>
++                            </li>
++            </ul>
++        
++
++
++  </nav>
++
++            </div>
++
++            <div class="t-align-center copyright">
++                &copy; Copyright 2026 Snowriver Mountain Resort, All Rights Reserved
++            </div>
++        </div>
++    </div>
++</footer>
++
++</div>
++  </div>
++
++
++<script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/874","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"lazy":{"lazysizes":{"lazyClass":"lazyload","loadedClass":"lazyloaded","loadingClass":"lazyloading","preloadClass":"lazypreload","errorClass":"lazyerror","autosizesClass":"lazyautosizes","srcAttr":"data-src","srcsetAttr":"data-srcset","sizesAttr":"data-sizes","minSize":40,"customMedia":[],"init":true,"expFactor":1.5,"hFac":0.8,"loadMode":2,"loadHidden":true,"ricTimeout":0,"throttleDelay":125,"plugins":{"object-fit":"object-fit\/ls.object-fit","parent-fit":"parent-fit\/ls.parent-fit"}},"placeholderSrc":"data:image\/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==","preferNative":false,"minified":true,"libraryPath":"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/lazysizes\/5.3.2"},"ajaxTrustedUrl":{"\/search":true},"user":{"uid":0,"permissionsHash":"0c7f276ba142aecb5b2cefc66a40517c708d09e7bd3cd268c820b43b7fe17fca"}}</script>
++<script src="/sites/default/files/js/js_B8I9Q9_V45j3xHm1IRhKWsviOIO_wjUBnqWehWBMHDQ.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=snowriver&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6aflFucUwDoQCANHfEuQ"></script>
++
++</body>
++</html>
+diff --git a/test/resorts/snowriver-trails.js b/test/resorts/snowriver-trails.js
+new file mode 100644
+index 00000000..89257395
+--- /dev/null
++++ b/test/resorts/snowriver-trails.js
+@@ -0,0 +1,364 @@
++import trails from '../trails/index.js';
++
++trails('snowriver', [
++  {
++    'name': 'Lost Tarn',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Maiden Voyage',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Oxbow',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'River Drive',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'River Guide',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Nautical Mile',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Portside',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Sailor's Delight",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Starboard',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Privateer',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Treasure Trove',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Blimey Bluff',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Red Night',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Tintalle Turnout',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Brookeside',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Powder Pank',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Upper Spillway',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Whitesides Crossing',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Draw Stroke',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Log Jam',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Yooperlite',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Lower Spillway',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Cool Runnings',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Boomer's Hideout",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Glader's Gulch",
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Microburst',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Paddle Shaft',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Maple',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Sugar Hills',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': "Voyageur's Highway",
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Alpenglow',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Jack's Cutoff",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Sundance',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Superior',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Borealis',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'F.I.S.',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Nimbus',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Stormfront',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Supercell',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Torrent',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'U.S.2',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Artesian Alley',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Gitchee Gumee Gulch',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Stratus Wall',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': "Voyageur's Headwall",
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Voyageur Funpark',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'River Ridge',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Coriolis Effect',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Flash Flood',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'U.P. A Creek',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Gully Washer',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Hailstrike',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Bear Creek Access',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Bear Creek Egress',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Deer Track',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Running Bear',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Elkhorn',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Kodiak Crossing',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Bear',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Buffalo',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Grizzly',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Goldi's Glade",
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': "Papa's",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Cascade',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Channel',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Confluence',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Current',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Capsize',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Chute',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  },
++  {
++    'name': 'Bowline Bluff',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': "Densow's Dream",
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Catamaran Cliffs',
++    'status': 'closed',
++    'level': 'doubleBlack'
++  }
++]);
+diff --git a/test/resorts/snowriver.js b/test/resorts/snowriver.js
+new file mode 100644
+index 00000000..7878d4ac
+--- /dev/null
++++ b/test/resorts/snowriver.js
+@@ -0,0 +1,14 @@
++import lifts from '../lifts/index.js';
++
++lifts('snowriver', 'html', {
++  'Ascender': 'closed',
++  'Birgantine': 'open',
++  'Capstan': 'closed',
++  'Draw Stroke': 'closed',
++  'Cloudfront Double': 'closed',
++  'Maple Tow': 'closed',
++  'Sugar Hills Conveyor': 'closed',
++  'Voyageur Express': 'closed',
++  'Bear Creek': 'closed',
++  'East T': 'closed'
++});
+-- 
+2.39.5
+

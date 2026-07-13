@@ -1,13 +1,13 @@
-From 89a55cb6a13434312213585d3766766d7314f96d Mon Sep 17 00:00:00 2001
+From 9720d25f0eecc13b43a2aa65d05bb0db27c975bc Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 09:49:02 -0400
-Subject: [PATCH 23/31] resort: add burke-mountain trail status
+Subject: [PATCH 23/41] resort: add burke-mountain trail status
 
 ---
  lib/resorts/burke-mountain/resort.json |   3 +-
- lib/resorts/burke-mountain/trails.js   |  55 +++++
+ lib/resorts/burke-mountain/trails.js   |  53 +++++
  test/resorts/burke-mountain-trails.js  | 270 +++++++++++++++++++++++++
- 3 files changed, 327 insertions(+), 1 deletion(-)
+ 3 files changed, 325 insertions(+), 1 deletion(-)
  create mode 100644 lib/resorts/burke-mountain/trails.js
  create mode 100644 test/resorts/burke-mountain-trails.js
 
@@ -25,10 +25,10 @@ index 6aaa2ff1..48d6d3ed 100644
  }
 diff --git a/lib/resorts/burke-mountain/trails.js b/lib/resorts/burke-mountain/trails.js
 new file mode 100644
-index 00000000..b425244d
+index 00000000..22bebf4d
 --- /dev/null
 +++ b/lib/resorts/burke-mountain/trails.js
-@@ -0,0 +1,55 @@
+@@ -0,0 +1,53 @@
 +import select from '../../select.js';
 +import { findText } from '../../tools/domutil.js';
 +
@@ -62,9 +62,7 @@ index 00000000..b425244d
 +    if (nameCol < 0) {
 +      continue;
 +    }
-+    const statusCols = headers
-+      .map((h, i) => (['Open', 'Closed', 'Status'].includes(h) ? i : -1))
-+      .filter(i => i >= 0);
++    const statusCols = headers.map((h, i) => (['Open', 'Closed', 'Status'].includes(h) ? i : -1)).filter(i => i >= 0);
 +    for (const tr of select(table.children, 'tbody tr')) {
 +      const tds = tr.children.filter(c => c.name === 'td');
 +      const name = findText(tds[nameCol])?.trim();

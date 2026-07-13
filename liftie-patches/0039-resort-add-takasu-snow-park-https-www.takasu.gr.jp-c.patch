@@ -1,0 +1,1249 @@
+From 6958f575294ac802d4bcfa29b32b8b12c49d6e8e Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:01:09 -0400
+Subject: [PATCH 39/41] resort: add takasu-snow-park
+ (https://www.takasu.gr.jp/condition/)
+
+---
+ lib/resorts/takasu-snow-park/index.js      |   23 +
+ lib/resorts/takasu-snow-park/resort.json   |   15 +
+ lib/resorts/takasu-snow-park/status.js     |   14 +
+ lib/resorts/takasu-snow-park/trails.js     |   39 +
+ test/resorts/example/takasu-snow-park.html | 1083 ++++++++++++++++++++
+ test/resorts/takasu-snow-park-trails.js    |    3 +
+ test/resorts/takasu-snow-park.js           |    3 +
+ 7 files changed, 1180 insertions(+)
+ create mode 100644 lib/resorts/takasu-snow-park/index.js
+ create mode 100644 lib/resorts/takasu-snow-park/resort.json
+ create mode 100644 lib/resorts/takasu-snow-park/status.js
+ create mode 100644 lib/resorts/takasu-snow-park/trails.js
+ create mode 100644 test/resorts/example/takasu-snow-park.html
+ create mode 100644 test/resorts/takasu-snow-park-trails.js
+ create mode 100644 test/resorts/takasu-snow-park.js
+
+diff --git a/lib/resorts/takasu-snow-park/index.js b/lib/resorts/takasu-snow-park/index.js
+new file mode 100644
+index 00000000..8ff4bdd4
+--- /dev/null
++++ b/lib/resorts/takasu-snow-park/index.js
+@@ -0,0 +1,23 @@
++import select from '../../select.js';
++import coerce from '../../tools/coerce.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// lift table columns: リフト名 | 運行時間 | 運行可否 | お知らせ
++export default function parse(dom) {
++  const liftStatus = {};
++  for (const table of select(dom, 'table')) {
++    const rows = select(table.children, 'tr');
++    const header = rows[0] && select(rows[0].children, 'th, td').map(findText);
++    if (!header?.[0]?.includes('リフト名')) {
++      continue;
++    }
++    for (const row of rows.slice(1)) {
++      const cells = select(row.children, 'th, td').map(findText);
++      if (cells[0] && cells[2]) {
++        liftStatus[cells[0].trim()] = coerce(status(cells[2]));
++      }
++    }
++  }
++  return liftStatus;
++}
+diff --git a/lib/resorts/takasu-snow-park/resort.json b/lib/resorts/takasu-snow-park/resort.json
+new file mode 100644
+index 00000000..ce1347dd
+--- /dev/null
++++ b/lib/resorts/takasu-snow-park/resort.json
+@@ -0,0 +1,15 @@
++{
++  "name": "Takasu Snow Park",
++  "url": {
++    "host": "https://www.takasu.gr.jp",
++    "pathname": "/condition/"
++  },
++  "trails": true,
++  "tags": [
++    "Japan"
++  ],
++  "ll": [
++    136.8807,
++    36.0069
++  ]
++}
+diff --git a/lib/resorts/takasu-snow-park/status.js b/lib/resorts/takasu-snow-park/status.js
+new file mode 100644
+index 00000000..5559df28
+--- /dev/null
++++ b/lib/resorts/takasu-snow-park/status.js
+@@ -0,0 +1,14 @@
++// shared status glyph translation for the Japanese condition tables
++export default function status(text = '') {
++  const t = text.trim();
++  if (/^[○◯〇]/.test(t) || /運行中|営業中/.test(t)) {
++    return 'open';
++  }
++  if (/^[△▲]/.test(t)) {
++    return 'hold';
++  }
++  if (/^[×✕✖-]/.test(t) || /運休|終了/.test(t)) {
++    return 'closed';
++  }
++  return t;
++}
+diff --git a/lib/resorts/takasu-snow-park/trails.js b/lib/resorts/takasu-snow-park/trails.js
+new file mode 100644
+index 00000000..76785d2a
+--- /dev/null
++++ b/lib/resorts/takasu-snow-park/trails.js
+@@ -0,0 +1,39 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++const sections = { 初級: 'green', 中級: 'blue', 上級: 'black' };
++
++// course tables: [section row like 初級コース] コース名 | 滑走状況 | お知らせ;
++// park tables use パーク名 in the header instead
++export default function parse(dom) {
++  const rows = [];
++  for (const table of select(dom, 'table')) {
++    const trs = select(table.children, 'tr');
++    const caption = select(table.children, 'caption')[0];
++    let level = caption && sections[Object.keys(sections).find(k => (findText(caption) ?? '').includes(k))];
++    let headerIdx = -1;
++    for (const [i, tr] of trs.entries()) {
++      const cells = select(tr.children, 'th, td').map(findText);
++      const joined = cells.filter(Boolean).join(' ');
++      if (/コース名|パーク名/.test(joined)) {
++        headerIdx = i;
++        if (/パーク名/.test(joined)) {
++          level = 'terrainPark';
++        }
++        continue;
++      }
++      if (headerIdx < 0) {
++        const section = Object.keys(sections).find(k => joined.includes(k));
++        if (section) {
++          level = sections[section];
++        }
++        continue;
++      }
++      if (cells[0] && cells[1]) {
++        rows.push({ name: cells[0].trim(), status: status(cells[1]), level });
++      }
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/example/takasu-snow-park.html b/test/resorts/example/takasu-snow-park.html
+new file mode 100644
+index 00000000..3c567bdc
+--- /dev/null
++++ b/test/resorts/example/takasu-snow-park.html
+@@ -0,0 +1,1083 @@
++
++<!doctype html>
++<html><!-- InstanceBegin template="/Templates/base.dwt" codeOutsideHTMLIsLocked="false" -->
++<head>
++<!-- Google Tag Manager -->
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-K9BHWCRR');</script>
++<!-- End Google Tag Manager -->
++	
++<!-- Google Tag Manager -->
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-T5QSW6XL');</script>
++<!-- End Google Tag Manager -->
++
++<!-- Google Tag Manager --> 
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-NVTJ2RB');</script> 
++<!-- End Google Tag Manager -->
++    
++<meta charset="utf-8">
++<meta name="viewport" content="width=device-width">
++<!-- InstanceBeginEditable name="doctitle" -->
++  <title>最新ゲレンデ情報 ｜ 岐阜県・中部エリアの西日本最大級スキー場は高鷲スノーパーク</title>
++  <!-- InstanceEndEditable -->
++<meta name="description" content="西日本最大級のビッグゲレンデ、高鷲スノーパークは4/19をもって25-26シーズンの営業を終了いたしました！今シーズンも多くのご来場をいただき誠にありがとうございました。来シーズンの更なるアップデートをご期待ください！">
++
++
++<meta name="format-detection" content="telephone=no">
++<link href="favicon.ico" rel="shortcut icon" />
++<link rel="preconnect" href="https://fonts.googleapis.com">
++<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@700;900&display=swap" rel="stylesheet">
++<link rel="stylesheet" type="text/css" href="../assets/css/reset.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/common_2022.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/common.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/module.css" media="all" />
++<!-- InstanceBeginEditable name="head" -->
++
++  <link rel="stylesheet" href="../assets/css/condition.css">
++  <link rel="stylesheet" href="../assets/css/map.css">
++  <link rel="stylesheet" href="../assets/css/layout.css">
++    <style>
++    .noline {
++    border-bottom-style: none;
++}</style>
++	<link rel="stylesheet" href="../assets/css/scroll-hint.css">
++  <!-- ライブカメラ映像用 -->
++  <script src="https://lnbgtscw.user.webaccel.jp/assets/js/web-acc/index.async.taka.js"></script>
++  <!-- ライブカメラ映像用 ここまで-->
++  <link rel="canonical" href="https://www.takasu.gr.jp/condition/" />
++    <link rel="stylesheet" href="../assets/css/zoom.css">
++  <!-- InstanceEndEditable -->
++
++<script src="https://d.shutto-translation.com/trans.js?id=1332"></script>
++    <link rel="stylesheet" href="../assets/css/common_2025.css">
++    
++    
++    <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@graph": [
++    {
++      "@type": "Organization",
++      "@id": "https://www.takasu.gr.jp/#organization",
++      "name": "高鷲スノーパーク<",
++      "url": "https://www.takasu.gr.jp/",
++      "logo": {
++        "@type": "ImageObject",
++        "url": "https://www.takasu.gr.jp/assets/img/common/logo.png"
++      },
++      "sameAs": [
++        "https://www.facebook.com/takasusnowpark",
++        "https://twitter.com/takasu_snowpark",
++        "https://www.instagram.com/takasu_snowpark/",
++        "https://www.youtube.com/channel/UCcMpmmLMG0XSLDdu7WyheNg",
++        "https://www.tiktok.com/@takasu_snowpark",
++        "https://lin.ee/FI4pmLm"
++      ]
++    },
++    {
++      "@type": "SkiResort",
++      "@id": "https://www.takasu.gr.jp/#place",
++      "name": "高鷲スノーパーク<",
++      "url": "https://www.takasu.gr.jp/",
++      "image": {
++        "@type": "ImageObject",
++        "url": "https://www.takasu.gr.jp/assets/img/common/main_visual.jpg"
++      },
++      "address": {
++        "@type": "PostalAddress",
++        "postalCode": "501-5305",
++        "addressCountry": "JP",
++        "addressRegion": "岐阜県",
++        "addressLocality": "郡上市高鷲町西洞",
++        "streetAddress": "3086-1"
++      },
++      "telephone": "0575-72-7000",
++  "priceRange": "¥¥",
++      "geo": {
++        "@type": "GeoCoordinates",
++        "latitude": 35.99824180820044,
++        "longitude": 136.87733151951488
++      },
++      "sameAs": [
++        "https://www.facebook.com/takasusnowpark",
++        "https://twitter.com/takasu_snowpark",
++        "https://www.instagram.com/takasu_snowpark/",
++        "https://www.youtube.com/channel/UCcMpmmLMG0XSLDdu7WyheNg",
++        "https://www.tiktok.com/@takasu_snowpark",
++        "https://lin.ee/FI4pmLm"
++      ]
++    },
++    {
++      "@type": "WebSite",
++      "@id": "https://www.takasu.gr.jp/#website",
++      "name": "高鷲スノーパーク",
++      "url": "https://www.takasu.gr.jp/",
++      "publisher": { "@id": "https://www.takasu.gr.jp/#organization" },
++      "inLanguage": "ja"
++    }
++  ]
++}
++</script>
++
++    
++<!-- InstanceBeginEditable name="EditRegion5" -->
++    <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@graph": [
++    {
++      "@type": "WebPage",
++      "@id": "https://www.takasu.gr.jp/condition/#webpage",
++      "url": "https://www.takasu.gr.jp/condition/",
++      "name": "最新ゲレンデ情報 ｜ 岐阜県・中部エリアの西日本最大級スキー場は高鷲スノーパーク",
++      "isPartOf": { "@id": "https://www.takasu.gr.jp/#website" },
++      "about": { "@id": "https://www.takasu.gr.jp/#place" },
++      "inLanguage": "ja"
++    },
++    {
++      "@type": "BreadcrumbList",
++      "@id": "https://www.takasu.gr.jp/condition/#breadcrumb",
++      "itemListElement": [
++        {
++          "@type": "ListItem",
++          "position": 1,
++          "name": "ホーム",
++          "item": "https://www.takasu.gr.jp/"
++        },
++        {
++          "@type": "ListItem",
++          "position": 2,
++          "name": "最新ゲレンデ情報",
++          "item": "https://www.takasu.gr.jp/condition/"
++        }
++      ]
++    }
++  ]
++}
++</script>
++<!-- InstanceEndEditable -->
++    
++    
++</head>
++
++<body>
++<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K9BHWCRR"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++	
++<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T5QSW6XL"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++
++<!-- Google Tag Manager (noscript) -->
++<noscript>
++<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NVTJ2RB"
++height="0" width="0" style="display:none;visibility:hidden"></iframe>
++</noscript>
++<!-- End Google Tag Manager (noscript) -->
++
++<header class="header">
++  <h1 class="logo"><a href="../" data-label="ロゴ" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/h_logo_new.png" alt="高鷲スノーパーク"/></a></h1>
++  <nav class="header-nav">
++    <div class="header-nav-sub">
++      <ul>
++        <li><a href="../faq/" data-label="FAQ：PC" data-category="ヘッダー" class="click-event">FAQ</a></li>
++        <li><a href="https://asobito-resort.com/login" target="_blank" data-label="会員ログイン：PC" data-category="ヘッダー" class="click-event">会員ログイン</a></li>
++        <li><a href="https://asobito-resort.com/register" target="_blank" data-label="新規会員登録：PC" data-category="ヘッダー" class="click-event">新規会員登録</a></li>
++        <li><a href="https://www.takasumountains.com/" target="_blank" data-label="TAKASU MOUNTAINS：PC" data-category="ヘッダー" class="click-event">TAKASU MOUNTAINS</a></li>
++      </ul>
++    </div>
++    <div class="header-nav-sns">
++      <ul>
++        <li class="pc"><a href="https://www.facebook.com/takasusnowpark" target="_blank" data-label="FaceBook" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_fb_c.png" width="80" height="80" alt="Facebook"/></a></li>
++        <li><a href="https://twitter.com/takasu_snowpark" target="_blank" data-label="X" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_tw_c.png" width="80" height="80" alt="X"/></a></li>
++        <li><a href="https://www.instagram.com/takasu_snowpark/" target="_blank" data-label="Instagram" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ic_ig_c.png" width="80" height="80" alt="Instagram"/></a></li>
++        <li class="pc"><a href="https://lin.ee/FI4pmLm" target="_blank" data-label="LINE" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_ln_c.png" width="80" height="80" alt="LINE"/></a></li>
++        <li class="pc"><a href="https://www.youtube.com/channel/UCcMpmmLMG0XSLDdu7WyheNg" target="_blank" data-label="YouTube" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_yt_c.png" width="80" height="80" alt="YouTube"/></a></li>
++        <li><a href="https://www.tiktok.com/@takasu_snowpark" target="_blank" data-label="TikTok" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_tk_c.svg" width="80" height="80" alt="TikTok"/></a></li>
++      </ul>
++    </div>
++    <ul class="header-nav-link">
++      <li class="translate">
++        <p class="translate-title">Languages</p>
++        <div class="translate-list"> <a href="?stt_lang=en">English</a> <a href="?stt_lang=th">Thai</a> <a href="?stt_lang=zh-CN">中国語(簡体)</a> <a href="?stt_lang=zh-TW">中国語(繁体)</a> <a href="?stt_lang=ja">日本語</a> </div>
++      </li>
++    </ul>
++  </nav>
++    
++  <button type="button" class="global-nav-menu">
++  <div class="global-nav-menu-outer"> <span class="global-nav-menu-item"></span></div>
++  </button>
++</header>
++<nav class="global-nav">
++  <ul class="global-nav-list">
++    <li class="global-nav-top"><a href="../" data-label="ホーム" data-category="ヘッダー" class="click-event">ホーム</a></li>
++    <li><a href="../condition/" data-label="最新ゲレンデ情報" data-category="ヘッダー" class="click-event">最新ゲレンデ情報</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../condition/" data-label="最新ゲレンデ情報：ミドル" data-category="ヘッダー" class="click-event">最新ゲレンデ情報</a></li>
++          <li><a href="../gelande/" data-label="ゲレンデマップ" data-category="ヘッダー" class="click-event">ゲレンデマップ</a></li>
++          <li><a href="../gelande/#gelande01" data-label="エリア・コース紹介" data-category="ヘッダー" class="click-event">エリア・コース紹介</a></li>
++          <li class="pc"><a href="../kids/" data-label="キッズ・ファミリー情報" data-category="ヘッダー" class="click-event">キッズ・ファミリー情報</a></li>
++          <li><a href="../tparks/" target="_blank" data-label="TAKASU PARKS" data-category="ヘッダー" class="click-event">TAKASU PARKS</a></li>
++          <li><a href="/guide/beginner/" data-label="初めてのスキー・スノボ完全ガイド" data-category="ヘッダー" class="click-event">初めてのスキー・スノボ<br>完全ガイド</a></li>
++        </ul>
++      </div>
++    </li>
++    <li class="sp"><a href="../features/" data-label="高鷲スノーパークはこんなところ！" data-category="ヘッダー" class="click-event">高鷲スノーパークはこんなところ！</a></li>
++    <li class="sp"><a href="../kids/" data-label="キッズ・ファミリー情報" data-category="ヘッダー" class="click-event">キッズ・ファミリー情報</a></li>
++      <li class="sp"><a href="../young/" data-label="若者応援割引キャンペーン！" data-category="ヘッダー" class="click-event">若者応援割引キャンペーン！</a></li>
++    <li><a href="../reserve/"  data-label="Web予約・購入" data-category="ヘッダー" class="click-event">Web予約・購入</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../reserve/#liftpass" data-label="リフト券購入" data-category="ヘッダー" class="click-event">リフト券購入</a></li>
++            <li><a href="../reserve/#rentalres" data-label="レンタル予約" data-category="ヘッダー" class="click-event">レンタル予約</a></li>
++            <li><a href="../reserve/#schoolres" data-label="スクール予約" data-category="ヘッダー" class="click-event">スクール予約</a></li>
++            <li><a href="../reserve/#yukinosu" data-label="ユキノス入場券購入" data-category="ヘッダー" class="click-event">ユキノス入場券購入</a></li>
++          <li><a href="../reserve/#parkingres" data-label="駐車場予約" data-category="ヘッダー" class="click-event">駐車場予約</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../charge/" data-label="時間・料金" data-category="ヘッダー" class="click-event">時間・料金</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../charge/#charge01" data-label="営業時間" data-category="ヘッダー" class="click-event">営業時間</a></li>
++          <li><a href="../charge/#charge02" data-label="高鷲ダイナ共通リフト料金" data-category="ヘッダー" class="click-event">高鷲ダイナ共通リフト料金</a></li>
++          <li><a href="../charge/#charge03" data-label="団体割引" data-category="ヘッダー" class="click-event">団体割引</a></li>
++          <li><a href="../charge/#charge05" data-label="駐車料金" data-category="ヘッダー" class="click-event">駐車料金</a></li>
++          <li><a href="../charge/#charge04" data-label="シーズン券" data-category="ヘッダー" class="click-event">シーズン券</a></li>
++          <li class="pc"><a href="../young/" data-label="若者応援割" data-category="ヘッダー" class="click-event">若者応援割<br>
++割引キャンペーン！</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../rental" data-label="レンタル" data-category="ヘッダー" class="click-event">レンタル</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../rental/" data-label="レンタル案内" data-category="ヘッダー" class="click-event">レンタル案内</a></li>
++          <li><a href="../rental/#pacplan" data-label="おすすめパックプラン" data-category="ヘッダー" class="click-event">おすすめパックプラン</a></li>
++            <li><a href="../rental/#be_service" data-label="事前決済取り置きサービス" data-category="ヘッダー" class="click-event">事前決済取り置きサービス</a></li>
++          <li><a href="../rental/#pricelist" data-label="時間・料金サイズ" data-category="ヘッダー" class="click-event">時間・料金サイズ</a></li>
++          
++          <li><a href="../rental/#flow_c" data-label="お申し込みの流れ" data-category="ヘッダー" class="click-event">お申し込みの流れ</a></li>
++          <li><a href="../rental/#itemset" data-label="レンタル可能アイテム" data-category="ヘッダー" class="click-event">レンタル可能アイテム</a></li>
++          <li><a href="../rental/#attcon" data-label="ご利用にあたってのお願い" data-category="ヘッダー" class="click-event">ご利用にあたってのお願い</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../school/" data-label="スクール" data-category="ヘッダー" class="click-event">スクール</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../school/#ski" data-label="SIAスキースクール" data-category="ヘッダー" class="click-event">SIAスキースクール</a></li>
++          <li><a href="../school/#snow" data-label="JSBAスノーボードスクール" data-category="ヘッダー" class="click-event">JSBA<br>
++            スノーボードスクール</a></li>
++          <li><a href="../school/#saj" data-label="SAJスキースクール" data-category="ヘッダー" class="click-event">SAJスキースクール</a></li>
++          <li><a href="../school/#woot" data-label="グラトリ・パーク専門スノーボードスクール" data-category="ヘッダー" class="click-event">グラトリ・パーク専門<br class="pc">
++            スノーボードスクール</a></li>
++          <li><a href="../school/#gujoiss" data-label="郡上インターナショナルスノースクール" data-category="ヘッダー" class="click-event">郡上インターナショナル<br class="pc">
++            スノースクール</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../facilities/" data-label="施設案内" data-category="ヘッダー" class="click-event">施設案内</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="/guide/" data-label="タカスダイナ総合ガイド" data-category="ヘッダー" class="click-event">タカスダイナ総合ガイド</a></li>
++          <li><a href="../facilities/#facilities00" data-label="TAKASU TERRACE" data-category="ヘッダー" class="click-event">TAKASU TERRACE</a></li>
++          <li><a href="../facilities/#facilities01" data-label="センターハウス1F" data-category="ヘッダー" class="click-event">センターハウス1F</a></li>
++          <li><a href="../facilities/#facilities02" data-label="センターハウス2F" data-category="ヘッダー" class="click-event">センターハウス2F</a></li>
++            <li><a href="../facilities/#monte" data-label="モンテローザ" data-category="ヘッダー" class="click-event">モンテローザ</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../access/" data-label="アクセス・宿泊" data-category="ヘッダー" class="click-event">アクセス・宿泊</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../access/#access01" data-label="マイカー" data-category="ヘッダー" class="click-event">マイカー</a></li>
++          <li><a href="../access/#access02" data-label="ツアーバス" data-category="ヘッダー" class="click-event">ツアーバス</a></li>
++          <li><a href="../access/#access03" data-label="レンタカー" data-category="ヘッダー" class="click-event">レンタカー</a></li>
++          <li><a href="../access/#access04" data-label="無料シャトルバス" data-category="ヘッダー" class="click-event">無料シャトルバス</a></li>
++          <li><a href="../access/#stay01" data-label="周辺宿泊施設" data-category="ヘッダー" class="click-event">周辺宿泊施設</a></li>
++          <li><a href="../access/#stay02" data-label="近隣の温泉情報" data-category="ヘッダー" class="click-event">近隣の温泉情報</a></li>
++          <li><a href="https://takasudyna.com/campaign/" target="_blank" data-label="【福井割】実施中" data-category="ヘッダー" class="click-event">【福井割】実施中</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../news/" data-label="ニュース・イベント" data-category="ヘッダー" class="click-event">ニュース・イベント</a>
++       <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../calendar/" data-label="イベントカレンダー" data-category="ヘッダー" class="click-event">イベントカレンダー</a></li>
++        </ul>
++      </div>
++      </li>
++  </ul>
++  <nav class="sp-nav">
++    <div class="sp-nav-sub">
++      <ul>
++        <li><a href="../faq/" data-label="FAQ：SP" data-category="ヘッダー" class="click-event">FAQ</a></li>
++        <li><a href="https://asobito-resort.com/login" target="_blank" data-label="会員ログイン：SP" data-category="ヘッダー" class="click-event">会員ログイン</a></li>
++        <li><a href="https://asobito-resort.com/register" target="_blank" data-label="新規会員登録：SP" data-category="ヘッダー" class="click-event">新規会員登録</a></li>
++        <li><a href="https://www.takasumountains.com/" data-label="TAKASU MOUNTAINS：SP" data-category="ヘッダー" class="click-event">TAKASU MOUNTAINS</a></li>
++        <li><a href="../company/" data-label="会社概要：SP" data-category="ヘッダー" class="click-event">会社概要</a></li>
++        <li><a href="../contact/" data-label="お問い合わせ：SP" data-category="ヘッダー" class="click-event">お問い合わせ</a></li>
++      </ul>
++    </div>
++    <div class="sp-nav-sns">
++      <ul>
++        <li><a href="https://www.facebook.com/takasusnowpark" target="_blank" data-label="Facebook：SP" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_fb_w.png" width="80" height="80" alt="Facebook"/></a></li>
++        <li><a href="https://twitter.com/takasu_snowpark" target="_blank" data-label="X：SP" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_tw_w.png" width="80" height="80" alt="X"/></a></li>
++        <li><a href="https://www.instagram.com/takasu_snowpark/" target="_blank" data-label="Instagram：SP" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_ig_w.png" width="80" height="80" alt=""/></a></li>
++        <li><a href="https://lin.ee/FI4pmLm" target="_blank" data-label="LINE：SP" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_ln_w.png" width="80" height="80" alt="LINE"/></a></li>
++        <li><a href="https://www.youtube.com/channel/UCcMpmmLMG0XSLDdu7WyheNg" target="_blank" data-label="YouTube：SP" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_yt_w.png" width="80" height="80" alt="YouTube"/></a></li>
++            <li><a href="https://www.tiktok.com/@takasu_snowpark" target="_blank" data-label="TikTok：SP" data-category="ヘッダー" class="click-event"><img src="../assets/img/common/ico_tk_w.png" width="80" height="80" alt="TikTok"/></a></li>
++      </ul>
++    </div>
++    <ul class="sp-nav-languages">
++      <li class="translate">
++        <div class="translate-list"> <a href="?stt_lang=en">English</a> <a href="?stt_lang=th">Thai</a> <a href="?stt_lang=zh-CN">中国語(簡体)</a> <a href="?stt_lang=zh-TW">中国語(繁体)</a> <a href="?stt_lang=ja">日本語</a> </div>
++      </li>
++    </ul>
++    <ul class="sp-nav-link">
++      <li class="dynaland"><a href="https://www.dynaland.co.jp/" target="_blank" data-label="ダイナランド" data-category="ヘッダー：SP" class="click-event"><img src="../assets/img/common/logo_takasu.png" alt="ダイナランド"/>ダイナランド</a></li>
++    </ul>
++  </nav>
++</nav>
++<main class="main"> <!-- InstanceBeginEditable name="main" -->
++    <section id="page_ttl">
++      <div class="inner">
++        <p class="en">CONDITION</p>
++        <h1 class="jp">最新ゲレンデ情報</h1>
++      </div>
++    </section>
++    
++    
++    
++    <section id="pankuzu">
++      <div class="inner">
++        <ol>
++          <li><a href="/">ホーム</a></li>
++          <li>最新ゲレンデ情報</li>
++        </ol>
++      </div>
++    </section>
++
++    <section class="date">
++      <div class="inner">
++        <div class="lttl">
++          <time class="en">2026-07-06 PM1:00</time>
++          <p class="jp">Latest slope information</p>
++        </div>
++      </div>
++    </section>
++
++    <section class="page_nav">
++      <div class="inner">
++        <ul class="pb0">
++          <li><a href="#gelande_anch">ゲレンデNOW!</a></li>
++          <li><a href="#live_anch">ライブカメラ</a></li>
++          <li><a href="#comment_anch">スタッフの<wbr>コメント</a></li>
++          <li><a href="#map_anch">各リフト・<wbr>コース状況</a></li>
++            </ul>
++             <ul class="page_un">
++          <li><a href="#course_anch">各コース<wbr>状況詳細</a></li>
++          <li><a href="#park_anch">パーク状況詳細</a></li>
++          <li><a href="#kids_anch">キッズパーク<wbr>状況</a></li>
++          <li><a href="#rule_anch">各種規定<wbr>・利用規約</a></li>
++        </ul>
++      </div>
++    </section>
++
++    
++
++    <section id="gelande" class="content">
++      <a id="gelande_anch" name="gelande_anch" class="anchor"></a>
++      <div class="gelande-wrapper">
++        <!--<h2 class="gelande-title">ゲレンデ<br>NOW!</h2>-->
++                <figure>
++          <img src="https://www.takasu.gr.jp/news/wp-content/uploads/2024/05/b2635b06e231971f32a7912b5030a662.jpg" alt="ゲレンデ状況" width="100%">
++          <!--<img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000060cff9e8" alt="ライブカメラの画像" width="100%" class="image" />-->
++        </figure>-->
++          
++          
++          <!--<iframe width="" height="auto" class="youtubecamera now" src="https://www.youtube.com/embed/2wYa2xEpdCI?si=DhZwylEXq2MVUGKn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
++          
++          
++        <div class="weather-wrapper">
++          <ul>
++            <li class="weather">
++              <figure>
++                <img src="/assets/img/condition/ico_info_01.png" alt="">
++              </figure>晴れ            </li>
++            <li class="condition">
++                            <figure><img src="../assets/img/index/ico_slope.png" alt="" /></figure>滑走不可            </li>
++            <li class="snow">
++              <figure><img src="../assets/img/index/ico_snow.png" alt="" />
++                <figcaption>中腹</figcaption>
++              </figure><span>cm</span>
++            </li>
++            <li class="temperature">
++              <figure><img src="../assets/img/index/ico_temp.png" alt="" /></figure><span>&#8451;</span>
++            </li>
++            <li class="quality">
++              <figure><img src="../assets/img/index/ico_quality.png" alt="" /></figure>            </li>
++          </ul>
++          <p class="weatherpinpoint"><a href="https://weathernews.jp/s/ski/spot/35241/" target="_blank" data-label="週間天気予報" data-category="最新ゲレンデ情報" class="click-event">週間天気予報を見る</a>
++          </p>
++          <p class="road"><a href="http://c-ihighway.jp/web/map_tokai.html" target="_blank" data-label="ihightway" data-category="最新ゲレンデ情報" class="click-event"><img src="../assets/img/condition/bnr_ihightway.jpg" alt="ihightway" width="100%" /></a></p>
++
++        </div>
++      </div>
++    </section>
++
++
++
++  
++    <section id="road" class="content">
++      <a id="road_anch" name="road_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">ROAD CONDITIONS</p>
++          <h2 class="jp">道路状況</h2>
++        </div>
++        <div class="content_inner">
++          <p></p>
++        </div>
++      </div>
++    </section>
++
++    <input class="serialNumber" type="hidden" value="0000000060cff9e8,000000009649b28a,00000000d9b8dbd9,00000000059ffffa,000000001b3c6287,0000000035d5e814" />
++
++	
++	
++    <section id="livecamera" class="content bg-pink10">
++          <a id="live_anch" name="live_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">LIVE CAMERA</p>
++          <h2 class="jp">ライブカメラ</h2>
++        </div>
++        <div class="content_inner" id="facilities01">
++          <div class="flex-wrap col2-wrap mb-m">
++            <div class="body">
++              <h3 class="mttl" id="facilities">ゴンドラ山頂<br class="sp">
++                （ダイヤモンドコース）</h3>
++             <!-- <figure><img class="image" src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000060cff9e8" alt="ライブカメラの画像" width="100%" /></figure>
++              <div class="taken_at blue" data-id="0000000060cff9e8" data-show-sec="0"></div>-->
++                
++              <!--<iframe width="" height="315" class="youtubecamera" src="https://www.youtube.com/embed/2wYa2xEpdCI?si=DhZwylEXq2MVUGKn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
++                
++                <figure><img class="image" src="../assets/img/condition/readyimg2.jpg" alt="ライブカメラの画像" width="" /></figure>
++            </div>
++            <div class="body">
++              <h3 class="mttl">山麓センターハウス前</h3>
++                <figure><img class="image" src="../assets/img/condition/readyimg2.jpg" alt="ライブカメラの画像" width="" /></figure>
++                
++                
++                <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000d9b8dbd9" alt="ライブカメラの画像" width="100%" class="image" /></figure>
++              <div class="taken_at blue center" data-id="00000000d9b8dbd9" data-show-sec="0"></div>
++               </div>-->
++              </div>
++            <div class="body">
++              <h3 class="mttl" id="parking2">駐車場料金所付近<br class="sp">
++                ライブカメラ</h3>
++                
++                <figure><img class="image" src="../assets/img/condition/readyimg2.jpg" alt="ライブカメラの画像" width="" /></figure>
++              <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000035d5e814" alt="ライブカメラの画像" width="100%" class="image" /></figure>
++              <div class="taken_at blue" data-id="0000000035d5e814" data-show-sec="0"></div>-->
++            </div>
++          
++     </div>
++      </div>
++    </section>
++
++
++
++
++
++
++
++
++
++
++
++
++    <section class="content">
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">WEATHER/SNOW</p>
++          <h2 class="jp">天候・積雪状況</h2>
++        </div>
++        <div class="content_inner">
++          <table class="table_wes mgb30">
++            <tbody>
++              <tr>
++                <th rowspan="5">山頂の状況</th>
++                <td class="table_westtl">天候</td>
++                <td class="table_wesinfo">
++                                    <img src="/assets/img/condition/ico_info_03.png" alt="">
++                </td>
++              </tr>
++              <tr>
++                <td>現在の積雪量</td>
++                <td>cm</td>
++              </tr>
++              <tr>
++                <td>気温</td>
++                <td>&#8451;</td>
++              </tr>
++              <tr>
++                <td>雪質</td>
++                <td class="info"></td>
++              </tr>
++
++            </tbody>
++          </table>
++          <table class="table_wes">
++            <tbody>
++              <tr>
++                <th rowspan="4">中腹の状況</th>
++                <td class="table_westtl">天候</td>
++                <td class="table_wesinfo">
++                  
++                  <img src="/assets/img/condition/ico_info_01.png" alt="">
++                </td>
++              </tr>
++              <tr>
++                <td>現在の積雪量</td>
++                <td>cm</td>
++              </tr>
++              <tr>
++                <td>気温</td>
++                <td>&#8451;</td>
++              </tr>
++              <tr>
++                <td>雪質</td>
++                <td></td>
++              </tr>
++            </tbody>
++          </table>
++        </div>
++      </div>
++    </section>
++    
++    
++    
++    
++        
++
++
++    <section id="comment" class="content bg-pink10">
++      <a id="comment_anch" name="comment_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">STAFF’S COMMENT</p>
++          <h2 class="jp">スタッフのコメント</h2>
++        </div>
++        <div class="content_inner">
++          <p><span style="color: #0000ff;"><strong><span style="font-size: 20px;">4/19(日)を以て25-26シーズンの営業を終了いたしました！</span></strong></span><br /><span style="color: #0000ff;"><strong><span style="font-size: 20px;">今シーズンも多くのご来場を頂き誠にありがとうございました。</span></strong></span></p><p><br />当スキー場はこれから来シーズンに向けて、更なるアップデートをするべく様々な改善、対策をいたします。<br /><br />よろしければぜひ皆さまの貴重なご意見やコメントもぜひお聞かせ下さい！ <a href="https://search.google.com/local/writereview?placeid=ChIJqZz3FjmGAmARwPXH2fiG4WM">『口コミ投稿』</a><br /><br /><img class="alignnone size-medium wp-image-10332" src="https://www.takasu.gr.jp/news/wp-content/uploads/2026/05/78c99df7290401c533e06ce72b6e3ecb-340x191.jpg" alt="" width="340" height="191" /></p>
++          <!--<div class="flex-wrap col2-wrap mb-m">
++          <div class="body center">
++		  <h4 class="sttl">タイムラプス映像</h4>
++<video controls autoplay width="320" height="240">
++           <source src="https://powdercam.jp/resources/videos/00000000fbd57607/time_lapse.mp4">
++            <p>動画を再生するには、videoタグをサポートしたブラウザが必要です。</p></div>
++          <div class="body">
++          <p><span style="color: #0000ff;"><strong><span style="font-size: 20px;">4/19(日)を以て25-26シーズンの営業を終了いたしました！</span></strong></span><br /><span style="color: #0000ff;"><strong><span style="font-size: 20px;">今シーズンも多くのご来場を頂き誠にありがとうございました。</span></strong></span></p><p><br />当スキー場はこれから来シーズンに向けて、更なるアップデートをするべく様々な改善、対策をいたします。<br /><br />よろしければぜひ皆さまの貴重なご意見やコメントもぜひお聞かせ下さい！ <a href="https://search.google.com/local/writereview?placeid=ChIJqZz3FjmGAmARwPXH2fiG4WM">『口コミ投稿』</a><br /><br /><img class="alignnone size-medium wp-image-10332" src="https://www.takasu.gr.jp/news/wp-content/uploads/2026/05/78c99df7290401c533e06ce72b6e3ecb-340x191.jpg" alt="" width="340" height="191" /></p></div>
++        </div>-->
++
++        </div>
++      </div>
++    </section>
++    
++    
++    
++    
++    
++    <section id="map" class="content">
++      <a id="map_anch" name="map_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">LIFT &amp; COURSE</p>
++          <h2 class="jp">各リフト・コース状況</h2>
++        </div>
++        <div class="content_inner">
++             <!-- 最新ゲレンデ情報マップ ここから// -->
++          <!--<figure class="condition_map">-->
++
++                    <figure class="condition_map js-pinch-hint">
++
++                                                                                                                                                                                                                  <script>
++                                  lift01_status="×";
++                                  lift02_status="×";
++                                  lift03_status="×";
++                                  lift04_status="×";
++                              </script>
++            
++                                                                                                                                                                                                                                                                                    
++                                                                                                                                                                                                                                                                                                                                                                            
++                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
++                                                                                                                                                            <img src="https://www.takasu.gr.jp/new_parts/images/condition/map/course_name.png" alt="コース名" class="map-name">
++            <img src="https://www.takasu.gr.jp/new_parts/images/condition/map/course_base.jpg" alt="コースマップ" class="map-base">
++          </figure>
++          <!-- //最新ゲレンデ情報マップ ここまで -->
++            </div>
++          </div>
++            </section>
++    
++    
++
++
++    <section id="lift" class="content bg-pink10">
++      <a id="lift_anch" name="lift_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">LIFT</p>
++          <h2 class="jp">リフト運行状況</h2>
++        </div>
++        <div class="content_inner">
++            <div class="scrollimg">
++          <table class="table_basic mgb20">
++            <tr>
++              <th>リフト名</th>
++              <th>運行時間</th>
++              <th>運行可否</th>
++              <th class="info">お知らせ</th>
++            </tr>
++
++                                                                                                                                                                                                      </table>
++            </div>
++          <p class="center">※天候や積雪の影響により、運行時間を変更させていただく場合がございます。</p>
++            
++            
++        </div>
++      </div>
++    </section>
++    
++    
++    
++    
++    
++    
++    
++    
++    
++    <section id="course" class="content">
++      <a id="course_anch" name="course_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">COURSE</p>
++          <h2 class="jp">各コース利用状況</h2>
++        </div>
++        <div class="content_inner">
++
++
++
++         
++
++
++          <!--
++        <figure><img src="../new_parts/images/condition/course_map.jpg" alt="コースマップ"></figure>
++      -->
++
++         <!--   <p class="center mgb20 sttl"><strong><a href="https://www.takasu.gr.jp/condition/map.php" target="_blank">スマートフォンでマップを見る</a></strong> &gt;&gt;</p>
++           <p class="center mgb30">※スマートフォンでご覧の際、スワイプ（拡大・縮小）によりブラウザが正常に動作しない場合がございます。<br>スマートフォンでコース状況マップをご覧の際は上記からをお勧めいたします。</p>-->
++          <p class="center mgb50"><strong><a href="https://www.dynaland.co.jp/condition/" target="_blank">ダイナランドのコース状況はこちら</a></strong> &gt;&gt;</p>
++
++
++
++
++                    
++                    
++
++                    
++        </div>
++      </div>
++    </section>
++    <section id="park" class="content bg-pink10">
++      <a id="park_anch" name="park_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">PARK</p>
++          <h2 class="jp">パーク・ツリーラン状況</h2>
++        </div>
++        <div class="content_inner">
++            <div class="scrollimg">
++
++          
++          
++
++        </div>
++          <p class="center"><a href="https://www.instagram.com/takasu_parks/?hl=ja" target="_blank" data-label="takasu_parks instagram" data-category="最新ゲレンデ情報" class="click-event">
++              <img src="https://www.takasu.gr.jp/assets/img/condition/bnr_takasu_parks.jpg" alt="takasu parks"></a></p>
++          <p class="center"><a href="https://www.instagram.com/global_snow_design/" target="_blank" data-label="global_snow_design instagram" data-category="最新ゲレンデ情報" class="click-event">
++              <img src="https://www.takasu.gr.jp/assets/img/condition/bnr_gsd.jpg" alt="GSD"></a></p>
++
++        </div>
++      </div>
++    </section>
++    <section id="kids" class="content">
++      <a id="kids_anch" name="kids_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">FAMILY SNOW AREA</p>
++          <h2 class="jp">キッズパーク状況<br class="sp">（YUKINOS）</h2>
++        </div>
++        <div class="content_inner">
++            <div class="scrollimg">
++
++          
++
++          
++          <!--
++      <p class="center"><a href="../kids/"><img src="../new_parts/images/common/bnr_kiz.jpg" alt="" /></a></p>
++        -->
++
++          </div>
++          </div>
++      </div>
++    </section>
++    
++    
++    
++     <section id="rule" class="content bg-pink10">
++      <a id="rule_anch" name="rule_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">RULES &amp; REGULATIONS</p>
++          <h2 class="jp">各種規定・利用規約</h2>
++        </div>
++        <div class="content_inner">
++                <h3 class="sttl center col_bk"><strong>各種規定（PDF）</strong></h3>
++         <div class="flex-wrap col2-wrap">
++           <div>
++             <p class="kiteilink"><a href="../assets/img/common/reg_lift.pdf" target="_blank">リフト利用規定</a></p>
++           </div>
++           <div>
++             <p class="kiteilink"><a href="../assets/img/common/reg_item.pdf" target="_blank">ゲレンデ利用可能滑走具</a></p>
++           </div>
++         </div>
++             <h3 class="sttl center col_bk"><strong>スキー場利用約款と<br class="sp">滑走禁止区域での<br class="sp">救助費用について（PDF）</strong></h3>
++         <div class="flex-wrap col3-wrap">
++           <div>
++             <p class="kiteilink"><a href="../assets/img/common/terms.pdf" target="_blank">スキー場利用約款</a></p>
++           </div>
++           <div>
++             <p class="kiteilink"><a href="../assets/img/common/cablecar.pdf" target="_blank">索道利用約款</a></p>
++           </div>
++           <div>
++             <p class="kiteilink"><a href="../assets/img/common/costs.pdf" target="_blank">滑走禁止区域・救助費用</a></p>
++           </div>
++         </div>
++            </div>
++          </div>
++         </section>
++    
++    
++    
++    
++    <section class="page_nav">
++      <div class="inner">
++        <ul class="pb0">
++          <li><a href="#gelande_anch">ゲレンデNOW!</a></li>
++          <li><a href="#live_anch">ライブカメラ</a></li>
++          <li><a href="#comment_anch">スタッフの<wbr>コメント</a></li>
++          <li><a href="#map_anch">各リフト・<wbr>コース状況</a></li>
++            </ul>
++             <ul class="page_un">
++          <li><a href="#course_anch">各コース<wbr>状況詳細</a></li>
++          <li><a href="#park_anch">パーク状況詳細</a></li>
++          <li><a href="#kids_anch">キッズパーク<wbr>状況</a></li>
++          <li><a href="#rule_anch">各種規定<wbr>・利用規約</a></li>
++        </ul>
++      </div>
++    </section>
++
++    <!-- InstanceEndEditable --> </main>
++<div class="bg-footer"></div>
++<div class="floating-items">
++    
++    
++    <!--
++  <ul class="floating-list">
++      <li class="lift"><a href="https://www.takasu.gr.jp/ec/" target="_blank" data-label="QR前売り券購入" data-category="フローティング" class="click-event">
++      <figure><img src="../assets/img/common/ico_qr.png" alt="QR前売り券購入"/></figure>
++      QR<br class="sp">前売り券<br class="sp">購入</a></li>
++    <li class="lift"><a href="https://www.winterplus.jp/lift/lift_detail.cfm?PR=8711&utm_source=takasudyna&utm_medium=hp&utm_campaign=affiliates" target="_blank" data-label="IC前売り券購入" data-category="フローティング" class="click-event">
++      <figure><img src="../assets/img/common/ico_lift.png" alt="IC前売り券購入"/></figure>
++      IC<br class="sp">前売り券<br class="sp">購入</a></li>
++    <li class="school"><a href="../reserve/" data-label="各種ご予約" data-category="フローティング" class="click-event">
++      <figure><img src="../assets/img/common/ic_cal.png" alt="各種ご予約"/></figure>
++      各種<br class="sp">ご予約</a></li>
++      <li class="hotel"><a href="https://www.villa-montsaint.com/" target="_blank" data-label="HOTEL予約" data-category="フローティング" class="click-event">
++      <figure><img src="../assets/img/common/ico_hotel.png" alt="HOTEL予約"/></figure>
++      HOTEL<br class="sp">予約</a></li>
++  </ul>-->
++    
++    
++    
++    
++    
++      <ul class="floating-list">
++    <li class="lift"><a href="https://www.takasu.gr.jp/ec/" target="_blank" data-label="リフト券購入" data-category="フローティング" class="click-event">
++      <figure><img src="../assets/img/common/ico_lift.png" alt="リフト券購入"/></figure>
++      リフト券<br class="sp">
++      購入</a></li>
++    <li class="school"><a href="../reserve/" data-label="各種ご予約" data-category="フローティング" class="click-event">
++      <figure><img src="../assets/img/common/ic_cal.png" alt="各種ご予約"/></figure>
++      各種<br class="sp">
++        ご予約</a></li>
++      <li class="hotel"><a href="https://www.villa-montsaint.com/" target="_blank" data-label="HOTEL予約" data-category="フローティング" class="click-event">
++      <figure><img src="../assets/img/common/ico_hotel.png" alt="HOTEL予約"/></figure>
++      HOTEL<br class="sp">
++      予約</a></li>
++    <li class="dynaland"><a href="https://www.dynaland.co.jp/" target="_blank" data-label="ダイナランド" data-category="フローティング" class="click-event">
++      <figure><img src="../assets/img/common/logo_dynaland_s.png" alt="ダイナランド"/></figure>
++      ダイナ<br class="sp">
++        ランド</a></li>
++  </ul>
++</div>
++    
++<section class="pr-bnr">
++  <div class="inner">
++    <ul class="pr-bnr-list">
++        
++      <li><a href="https://chubu-snow.com/member/" target="_blank" data-label="アソビト" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_asobito.jpg" alt="アソビト"></a></li>
++      <li><a href="https://chubu-snow.com/recruit/" target="_blank" data-label="中部スノーアライアンス 正社員募集中" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_recruit.jpg" alt="中部スノーアライアンス リゾート運営 正社員募集中"></a></li>
++      <li><a href="https://www.dynaland.co.jp/job/" target="_blank" data-label="スノーリゾートアルバイト大募集" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_recruit2.png" alt="スノーリゾートアルバイト大募集"></a></li>
++      <li><a href="/guide/beginner/" data-label="初めてのスキー・スノボ完全ガイド" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_manner.png" alt="初めてのスキー・スノボ完全ガイド"></a></li>
++      <li><a href="https://www.winterplus.jp/ski/ski_detail.cfm?skiarea_code=takasu" target="_blank" data-label="ウィンタープラス" data-category="PRバナー" class="click-event"><img src="../assets/img/common/takasu_winteplus_240x80.gif" alt="ウィンタープラス"></a></li>
++		<li><a href="https://www.jtb.co.jp/leisure/fp/qKS006945/" target="_blank" data-label="JTB" data-category="PRバナー" class="click-event"><img src="/assets/img/common/bnr_jtb.jpg" alt="JTB"></a></li>
++        <!--<li><a href="https://opt.jtb.co.jp/kokunai_opt/i/h16_i1601/?genre1=38&search_keyword2=%8D%82%98h%83X%83m%81[%83p%81[%83N" target="_blank" data-label="JTB data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_jtb_anime.gif" alt="JTB コンビニで購入"></a></li>-->
++      <li><a href="https://www.quickliner.com/ski/gelende/takasu/index.html" target="_blank" data-label="クイックライナー" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_rado_kansai.gif" alt="大阪・京都から"></a></li>
++      <li><a href="https://www.sanq-tripal.com/item/skibus/ski_bus_a_02.php" target="_blank" data-label="トライパルツアー" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_try_nagoya.gif" alt="名古屋から"></a></li>
++      <li><a href="https://www.tabione.com/en/course_input/?company=154754&shop=S30107&plan=0035&crse=c040" target="_blank" data-label="Tabiplusone" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_rado_multibn.jpg" alt="Single 1-Day Lift Ticket"></a></li>
++      <li><a href="https://7ticket.jp/g/000948" target="_blank" data-label="セブンチケット" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_7.gif" alt="セブンチケット"></a></li>
++      <li><a href="https://www.gifubus.co.jp/info/kousokubus/post698" target="_blank" data-label="岐阜バス" data-category="PRバナー" class="click-event"><img src="/assets/img/common/tmskippu.jpg" alt="岐阜バス"/></a></li>
++      <li><a href="https://car.orix.co.jp/campaign/snow2025-2026.html" target="_blank" data-label="オリックスレンタカー" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_orix4.jpg" alt="オリックスレンタカー"></a></li>
++      <li><a href="https://www.j-netrentacar.co.jp/campaign/detail/?id=12090" target="_blank" data-label="j-netレンタカー" data-category="PRバナー" class="click-event"><img src="../assets/img/common/lift_ticket.jpg" alt="j-netレンタカー"></a></li>
++      <li><a href="https://trl-aichi.co.jp/campaign/ski/" target="_blank" data-label="トヨタレンタリース愛知" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_toyota.jpg" alt="toyota"></a></li>
++      <li><a href="https://paypay.box.com/s/yjfz49915d3dy4fs4ycv87mill3zv7lw" target="_blank" data-label="paypayクーポン" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_paypay.jpg" alt="paypayクーポン"></a></li>
++      <li><a href="https://hayatabi.c-nexco.co.jp/setplan/detail.html?id=1161" target="_blank" data-label="高速料金が安いお得なプラン発券約40％OFF" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_hiway.jpg" alt="高速料金が安いお得なプラン発券約40％OFF" width="240" height="80"></a></li>
++      <li><a href="https://tabitabigujo.com/outdoor/?utm_source=dmo&utm_medium=referral&utm_campaign=website_takasusnow" target="_blank" data-label="GUJO Outdoor Experiences" data-category="PRバナー" class="click-event"><img src="../assets/img/common/sub_gujo.jpg" alt="GUJO Outdoor Experiences"></a></li>
++      <li><a href="https://gujotakasu.com/" target="_blank" data-label="たかす・ひるがの観光WEB" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_takasuk.jpeg" alt="たかす・ひるがの観光WEB"/></a></li>
++      <li><a href="https://yuki-yama.com/" target="_blank" data-label="yukiyama" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_yukiyama.png" alt="スキー・スノーボードライフをより豊かにするアプリサービス yukiyama"></a></li>
++      <li><a href="https://www.snowjapan.com/japan-ski-resorts/gifu/gujo/takasu-snow-park" target="_blank" data-label="snow japan" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_snowjapan.jpg" alt="snow japan"></a></li>
++      <li><a href="https://japan-snowboard-academy.com/" target="_blank" data-label="JAPAN SNOWBOARD ACADEMY" data-category="PRバナー" class="click-event"><img src="../assets/img/common/kyuujin_dynaland.jpg" alt="JAPAN SNOWBOARD ACADEMY"></a></li>
++      <li><a href="https://jsbs2012.jp/date/takasu-gr" target="_blank" data-label="縁結び大学" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_date.jpg" alt="縁結び大学"></a></li>
++      <li><a href="https://xn--6i6a24d.net/" target="_blank" data-label="高鷲ポータルサイト" data-category="PRバナー" class="click-event"><img src="/assets/img/common/bnr_takasu.png" alt="高鷲ポータルサイト"></a></li>
++        <li><a href="https://protectourwinters.jp/sustainableresort/" target="_blank" data-label="SUSTAINABLE RESORT ALLIANCE" data-category="PRバナー" class="click-event"><img src="../assets/img/common/powlogo.png" alt="SUSTAINABLE RESORT ALLIANCE"></a></li>
++        <li><a href="https://tabitabigujo.com/" target="_blank" data-label="TABITABI郡上（たびたび郡上）" data-category="PRバナー" class="click-event"><img src="../assets/img/common/bnr_gujokanko.png" alt="TABITABI郡上（たびたび郡上）"/></a></li>
++    </ul>
++  </div>
++</section>
++<footer class="footer">
++  <div class="inner">
++    <nav class="footer-nav">
++      <ul class="footer-nav-list">
++        <li><a href="../" data-label="ホーム" data-category="フッター" class="click-event">ホーム</a></li>
++        <li><a href="../condition/" data-label="最新ゲレンデ情報" data-category="フッター" class="click-event">最新ゲレンデ情報</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../gelande/#map" data-label="ゲレンデマップ" data-category="フッター" class="click-event">ゲレンデマップ</a></li>
++            <li><a href="../gelande/#gelande01" data-label="エリア・コース紹介" data-category="フッター" class="click-event">エリア・コース紹介</a></li>
++            <li><a href="../tparks/" target="_blank" data-label="TAKASU PARKS" data-category="フッター" class="click-event">TAKASU PARKS</a></li>
++              <li><a href="../kids/" data-label="キッズ・ファミリー情報" data-category="フッター" class="click-event">キッズ・ファミリー情報</a></li>
++			  <li><a href="/guide/beginner/" data-label="初めてのスキー・スノボ完全ガイド" data-category="フッター" class="click-event">初めてのスキー・スノボ完全ガイド</a></li>
++          </ul>
++        </li>
++        <li><a href="../facilities/" data-label="施設案内" data-category="フッター" class="click-event">施設案内</a>
++          <ul class="footer-nav-sub">
++              <li><a href="/guide/" data-label="タカスダイナ総合ガイド" data-category="フッター" class="click-event">タカスダイナ総合ガイド</a></li>
++            <li><a href="../facilities/" data-label="施設概要" data-category="フッター" class="click-event">施設概要</a></li>
++            <li><a href="../facilities/#facilities00" data-label="TAKASU TERRACE" data-category="フッター" class="click-event">TAKASU TERRACE</a></li>
++            <li><a href="../facilities/#facilities01" data-label="センターハウス1F" data-category="フッター" class="click-event">センターハウス1F</a></li>
++            <li><a href="../facilities/#facilities02" data-label="センターハウス2F" data-category="フッター" class="click-event">センターハウス2F</a></li>
++              <li><a href="../facilities/#monte" data-label="モンテローザ" data-category="フッター" class="click-event">モンテローザ</a></li>
++          </ul>
++        </li>
++        <li><a href="../charge/" data-label="時間・料金" data-category="フッター" class="click-event">時間・料金</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../charge/#charge01" data-label="営業時間" data-category="フッター" class="click-event">営業時間</a></li>
++            <li><a href="../charge/#charge02" data-label="高鷲ダイナ共通リフト料金" data-category="フッター" class="click-event">高鷲ダイナ共通リフト料金</a></li>
++            <li><a href="../charge/#charge03" data-label="団体割引" data-category="フッター" class="click-event">団体割引</a></li>
++            <li><a href="../charge/#charge05" data-label="駐車料金" data-category="フッター" class="click-event">駐車料金</a></li>
++            <li><a href="../charge/#charge04" data-label="シーズン券" data-category="フッター" class="click-event">シーズン券</a></li>
++              <li><a href="../young/" data-label="若者応援割" data-category="フッター" class="click-event">若者応援割割引キャンペーン！</a></li>
++          </ul>
++        </li>
++        <li><a href="../rental/" data-label="レンタル" data-category="フッター" class="click-event">レンタル</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../rental/" data-label="レンタル案内" data-category="フッター" class="click-event">レンタル案内</a></li>
++            <li><a href="../rental/#pacplan" data-label="おすすめパックプラン" data-category="フッター" class="click-event">おすすめパックプラン</a></li>
++              <li><a href="../rental/#pricelist" data-label="時間・料金サイズ" data-category="フッター" class="click-event">時間・料金サイズ</a></li>
++              <li><a href="../rental/#be_service" data-label="事前決済取り置きサービス" data-category="フッター" class="click-event">事前決済取り置きサービス</a></li>            
++            <li><a href="../rental/#flow_c" data-label="お申し込みの流れ" data-category="フッター" class="click-event">お申し込みの流れ</a></li>
++            <li><a href="../rental/#itemset" data-label="レンタル可能アイテム" data-category="フッター" class="click-event">レンタル可能アイテム</a></li>
++            <li><a href="../rental/#attcon" data-label="ご利用にあたってのお願い" data-category="フッター" class="click-event">ご利用にあたってのお願い</a></li>
++          </ul>
++        </li>
++        <li><a href="../school/" data-label="スクール" data-category="フッター" class="click-event">スクール</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../school/#ski" data-label="SIAスキースクール" data-category="フッター" class="click-event">SIAスキースクール</a></li>
++            <li><a href="../school/#snow" data-label="JSBAスノーボードスクール" data-category="フッター" class="click-event">JSBAスノーボードスクール</a></li>
++            <li><a href="../school/#saj" data-label="SAJスキースクール" data-category="フッター" class="click-event">SAJスキースクール</a></li>
++            <li><a href="../school/#woot" data-label="グラトリ・パーク専門スノーボードスクール" data-category="フッター" class="click-event">グラトリ・パーク専門<br class="pc">
++              スノーボードスクール</a></li>
++            <li><a href="../school/#gujoiss" data-label="郡上インターナショナルスノースクール" data-category="フッター" class="click-event">郡上インターナショナルスノースクール</a></li>
++          </ul>
++        </li>
++        <li><a href="../access/" data-label="アクセス・宿泊" data-category="フッター" class="click-event">アクセス・宿泊</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../access/#access01" data-label="マイカー" data-category="フッター" class="click-event">マイカー</a></li>
++            <li><a href="../access/#access02" data-label="ツアーバス" data-category="フッター" class="click-event">ツアーバス</a></li>
++            <li><a href="../access/#access03" data-label="ツアーバス" data-category="フッター" class="click-event">レンタカー</a></li>
++            <li><a href="../access/#access04" data-label="無料シャトルバス" data-category="フッター" class="click-event">無料シャトルバス</a></li>
++            <li><a href="../access/#stay01" data-label="周辺宿泊施設" data-category="フッター" class="click-event">周辺宿泊施設</a></li>
++            <li><a href="../access/#stay02" data-label="近隣の温泉情報" data-category="フッター" class="click-event">近隣の温泉情報</a></li>
++              <li><a href="https://takasudyna.com/campaign/" target="_blank" data-label="【福井割】実施中" data-category="フッター" class="click-event">【福井割】実施中</a></li>
++          </ul>
++        </li>
++        <li><a href="../reserve/" data-label="Web予約・購入" data-category="フッター" class="click-event">Web予約・購入</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../reserve/#liftpass" data-label="リフト券購入" data-category="フッター" class="click-event">リフト券購入</a></li>
++            <li><a href="../reserve/#rentalres" data-label="レンタル予約" data-category="フッター" class="click-event">レンタル予約</a></li>
++            <li><a href="../reserve/#schoolres" data-label="スクール予約" data-category="フッター" class="click-event">スクール予約</a></li>
++            <li><a href="../reserve/#yukinosu" data-label="ユキノス入場券購入" data-category="フッター" class="click-event">ユキノス入場券購入</a></li>
++              <li><a href="../reserve/#parkingres" data-label="駐車場予約" data-category="フッター" class="click-event">駐車場予約</a></li>
++          </ul>
++        </li>
++      </ul>
++      <ul class="footer-nav-bottom">
++        <li><a href="../features/" data-label="高鷲スノーパークはこんなところ" data-category="フッター" class="click-event">高鷲スノーパークはこんなところ！</a></li>
++        <li><a href="../young/" data-label="若者応援割引キャンペーン！" data-category="フッター" class="click-event">若者応援割引キャンペーン！</a></li>
++        <li><a href="../kids/" data-label="キッズ・ファミリー情報" data-category="フッター" class="click-event">キッズ・ファミリー情報</a></li>
++        <li><a href="../news/" data-label="ニュース・イベント" data-category="フッター" class="click-event">ニュース・イベント</a></li>
++        <li><a href="../calendar/" data-label="イベントカレンダー" data-category="フッター" class="click-event">イベントカレンダー</a></li>
++        <li><a href="../faq/" data-label="FAQ" data-category="フッター" class="click-event">FAQ</a></li>
++        <li><a href="../company/" data-label="会社概要" data-category="フッター" class="click-event">会社概要</a></li>
++        <li><a href="https://www.takasumountains.com/" target="_blank" data-label="TAKASU MOUNTAINS" data-category="フッター" class="click-event">TAKASU MOUNTAINS</a></li>
++        <li><a href="https://asobito-resort.com/login" target="_blank" data-label="会員ログイン" data-category="フッター" class="click-event">会員ログイン</a></li>
++        <li><a href="https://asobito-resort.com/register" target="_blank" data-label="新規会員登録" data-category="フッター" class="click-event">新規会員登録</a></li>
++        <li><a href="../contact/" data-label="お問い合わせ" data-category="フッター" class="click-event">お問い合わせ</a></li>
++      </ul>
++    </nav>
++  </div>
++  <div class="footer-related">
++    <div class="inner">
++      <div class="footer-company">
++        <h3 class="logo"><a href="../" data-label="ロゴ" data-category="フッター" class="click-event"><img src="../assets/img/common/h_logo_new.png" alt="高鷲スノーパーク"/></a></h3>
++        <address>
++        〒501-5305 岐阜県郡上市高鷲町西洞3086-1<br>
++        東海北陸自動車道「高鷲IC」より10分!
++        </address>
++        <p class="tel">TEL:0575-72-7000</p>
++        <div class="sns">
++          <ul>
++            <li><a href="https://www.facebook.com/takasusnowpark" target="_blank" data-label="Facebook" data-category="フッター" class="click-event"><img src="../assets/img/common/ico_fb_w.png" width="80" height="80" alt="Facebook"/></a></li>
++            <li><a href="https://twitter.com/takasu_snowpark" target="_blank" data-label="X" data-category="フッター" class="click-event"><img src="../assets/img/common/ico_tw_w.png" width="80" height="80" alt="X"/></a></li>
++            <li><a href="https://www.instagram.com/takasu_snowpark/" target="_blank" data-label="Instagram" data-category="フッター" class="click-event"><img src="../assets/img/common/ico_ig_w.png" width="80" height="80" alt="Instagram"/></a></li>
++            <li><a href="https://lin.ee/FI4pmLm" target="_blank" data-label="LINE" data-category="フッター" class="click-event"><img src="../assets/img/common/ico_ln_w.png" width="80" height="80" alt="LINE"/></a></li>
++            <li><a href="https://www.youtube.com/channel/UCcMpmmLMG0XSLDdu7WyheNg" target="_blank" data-label="YouTube" data-category="フッター" class="click-event"><img src="../assets/img/common/ico_yt_w.png" width="80" height="80" alt="YouTube"/></a></li>
++            <li><a href="https://www.tiktok.com/@takasu_snowpark" target="_blank" data-label="TikTok" data-category="フッター" class="click-event"><img src="../assets/img/common/ico_tk_w.png" width="80" height="80" alt="TikTok"/></a></li>
++          </ul>
++        </div>
++        <p class="copyright">&copy; 2022 TAKASU SNOW PARK</p>
++      </div>
++      <div class="footer-related-list">
++        <h4>近くのスキー場</h4>
++        <ul>
++          <li><a href="https://www.dynaland.co.jp/" target="_blank" data-label="ダイナランド" data-category="フッター" class="click-event">ダイナランド</a></li>
++          <li><a href="http://www.hiruganokogen.com/" target="_blank" data-label="ひるがの高原スキー場" data-category="フッター" class="click-event">ひるがの高原スキー場</a></li>
++        </ul>
++      </div>
++      <div class="footer-related-list">
++        <h4>近くの宿泊施設</h4>
++        <ul>
++          <li><a href="https://www.villa-montsaint.com/" target="_blank" data-label="ホテルヴィラ・モンサン" data-category="フッター" class="click-event">ホテルヴィラ・モンサン</a></li>
++        </ul>
++      </div>
++    </div>
++  </div>
++</footer>
++<script src="../assets/js/lib/jquery-3.2.1.min.js"></script> 
++<script src="../assets/js/common.js"></script> 
++<script src="../assets/js/module.js"></script> 
++<!-- InstanceBeginEditable name="foot" -->
++  <script src="../assets/js/map.js"></script>
++    <script src="../assets/js/zoom.js"></script>
++    <script src="../assets/js/scroll-hint.js"></script>  
++    <script>
++  new ScrollHint('.scrollimg', {
++  suggestiveShadow: true,
++  remainingTime: 5000,
++  i18n: {
++    scrollable: 'スクロールできます'
++  }
++  });
++</script>
++  <script>
++    (function(d, s, id) {
++      var js, fjs = d.getElementsByTagName(s)[0];
++      if (d.getElementById(id)) return;
++      js = d.createElement(s);
++      js.id = id;
++      js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.5";
++      fjs.parentNode.insertBefore(js, fjs);
++    }(document, 'script', 'facebook-jssdk'));
++  </script>
++  　
++  <!-- InstanceEndEditable --> 
++<script type="text/javascript">
++/* <![CDATA[ */
++var google_conversion_id = 965996918;
++var google_custom_params = window.google_tag_params;
++var google_remarketing_only = true;
++/* ]]> */
++</script> 
++<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
++</script>
++<noscript>
++<div style="display:inline;"> <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/965996918/?value=0&amp;guid=ON&amp;script=0"/> </div>
++</noscript>
++<script type="text/javascript" language="javascript">
++/* <![CDATA[ */
++var yahoo_retargeting_id = '3XJ4FMF332';
++var yahoo_retargeting_label = '';
++/* ]]> */
++</script> 
++<script type="text/javascript" language="javascript" src="//b92.yahoo.co.jp/js/s_retargeting.js"></script> 
++<script type="text/javascript">
++  (function () {
++    var tagjs = document.createElement("script");
++    var s = document.getElementsByTagName("script")[0];
++    tagjs.async = true;
++    tagjs.src = "//s.yjtag.jp/tag.js#site=ohdmU7u";
++    s.parentNode.insertBefore(tagjs, s);
++  }());
++</script>
++<noscript>
++<iframe src="//b.yjtag.jp/iframe?c=ohdmU7u" width="1" height="1" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
++</noscript>
++</body>
++<!-- InstanceEnd --></html>
+\ No newline at end of file
+diff --git a/test/resorts/takasu-snow-park-trails.js b/test/resorts/takasu-snow-park-trails.js
+new file mode 100644
+index 00000000..a057e9f0
+--- /dev/null
++++ b/test/resorts/takasu-snow-park-trails.js
+@@ -0,0 +1,3 @@
++import trails from '../trails/index.js';
++
++trails('takasu-snow-park', []);
+diff --git a/test/resorts/takasu-snow-park.js b/test/resorts/takasu-snow-park.js
+new file mode 100644
+index 00000000..1e3502b2
+--- /dev/null
++++ b/test/resorts/takasu-snow-park.js
+@@ -0,0 +1,3 @@
++import lifts from '../lifts/index.js';
++
++lifts('takasu-snow-park', 'html', {});
+-- 
+2.39.5
+

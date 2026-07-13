@@ -1,7 +1,7 @@
 From 8572c7f4cad8ab15f3808250d94a6c0bdee994ae Mon Sep 17 00:00:00 2001
 From: Orlando Castiglioni <orlando@orlandocc.me>
 Date: Sun, 12 Jul 2026 08:15:22 -0400
-Subject: [PATCH 07/31] resort: fix skiwelt - route JSON endpoint through api
+Subject: [PATCH 07/41] resort: fix skiwelt - route JSON endpoint through api
  instead of dataUrl
 
 dataUrl responses always go through the HTML parser, so the JSON parse

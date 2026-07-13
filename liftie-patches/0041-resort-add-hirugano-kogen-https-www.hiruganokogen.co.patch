@@ -1,0 +1,1020 @@
+From 0db73a204e6ad78f19286ed99194b53da4f00759 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:01:09 -0400
+Subject: [PATCH 41/41] resort: add hirugano-kogen
+ (https://www.hiruganokogen.com/condition/)
+
+---
+ lib/resorts/hirugano-kogen/index.js      |  23 +
+ lib/resorts/hirugano-kogen/resort.json   |  15 +
+ lib/resorts/hirugano-kogen/status.js     |  14 +
+ lib/resorts/hirugano-kogen/trails.js     |  39 ++
+ test/resorts/example/hirugano-kogen.html | 821 +++++++++++++++++++++++
+ test/resorts/hirugano-kogen-trails.js    |  32 +
+ test/resorts/hirugano-kogen.js           |   7 +
+ 7 files changed, 951 insertions(+)
+ create mode 100644 lib/resorts/hirugano-kogen/index.js
+ create mode 100644 lib/resorts/hirugano-kogen/resort.json
+ create mode 100644 lib/resorts/hirugano-kogen/status.js
+ create mode 100644 lib/resorts/hirugano-kogen/trails.js
+ create mode 100644 test/resorts/example/hirugano-kogen.html
+ create mode 100644 test/resorts/hirugano-kogen-trails.js
+ create mode 100644 test/resorts/hirugano-kogen.js
+
+diff --git a/lib/resorts/hirugano-kogen/index.js b/lib/resorts/hirugano-kogen/index.js
+new file mode 100644
+index 00000000..8ff4bdd4
+--- /dev/null
++++ b/lib/resorts/hirugano-kogen/index.js
+@@ -0,0 +1,23 @@
++import select from '../../select.js';
++import coerce from '../../tools/coerce.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// lift table columns: リフト名 | 運行時間 | 運行可否 | お知らせ
++export default function parse(dom) {
++  const liftStatus = {};
++  for (const table of select(dom, 'table')) {
++    const rows = select(table.children, 'tr');
++    const header = rows[0] && select(rows[0].children, 'th, td').map(findText);
++    if (!header?.[0]?.includes('リフト名')) {
++      continue;
++    }
++    for (const row of rows.slice(1)) {
++      const cells = select(row.children, 'th, td').map(findText);
++      if (cells[0] && cells[2]) {
++        liftStatus[cells[0].trim()] = coerce(status(cells[2]));
++      }
++    }
++  }
++  return liftStatus;
++}
+diff --git a/lib/resorts/hirugano-kogen/resort.json b/lib/resorts/hirugano-kogen/resort.json
+new file mode 100644
+index 00000000..e5d27b88
+--- /dev/null
++++ b/lib/resorts/hirugano-kogen/resort.json
+@@ -0,0 +1,15 @@
++{
++  "name": "Hirugano Kogen",
++  "url": {
++    "host": "https://www.hiruganokogen.com",
++    "pathname": "/condition/"
++  },
++  "trails": true,
++  "tags": [
++    "Japan"
++  ],
++  "ll": [
++    136.893,
++    35.888
++  ]
++}
+diff --git a/lib/resorts/hirugano-kogen/status.js b/lib/resorts/hirugano-kogen/status.js
+new file mode 100644
+index 00000000..5559df28
+--- /dev/null
++++ b/lib/resorts/hirugano-kogen/status.js
+@@ -0,0 +1,14 @@
++// shared status glyph translation for the Japanese condition tables
++export default function status(text = '') {
++  const t = text.trim();
++  if (/^[○◯〇]/.test(t) || /運行中|営業中/.test(t)) {
++    return 'open';
++  }
++  if (/^[△▲]/.test(t)) {
++    return 'hold';
++  }
++  if (/^[×✕✖-]/.test(t) || /運休|終了/.test(t)) {
++    return 'closed';
++  }
++  return t;
++}
+diff --git a/lib/resorts/hirugano-kogen/trails.js b/lib/resorts/hirugano-kogen/trails.js
+new file mode 100644
+index 00000000..76785d2a
+--- /dev/null
++++ b/lib/resorts/hirugano-kogen/trails.js
+@@ -0,0 +1,39 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++const sections = { 初級: 'green', 中級: 'blue', 上級: 'black' };
++
++// course tables: [section row like 初級コース] コース名 | 滑走状況 | お知らせ;
++// park tables use パーク名 in the header instead
++export default function parse(dom) {
++  const rows = [];
++  for (const table of select(dom, 'table')) {
++    const trs = select(table.children, 'tr');
++    const caption = select(table.children, 'caption')[0];
++    let level = caption && sections[Object.keys(sections).find(k => (findText(caption) ?? '').includes(k))];
++    let headerIdx = -1;
++    for (const [i, tr] of trs.entries()) {
++      const cells = select(tr.children, 'th, td').map(findText);
++      const joined = cells.filter(Boolean).join(' ');
++      if (/コース名|パーク名/.test(joined)) {
++        headerIdx = i;
++        if (/パーク名/.test(joined)) {
++          level = 'terrainPark';
++        }
++        continue;
++      }
++      if (headerIdx < 0) {
++        const section = Object.keys(sections).find(k => joined.includes(k));
++        if (section) {
++          level = sections[section];
++        }
++        continue;
++      }
++      if (cells[0] && cells[1]) {
++        rows.push({ name: cells[0].trim(), status: status(cells[1]), level });
++      }
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/example/hirugano-kogen.html b/test/resorts/example/hirugano-kogen.html
+new file mode 100644
+index 00000000..6f65f6aa
+--- /dev/null
++++ b/test/resorts/example/hirugano-kogen.html
+@@ -0,0 +1,821 @@
++<!doctype html>
++<html  lang="jp"><!-- InstanceBegin template="/Templates/base.dwt" codeOutsideHTMLIsLocked="false" -->
++<head>
++<meta charset="utf-8">
++<!-- 190917 Google Tag Manager --> 
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-MFT64QN');</script> 
++<!-- End Google Tag Manager -->
++    <!-- Google Tag Manager -->
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-KKWMQFKR');</script>
++<!-- End Google Tag Manager -->
++    
++<!-- InstanceBeginEditable name="doctitle" -->
++  <title>最新ゲレンデ情報 ｜ 岐阜県・中部エリアのファミリー向けスキー場はひるがの高原スキー場</title>
++  <!-- InstanceEndEditable -->
++<meta name="description" content="家族みんなで楽しもう！ひるがの高原スキー場はファミリーにぴったりなコースとキッズパークやスノーラフティングまで子どもの雪遊びに最適。さらにグルメも充実、交通アクセスも良好です。" />
++<meta property="og:type" content="website" />
++<meta property="og:title" content="岐阜県・中部エリアのファミリー向けスキー場はひるがの高原スキー場" />
++<meta property="og:description" content="家族みんなで楽しもう！ひるがの高原スキー場はファミリーにぴったりなコースとキッズパークやスノーラフティングまで子どもの雪遊びに最適。さらにグルメも充実、交通アクセスも良好です。" />
++<meta property="og:image" content="https://www.hiruganokogen.com/new_parts/images/index/slide_open.jpg" />
++<meta property="og:url" content="https://www.hiruganokogen.com/" />
++<meta property="og:site_name" content="ひるがの高原スキー場" />
++<meta property="og:locale" content="ja_JP" />
++<meta name="format-detection" content="telephone=no">
++<link rel="stylesheet" href="../new_parts/css/reboot.css">
++<link rel="stylesheet" href="../new_parts/css/jquery.bxslider.css">
++<link rel="stylesheet" href="../new_parts/css/common.css">
++<!-- InstanceBeginEditable name="css" -->
++<link rel="canonical" href="https://www.hiruganokogen.com/condition/">
++  <link rel="stylesheet" href="../new_parts/css/layout.css">
++  <link rel="stylesheet" href="../new_parts/css/condition.css">
++  <link rel="stylesheet" href="../new_parts/js/zoom/zoom.css">
++  <!-- ライブカメラ映像用 -->
++  <script src="https://lnbgtscw.user.webaccel.jp/assets/js/web-acc/index.async.taka.js"></script>
++  <!-- ライブカメラ映像用 ここまで-->
++  <!-- InstanceEndEditable -->
++<!--<link href="apple-touch-icon.png" rel="apple-touch-icon">-->
++<link href="../favicon.ico" rel="shortcut icon" />
++
++<!-- Google Tag Manager --> 
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-N4CST5V');</script> 
++<!-- End Google Tag Manager --> 
++
++<script src="../new_parts/js/jquery-1.8.2.min.js"></script> 
++<script src="../new_parts/js/jquery.bxslider.js"></script> 
++<script src="../new_parts/js/common.js"></script> 
++<script src="../new_parts/js/drawer_menu.js"></script> 
++<script type="text/javascript"> 
++		function googleTranslateElementInit() { 
++		new google.translate.TranslateElement({pageLanguage: 'ja', includedLanguages: 'en,zh-TW', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
++		} 
++</script> 
++<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
++<!-- InstanceBeginEditable name="js" -->
++  <script src="../new_parts/js/zoom/zoom.js"></script>
++  <script>
++    (function(d, s, id) {
++      var js, fjs = d.getElementsByTagName(s)[0];
++      if (d.getElementById(id)) return;
++      js = d.createElement(s);
++      js.id = id;
++      js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.5";
++      fjs.parentNode.insertBefore(js, fjs);
++    }(document, 'script', 'facebook-jssdk'));
++  </script>
++  <!-- InstanceEndEditable -->
++<!-- InstanceParam name="pass" type="text" value="condition" -->
++<!-- InstanceBeginEditable name="head" -->
++  <!-- InstanceEndEditable -->
++<!-- 230130 Google tag (gtag.js) --> 
++<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q9FG4TTF7D"></script> 
++<script>
++  window.dataLayer = window.dataLayer || [];
++  function gtag(){dataLayer.push(arguments);}
++  gtag('js', new Date());
++
++  gtag('config', 'G-Q9FG4TTF7D');
++</script> 
++<!-- END 230130 Google tag (gtag.js) -->
++    <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@graph": [
++    {
++      "@type": "Organization",
++      "@id": "https://www.hiruganokogen.com/#organization",
++      "name": "ひるがの高原スキー場",
++      "url": "https://www.hiruganokogen.com/",
++      "logo": {
++        "@type": "ImageObject",
++        "url": "https://www.hiruganokogen.com/new_parts/images/common/logo.png"
++      },
++      "sameAs": [
++        "https://www.facebook.com/Hiruganokogen/",
++        "https://x.com/hiruganokougen",
++        "https://www.instagram.com/hiruganokogen/"
++      ]
++    },
++    {
++      "@type": "SkiResort",
++      "@id": "https://www.hiruganokogen.com/#place",
++      "name": "ひるがの高原スキー場",
++      "url": "https://www.hiruganokogen.com/",
++      "image": {
++        "@type": "ImageObject",
++        "url": "https://www.hiruganokogen.com/new_parts/images/common/main_visual.jpg"
++      },
++      "address": {
++        "@type": "PostalAddress",
++        "postalCode": "501-5301",
++        "addressCountry": "JP",
++        "addressRegion": "岐阜県",
++        "addressLocality": "郡上市高鷲町ひるがの",
++        "streetAddress": "4670-75"
++      },
++      "telephone": "0575-73-2311",
++      "priceRange": "¥¥",
++      "geo": {
++        "@type": "GeoCoordinates",
++        "latitude": 36.00553846621548,
++        "longitude": 136.90853621300897
++      },
++      "sameAs": [
++        "https://www.facebook.com/Hiruganokogen/",
++        "https://x.com/hiruganokougen",
++        "https://www.instagram.com/hiruganokogen/"
++      ]
++    },
++    {
++      "@type": "WebSite",
++      "@id": "https://www.hiruganokogen.com/#website",
++      "name": "ひるがの高原スキー場",
++      "url": "https://www.hiruganokogen.com/",
++      "publisher": { "@id": "https://www.hiruganokogen.com/#organization" },
++      "inLanguage": "ja"
++    }
++  ]
++}
++</script>
++<!-- InstanceBeginEditable name="schema" -->
++    <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@graph": [
++    {
++      "@type": "WebPage",
++      "@id": "https://www.hiruganokogen.com/condition/#webpage",
++      "url": "https://www.hiruganokogen.com/condition/",
++      "name": "最新ゲレンデ情報 ｜ 岐阜県・中部エリアのファミリー向けスキー場はひるがの高原スキー場",
++      "isPartOf": { "@id": "https://www.hiruganokogen.com/#website" },
++      "about": { "@id": "https://www.hiruganokogen.com/#place" },
++      "inLanguage": "ja"
++    },
++    {
++      "@type": "BreadcrumbList",
++      "@id": "https://www.hiruganokogen.com/condition/#breadcrumb",
++      "itemListElement": [
++        {
++          "@type": "ListItem",
++          "position": 1,
++          "name": "ホーム",
++          "item": "https://www.hiruganokogen.com/"
++        },
++        {
++          "@type": "ListItem",
++          "position": 2,
++          "name": "最新ゲレンデ情報",
++          "item": "https://www.hiruganokogen.com/condition/"
++        }
++      ]
++    }
++  ]
++}
++</script>
++
++<!-- InstanceEndEditable -->
++
++
++</head>
++<script src="https://d.shutto-translation.com/trans.js?id=1330"></script>
++<body>
++<!-- 190617 Google Tag Manager (noscript) -->
++<noscript>
++<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFT64QN"
++height="0" width="0" style="display:none;visibility:hidden"></iframe>
++</noscript>
++<!-- End Google Tag Manager (noscript) --> 
++<!-- Google Tag Manager (noscript) -->
++<noscript>
++<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N4CST5V"
++height="0" width="0" style="display:none;visibility:hidden"></iframe>
++</noscript>
++<!-- End Google Tag Manager (noscript) -->
++<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KKWMQFKR"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++<header>
++	<div class="inner">
++		<div class="h_ttl">
++
++  <p class="logo"><a href="../"><img src="../new_parts/images/common/h_logo.png" alt="ひるがの高原スキー場"></a></p>
++			
++		</div>
++		<div class="btn_access sp"><a href="../access/"><img src="../new_parts/images/common/h_access.png" alt="アクセス"></a></div>
++		<div class="btn_ticket sp"><a href="https://www.asoview.com/channel/tickets/c1SjSq0HWP/" target="_blank"><img src="../new_parts/images/common/h_ticket.png" alt="リフト券購入"></a></div>
++		<div class="drawer_menu">
++			<div class="drawer_bg"></div>
++			<button type="button" class="drawer_button sp"> <span class="drawer_menu_text drawer_text"><img src="../new_parts/images/common/h_menu_open.png" alt="OPEN"></span> <span class="drawer_close drawer_text"><img src="../new_parts/images/common/h_manu_close.png" alt="CLOSE"></span> </button>
++			<nav id="gnav">
++				<ul class="sub_nav1">
++					<li class="login"><a href="https://chubu-snow.com/member/login.php" target="_blank">会員ログイン</a></li>
++					<li class="green"><a href="https://hirugano-picnicgarden.com/"><img src="../new_parts/images/common/btn_green_season.png" alt="グリーンシーズン"></a></li>
++					<li class="translate_element">
++						<div id="translate-wrap">
++							<p>Languages</p>
++							<div> <a href="?stt_lang=en">English</a> <a href="?stt_lang=th">Thai</a> <a href="?stt_lang=zh-CN">中国語(簡体)</a> <a href="?stt_lang=zh-TW">中国語(繁体)</a> <a href="?stt_lang=ja">日本語</a></div>
++						</div>
++					</li>
++				</ul>
++				<ul class="allbtn">
++					<li><a href="../condition/">最新ゲレンデ情報</a>
++						<ul class="sub">
++							<li><a href="#gelande">ライブ画像</a></li>
++							<li><a href="#comment">スタッフのコメント</a></li>
++							<li><a href="#lift">リフト運行状況</a></li>
++							<li><a href="#course">各コース利用状況</a></li>
++							<li><a href="#park">アクティビティ状況</a></li>
++							<li><a href="#kids">キッズパーク状況</a></li>
++							<li><a href="#car">駐車場状況</a></li>
++						</ul>
++					</li>
++					<li><a href="../about/">ゲレンデ紹介</a>
++						<ul class="sub">
++							<li><a href="../about/#gelandemap">ゲレンデマップ</a></li>
++							<li><a href="../about/#course">コース紹介</a></li>
++							<li><a href="../about/#kidsland">キッズランド</a></li>
++							<li><a href="../manners/" target="_blank">はじめてのスキー・スノボ講座</a></li>
++						</ul>
++					</li>
++					<li><a href="../facility/">施設案内</a>
++						<ul class="sub">
++							<li><a href="../facility/#restaurant">レストラン</a></li>
++							<li><a href="../facility/#shop_out">屋外売店</a></li>
++							<li><a href="../facility/#premium">ひるがの<br>プレミアムラウンジ</a></li>
++							<li><a href="../facility/#lounge">ひるがのラウンジ</a></li>
++							<li><a href="../facility/#others">休憩スペース</a></li>
++						</ul>
++					</li>
++					<li><a href="../price/">時間・料金</a>
++						<ul class="sub">
++							<li><a href="../price/#business_h">営業時間</a></li>
++							<li><a href="../price/#lift_price">リフト料金</a></li>
++							<li><a href="../price/#carport">駐車料金</a></li>
++							<li><a href="../price/#seasonpass">シーズン券</a></li>
++						</ul>
++					</li>
++					<li><a href="../rental/">レンタル</a></li>
++					<li><a href="../school/">スクール</a>
++						<ul class="sub">
++							<li><a href="../school/#sia_school">SIAスキー&amp;スノーボード<br> スクール</a></li>
++							<li><a href="../school/#snowb_school">スノーボードスクール</a></li>
++							<li><a href="../school/#saj_shcool">キッズひるがの</a></li>
++						</ul>
++					</li>
++					<li><a href="../news/">ニュース・イベント</a></li>
++					<li><a href="../access/">アクセス・宿泊</a>
++						<ul class="sub">
++							<li><a href="../access/#bustour">バスツアー</a></li>
++							<li><a href="../access/#highway_bus">高速バスで行く</a></li>
++							<li><a href="../access/#mycar">車で行く</a></li>
++							<li><a href="../access/#mycar2">レンタカーで行く</a></li>
++							<li><a href="../access/#shuttle">タカススノーシャトルバス</a></li>
++							<li><a href="../access/#bus">直行ツアーバスで行く</a></li>
++							<li><a href="../access/#stay">近隣宿泊施設のご案内</a></li>
++							<li><a href="../access/#spring">近隣の温泉情報</a></li>
++						</ul>
++					</li>
++					<li class="sp"><a href="../gallery/">フォトギャラリー</a></li>
++					<li class="sp"><a href="../anzen/">安全報告書</a></li>
++					<li class="sp"><a href="../privacy/">個人情報保護方針</a></li>
++					<li class="sp"><a href="../contact/">お問い合わせ</a></li>
++				</ul>
++			</nav>
++		</div>
++	</div>
++</header>
++<header class="change_header">
++	<div class="inner">
++		<div class="drawer_menu">
++			<nav id="gnav">
++				<ul class="allbtn">
++					<li><a href="../condition/">最新ゲレンデ情報</a>
++						<ul class="sub">
++							<li><a href="#gelande">ライブ画像</a></li>
++							<li><a href="#comment">スタッフのコメント</a></li>
++							<li><a href="#lift">リフト運行状況</a></li>
++							<li><a href="#course">各コース利用状況</a></li>
++							<li><a href="#park">アクティビティ状況</a></li>
++							<li><a href="#kids">キッズパーク状況</a></li>
++							<li><a href="#car">駐車場状況</a></li>
++						</ul>
++					</li>
++					<li><a href="../about/">ゲレンデ紹介</a>
++						<ul class="sub">
++							<li><a href="../about/#gelandemap">ゲレンデマップ</a></li>
++							<li><a href="../about/#course">コース紹介</a></li>
++							<li><a href="../about/#kidsland">キッズランド</a></li>
++							<li><a href="../manners/" target="_blank">はじめてのスキー・スノボ講座</a></li>
++						</ul>
++					</li>
++					<li><a href="../facility/">施設案内</a>
++						<ul class="sub">
++							<li><a href="../facility/#restaurant">レストラン</a></li>
++							<li><a href="../facility/#shop_out">屋外売店</a></li>
++							<li><a href="../facility/#lounge">LOUNGE</a></li>
++							<li><a href="../facility/#renal">レンタルルーム</a></li>
++							<li><a href="../facility/#others">休憩スペース</a></li>
++							<li><a href="../facility/#shop_in">ひるがのショップ</a></li>
++						</ul>
++					</li>
++					<li><a href="../price/">時間・料金</a>
++						<ul class="sub">
++							<li><a href="../price/#business_h">営業時間</a></li>
++							<li><a href="../price/#lift_price">リフト料金</a></li>
++							<li><a href="../price/#carport">駐車料金</a></li>
++							<li><a href="../price/#seasonpass">シーズン券</a></li>
++						</ul>
++					</li>
++					<li><a href="../rental/">レンタル</a></li>
++					<li><a href="../school/">スクール</a>
++						<ul class="sub">
++							<li><a href="../school/#sia_school">SIAスキー&amp;スノーボード<br> スクール</a></li>
++							<li><a href="../school/#snowb_school">スノーボードスクール</a></li>
++							<li><a href="../school/#saj_shcool">キッズひるがの</a></li>
++						</ul>
++					</li>
++					<li><a href="../news/">ニュース・イベント</a></li>
++					<li><a href="../access/">アクセス・宿泊</a>
++						<ul class="sub">
++							<li><a href="../access/#bustour">バスツアー</a></li>
++							<li><a href="../access/#highway_bus">高速バスで行く</a></li>
++							<li><a href="../access/#mycar">車で行く</a></li>
++							<li><a href="../access/#mycar2">レンタカーで行く</a></li>
++							<li><a href="../access/#shuttle">タカススノーシャトルバス</a></li>
++							<li><a href="../access/#bus">直行ツアーバスで行く</a></li>
++							<li><a href="../access/#stay">近隣宿泊施設のご案内</a></li>
++							<li><a href="../access/#spring">近隣の温泉情報</a></li>
++						</ul>
++					</li>
++					<li class="sp"><a href="../gallery/">フォトギャラリー</a></li>
++					<li class="sp"><a href="../anzen/">安全報告書</a></li>
++					<li class="sp"><a href="../privacy/">個人情報保護方針</a></li>
++					<li class="sp"><a href="../contact/">お問い合わせ</a></li>
++				</ul>
++			</nav>
++		</div>
++	</div>
++</header>
++<main><!-- InstanceBeginEditable name="main" -->
++    <section id="page_ttl">
++      <div class="inner">
++        <h1>最新ゲレンデ情報</h1>
++      </div>
++    </section>
++    <section id="pankuzu">
++      <div class="inner">
++        <ol>
++          <li><a href="#">ホーム</a></li>
++          <li>最新ゲレンデ情報</li>
++        </ol>
++      </div>
++    </section>
++    <section>
++      <div class="inner">
++
++
++        <input class="serialNumber" type="hidden" value="00000000fbd57607">
++
++        <section class="date">
++          <time datetime="2026.3.1517:50">2026.3.15 17:50</time>
++        </section>
++        <section class="page_nav">
++            <ul>
++              <li><a href="#gelande">ライブ画像</a></li>
++              <li><a href="#comment">スタッフの<wbr>
++                  コメント</a></li>
++              <li><a href="#lift">リフト運行状況</a></li>
++              <li><a href="#course">各コース<wbr>
++                  利用状況</a></li>
++              <li><a href="#park">パーク状況</a></li>
++              <li><a href="#kids">キッズパーク<wbr>
++                  状況</a></li>
++            </ul>
++        </section>
++        <section id="gelande" class="content">
++          <div class="inner">
++            <h2>ライブ画像（1分おきに更新）</h2>
++            <div class="content_inner">
++              <figure>
++                <!--<img src="https://www.hiruganokogen.com/new_parts/images/common/adjusting.jpg" alt="" width="100%">-->
++                <img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=000000005c64a412" alt="ライブカメラの画像" width="100%" class="image">
++                <!--<img src="" alt="ライブカメラ" width="100%">-->
++              </figure>
++              <div class="weather">
++                <ul>
++                  <li class="condition">
++                                        滑走不可</li>
++                  <li class="ico">
++                                        <img src="/new_parts/images/condition/ico_info_01.png" alt="">
++                  </li>
++                  <li>晴れ</li>
++                </ul>
++                <dl class="snow">
++                  <dt>積雪</dt>
++                  <dd>cm&nbsp;</dd>
++                  <dt>気温</dt>
++                  <dd>&#8451;&nbsp;</dd>
++                  <dt>雪質</dt>
++                  <dd>&nbsp;</dd>
++                </dl>
++                <dl class="road">
++                  <dt>道路状況</dt>
++                  <dd>&nbsp;</dd>
++                </dl>
++              </div>
++            </div>
++          </div>
++        </section>
++        <section id="comment" class="content">
++          <div class="inner">
++            <h2 class="lttl">スタッフのコメント</h2>
++            <div class="content_inner">
++
++              <div class="flex-wrap col2-wrap mb-m">
++                <div class="body center">
++                  <h4 class="sttl mt-0">タイムラプス映像</h4>
++
++                 <!-- <iframe width="480" height="360" src="https://www.youtube.com/embed/?list=UUY0Cf1Maae8gRM_5DCVfo1w" frameborder="0" allowfullscreen class="timelapse"></iframe>-->
++
++                  <img src="https://www.hiruganokogen.com/new_parts/images/common/adjusting.jpg" alt="" width="320"> 
++                </div>
++                <div class="body">
++                  <p>
++                    2025-2026シーズンの営業は3月15日（日）をもって終了いたしました。<br />
++たくさんのご来場ありがとうございました。<br />
++来シーズンも皆様のご来場お待ちしてます。<br />
++<br />
++尚、４月２９日よりジップラインアドベンチャー、マウンテンカートの営業を開始いたします。<br />
++４月１日よりWEB予約を開始いたします。<br />
++グリーンシーズンもよろしくお願いいたします。<br />
++<br />
++お客様からのご意見、GoogoleMapで是非お聞かせください。<br />
++貴重なご意見を参考にさせていただきます。</p>
++                </div>
++              </div>
++
++              <!--<p></p>-->
++            </div>
++          </div>
++        </section>
++        <section id="lift" class="content">
++          <div class="inner">
++            <h2 class="lttl">リフト運行状況</h2>
++            <div class="content_inner">
++              <table class="table_basic">
++                <tr>
++                  <th>リフト名</th>
++                  <th>運行時間</th>
++                  <th>運行可否</th>
++                  <th class="info">お知らせ</th>
++                </tr>
++
++                                                          <tr>
++                        <th class="name">第1クワッドリフト</th>
++                        <td>8:30～16:30（土日祝8:00～）</td>
++                        <td>×</td>
++                        <td class="info"></td>
++                      </tr>
++                                                                              <tr>
++                        <th class="name">第2ペアリフト</th>
++                        <td>8:30～16:30（土日祝8:00～）</td>
++                        <td>×</td>
++                        <td class="info"></td>
++                      </tr>
++                                                                              <tr>
++                        <th class="name">第3ペアリフト</th>
++                        <td>8:30～16:30（土日祝8:00～）</td>
++                        <td>×</td>
++                        <td class="info">今季終了</td>
++                      </tr>
++                                                  </table>
++            </div>
++          </div>
++        </section>
++        <section id="course" class="content">
++          <div class="inner">
++            <h2 class="lttl">各コース利用状況</h2>
++            <div class="content_inner">
++
++              <!-- 最新ゲレンデ情報マップ ここから// -->
++                            <figure class="condition_map js-pinch-hint">
++
++                                    <img src="/new_parts/images/condition/map/lift_01_00.png" alt="×" class="map-lift">
++                                                        <img src="/new_parts/images/condition/map/lift_02_00.png" alt="×" class="map-lift">
++                                                        <img src="/new_parts/images/condition/map/lift_03_00.png" alt="×" class="map-lift">
++                                    
++                                    <img src="/new_parts/images/condition/map/course_0101_00.png" alt="×" class="map-course">
++                                    <img src="/new_parts/images/condition/map/course_0102_00.png" alt="×" class="map-course">
++                                                                                            <img src="/new_parts/images/condition/map/course_0104_00.png" alt="×" class="map-course">
++                                    <img src="/new_parts/images/condition/map/course_0105_00.png" alt="×" class="map-course">
++                
++                                                                                            <img src="/new_parts/images/condition/map/course_0202_00.png" alt="×" class="map-course">
++                                    <img src="/new_parts/images/condition/map/course_0203_00.png" alt="×" class="map-course">
++                                    <img src="/new_parts/images/condition/map/course_0204_00.png" alt="×" class="map-course">
++                
++                
++                                    <img src="/new_parts/images/condition/map/park_01_00.png" alt="×" class="map-park">
++                
++                                    <img src="/new_parts/images/condition/map/kidspark_01_00.png" alt="×" class="map-kidspark">
++                                <img src="/new_parts/images/condition/map/course_name.png" alt="コース名" class="map-name">
++                <img src="/new_parts/images/condition/map/course_base.jpg" alt="コースマップ" class="map-base">
++              </figure>
++              <!-- //最新ゲレンデ情報マップ ここまで -->
++
++
++              
++              <table class="table_basic">
++                <tr>
++                  <th class="cell1">コース名</th>
++                  <th class="cell2">滑走状況</th>
++                  <th class="info cell3">お知らせ</th>
++                </tr>
++                                                          <tr>
++                        <th>ハートスロープ</th>
++                        <td>
++                          ×                          </td>
++                        <td class="info">初心者の練習に最適なワイドバーン！</td>
++                      </tr>
++                                                                              <tr>
++                        <th>ダイヤスロープ</th>
++                        <td>
++                          ×                          </td>
++                        <td class="info">今季終了</td>
++                      </tr>
++                                                                                                                                      <tr>
++                        <th>林間コース</th>
++                        <td>
++                          ×                          </td>
++                        <td class="info">今季終了</td>
++                      </tr>
++                                                                              <tr>
++                        <th>スペードスロープ</th>
++                        <td>
++                          ×                          </td>
++                        <td class="info"></td>
++                      </tr>
++                                                                                                                                                      <tr>
++                        <th>クイーンスロープ</th>
++                        <td>
++                          ×                          </td>
++                        <td class="info">今季終了</td>
++                      </tr>
++                                                                              <tr>
++                        <th>キングスロープ</th>
++                        <td>
++                          ×                          </td>
++                        <td class="info">今季終了</td>
++                      </tr>
++                                                                              <tr>
++                        <th>バンク・ウェーブ</th>
++                        <td>
++                          ×                          </td>
++                        <td class="info"></td>
++                      </tr>
++                                                                  </table>
++            </div>
++          </div>
++        </section>
++
++              </div>
++
++              <section id="park" class="content">
++          <div class="inner">
++            <h2 class="lttl">アクティビティ状況</h2>
++            <div class="content_inner">
++              <table class="table_basic">
++
++                                                          <tr>
++                        <th class="name">スノーラフティング</th>
++                        <td class="status">×</td>
++                        <td class="info cell3">今シーズン営業運行はありません</td>
++                      </tr>
++                                                  </table>
++            </div>
++          </div>
++        </section>
++      
++      
++              <section id="kids" class="content">
++          <div class="inner">
++            <h2 class="lttl">キッズパーク状況</h2>
++            <div class="content_inner">
++              <table class="table_basic">
++                                                          <tr>
++                        <th class="name">ひるがもキッズランド</th>
++                        <td class="status">×</td>
++                        <td class="info"></td>
++                      </tr>
++                                                  </table>
++            </div>
++          </div>
++        </section>
++            <section id="car" class="content">
++        <div class="inner">
++          <h2 class="lttl">駐車場状況</h2>
++          <div class="content_inner">
++            <table class="table_basic">
++                                                                            </table>
++          </div>
++        </div>
++      </section>
++      <section class="page_nav">
++        <div class="inner">
++          <ul>
++            <li><a href="#gelande">ライブ画像</a></li>
++            <li><a href="#comment">スタッフの<wbr>
++                コメント</a></li>
++            <li><a href="#lift">リフト運行状況</a></li>
++            <li><a href="#course">各コース<wbr>
++                利用状況</a></li>
++            <li><a href="#park">パーク状況</a></li>
++            <li><a href="#kids">キッズパーク<wbr>
++                状況</a></li>
++          </ul>
++        </div>
++      </section>
++
++
++
++      </div>
++    </section>
++
++    <!-- InstanceEndEditable --> </main>
++<footer>
++	<section class="sns">
++		<ul>
++			<li><a href="https://www.facebook.com/Hiruganokogen/"><img src="../new_parts/images/common/f_facebook.png" alt="facebook"></a></li>
++			<li><a href="https://twitter.com/hiruganokougen"><img src="../new_parts/images/common/f_twitter.png" alt="twitter"></a></li>
++			<li><a href="https://www.instagram.com/hiruganokogen/"><img src="../new_parts/images/common/f_instagram.png" alt="instagram"></a></li>
++		</ul>
++	</section>
++	<section class="bnr">
++		<div class="inner">
++			<ul class="bnr_list">
++				<li><a href="https://seasonpass.chubu-snow.com/mej/" target="_blank"><img src="../new_parts/images/common/bnr_mac.jpg" alt="マックアースジャパン"></a></li>
++				<li><a href="https://chubu-snow.com/member/login.php" target="_blank"><img src="../new_parts/images/common/bnr_member.jpg" alt="アソビト"></a></li>
++				<li><a href="../manners/" target="_blank"><img src="../new_parts/images/common/bnr_manner.png" alt="カッコよく！カワイく！ゲレンデを楽しむ方法"></a></li>
++				<li><a href="https://www.winterplus.jp/ski/ski_detail.cfm?skiarea_code=hirugano" target="_blank"><img src="../new_parts/images/common/bnr_winteplus.gif" alt="WINTER PLUS"></a></li>
++				<li><a href="https://bsbs.jp/" target="_blank"><img src="../new_parts/images/common/bnr_school.jpg" alt="スノーボードスクール スタッフ募集 JAPAN SNOWBOAD ACADEMY"></a></li>
++				<li><a href="https://jsbc.jp/tengoku/" target="_blank"><img src="../new_parts/images/common/bnr_sunowten.png" alt="スノーボード天国"></a></li>
++				<li><a href="https://xn--6i6a24d.net/" target="_blank"><img src="../new_parts/images/common/bnr_takasu.png" alt="TAKASUポータルサイト"></a></li>
++				<li><a href="http://bsbs.jp/summer/activity/zipline-adventure-hirugano/price/" target="_blank"><img src="../new_parts/images/common/bnr_zipline.jpg" alt="ジップライン"></a></li>
++				<li><a href="https://hirugano-picnicgarden.com/" target="_blank"><img src="../new_parts/images/common/bnr_picnic.jpg" alt="ひるがのピクニックガーデン"></a></li>
++				<li><a href="https://www.quickliner.com/ski/gelende/hirugano/index.html"><img src="../new_parts/images/common/bnr_lado.png" alt="バスでスキー＆スノ―ボード 関西発 ラド観光"></a></li>
++          <li><a href="https://7ticket.jp/g/002496" target="_blank"><img src="../new_parts/images/common/bnr_seven.png" alt="セブンチケット"></a></li>
++          <li><a href="https://www.dorapack.com/skiing-snowboarding" target="_blank"><img src="../new_parts/images/common/bnr_dorapack.png" alt="ドラゴンズパック"></a></li>
++				<li><a href="https://car.orix.co.jp/campaign/snow2025-2026.html" target="_blank"><img src="../new_parts/images/common/bnr_orix.jpg" alt="オリックスレンタカー"></a></li>
++				<li><a href="https://hayatabi.c-nexco.co.jp/setplan/detail.html?id=1162" target="_blank"><img src="../new_parts/images/common/bnr_nexco.jpg" alt="高速道路割引プラン"></a></li>
++				<li><a href="https://www.snowjapan.com/japan-ski-resorts/gifu/gujo/hirugano-kogen" target="_blank"><img src="../new_parts/images/common/bnr_snowjapan.jpg" alt="snow japan english"></a></li>
++				<li><a href="https://www.j-netrentacar.co.jp/campaign/detail/?id=12090" target="_blank"><img src="../new_parts/images/common/bnr_jnet.jpg" alt="j-netレンタカー"></a></li>
++				<li><a href="https://www.gifubus.co.jp/info/kousokubus/post698" target="_blank"><img src="../new_parts/images/common/bnr_gifubus.png" alt="タカスマウンテンズ スキーきっぷ"></a></li>
++				<li><a href="https://trl-aichi.co.jp/campaign/ski/" target="_blank"><img src="../new_parts/images/common/bnr_trl-aich.jpg" alt="トヨタレンタリース愛知限定"></a></li>
++          <li><a href="https://protectourwinters.jp/sustainableresort/" target="_blank"><img src="../new_parts/images/common/bnr_protectourwinters.png" alt="SUSTAINABLE RESORT ALLIANCE"></a></li>
++          <li><a href="https://www.dynaland.co.jp/job/" target="_blank"><img src="../new_parts/images/common/bnr_recruit2.jpg" alt="高鷲スノーリゾート｜アルバイト募集｜2025-2026"></a></li>
++			</ul>
++		</div>
++	</section>
++	<section class="f_nav">
++		<div class="inner">
++			<nav>
++				<ul>
++					<li><a href="../">ホーム</a></li>
++					<li><a href="../condition/">最新ゲレンデ情報</a>
++						<ul>
++							<li><a href="#gelande">ライブ画像</a></li>
++							<li><a href="#comment">スタッフのコメント</a></li>
++							<li><a href="#lift">リフト運行状況</a></li>
++							<li><a href="#course">各コース利用状況</a></li>
++							<li><a href="#park">アクティビティ状況</a></li>
++							<li><a href="#kids">キッズパーク状況</a></li>
++							<li><a href="#car">駐車場状況</a></li>
++						</ul>
++					</li>
++
++					
++				</ul>
++				<ul>
++					<li><a href="../about/">ゲレンデ紹介</a>
++						<ul>
++							<li><a href="../about/#gelandemap">ゲレンデマップ</a></li>
++							<li><a href="../about/#course">コース紹介</a></li>
++							<li><a href="../about/#kidsland">キッズランド</a></li>
++							<li><a href="../manners/" target="_blank">はじめてのスキー・スノボ講座</a></li>
++						</ul>
++					</li>
++					<li><a href="../facility/">施設案内</a>
++						<ul>
++							<li><a href="../facility/#restaurant">レストラン</a></li>
++							<li><a href="../facility/#shop_out">屋外売店</a></li>
++							<li><a href="../facility/#premium">ひるがのプレミアムラウンジ</a></li>
++							<li><a href="../facility/#lounge">ひるがのラウンジ</a></li>
++							<li><a href="../facility/#others">休憩スペース</a></li>
++						</ul>
++					</li>
++
++				</ul>
++				<ul>
++					<li><a href="../price/">時間・料金</a>
++						<ul>
++							<li><a href="../price/#business_h">営業時間</a></li>
++							<li><a href="../price/#lift_price">リフト料金</a></li>
++							<li><a href="../price/#carport">駐車料金</a></li>
++							<li><a href="../price/#seasonpass">シーズン券</a></li>
++						</ul>
++					</li>
++					<li><a href="../rental/">レンタル</a></li>
++					<li><a href="../school/">スクール</a>
++						<ul>
++							<li><a href="../school/#sia_school">SIAスキー&amp;スノーボードスクール</a></li>
++							<li><a href="../school/#snowb_school">スノーボードスクール</a></li>
++							<li><a href="../school/#saj_shcool">キッズひるがの</a></li>
++						</ul>
++					</li>
++				</ul>
++				<ul>
++					<li><a href="../access/">アクセス・宿泊</a>
++						<ul>
++							<li><a href="../access/#bustour">バスツアー</a></li>
++							<li><a href="../access/#highway_bus">高速バスで行く</a></li>
++							<li><a href="../access/#mycar">車で行く</a></li>
++							<li><a href="../access/#mycar2">レンタカーで行く</a></li>
++							<li><a href="../access/#shuttle">タカススノーシャトルバス</a></li>
++							<li><a href="../access/#bus">直行ツアーバスで行く</a></li>
++							<li><a href="../access/#stay">近隣宿泊施設のご案内</a></li>
++							<li><a href="../access/#spring">近隣の温泉情報</a></li>
++						</ul>
++					</li>
++				</ul>
++				<ul>
++					<!--<li><a href="../contest/">イベント情報</a></li>-->
++					<li><a href="../news/">ニュース・イベント</a></li>
++					<li><a href="../gallery/">フォトギャラリー</a></li>
++					<li><a href="https://chubu-snow.com/register/" target="_blank">会員募集・登録</a></li>
++					<li><a href="https://www.dynaland.co.jp/job/" target="_blank">採用情報</a></li>
++				</ul>
++				<ul>
++					<li><a href="../anzen/">安全報告書</a></li>
++					<li><a href="../company/">会社概要</a></li>
++					<li><a href="../contact/">お問い合わせ</a></li>
++					<li><a href="../privacy/">個人情報保護方針</a></li>
++					<li><a href="../sitemap/">サイトマップ</a></li>
++					<li><a href="https://hirugano-picnicgarden.com/" target="_blank">グリーンシーズン</a></li>
++				</ul>
++			</nav>
++			<h2>
++				<figure><img src="../new_parts/images/common/h_logo.png" alt="ひるがの高原スキー場"></figure>
++			</h2>
++			<address>
++			岐阜県郡上市高鷲町ひるがの4670-75
++			</address>
++			<p class="tel">TEL:0575-73-2311</p>
++		</div>
++	</section>
++	<section class="macearth">
++		<div class="inner">
++			<h2 class="sp">近くのグループスキー場・宿泊施設</h2>
++			<div class="group">
++				<div class="ski">
++					<h3>近くのスキー場</h3>
++					<ul>
++						<li><a href="https://www.takasu.gr.jp/?_ga=1.105170688.224896027.1440453512" target="_blank">高鷲スノーパーク</a></li>
++						<li><a href="https://dynaland.co.jp/" target="_blank">ダイナランド</a></li>
++						<li><a href="https://ski.washigatake.jp/" target="_blank">鷲ヶ岳スキー場</a></li>
++					</ul>
++				</div>
++				<div class="hotel">
++					<h3>近くの宿泊施設</h3>
++					<ul>
++						<li><a href="https://hotel.washigatake.jp/rainbow/" target="_blank">鷲ヶ岳高原ホテルレインボー</a></li>
++						<li><a href="https://hotel.washigatake.jp/kogen/" target="_blank">鷲ヶ岳高原ホテル</a></li>
++						<li><a href="https://www.villa-montsaint.com/" target="_blank">ホテルヴィラ・モンサン</a></li>
++					</ul>
++				</div>
++			</div>
++			<p class="copy">&copy;2025 Hirugano kogen</p>
++		</div>
++	</section>
++</footer>
++<ul class="float_btn">
++	<li class="btn_blue"><a href="https://www.asoview.com/channel/tickets/c1SjSq0HWP/" target="_blank"><figure><img src="../new_parts/images/common/ico_lift.png" alt=""/></figure>リフト券<br>購入</a></li>
++	<!--<li class="btn_red"><a href="#" target="_blank"><figure><img src="../new_parts/images/common/ico_kland.svg" alt=""/></figure>
++    キッズランド<br>購入</a></li>-->
++	<li class="btn_green"><a href="https://www.asoview.com/channel/activities/ja/hiruganokogen/offices/2966/courses" target="_blank"><figure><img src="../new_parts/images/common/ico_lounge.svg" alt=""/></figure>ラウンジ<br>予約</a></li>
++	<li class="btn_orange"><a href="../about/#kc" target="_blank"><figure><img src="../new_parts/images/common/ico_kclub.svg" alt=""/></figure>キッズ<br>クラブ</a></li>
++</ul>
++<!-- InstanceBeginEditable name="js-bottom" -->
++<!-- InstanceEndEditable -->
++</body>
++<!-- InstanceEnd --></html>
+\ No newline at end of file
+diff --git a/test/resorts/hirugano-kogen-trails.js b/test/resorts/hirugano-kogen-trails.js
+new file mode 100644
+index 00000000..07347823
+--- /dev/null
++++ b/test/resorts/hirugano-kogen-trails.js
+@@ -0,0 +1,32 @@
++import trails from '../trails/index.js';
++
++trails('hirugano-kogen', [
++  {
++    'name': 'ハートスロープ',
++    'status': 'closed'
++  },
++  {
++    'name': 'ダイヤスロープ',
++    'status': 'closed'
++  },
++  {
++    'name': '林間コース',
++    'status': 'closed'
++  },
++  {
++    'name': 'スペードスロープ',
++    'status': 'closed'
++  },
++  {
++    'name': 'クイーンスロープ',
++    'status': 'closed'
++  },
++  {
++    'name': 'キングスロープ',
++    'status': 'closed'
++  },
++  {
++    'name': 'バンク・ウェーブ',
++    'status': 'closed'
++  }
++]);
+diff --git a/test/resorts/hirugano-kogen.js b/test/resorts/hirugano-kogen.js
+new file mode 100644
+index 00000000..45bb4249
+--- /dev/null
++++ b/test/resorts/hirugano-kogen.js
+@@ -0,0 +1,7 @@
++import lifts from '../lifts/index.js';
++
++lifts('hirugano-kogen', 'html', {
++  '第1クワッドリフト': 'closed',
++  '第2ペアリフト': 'closed',
++  '第3ペアリフト': 'closed'
++});
+-- 
+2.39.5
+

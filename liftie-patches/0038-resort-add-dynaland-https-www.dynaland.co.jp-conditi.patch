@@ -1,0 +1,1561 @@
+From 0c75a61ed2f3c3cccbcb793d4656b51c4e68b844 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:01:09 -0400
+Subject: [PATCH 38/41] resort: add dynaland
+ (https://www.dynaland.co.jp/condition/)
+
+---
+ lib/resorts/dynaland/index.js      |   23 +
+ lib/resorts/dynaland/resort.json   |   15 +
+ lib/resorts/dynaland/status.js     |   14 +
+ lib/resorts/dynaland/trails.js     |   39 +
+ test/resorts/dynaland-trails.js    |  124 +++
+ test/resorts/dynaland.js           |    9 +
+ test/resorts/example/dynaland.html | 1268 ++++++++++++++++++++++++++++
+ 7 files changed, 1492 insertions(+)
+ create mode 100644 lib/resorts/dynaland/index.js
+ create mode 100644 lib/resorts/dynaland/resort.json
+ create mode 100644 lib/resorts/dynaland/status.js
+ create mode 100644 lib/resorts/dynaland/trails.js
+ create mode 100644 test/resorts/dynaland-trails.js
+ create mode 100644 test/resorts/dynaland.js
+ create mode 100644 test/resorts/example/dynaland.html
+
+diff --git a/lib/resorts/dynaland/index.js b/lib/resorts/dynaland/index.js
+new file mode 100644
+index 00000000..8ff4bdd4
+--- /dev/null
++++ b/lib/resorts/dynaland/index.js
+@@ -0,0 +1,23 @@
++import select from '../../select.js';
++import coerce from '../../tools/coerce.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++// lift table columns: リフト名 | 運行時間 | 運行可否 | お知らせ
++export default function parse(dom) {
++  const liftStatus = {};
++  for (const table of select(dom, 'table')) {
++    const rows = select(table.children, 'tr');
++    const header = rows[0] && select(rows[0].children, 'th, td').map(findText);
++    if (!header?.[0]?.includes('リフト名')) {
++      continue;
++    }
++    for (const row of rows.slice(1)) {
++      const cells = select(row.children, 'th, td').map(findText);
++      if (cells[0] && cells[2]) {
++        liftStatus[cells[0].trim()] = coerce(status(cells[2]));
++      }
++    }
++  }
++  return liftStatus;
++}
+diff --git a/lib/resorts/dynaland/resort.json b/lib/resorts/dynaland/resort.json
+new file mode 100644
+index 00000000..2d055315
+--- /dev/null
++++ b/lib/resorts/dynaland/resort.json
+@@ -0,0 +1,15 @@
++{
++  "name": "Dynaland",
++  "url": {
++    "host": "https://www.dynaland.co.jp",
++    "pathname": "/condition/"
++  },
++  "trails": true,
++  "tags": [
++    "Japan"
++  ],
++  "ll": [
++    136.8852,
++    35.9973
++  ]
++}
+diff --git a/lib/resorts/dynaland/status.js b/lib/resorts/dynaland/status.js
+new file mode 100644
+index 00000000..5559df28
+--- /dev/null
++++ b/lib/resorts/dynaland/status.js
+@@ -0,0 +1,14 @@
++// shared status glyph translation for the Japanese condition tables
++export default function status(text = '') {
++  const t = text.trim();
++  if (/^[○◯〇]/.test(t) || /運行中|営業中/.test(t)) {
++    return 'open';
++  }
++  if (/^[△▲]/.test(t)) {
++    return 'hold';
++  }
++  if (/^[×✕✖-]/.test(t) || /運休|終了/.test(t)) {
++    return 'closed';
++  }
++  return t;
++}
+diff --git a/lib/resorts/dynaland/trails.js b/lib/resorts/dynaland/trails.js
+new file mode 100644
+index 00000000..76785d2a
+--- /dev/null
++++ b/lib/resorts/dynaland/trails.js
+@@ -0,0 +1,39 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++import status from './status.js';
++
++const sections = { 初級: 'green', 中級: 'blue', 上級: 'black' };
++
++// course tables: [section row like 初級コース] コース名 | 滑走状況 | お知らせ;
++// park tables use パーク名 in the header instead
++export default function parse(dom) {
++  const rows = [];
++  for (const table of select(dom, 'table')) {
++    const trs = select(table.children, 'tr');
++    const caption = select(table.children, 'caption')[0];
++    let level = caption && sections[Object.keys(sections).find(k => (findText(caption) ?? '').includes(k))];
++    let headerIdx = -1;
++    for (const [i, tr] of trs.entries()) {
++      const cells = select(tr.children, 'th, td').map(findText);
++      const joined = cells.filter(Boolean).join(' ');
++      if (/コース名|パーク名/.test(joined)) {
++        headerIdx = i;
++        if (/パーク名/.test(joined)) {
++          level = 'terrainPark';
++        }
++        continue;
++      }
++      if (headerIdx < 0) {
++        const section = Object.keys(sections).find(k => joined.includes(k));
++        if (section) {
++          level = sections[section];
++        }
++        continue;
++      }
++      if (cells[0] && cells[1]) {
++        rows.push({ name: cells[0].trim(), status: status(cells[1]), level });
++      }
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/dynaland-trails.js b/test/resorts/dynaland-trails.js
+new file mode 100644
+index 00000000..9f6522f8
+--- /dev/null
++++ b/test/resorts/dynaland-trails.js
+@@ -0,0 +1,124 @@
++import trails from '../trails/index.js';
++
++trails('dynaland', [
++  {
++    'name': 'パラダイスAコース',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': '乙女コース（上部）',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': '乙女コース（下部）',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': '第1ゲレンデ',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'から松ゲレンデ',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': '第6ゲレンデ',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': '神中Aコース',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'ラビットコース',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'β‐α連絡コース',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'ダウンヒルコース',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'パラダイスツリーラン',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'モーグルコース',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'スカイラインBコース（上部）',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'スカイラインBコース（下部）',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'パラダイスBコース',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'クマダナコース',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': '神中Bコース',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': '神中回転バーン',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'チャレンジBコース',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'チャレンジCコース',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'スカイラインAコース',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'チャレンジツリーランエリア',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'ウマノセツリーランエリア',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': '乙女ツリーランエリア',
++    'status': 'closed',
++    'level': 'black'
++  }
++]);
+diff --git a/test/resorts/dynaland.js b/test/resorts/dynaland.js
+new file mode 100644
+index 00000000..4b8e7ef8
+--- /dev/null
++++ b/test/resorts/dynaland.js
+@@ -0,0 +1,9 @@
++import lifts from '../lifts/index.js';
++
++lifts('dynaland', 'html', {
++  '第１ペアリフト': 'closed',
++  'アルファーライナー': 'closed',
++  'ベータライナー': 'closed',
++  'ガンマライナー': 'closed',
++  'からまつビギナーリフト': 'closed'
++});
+diff --git a/test/resorts/example/dynaland.html b/test/resorts/example/dynaland.html
+new file mode 100644
+index 00000000..2ce53104
+--- /dev/null
++++ b/test/resorts/example/dynaland.html
+@@ -0,0 +1,1268 @@
++<!doctype html>
++<html><!-- InstanceBegin template="/Templates/base.dwt" codeOutsideHTMLIsLocked="false" -->
++<head>
++<meta charset="utf-8">
++    
++    
++    <!-- Google Tag Manager -->
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-TSQ5P2G9');</script>
++<!-- End Google Tag Manager -->
++    
++    
++<!-- Google Tag Manager -->
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-T5QSW6XL');</script>
++<!-- End Google Tag Manager -->
++    
++    
++<meta name="viewport" content="width=device-width">
++<!-- InstanceBeginEditable name="doctitle" -->
++  <title>最新ゲレンデ情報 ｜ 岐阜県・中部エリアの西日本最大級スキー場はダイナランド</title>
++  <!-- InstanceEndEditable -->
++<meta name="description" content="岐阜県奥美濃エリアのダイナランドは、中部・西日本最大級のスキー場。最長3,200mの広大なロングランゲレンデと多彩なコースでスキーからスノーボード、ファミリーまで楽しめます。早朝＆ナイター営業で朝から夜までたっぷり滑走！" />
++<!-- Google Tag Manager --> 
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-NVTJ2RB');</script> 
++<!-- End Google Tag Manager -->
++<meta name="format-detection" content="telephone=no">
++<link href="favicon.ico" rel="shortcut icon" />
++<link rel="preconnect" href="https://fonts.googleapis.com">
++<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@700;900&display=swap" rel="stylesheet">
++<link rel="stylesheet" type="text/css" href="../assets/css/reset.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/common_2022.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/common.css" media="all" />
++<link rel="stylesheet" type="text/css" href="../assets/css/module.css" media="all" />
++    <link rel="stylesheet" href="../assets/css/common_2025.css">    
++<!-- InstanceBeginEditable name="head" -->
++
++  <link rel="stylesheet" href="../assets/css/condition.css">
++  <link rel="stylesheet" href="../assets/css/map.css">
++  <link rel="stylesheet" href="../assets/css/layout.css">
++  <!-- ライブカメラ映像用 -->
++  <script src="https://lnbgtscw.user.webaccel.jp/assets/js/web-acc/index.async.taka.js"></script>
++  <!-- ライブカメラ映像用 ここまで-->
++  <link rel="canonical" href="https://www.dynaland.co.jp/condition/" />
++      <link rel="stylesheet" href="../assets/css/zoom.css">
++  <!-- InstanceEndEditable -->
++    
++<script src="https://d.shutto-translation.com/trans.js?id=1328"></script>
++    
++    
++    
++    
++    
++    <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@graph": [
++    {
++      "@type": "Organization",
++      "@id": "https://www.dynaland.co.jp/#organization",
++      "name": "ダイナランド",
++      "url": "https://www.dynaland.co.jp/",
++      "logo": {
++        "@type": "ImageObject",
++        "url": "https://www.dynaland.co.jp/assets/img/common/logo.png"
++      },
++      "sameAs": [
++        "https://www.facebook.com/dynaland/",
++        "https://twitter.com/dynaland",
++        "https://www.instagram.com/dynaland01/",
++        "https://www.youtube.com/user/DYNALAND1",
++        "https://www.tiktok.com/@dynaland01",
++        "https://lin.ee/FI4pmLm"
++      ]
++    },
++    {
++      "@type": "SkiResort",
++      "@id": "https://www.dynaland.co.jp/#place",
++      "name": "ダイナランド",
++      "url": "https://www.dynaland.co.jp/",
++      "image": {
++        "@type": "ImageObject",
++        "url": "https://www.dynaland.co.jp/assets/img/common/main_visual.jpg"
++      },
++      "address": {
++        "@type": "PostalAddress",
++        "postalCode": "501-5305",
++        "addressCountry": "JP",
++        "addressRegion": "岐阜県",
++        "addressLocality": "郡上市高鷲町西洞",
++        "streetAddress": "3035-2"
++      },
++      "telephone": "0575-72-6636",
++  "priceRange": "¥¥",
++      "geo": {
++        "@type": "GeoCoordinates",
++        "latitude": 35.99030788951982,
++        "longitude": 136.87055741351443
++      },
++      "sameAs": [
++        "https://www.facebook.com/dynaland/",
++        "https://twitter.com/dynaland",
++        "https://www.instagram.com/dynaland01/",
++        "https://www.youtube.com/user/DYNALAND1",
++        "https://www.tiktok.com/@dynaland01",
++        "https://lin.ee/FI4pmLm"
++      ]
++    },
++    {
++      "@type": "WebSite",
++      "@id": "https://www.dynaland.co.jp/#website",
++      "name": "ダイナランド",
++      "url": "https://www.dynaland.co.jp/",
++      "publisher": { "@id": "https://www.dynaland.co.jp/#organization" },
++      "inLanguage": "ja"
++    }
++  ]
++}
++</script>
++
++    
++    
++    
++    
++    
++    <!-- InstanceBeginEditable name="EditRegion5" -->
++    <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@graph": [
++    {
++      "@type": "WebPage",
++      "@id": "https://www.dynaland.co.jp/condition/#webpage",
++      "url": "https://www.dynaland.co.jp/condition/",
++      "name": "最新ゲレンデ情報 ｜ 岐阜県・中部エリアの西日本最大級スキー場はダイナランド",
++      "isPartOf": { "@id": "https://www.dynaland.co.jp/#website" },
++      "about": { "@id": "https://www.dynaland.co.jp/#place" },
++      "inLanguage": "ja"
++    },
++    {
++      "@type": "BreadcrumbList",
++      "@id": "https://www.dynaland.co.jp/condition/#breadcrumb",
++      "itemListElement": [
++        {
++          "@type": "ListItem",
++          "position": 1,
++          "name": "ホーム",
++          "item": "https://www.dynaland.co.jp/"
++        },
++        {
++          "@type": "ListItem",
++          "position": 2,
++          "name": "最新ゲレンデ情報",
++          "item": "https://www.dynaland.co.jp/condition/"
++        }
++      ]
++    }
++  ]
++}
++</script>
++    <!-- InstanceEndEditable -->
++    
++    
++    
++    
++    
++</head>
++
++<body>
++   
++    
++    
++    <!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TSQ5P2G9"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++	
++	<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T5QSW6XL"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++    
++	<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NVTJ2RB"
++height="0" width="0" style="display:none;visibility:hidden"></iframe>
++</noscript><!-- End Google Tag Manager (noscript) -->
++	
++    
++    
++<header class="header">
++  <h1 class="logo"><a href="../"><img src="../assets/img/common/logo.png" alt="ダイナランド"/></a></h1>
++  <nav class="header-nav">
++    <div class="header-nav-sub">
++      <ul>
++        <li><a href="../faq/">FAQ</a></li>
++        <li><a href="https://asobito-resort.com/login" target="_blank">会員ログイン</a></li>
++        <li><a href="https://asobito-resort.com/register" target="_blank">新規会員登録</a></li>
++        <li><a href="https://www.takasumountains.com/">TAKASU MOUNTAINS</a></li>
++      </ul>
++    </div>
++      
++    <div class="header-nav-sns">
++      <ul>
++        <li><a href="https://www.facebook.com/dynaland/" target="_blank"><img src="../assets/img/common/ico_fb_c.png" width="80" height="80" alt="Facebook"/></a></li>
++        <li><a href="https://twitter.com/dynaland" target="_blank"><img src="../assets/img/common/ico_tw_c.png" width="80" height="80" alt="X"/></a></li>
++        <li><a href="https://www.instagram.com/dynaland01/" target="_blank"><img src="../assets/img/common/ico_ig_c.png" width="80" height="80" alt="Instagram"/></a></li>
++        <li><a href="https://lin.ee/FI4pmLm" target="_blank"><img src="../assets/img/common/ico_ln_c.png" width="80" height="80" alt="LINE"/></a></li>
++        <li><a href="https://www.youtube.com/user/DYNALAND1" target="_blank"><img src="../assets/img/common/ico_yt_c.png" width="80" height="80" alt="YouTube"/></a></li>
++        <li><a href="https://www.tiktok.com/@dynaland01" target="_blank"><img src="../assets/img/common/ico_ig_t.png" width="80" height="80" alt="TikTok"/></a></li>
++      </ul>
++    </div>
++    <ul class="header-nav-link">
++      <li class="translate">
++        <p class="translate-title">Languages</p>
++        <div class="translate-list"> <a href="?stt_lang=en">English</a> <a href="?stt_lang=th">Thai</a> <a href="?stt_lang=zh-CN">中国語(簡体)</a> <a href="?stt_lang=zh-TW">中国語(繁体)</a> <a href="?stt_lang=ja">日本語</a> </div>
++      </li>
++      <li class="green"><a href="https://www.dynaland.co.jp/camp/" target="_blank"><img src="../assets/img/common/ico_green.png" alt=""/>グリーンシーズン</a></li>
++    </ul>
++  </nav>
++  <button type="button" class="global-nav-menu">
++  <div class="global-nav-menu-outer"> <span class="global-nav-menu-item"></span> </div>
++  </button>
++</header>
++<nav class="global-nav">
++  <ul class="global-nav-list">
++    <li class="global-nav-top"><a href="../">ホーム</a></li>
++    <li><a href="../condition/">ゲレンデ</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../condition/">最新ゲレンデ情報</a></li>
++          <li><a href="../gelande/#map">ゲレンデMAP</a></li>
++          <li><a href="../gelande/#gelande01">コース紹介</a></li>
++          <li><a href="../gelande/#gelande02">パーク紹介</a></li>
++          <li><a href="../night/" class="">ヨルダイナ・アサダイナ</a></li>
++          <li><a href="/guide/beginner/">初めてのスキー・スノボ<br>完全ガイド</a></li>
++        </ul>
++      </div>
++    </li>
++   <li><a href="../facilities/">施設案内</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="/guide/">タカスダイナ総合ガイド</a></li>
++          <li><a href="../facilities/#map">施設マップ</a></li>
++          <li><a href="../facilities/#restaurant">レストラン・飲食</a></li>
++          <li><a href="../facilities/#rental">レンタル・売店・レッスン</a></li>
++          <li><a href="../facilities/#service">各種サービス施設</a></li>
++          <li><a href="../kids/">ファミリー</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../charge/">時間・料金</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../charge/">営業時間</a></li>
++          <li><a href="../charge/#charge02">高鷲ダイナ共通リフト料金</a></li>
++          <li><a href="../charge/#charge04">シーズン券</a></li>
++          <li><a href="../features/" class="">各種ご予約</a></li>
++          <li><a href="../young/" target="_blank">若者応援割引キャンペーン</a></li>
++          <li><a href="../senior/" target="_blank">シニア カムバック割</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../rental/" class="">レンタル</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../rental/#rentalprice">レンタル料金&amp;アイテム</a></li>
++          <li><a href="../rental/#rental01">おすすめパックプラン</a></li>
++          <li><a href="../rental/#be_service">事前決済取置サービス</a></li>
++          <li><a href="../rental/#rental02">レンタルカムバック割</a></li>
++          <li><a href="../rental/#rental04">スクート Snow Scoot</a></li>
++          <li><a href="../rental/#rental_skate">スノスケ Snow Skate</a></li>
++          <li><a href="../rental/#rental03">ハイグレードモデルレンタル</a></li>
++          <!--<li><a href="../rental/#corona_area">新型コロナウィルス<br class="pc">感染症対策について</a></li>-->
++        </ul>
++      </div>
++    </li>
++    <li><a href="../school/">スクール</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../school/#school01">スノーボード</a></li>
++          <li><a href="../school/#school02">スキー</a></li>
++          <li><a href="../school/#parkschool">グラトリ・パーク専門</a></li>
++          <li><a href="../school/#pole">ポールレッスン</a></li>
++            <li><a href="../school/#gujoiss" class="">郡上インターナショナル<br class="pc">
++            スノースクール</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../news/">ニュース・イベント</a>
++            <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../calendar/">イベントカレンダー</a></li>
++        </ul>
++      </div></li>
++  
++              
++    <li><a href="../access/">アクセス・宿泊</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../access/#access01">マイカー</a></li>
++          <li><a href="../access/#access02">ツアーバス</a></li>
++          <li><a href="../access/#access03">レンタカー</a></li>
++          <li><a href="../access/#access04">無料シャトルバス</a></li>
++          <li><a href="../access/#stay01">周辺宿泊施設</a></li>
++          <li><a href="../access/#stay02">近隣の温泉情報</a></li>
++          <li><a href="https://takasudyna.com/campaign/" target="_blank">【福井割】実施中</a></li>
++        </ul>
++      </div>
++    </li>
++    <li><a href="../features/" class="">Web予約・購入</a>
++      <div class="btn-open"></div>
++      <div class="global-nav-sub">
++        <ul>
++          <li><a href="../features/#liftpass" class="">リフト券購入</a></li>
++          <li><a href="../features/#rental" class="">レンタル予約</a></li>
++          <li><a href="../features/#school" class="">スクール予約</a></li>
++          <li><a href="../features/#kids" class="">託児所予約</a></li>
++          <li><a href="../features/#baboon" class="">駐車場予約</a></li>
++        </ul>
++      </div>
++    </li>
++   </ul>
++  <nav class="sp-nav">
++    <div class="sp-nav-sub">
++      <ul>
++        <li><a href="../faq/">FAQ</a></li>
++        <li><a href="https://asobito-resort.com/login" target="_blank">会員ログイン</a></li>
++        <li><a href="https://asobito-resort.com/register" target="_blank">新規会員登録</a></li>
++        <li><a href="https://www.takasumountains.com/">TAKASU MOUNTAINS</a></li>
++        <li><a href="../company/">会社概要</a></li>
++        <li><a href="../contact/">お問い合わせ</a></li>
++      </ul>
++    </div>
++    <div class="sp-nav-sns">
++      <ul>
++        <li><a href="https://www.facebook.com/dynaland/" target="_blank"><img src="../assets/img/common/ico_fb_w.png" width="80" height="80" alt=""/></a></li>
++        <li><a href="https://twitter.com/dynaland" target="_blank"><img src="../assets/img/common/ico_tw_w.png" width="80" height="80" alt=""/></a></li>
++        <li><a href="https://www.instagram.com/dynaland01/" target="_blank"><img src="../assets/img/common/ico_ig_w.png" width="80" height="80" alt=""/></a></li>
++        <li><a href="https://lin.ee/FI4pmLm" target="_blank"><img src="../assets/img/common/ico_ln_w.png" width="80" height="80" alt=""/></a></li>
++        <li><a href="https://www.youtube.com/user/DYNALAND1" target="_blank"><img src="../assets/img/common/ico_yt_w.png" width="80" height="80" alt=""/></a></li>
++        <li><a href="https://www.tiktok.com/@dynaland01" target="_blank"><img src="../assets/img/common/ico_ig_t_w.png" width="80" height="80" alt=""/></a></li>
++      </ul>
++    </div>
++    <ul class="sp-nav-languages">
++      <li class="translate">
++        <div class="translate-list"> <a href="?stt_lang=en">English</a> <a href="?stt_lang=th">Thai</a> <a href="?stt_lang=zh-CN">中国語(簡体)</a> <a href="?stt_lang=zh-TW">中国語(繁体)</a> <a href="?stt_lang=ja">日本語</a> </div>
++      </li>
++    </ul>
++    <ul class="sp-nav-link">
++      <li class="green"><a href="https://www.dynaland.co.jp/camp/" target="_blank"><img src="../assets/img/common/ico_green.png" alt=""/>グリーンシーズン</a></li>
++      <li class="takasu"><a href="https://www.takasu.gr.jp/" target="_blank"><img src="../assets/img/common/logo_takasu.png" alt=""/>高鷲スノーパーク</a></li>
++    </ul>
++  </nav>
++</nav>
++<main class="main"> <!-- InstanceBeginEditable name="main" -->
++    <section id="page_ttl">
++      <div class="inner">
++        <p class="en">CONDITION</p>
++        <h1 class="jp">最新ゲレンデ情報</h1>
++      </div>
++    </section>
++    <section id="pankuzu">
++      <div class="inner">
++        <ol>
++          <li><a href="/">ホーム</a></li>
++          <li>最新ゲレンデ情報</li>
++        </ol>
++      </div>
++    </section>
++
++    <section class="date">
++      <div class="inner">
++        <div class="lttl">
++          <time class="en">2026-07-11 AM10:00</time>
++          <p class="jp">Latest slope information</p>
++        </div>
++      </div>
++    </section>
++
++
++    <section class="page_nav">
++      <div class="inner">
++        <ul>
++          <li><a href="#gelande_anch">ゲレンデNOW!</a></li>
++          <li><a href="#comment_anch">スタッフの<wbr>
++              コメント</a></li>
++          <li><a href="#lift_anch">リフト運行状況</a></li>
++          <li><a href="#course_anch">各コース<wbr>
++              利用状況</a></li>
++          <li><a href="#park_anch">パーク状況</a></li>
++          <li><a href="#kids_anch">キッズパーク<wbr>
++              状況</a></li>
++        </ul>
++      </div>
++    </section>
++
++
++    <section id="gelande" class="content">
++      <a id="gelande_anch" name="gelande_anch" class="anchor"></a>
++      <div class="gelande-wrapper">
++        <h2 class="gelande-title">ゲレンデ<br>
++          NOW!</h2>
++                <!--<figure><img src="https://www.dynaland.co.jp/news/wp-content/uploads/2026/07/S__79421449-1280x1108.jpg" alt="ゲレンデ状況" width="100%">
++          <img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000005c3ad7a" alt="ライブカメラの画像" width="100%" class="image" />
++        </figure>-->
++         <!-- <iframe width="" height="auto" class="youtubecamera now" src="https://www.youtube.com/embed/83j2_5aXrEU?si=T6ziEzenG_FE4R3W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
++          <!-- <figure><img src="../assets/img/condition/youtube.jpg" alt="ライブカメラの画像" width="" class="image" /></figure>-->
++          <figure><img src="https://www.dynaland.co.jp/news/wp-content/uploads/2026/07/S__79421449-1280x1108.jpg" alt="" /></figure>
++        <div class="weather-wrapper">
++          <ul>
++            <li class="weather">
++              <figure>
++                <img src="/assets/img/condition/ico_info_01.png" alt="">
++              </figure>晴れ            </li>
++            <li class="condition">
++                            <figure><img src="../assets/img/index/ico_slope.png" alt="" /></figure>滑走不可            </li>
++            <li class="snow">
++              <figure><img src="../assets/img/index/ico_snow.png" alt="" /></figure>0<span>cm</span>
++            </li>
++            <li class="temperature">
++              <figure><img src="../assets/img/index/ico_temp.png" alt="" /></figure>23<span>&#8451;</span>
++            </li>
++            <li class="quality">
++              <figure><img src="../assets/img/index/ico_quality.png" alt="" /></figure><span>
++            </li>
++          </ul>
++          <p class="weatherpinpoint"><a href="https://weathernews.jp/s/ski/spot/35203/" target="_blank">週間天気予報を見る</a>
++          </p>
++          <p class="road"><a href="http://c-ihighway.jp/web/map_tokai.html" target="_blank"><img src="../assets/img/condition/bnr_ihightway.jpg" alt="" width="100%" /></a></p>
++
++        </div>
++      </div>
++    </section>
++
++
++    <section id="road" class="content">
++      <a id="road_anch" name="road_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">ROAD CONDITIONS</p>
++          <h2 class="jp">道路状況</h2>
++        </div>
++        <div class="content_inner">
++          <p>-</p>
++        </div>
++      </div>
++    </section>
++
++    <input class="serialNumber" type="hidden" value="000000009c60d3cf,00000000ab91a18b,00000000d9b8dbd9,0000000005c3ad7a,00000000b49a902c,000000003f961b2d" />
++
++
++
++    <section id="livecamera" class="content bg-blue10">
++      <div class="inner">
++        <div class="content_inner">
++          <div class="lttl">
++            <p class="en">LIVE CAMERA</p>
++            <h2 class="jp">ライブカメラ</h2>
++          </div>
++
++          <h3 class="mttl"><span>ゲレンデライブカメラ</span></h3>
++
++          <div class="flex-wrap col2-wrap mgb80">
++            <div class="body">
++              <h4 class="sttl center">山麓ライブカメラ</h4>
++              <div style="position: relative">
++                  <!--<iframe width="" height="315" class="youtubecamera" src="https://www.youtube.com/embed/83j2_5aXrEU?si=T6ziEzenG_FE4R3W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
++<div class="taken_at blue center" data-id="0000000005c3ad7a" data-show-sec="0"></div>-->
++                <figure><img src="../assets/img/condition/youtube.jpg" alt="ライブカメラの画像" width="1330" class="image" /></figure>
++                
++              </div>
++            </div>
++
++            <div class="body">
++              <h4 class="sttl center">山頂ライブカメラ</h4>
++              <div style="position: relative">
++                <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000b49a902c&force=WaU9xDcru3a3cWAm" alt="ライブカメラの画像" width="100%" class="image" />
++                </figure>
++<div class="taken_at blue center" data-id="00000000b49a902c" data-show-sec="0"></div>-->
++                  <figure><img src="../assets/img/condition/youtube.jpg" alt="ライブカメラの画像" width="1330" class="image" />
++                </figure>
++                
++              </div>
++            </div>
++          </div>
++
++        </div>
++
++
++
++        <h3 class="mttl"><span>路面状況（料金所前）</span></h3>
++        <div class="flex-wrap col2-wrap mgb80">
++          <div class="body">
++            <h4 class="sttl center">ライブカメラ</h4>
++              <figure><img src="../assets/img/condition/youtube.jpg" alt="ライブカメラの画像" width="1330" class="image" /></figure>
++            <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=000000009c60d3cf" alt="ライブカメラの画像" width="100%" class="image" /></figure>
++            <div class="taken_at blue center" data-id="000000009c60d3cf" data-show-sec="0"></div>-->
++          </div>
++          <div class="body">
++            <h4 class="sttl center">駐車場マップ</h4>
++            <figure><img src="../assets/img/condition/parkingmap.jpg" width="" alt="" /></figure>
++          </div>
++        </div>
++      </div>
++      </div>
++    </section>
++
++    <section id="comment" class="content">
++      <a id="comment_anch" name="comment_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">STAFF’S COMMENT</p>
++          <h2 class="jp">スタッフのコメント</h2>
++        </div>
++        <div class="content_inner">
++          <p>&nbsp;</p><h2><span style="color: #339966;">■ キャンプ場『Dynaland CAMP BASE』</span></h2><p><strong>Dynaland CAMP BASE 営業中！</strong></p><p>サイトエリアは遮蔽物が少ないため、風が強く吹くことがございます。<br />テントの設営時などは十分にご注意くださいませ。<br />タープを設営し、日陰をつくることをお勧めします。※ハイシーズンは1000円/1タープ</p><p>朝晩は気温が下がります。調節可能なお召し物でお越し下さい。</p><p>&nbsp;</p><hr /><p>&nbsp;</p><h2><span style="color: #ff6600;">■ イベント情報</span></h2><h3>・ステッカープレゼント</h3><p>キャンプ場をご利用いただいた方で、<strong><a href="https://www.nap-camp.com/identity/users/posts/campsite_reviews/new?campsite_id=14853">「なっぷ」の口コミ</a></strong>を投稿いただいた方にキャンプ場オリジナルステッカーをプレゼント！<br />キャンプ中の思い出をぜひ教えてくださいませ！</p><p>&nbsp;</p><h2><span style="color: #00ff00;">■ 遊具エリア情報</span></h2><p><strong>・ロングブランコ</strong></p><p>リフトの柱を利用したながーいブランコ！<br />お子様から大人の方まで、高原のスイングをお楽しみください！</p><p><strong>・ミニジップライン</strong></p><p>ターザン気分が味わえるミニサイズのジップライン！<br />2レーン並んで 3・2・1 GO！<br />※ 体重制限がございます。遊具周辺に設置された注意看板をご確認ください。</p><p><strong>・そりコースター</strong></p><p>特製レールの上をソリでスライド！<br />山肌を駆ける風になれ！</p><p>&nbsp;</p><h2><span style="color: #de95b8;">■ 予約情報</span></h2><p>【夏季秋季営業期間】</p><p>7月4日（土）～ 10月17日（土）</p><p>&nbsp;</p><p><strong>★ ご予約はこちらのロゴをタップ（外部サイトが開きます）！</strong></p><p><a href="https://www.nap-camp.com/gifu/14853"><img class=" wp-image-8723 alignnone" src="https://www.dynaland.co.jp/news/wp-content/uploads/2026/03/campbase_logo_yoko-670x102.png" alt="" width="322" height="49" /></a></p>        </div><a id="lift_anch"></a>
++      </div>
++    </section>
++
++
++
++
++
++
++
++
++
++    <section id="" class="content bg-blue10">
++        <p class="sp">&nbsp;</p>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">LIFT</p>
++          <h2 class="jp">リフト運行状況</h2>
++        </div>
++        <div class="content_inner">
++          <table class="table_basic mgb50">
++            <tr>
++              <th>リフト名</th>
++              <th>運行時間</th>
++              <th>運行可否</th>
++              <th class="info">お知らせ</th>
++            </tr>
++                                              <tr>
++                    <td>第１ペアリフト</td>
++                    <td>今シーズンの営業は終了いたしました</td>
++                    <td>×</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <td>アルファーライナー</td>
++                    <td>今シーズンの営業は終了いたしました</td>
++                    <td>×</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <td>ベータライナー</td>
++                    <td>今シーズンの営業は終了いたしました</td>
++                    <td>×</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <td>ガンマライナー</td>
++                    <td>今シーズンの営業は終了いたしました</td>
++                    <td>×</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <td>からまつビギナーリフト</td>
++                    <td>今シーズンの営業は終了いたしました</td>
++                    <td>×</td>
++                    <td class="info"></td>
++                  </tr>
++                                      </table>
++
++          <div class="flex-wrap col2-wrap">
++            <figure><a href="../assets/img/common/reg_lift.pdf" target="_blank"><img src="../assets/img/common/reg_lift.png" width="555" alt="リフト利用規定" /></a></figure>
++            <figure><a href="../assets/img/common/reg_item.pdf" target="_blank"><img src="../assets/img/common/reg_item.png" width="555" alt="ゲレンデ利用可能滑走具" /></a></figure>
++          </div>
++
++          <div class="flex-wrap col2-wrap">
++            <figure><a href="../assets/img/common/reg_tac.pdf" target="_blank"><img src="../assets/img/common/reg_tac.png" width="555" alt="スキー場利用約款" /></a></figure>
++          </div>
++</div>
++        </div>
++    </section>
++        
++        
++    <section id="course" class="content">
++      <a id="course_anch" name="course_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">COURSE</p>
++          <h2 class="jp">各コース利用状況</h2>
++        </div>
++        <div class="content_inner">
++
++
++          <!-- 最新ゲレンデ情報マップ ここから// -->
++                    <figure class="condition_map js-pinch-hint">
++
++                            <img src="/assets/img/condition/map/lift_01_00.png" alt="×" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_02_00.png" alt="×" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_03_00.png" alt="×" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_04_00.png" alt="×" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_05_00.png" alt="×" class="map-lift">
++                                            <script>
++                                  lift01_status="×";
++                                  lift02_status="×";
++                                  lift03_status="×";
++                                  lift04_status="×";
++                                  lift05_status="×";
++                              </script>
++            
++                            <img src="/assets/img/condition/map/course_0101_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0102_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0103_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0104_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0105_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0106_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0107_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0108_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0109_00.png" alt="×" class="map-course">
++            
++                            <img src="/assets/img/condition/map/course_0201_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0202_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0203_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0204_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0205_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0206_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0207_00.png" alt="×" class="map-course">
++            
++                            <img src="/assets/img/condition/map/course_0301_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0302_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0303_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0304_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0305_00.png" alt="×" class="map-course">
++                                                                        <img src="/assets/img/condition/map/course_0307_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0308_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0309_00.png" alt="×" class="map-course">
++            
++                            <img src="/assets/img/condition/map/park_07_00.png" alt="×" class="map-park">
++                            <img src="/assets/img/condition/map/park_01_00.png" alt="×" class="map-park">
++                                                                        <img src="/assets/img/condition/map/park_03_00.png" alt="×" class="map-park">
++                                                                        <img src="/assets/img/condition/map/park_05_00.png" alt="×" class="map-park">
++                            <img src="/assets/img/condition/map/park_06_00.png" alt="×" class="map-park">
++            
++                            <img src="/assets/img/condition/map/kidspark_01_00.png" alt="×" class="map-kidspark">
++                            <img src="/assets/img/condition/map/kidspark_02_00.png" alt="×" class="map-kidspark">
++                        <img src="/assets/img/condition/map/course_name.png" alt="コース名" class="map-name">
++            <img src="/assets/img/condition/map/course_base.jpg" alt="コースマップ" class="map-base">
++          </figure>
++          <!-- //最新ゲレンデ情報マップ ここまで -->
++          <!--
++        <figure><img src="../assets/img/condition/course_map.jpg" alt="コースマップ"></figure>-->
++
++
++
++         <!--<p class="center mgb20 sttl"><strong><a href="https://www.dynaland.co.jp/condition/map.php" target="_blank">スマートフォンでマップを見る</a></strong> &gt;&gt;</p>
++           <p class="center mgb30">※スマートフォンでご覧の際、スワイプ（拡大・縮小）によりブラウザが正常に動作しない場合がございます。<br>スマートフォンでコース状況マップをご覧の際は上記からをお勧めいたします。</p>-->
++
++          <p class="center mgb50"><strong><a href="https://www.takasu.gr.jp/condition/" target="_blank">高鷲スノーパークのコース状況を見る</a></strong> &gt;&gt;</p>
++
++
++                                <table class="table_basic shokyu">
++              <caption>
++                初級コース
++              </caption>
++              <tr>
++                <th class="cell1">コース名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info cell3">お知らせ</th>
++              </tr>
++                                                    <tr>
++                      <td>パラダイスAコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>乙女コース（上部）</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>乙女コース（下部）</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>第1ゲレンデ</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>から松ゲレンデ</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>第6ゲレンデ</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>神中Aコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>ラビットコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>β‐α連絡コース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                
++            </table>
++          
++                                <table class="table_basic chukyu">
++              <caption>
++                中級コース
++              </caption>
++              <tr class="table_basic shokyu">
++                <th class="cell1">コース名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info cell3">お知らせ</th>
++              </tr>
++                                                    <tr>
++                      <td>ダウンヒルコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>パラダイスツリーラン</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>モーグルコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>スカイラインBコース（上部）</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>スカイラインBコース（下部）</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>パラダイスBコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>クマダナコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                            </table>
++          
++
++                                <table class="table_basic jokyu">
++              <caption>
++                上級コース
++              </caption>
++              <tr class="table_basic shokyu">
++                <th class="cell1">コース名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info cell3">お知らせ</th>
++              </tr>
++                                                    <tr>
++                      <td>神中Bコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>神中回転バーン</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>チャレンジBコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>チャレンジCコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>スカイラインAコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                                                                        <tr>
++                      <td>チャレンジツリーランエリア</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>ウマノセツリーランエリア</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>乙女ツリーランエリア</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                            </table>
++          
++        </div>
++      </div>
++    </section>
++    <section id="park" class="content bg-blue10">
++      <a id="park_anch" name="park_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">PARK</p>
++          <h2 class="jp">パーク状況</h2>
++        </div>
++        <div class="content_inner">
++
++          
++                      <table class="table_basic">
++              <tr>
++                <th class="cell1">パーク名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info">パーク・アイテム情報</th>
++              </tr>
++            </table>
++                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">ステップアップパーク</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3">今シーズンの営業は終了いたしました</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">Re:テレインパーク</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3">今シーズンの営業は終了いたしました</td>
++                    </tr>
++                  </table>
++                                                                                                          <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">モーグルコース</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3"></td>
++                    </tr>
++                  </table>
++                                                                                                          <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">サーフライドパーク</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3">今シーズンの営業は終了いたしました</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">ナイトパーク</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3">今シーズンの営業は終了いたしました</td>
++                    </tr>
++                  </table>
++                                      
++          <p class="center clear mgb50"><a href="https://www.instagram.com/dynaland_digger/" target="_blank"><img src="../assets/img/index/insta_bnr.jpg" alt="インスタグラム" /></a></p>
++
++<div class="center">
++    <h3 class="mttl">Dynaland PARK Digger</h3>
++<div class="sns-item">
++            <div class="sns-body insta-body center"><iframe src="https://www.dynaland.co.jp/insta_feed.php" class="" scrolling="no" width="100%" height="700"></iframe></div>
++          </div></div>
++
++
++           <!--
++<div id="facebook" class="mgb40">
++            <div class="fb-page" data-href="https://www.facebook.com/Dynaland-Digger-408594756015682/?fref=ts" data-tabs="timeline" data-width="500" data-height="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"></div>
++          </div>
++            -->
++
++
++
++            <!--
++          <div id="facebook" class="mgb40">
++            <div class="fb-page" data-href="https://www.facebook.com/Dynaland-MOGUL-100326952022663/?fref=ts" data-tabs="timeline" data-width="500" data-height="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"></div>
++          </div>
++            -->
++
++
++
++
++
++
++
++        </div>
++
++      </div>
++    </section>
++    <section id="kids" class="content">
++      <a id="kids_anch" name="kids_anch" class="anchor"></a>
++      <div class="inner">
++        <div class="lttl">
++          <p class="en">KIDS PARK</p>
++          <h2 class="jp">キッズパーク状況</h2>
++        </div>
++        <div class="content_inner">
++
++                                <table class="table_basic">
++              <tr>
++                <th class="cell1">パーク名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info cell3">ひとことコメント</th>
++              </tr>
++            </table>
++                                              
++                    <table class="table_basic">
++                                                                        <tr>
++                            <td class="course_name cell1">Baboon</td>
++                            <td class="cell2">×</td>
++                                                          <td rowspan="4" class="info cell3">今シーズンの営業は終了いたしました</td>
++                                                      </tr>
++                                                                                                <tr>
++                            <td class="course_name cell1">Snow Baboon そり専用ゲレンデ</td>
++                            <td class="cell2">×</td>
++                                                      </tr>
++                                                                                                <tr>
++                            <td class="course_name cell1">Play Baboon 屋内遊具エリア</td>
++                            <td class="cell2">×</td>
++                                                      </tr>
++                                                                                                <tr>
++                            <td class="course_name cell1">Baboon フードコート</td>
++                            <td class="cell2">×</td>
++                                                      </tr>
++                                              
++                    </table>
++                                                                                                                    </div>
++            </div>
++    </section>
++    <section class="page_nav">
++      <div class="inner">
++        <ul>
++          <li><a href="#gelande_anch">ゲレンデNOW!</a></li>
++          <li><a href="#comment_anch">スタッフの<wbr>
++              コメント</a></li>
++          <li><a href="#lift_anch">リフト運行状況</a></li>
++          <li><a href="#course_anch">各コース<wbr>
++              利用状況</a></li>
++          <li><a href="#park_anch">パーク状況</a></li>
++          <li><a href="#kids_anch">キッズパーク<wbr>
++              状況</a></li>
++        </ul>
++      </div>
++    </section>
++    <!-- InstanceEndEditable --> </main>
++<div class="bg-footer"></div>
++<div class="floating-items">
++       <ul class="floating-list">
++    <li class="lift"><a href="https://www.dynaland.co.jp/ec/" target="_blank">
++      <figure><img src="../assets/img/common/ico_lift.png" alt=""/></figure>
++      リフト券<br class="sp">
++      購入</a></li>
++    <li class="takasu"><a href="https://www.takasu.gr.jp/" target="_blank">
++      <figure><img src="../assets/img/common/logo_takasu.png" alt=""/></figure>
++      高鷲スノー<br class="sp">パーク</a></li>
++    <li class="reserve pc"><a href="../kids/">
++      <figure><img src="../assets/img/common/ico_baboon.png" alt=""/></figure>
++      ファミリー</a></li>
++    <li class="ticket"><a href="../features/">
++      <figure><img src="../assets/img/common/ic_cal.png" alt=""/></figure>
++      各種予約</a></li>
++    <li class="hotel"><a href="https://www.villa-montsaint.com/" target="_blank">
++      <figure><img src="../assets/img/common/ico_hotel.png" alt=""/></figure>
++      HOTEL<br class="sp">
++      予約</a></li>
++  </ul>
++    
++    
++   <!-- 
++ <ul class="floating-list">
++     <li class="lift"><a href="https://www.dynaland.co.jp/ec/" target="_blank">
++      <figure><img src="../assets/img/common/ico_qr.png" alt=""/></figure>
++      QR<br class="sp">前売り券<br class="sp">購入</a></li>
++    <li class="lift"><a href="https://www.winterplus.jp/lift/lift_detail.cfm?PR=8711&utm_source=takasudyna&utm_medium=hp&utm_campaign=affiliates" target="_blank">
++      <figure><img src="../assets/img/common/ico_lift.png" alt=""/></figure>
++    IC<br class="sp">前売り券<br class="sp">購入</a></li>
++    <li class="reserve pc"><a href="../kids/">
++      <figure><img src="../assets/img/common/ico_baboon.png" alt=""/></figure>
++      ファミリー</a></li>
++    <li class="ticket"><a href="../features/">
++      <figure><img src="../assets/img/common/ic_cal.png" alt=""/></figure>
++      各種予約</a></li>
++    <li class="hotel"><a href="https://www.villa-montsaint.com/" target="_blank">
++      <figure><img src="../assets/img/common/ico_hotel.png" alt=""/></figure>
++      HOTEL<br class="sp">
++      予約</a></li>
++  </ul>-->
++    
++    
++    
++    
++</div>
++<section class="pr-bnr">
++  <div class="inner">
++    <ul class="pr-bnr-list">
++      <li><a href="https://chubu-snow.com/member/" target="_blank"><img src="../assets/img/common/bnr_asobito.jpg" alt="アソビト" width="240" height="80"></a></li>
++      <li><a href="https://www.dynaland.co.jp/ec/" target="_blank"><img src="../assets/img/common/bnr_quickpass.gif" alt="クイックパス" width="240" height="80"></a></li>
++      <li><a href="https://www.winterplus.jp/ski/ski_detail.cfm?skiarea_code=dynaland" target="_blank"><img src="../assets/img/common/dynaland_winteplus_240x80.gif" alt="ダイナランド×WINTERPLUS" width="240" height="80"></a></li>
++      <li><a href="https://www.jtb.co.jp/leisure/fp/qKS006945/" target="_blank"><img src="../assets/img/common/bnr_jtb.jpg" alt="JTB" width="240" height="80"></a></li>
++      <li><a href="https://www.dynaland.co.jp/job/" target="_blank"><img src="../assets/img/common/bnr_recruit.jpg" alt="スノーリゾートアルバイト大募集" width="240" height="80"></a></li>
++      <li><a href="https://yuki-yama.com/" target="_blank"><img src="../assets/img/common/bnr_yukiyama.png" alt="スキー・スノーボードライフをより豊かにするアプリサービス yukiyama" width="240" height="80"></a></li>
++      <li><a href="http://winter501.net/job.php" target="_blank"><img src="../assets/img/common/banner6.jpg" alt="チューンナップサービス WINTER501（ウインター501）スタッフ募集" width="240" height="80"></a></li>
++      <li><a href="/guide/beginner/"><img src="../assets/img/common/bnr_manner.png" alt="初めてのスキー・スノボ完全ガイド" width="240" height="80"></a></li>
++      <li><a href="https://japan-snowboard-academy.com/" target="_blank"><img src="../assets/img/common/kyuujin_dynaland_2019.jpg" alt="「できた」という笑顔のために　JAPAN SNOWBOAD ACADEMY" width="240" height="80"></a></li>
++      <!--<li><a href="https://sapa.c-nexco.co.jp/special?id=1364" target="_blank"><img src="../assets/img/common/bnr_challenge.png" alt="TAKASU2020雪山チャレンジ！" width="240" height="80"></a></li>-->
++        
++ 
++      <li><a href="https://www.quickliner.com/ski/gelende/dynaland/index.html" target="_blank"><img src="../assets/img/common/bnr_rado_kansai.gif" alt="大阪・京都から" width="240" height="80"></a></li>
++      <li><a href="https://www.sanq-tripal.com/item/ski/daytrip/ski_bus.php?eid=00039" target="_blank"><img src="../assets/img/common/bnr_try_nagoya.gif" alt="名古屋から" width="240" height="80"></a></li>
++      <li><a href="https://www.dynaland.co.jp/news/2025/01/23/6586/" target="_blank"><img src="../assets/img/common/bnr_oneday.png" alt="クイックライナー"></a></li>
++      <li><a href="https://www.dorapack.com/skiing-snowboarding" target="_blank"><img src="../assets/img/common/bnr_meitetsu.png" alt="名鉄観光バスドラゴンズパック"></a></li>  
++     <li><a href="https://7ticket.jp/g/002231" target="_blank"><img src="../assets/img/common/bnr_7.gif" alt="セブンチケット"></a></li>
++      <li><a href="https://www.gifubus.co.jp/info/kousokubus/post698" target="_blank"><img src="../assets/img/common/tmskippu.jpg" alt="岐阜バス"/></a></li>
++        
++     <li><a href="https://car.orix.co.jp/campaign/snow2025-2026.html" target="_blank"><img src="../assets/img/common/bnr_orix4.jpg" alt="オリックスレンタカー"></a></li>
++      <li><a href="https://www.j-netrentacar.co.jp/campaign/detail/?id=12090" target="_blank"><img src="../assets/img/common/lift_ticket.jpg" alt="Jネットレンタカー レンタカーコミコミパック" width="240" height="80"></a></li>
++      <li><a href="https://trl-aichi.co.jp/campaign/ski/" target="_blank"><img src="../assets/img/common/bnr_toyota.jpg" alt="toyota" width="240" height="80"></a></li>
++      <li><a href="https://paypay.box.com/s/yjfz49915d3dy4fs4ycv87mill3zv7lw" target="_blank"><img src="../assets/img/common/bnr_paypay.jpg" alt="paypayクーポン"></a></li>
++      <li><a href="https://hayatabi.c-nexco.co.jp/setplan/detail.html?id=1161" target="_blank"><img src="../assets/img/common/bnr_hiway.jpg" alt="高速料金が安いお得なプラン発券約40％OFF" width="240" height="80"></a></li>
++      <li><a href="https://www.villa-montsaint.com/" target="_blank"><img src="../assets/img/common/bnr_mont_saint21.jpg" alt="ホテル ヴィラ・モンサン" width="240" height="80"></a></li>
++      <li><a href="https://tabitabigujo.com/outdoor/?utm_source=dmo&utm_medium=referral&utm_campaign=website_dynaland" target="_blank"><img src="../assets/img/common/bnr_gujo.jpg" alt="アウトドア専門の観光WEBサイト - GUJO Outdoor Experiences" width="240" height="80"></a></li>
++      <li><a href="https://gujotakasu.com/" target="_blank"><img src="../assets/img/common/bnr_takasuk.jpg" alt="たかす・ひるがの観光WEB"/></a></li>
++      <li><a href="https://www.snowjapan.com/japan-ski-resorts/gifu/gujo/dynaland" target="_blank"><img src="../assets/img/common/bnr_snowjapan.jpg" alt="snow japan" width="240" height="80"></a></li>
++         <li><a href="https://xn--6i6a24d.net/" target="_blank"><img src="/assets/img/common/bnr_takasu.png" alt="高鷲ポータルサイト"></a></li>
++         <li><a href="https://protectourwinters.jp/sustainableresort/" target="_blank"><img src="../assets/img/common/powlogo.png" alt="SUSTAINABLE RESORT ALLIANCE"></a></li>
++        <li><a href="https://tabitabigujo.com/" target="_blank"><img src="../assets/img/common/bnr_gujokanko.png" alt="TABITABI郡上（たびたび郡上）"/></a></li>
++    </ul>
++  </div>
++</section>
++<footer class="footer">
++  <div class="inner">
++    <nav class="footer-nav">
++      <ul class="footer-nav-list">
++        <li><a href="../">ホーム</a></li>
++        <li><a href="../condition/">ゲレンデ</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../condition/">最新ゲレンデ情報</a></li>
++            <li><a href="../gelande/#map">ゲレンデMAP</a></li>
++            <li><a href="../gelande/#gelande01">コース紹介</a></li>
++            <li><a href="../gelande/#gelande02">パーク紹介</a></li>
++            <li><a href="../night/" class="">ヨルダイナ・アサダイナ</a></li>
++            <li><a href="/guide/beginner/">初めてのスキー・スノボ完全ガイド</a></li>
++          </ul>
++        </li>
++        <li><a href="../facilities/" class="">施設</a>
++          <ul class="footer-nav-sub">
++          <li><a href="/guide/">タカスダイナ総合ガイド</a></li>
++          <li><a href="../facilities/#map">施設マップ</a></li>
++          <li><a href="../facilities/#restaurant">レストラン・飲食</a></li>
++          <li><a href="../facilities/#rental">レンタル・売店・レッスン</a></li>
++          <li><a href="../facilities/#service">各種サービス施設</a></li>
++          <li><a href="../kids/">ファミリー</a></li>
++          </ul>
++        </li>
++        <li><a href="../charge/">時間・料金</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../charge/">営業時間</a></li>
++            <li><a href="../charge/#charge02">高鷲ダイナ共通リフト料金</a></li>
++            <li><a href="../charge/#charge04">シーズン券</a></li>
++            <li><a href="../features/" class="">各種ご予約</a></li>
++            <li><a href="../young/" target="_blank">若者応援割引キャンペーン</a></li>
++            <li><a href="../senior/" target="_blank">シニア カムバック割</a></li>
++          </ul>
++        </li>
++        <li><a href="../rental/" class="">レンタル</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../rental/#rentalprice">レンタル料金&amp;アイテム</a></li>
++          <li><a href="../rental/#rental01">おすすめパックプラン</a></li>
++          <li><a href="../rental/#be_service">事前決済取置サービス</a></li>
++          <li><a href="../rental/#rental02">レンタルカムバック割</a></li>
++          <li><a href="../rental/#rental04">スクート Snow Scoot</a></li>
++          <li><a href="../rental/#rental_skate">スノスケ Snow Skate</a></li>
++          <li><a href="../rental/#rental03">ハイグレードモデルレンタル</a></li>
++          </ul>
++        </li>
++        <li><a href="../school/">スクール</a>
++          <ul class="footer-nav-sub">
++          <li><a href="../school/#school01">スノーボード</a></li>
++          <li><a href="../school/#school02">スキー</a></li>
++          <li><a href="../school/#parkschool">グラトリ・パーク専門</a></li>
++          <li><a href="../school/#pole">ポールレッスン</a></li>
++              <li><a href="../school/#gujoiss" class="">郡上インターナショナルスノースクール</a></li>
++          </ul>
++        </li>
++        <li><a href="../access/">アクセス・宿泊</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../access/#access01">マイカー</a></li>
++            <li><a href="../access/#access02">ツアーバス</a></li>
++            <li><a href="../access/#access03">レンタカー</a></li>
++            <li><a href="../access/#access04">無料シャトルバス</a></li>
++            <li><a href="../access/#stay01">周辺宿泊施設</a></li>
++            <li><a href="../access/#stay02">近隣の温泉情報</a></li>
++            <li><a href="https://takasudyna.com/campaign/" target="_blank">【福井割】実施中</a></li>
++          </ul>
++        </li>
++        <li><a href="../features/#liftpass" class="">Web予約・購入</a>
++          <ul class="footer-nav-sub">
++            <li><a href="../features/#liftpass" class="">リフト券購入</a></li>
++          <li><a href="../features/#rental" class="">レンタル予約</a></li>
++          <li><a href="../features/#school" class="">スクール予約</a></li>
++          <li><a href="../features/#kids" class="">託児所予約</a></li>
++          <li><a href="../features/#baboon" class="">駐車場予約</a></li>
++          </ul>
++        </li>
++      </ul>
++      <ul class="footer-nav-bottom">
++        <li><a href="../news/">ニュース・イベント</a></li>
++        <li><a href="../calendar/" class="">イベントカレンダー</a></li>
++        <li><a href="../faq/">FAQ</a></li>
++        <li><a href="../company/">会社概要</a></li>
++        <li><a href="https://www.takasumountains.com/" target="_blank">TAKASU MOUNTAINS</a></li>
++        <li><a href="https://asobito-resort.com/login" target="_blank">会員ログイン</a></li>
++        <li><a href="https://asobito-resort.com/register" target="_blank">新規会員登録</a></li>
++        <li><a href="../contact/">お問い合わせ</a></li>
++      </ul>
++    </nav>
++  </div>
++    
++  <div class="footer-related">
++    <div class="inner">
++      <div class="footer-company">
++        <h3 class="logo"><a href="../"><img src="../assets/img/common/logo_w.png" alt="ダイナランド"/></a></h3>
++        <address>
++        〒501-5305 岐阜県郡上市高鷲町西洞3035-2<br>
++        東海北陸自動車道「高鷲IC」より10分!
++        </address>
++        <p class="tel">TEL:0575-72-6636</p>
++        <div class="sns">
++          <ul>
++            <li><a href="https://www.facebook.com/dynaland/"><img src="../assets/img/common/ico_fb_w.png" width="80" height="80" alt="Facebook"/></a></li>
++            <li><a href="https://twitter.com/dynaland"><img src="../assets/img/common/ico_tw_w.png" width="80" height="80" alt="X"/></a></li>
++            <li><a href="https://www.instagram.com/dynaland01/"><img src="../assets/img/common/ico_ig_w.png" width="80" height="80" alt="Instagram"/></a></li>
++            <li><a href="https://lin.ee/FI4pmLm" target="_blank"><img src="../assets/img/common/ico_ln_w.png" width="80" height="80" alt="LINE"/></a></li>
++            <li><a href="https://www.youtube.com/user/DYNALAND1"><img src="../assets/img/common/ico_yt_w.png" width="80" height="80" alt="YouTube"/></a></li>
++            <li><a href="https://www.tiktok.com/@dynaland01" target="_blank"><img src="../assets/img/common/ico_ig_t_w.png" width="80" height="80" alt="TikTok"/></a></li>
++            <li class="green"><a href="https://www.dynaland.co.jp/camp/" target="_blank"><img src="../assets/img/common/ico_green.png" width="80" height="50" alt="グリーンシーズン"/>グリーンシーズン</a></li>
++          </ul>
++        </div>
++        <p class="copyright">&copy; 2022 DYNALAND</p>
++      </div>
++      <div class="footer-related-list">
++        <h4>近くのスキー場</h4>
++        <ul>
++          <li><a href="http://www.takasu.gr.jp/" target="_blank">高鷲スノーパーク</a></li>
++          <li><a href="http://www.hiruganokogen.com/" target="_blank">ひるがの高原スキー場</a></li>
++        </ul>
++      </div>
++      <div class="footer-related-list">
++        <h4>近くの宿泊施設</h4>
++        <ul>
++          <li><a href="https://www.villa-montsaint.com/" target="_blank">ホテルヴィラ・モンサン</a></li>
++        </ul>
++      </div>
++    </div>
++  </div>
++</footer>
++<script src="../assets/js/lib/jquery-3.2.1.min.js"></script> 
++<script src="../assets/js/common.js"></script> 
++<script src="../assets/js/module.js"></script> 
++<!-- InstanceBeginEditable name="foot" -->
++  <script src="../assets/js/map.js"></script>
++  <script src="../assets/js/zoom.js"></script>
++  <script>
++    (function(d, s, id) {
++      var js, fjs = d.getElementsByTagName(s)[0];
++      if (d.getElementById(id)) return;
++      js = d.createElement(s);
++      js.id = id;
++      js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.5";
++      fjs.parentNode.insertBefore(js, fjs);
++    }(document, 'script', 'facebook-jssdk'));
++  </script>
++
++  　
++  <!-- InstanceEndEditable -->
++<script type="text/javascript">
++/* <![CDATA[ */
++var google_conversion_id = 965996918;
++var google_custom_params = window.google_tag_params;
++var google_remarketing_only = true;
++/* ]]> */
++</script> 
++<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
++</script>
++<noscript>
++<div style="display:inline;"> <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/965996918/?value=0&amp;guid=ON&amp;script=0"/> </div>
++</noscript>
++<script type="text/javascript" language="javascript">
++/* <![CDATA[ */
++var yahoo_retargeting_id = '3XJ4FMF332';
++var yahoo_retargeting_label = '';
++/* ]]> */
++</script> 
++<script type="text/javascript" language="javascript" src="//b92.yahoo.co.jp/js/s_retargeting.js"></script> 
++<script type="text/javascript">
++  (function () {
++    var tagjs = document.createElement("script");
++    var s = document.getElementsByTagName("script")[0];
++    tagjs.async = true;
++    tagjs.src = "//s.yjtag.jp/tag.js#site=ohdmU7u";
++    s.parentNode.insertBefore(tagjs, s);
++  }());
++</script>
++<noscript>
++<iframe src="//b.yjtag.jp/iframe?c=ohdmU7u" width="1" height="1" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
++</noscript>
++</body>
++<!-- InstanceEnd --></html>
+\ No newline at end of file
+-- 
+2.39.5
+
