@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-07-13T23:41:34Z",
+  "fetchedAt": "2026-07-14T00:00:32Z",
   "href": "https://www.skigranitepeak.com/mountain-info/mountain-report",
   "id": "granite-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Blitzen": "closed",
+      "Blizzard Carpet": "closed",
+      "Comet 6-Pack": "closed",
+      "Cupid Quad": "closed",
+      "Dasher Quad": "closed",
+      "Frosty Carpet": "closed",
+      "Santa": "closed"
+    }
   },
   "ll": [
     -89.6832,
@@ -23,9 +31,9 @@
   ],
   "name": "Granite Peak",
   "timestamp": {
-    "lifts": 1783986062057,
+    "lifts": 1783986364069,
     "opening": 1783986061300,
-    "trails": 1783986064057,
+    "trails": 1783986364099,
     "weather": 0,
     "webcams": 0
   },
