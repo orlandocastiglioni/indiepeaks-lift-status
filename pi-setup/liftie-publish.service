@@ -1,0 +1,10 @@
+[Unit]
+Description=Publish lift status JSON to GitHub
+After=liftie.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=orlando
+Group=orlando
+ExecStart=/usr/bin/python3 /home/orlando/liftie-publish.py

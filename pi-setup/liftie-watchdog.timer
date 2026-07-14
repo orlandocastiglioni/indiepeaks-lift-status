@@ -1,0 +1,10 @@
+[Unit]
+Description=Run liftie-watchdog daily
+
+[Timer]
+OnCalendar=*-*-* 12:30:00
+RandomizedDelaySec=600
+Persistent=true
+
+[Install]
+WantedBy=timers.target

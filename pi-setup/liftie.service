@@ -1,0 +1,31 @@
+[Unit]
+Description=Liftie ski lift status server (localhost only)
+Documentation=https://github.com/pirxpilot/liftie
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=orlando
+Group=orlando
+WorkingDirectory=/home/orlando/liftie
+Environment=NODE_ENV=production
+Environment=PORT=3001
+Environment=LIFTIE_HOST=127.0.0.1
+Environment=LIFTIE_RESORTS=49-degrees-north,berkshire-east,big-moose,big-white,bolton-valley,burke-mountain,caberfae-peaks,calabogie,canaan-valley,cannon,cooper-spur,castle-mountain,cataloochee,chinapeak,donner-ski-ranch,dynaland,eagle-point,echo-mountain,glencoe,granite-peak,greek-peak,hirugano-kogen,hochzeiger,hoodoo,jay-peak,king-pine,little-switzerland,loveland,lutsen-mountains,manning-park,mission-ridge,mt-abram,mt-la-crosse,mthigh,mthood,nayoro-piyashiri,nordic-mountain,okunakayama,owlshead,pats-peak,palcall-tsumagoi,pitztaler-gletscher,ragged-mountain,red-lodge-mountain,saddleback,saskadena-six,sasquatch-mountain,shawnee-mountain,ski-sawmill,skiwelt,snow-ridge,snowriver,sundown-mountain,swain,takasu-snow-park,togakushi,washigatake,waterville,west-mountain,wintergreen,winterplace,wisp
+Environment="LIFTIE_USER_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+ExecStart=/usr/bin/node app.js
+Restart=always
+RestartSec=10
+
+# hardening — liftie only needs to read its tree and write its cache to /tmp
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

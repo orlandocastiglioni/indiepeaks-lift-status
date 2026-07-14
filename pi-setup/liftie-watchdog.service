@@ -1,0 +1,11 @@
+[Unit]
+Description=Liftie pipeline watchdog (publish freshness + parser rot)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=orlando
+Group=orlando
+Environment=NTFY_TOPIC=<your-private-ntfy-topic>
+ExecStart=/usr/bin/python3 /home/orlando/liftie-watchdog.py
