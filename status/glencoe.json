@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-14T00:43:59Z",
+  "fetchedAt": "2026-07-14T00:45:32Z",
   "href": "https://www.glencoemountain.co.uk/snow-report",
   "id": "glencoe",
   "lifts": {
@@ -25,8 +25,89 @@
   "timestamp": {
     "lifts": 1783989829232,
     "opening": 1783989828434,
-    "trails": 0,
+    "trails": 1783989843749,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Access Return",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bunny Run",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Canyon",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Happy Valley",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Etive Glades",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Fly Paper",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Main Basin",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Mugs Alley",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Plateau Run",
+        "status": "closed"
+      },
+      {
+        "name": "Rannoch Glades",
+        "status": "closed"
+      },
+      {
+        "name": "Spring Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "The High Road",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "The Low Road",
+        "status": "closed"
+      },
+      {
+        "name": "The Wall",
+        "status": "closed"
+      },
+      {
+        "name": "Thrombosis",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 15,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }
