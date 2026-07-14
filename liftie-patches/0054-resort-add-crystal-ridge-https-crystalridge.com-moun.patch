@@ -1,0 +1,1545 @@
+From 69dbba14e2b5dd20304beb0c8b5f7db18aca37f9 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:54:38 -0400
+Subject: [PATCH 54/56] resort: add crystal-ridge
+ (https://crystalridge.com/mountain-info/snow-report/)
+
+---
+ lib/resorts/crystal-ridge/index.js      |   14 +
+ lib/resorts/crystal-ridge/resort.json   |   16 +
+ lib/resorts/crystal-ridge/trails.js     |   19 +
+ test/resorts/crystal-ridge-trails.js    |   34 +
+ test/resorts/crystal-ridge.js           |    9 +
+ test/resorts/example/crystal-ridge.html | 1393 +++++++++++++++++++++++
+ 6 files changed, 1485 insertions(+)
+ create mode 100644 lib/resorts/crystal-ridge/index.js
+ create mode 100644 lib/resorts/crystal-ridge/resort.json
+ create mode 100644 lib/resorts/crystal-ridge/trails.js
+ create mode 100644 test/resorts/crystal-ridge-trails.js
+ create mode 100644 test/resorts/crystal-ridge.js
+ create mode 100644 test/resorts/example/crystal-ridge.html
+
+diff --git a/lib/resorts/crystal-ridge/index.js b/lib/resorts/crystal-ridge/index.js
+new file mode 100644
+index 00000000..a4d8d6b8
+--- /dev/null
++++ b/lib/resorts/crystal-ridge/index.js
+@@ -0,0 +1,14 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++
++export default {
++  selector: '.Lift.component-row',
++  parse: row => {
++    const title = select(row.children, '.cell.title')[0];
++    const status = select(row.children, '.cell.status')[0];
++    if (!title || !status) {
++      return;
++    }
++    return { name: allText(title), status: status.attribs.title ?? allText(status) };
++  }
++};
+diff --git a/lib/resorts/crystal-ridge/resort.json b/lib/resorts/crystal-ridge/resort.json
+new file mode 100644
+index 00000000..25b0ccf1
+--- /dev/null
++++ b/lib/resorts/crystal-ridge/resort.json
+@@ -0,0 +1,16 @@
++{
++  "name": "Crystal Ridge",
++  "url": {
++    "host": "https://crystalridge.com",
++    "pathname": "/mountain-info/snow-report/"
++  },
++  "trails": true,
++  "tags": [
++    "Wisconsin",
++    "Midwest"
++  ],
++  "ll": [
++    -88.0384,
++    42.8886
++  ]
++}
+diff --git a/lib/resorts/crystal-ridge/trails.js b/lib/resorts/crystal-ridge/trails.js
+new file mode 100644
+index 00000000..db5d2683
+--- /dev/null
++++ b/lib/resorts/crystal-ridge/trails.js
+@@ -0,0 +1,19 @@
++import select from '../../select.js';
++import { allText } from '../../tools/domutil.js';
++
++export default {
++  selector: '.Trail.component-row',
++  parse: row => {
++    const title = select(row.children, '.cell.title')[0];
++    const status = select(row.children, '.cell.status')[0];
++    const level = title && select(title.children, '.f-icon.level')[0];
++    if (!title || !status) {
++      return;
++    }
++    return {
++      name: allText(title),
++      status: status.attribs.title ?? allText(status),
++      level: level?.attribs.title
++    };
++  }
++};
+diff --git a/test/resorts/crystal-ridge-trails.js b/test/resorts/crystal-ridge-trails.js
+new file mode 100644
+index 00000000..18689c7a
+--- /dev/null
++++ b/test/resorts/crystal-ridge-trails.js
+@@ -0,0 +1,34 @@
++import trails from '../trails/index.js';
++
++trails('crystal-ridge', [
++  {
++    'name': 'Beginner Conveyor',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Easy Street',
++    'status': 'closed',
++    'level': 'green'
++  },
++  {
++    'name': 'Crystal Bowl',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'Ridge Runner',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'The Drop',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'Whitnall Way',
++    'status': 'closed',
++    'level': 'black'
++  }
++]);
+diff --git a/test/resorts/crystal-ridge.js b/test/resorts/crystal-ridge.js
+new file mode 100644
+index 00000000..97d4d4df
+--- /dev/null
++++ b/test/resorts/crystal-ridge.js
+@@ -0,0 +1,9 @@
++import lifts from '../lifts/index.js';
++
++lifts('crystal-ridge', 'html', {
++  'Double Chair Lift': 'closed',
++  'High Speed Rope Tow': 'closed',
++  'Summit Handle Tow': 'closed',
++  'Tubing Conveyor Lifts': 'closed',
++  'Beginner Conveyor': 'closed'
++});
+diff --git a/test/resorts/example/crystal-ridge.html b/test/resorts/example/crystal-ridge.html
+new file mode 100644
+index 00000000..c347959e
+--- /dev/null
++++ b/test/resorts/example/crystal-ridge.html
+@@ -0,0 +1,1393 @@
++
++  <!DOCTYPE html>
++<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#" class="domain-crystal" data-domain="crystal">
++
++<head>
++
++            <!-- Google Tag Manager -->
++        <link href="https://www.googletagmanager.com" rel="preconnect" crossorigin>
++        <link rel="dns-prefetch" href="https://www.googletagmanager.com">
++        <script>(function(w, d, s, l, i) {
++                w[l] = w[l] || [];
++                w[l].push({
++                    'gtm.start':
++                        new Date().getTime(), event: 'gtm.js',
++                });
++                var f = d.getElementsByTagName(s)[0],
++                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
++                j.async = true;
++                j.src =
++                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
++                f.parentNode.insertBefore(j, f);
++            })(window, document, 'script', 'dataLayer', 'GTM-NXC23NJ');</script>
++        <!-- End Google Tag Manager -->
++    
++    <link rel="preload"
++      href="https://cdn.jsdelivr.net/combine/npm/@accessible360/accessible-slick@1.0.1/slick/slick.min.css" as="style"
++      onload="this.onload=null;this.rel='stylesheet'">
++<link rel="preload"
++      href="https://cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/accessible-slick-theme.min.css"
++      as="style" onload="this.onload=null;this.rel='stylesheet'">
++
++<noscript>
++    <link rel="stylesheet"
++          href="https://cdn.jsdelivr.net/combine/npm/@accessible360/accessible-slick@1.0.1/slick/slick.min.css">
++    <link rel="stylesheet"
++          href="https://cdn.jsdelivr.net/npm/@accessible360/accessible-slick@1.0.1/slick/accessible-slick-theme.min.css">
++</noscript>
++
++
++<script>
++    /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
++    /* This file is meant as a standalone workflow for
++    - testing support for link[rel=preload]
++    - enabling async CSS loading in browsers that do not support rel=preload
++    - applying rel preload css once loaded, whether supported or not.
++    */
++    (function(w) {
++        'use strict';
++        // rel=preload support test
++        if (!w.loadCSS) {
++            w.loadCSS = function() {
++            };
++        }
++        // define on the loadCSS obj
++        var rp = loadCSS.relpreload = {};
++        // rel=preload feature support test
++        // runs once and returns a function for compat purposes
++        rp.support = (function() {
++            var ret;
++            try {
++                ret = w.document.createElement('link').relList.supports('preload');
++            } catch (e) {
++                ret = false;
++            }
++            return function() {
++                return ret;
++            };
++        })();
++
++        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
++        // then change that media back to its intended value on load
++        rp.bindMediaToggle = function(link) {
++            // remember existing media attr for ultimate state, or default to 'all'
++            var finalMedia = link.media || 'all';
++
++            function enableStylesheet() {
++                // unbind listeners
++                if (link.addEventListener) {
++                    link.removeEventListener('load', enableStylesheet);
++                } else if (link.attachEvent) {
++                    link.detachEvent('onload', enableStylesheet);
++                }
++                link.setAttribute('onload', null);
++                link.media = finalMedia;
++            }
++
++            // bind load handlers to enable media
++            if (link.addEventListener) {
++                link.addEventListener('load', enableStylesheet);
++            } else if (link.attachEvent) {
++                link.attachEvent('onload', enableStylesheet);
++            }
++
++            // Set rel and non-applicable media type to start an async request
++            // note: timeout allows this to happen async to let rendering continue in IE
++            setTimeout(function() {
++                link.rel = 'stylesheet';
++                link.media = 'only x';
++            });
++            // also enable media after 3 seconds,
++            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
++            setTimeout(enableStylesheet, 3000);
++        };
++
++        // loop through link elements in DOM
++        rp.poly = function() {
++            // double check this to prevent external calls from running
++            if (rp.support()) {
++                return;
++            }
++            var links = w.document.getElementsByTagName('link');
++            for (var i = 0; i < links.length; i++) {
++                var link = links[i];
++                // qualify links to those with rel=preload and as=style attrs
++                if (link.rel === 'preload' && link.getAttribute('as') === 'style' && !link.getAttribute('data-loadcss')) {
++                    // prevent rerunning on link
++                    link.setAttribute('data-loadcss', true);
++                    // bind listeners to toggle media back
++                    rp.bindMediaToggle(link);
++                }
++            }
++        };
++
++        // if unsupported, run the polyfill
++        if (!rp.support()) {
++            // run once at least
++            rp.poly();
++
++            // rerun poly on an interval until onload
++            var run = w.setInterval(rp.poly, 500);
++            if (w.addEventListener) {
++                w.addEventListener('load', function() {
++                    rp.poly();
++                    w.clearInterval(run);
++                });
++            } else if (w.attachEvent) {
++                w.attachEvent('onload', function() {
++                    rp.poly();
++                    w.clearInterval(run);
++                });
++            }
++        }
++
++
++        // commonjs
++        if (typeof exports !== 'undefined') {
++            exports.loadCSS = loadCSS;
++        } else {
++            w.loadCSS = loadCSS;
++        }
++    }(typeof global !== 'undefined' ? global : this));
++
++</script>
++<script></script><!-- here to ensure a non-blocking load still occurs in IE and Edge, even if scripts follow loadCSS in head -->
++    <meta charset="utf-8" />
++<style>/* @see https://github.com/aFarkas/lazysizes#broken-image-symbol */.js img.lazyload:not([src]) { visibility: hidden; }/* @see https://github.com/aFarkas/lazysizes#automatically-setting-the-sizes-attribute */.js img.lazyloaded[data-sizes=auto] { display: block; width: 100%; }/* Transition effect. */.js .lazyload, .js .lazyloading { opacity: 0; }.js .lazyloaded { opacity: 1; -webkit-transition: opacity 2000ms; transition: opacity 2000ms; }</style>
++<link rel="canonical" href="https://crystalridge.com/mountain-info/snow-report" />
++<link rel="image_src" href="https://crystalridge.com/sites/default/files/styles/max_2600x2600/public/2025-01/CR-59.jpg?itok=VLB29aqS" />
++<meta property="og:site_name" content="Crystal Ridge" />
++<meta property="og:type" content="website" />
++<meta property="og:url" content="https://crystalridge.com/mountain-info/snow-report" />
++<meta property="og:title" content="Snow Report" />
++<meta property="og:image" content="https://crystalridge.com/sites/default/files/styles/max_2600x2600/public/2025-01/CR-59.jpg?itok=VLB29aqS" />
++<meta name="Generator" content="Drupal 11 (https://www.drupal.org)" />
++<meta name="MobileOptimized" content="width" />
++<meta name="HandheldFriendly" content="true" />
++<meta name="viewport" content="width=device-width, initial-scale=1" />
++<script type="application/ld+json">{
++    "@context": "https://schema.org",
++    "@graph": [
++        {
++            "@type": "Organization",
++            "@id": "https://crystalridge.com/#organization",
++            "sameAs": [
++                "https://www.instagram.com/crystalridgeski",
++                "https://www.facebook.com/crystalridgeski"
++            ],
++            "url": "https://crystalridge.com/",
++            "name": "Crystal Ridge",
++            "telephone": "414 235 8818",
++            "contactPoint": {
++                "@type": "ContactPoint",
++                "telephone": "414 235 8818",
++                "email": "info@crystalridge.com",
++                "url": "https://crystalridge.com/"
++            },
++            "logo": {
++                "@type": "ImageObject",
++                "url": "https://crystalridge.com//themes/custom/crystal/logo.svg"
++            },
++            "image": {
++                "@type": "ImageObject",
++                "url": "https://crystalridge.com/sites/default/files/styles/max_2600x2600/public/styles/max_2600x2600/public/2024-08/320883856_2408999732589389_5268778015429424250_n%203.png?itok=JsteNZFZ"
++            },
++            "address": {
++                "@type": "PostalAddress",
++                "streetAddress": "7011 S Ballpark Dr",
++                "addressLocality": "Franklin",
++                "addressRegion": "WI",
++                "postalCode": "53132",
++                "addressCountry": "US"
++            }
++        },
++        {
++            "@type": "WebPage",
++            "@id": "https://crystalridge.com/mountain-info/snow-report/#webpage",
++            "publisher": {
++                "@type": "Organization",
++                "@id": "https://crystalridge.com/#organization"
++            },
++            "inLanguage": "en-US"
++        },
++        {
++            "@type": "WebSite",
++            "@id": "https://crystalridge.com/#website",
++            "name": "Crystal Ridge",
++            "url": "https://crystalridge.com/",
++            "publisher": {
++                "@type": "Organization",
++                "@id": "https://crystalridge.com/#organization"
++            },
++            "inLanguage": "en-US"
++        }
++    ]
++}</script>
++<link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
++
++        <title>Snow Report | Crystal Ridge</title>
++        <link rel="stylesheet" media="all" href="/sites/default/files/css/css__75fq_Gum971jibIgUuIEroSDjwojGXh7fMe7qZwgPg.css?delta=0&amp;language=en&amp;theme=crystal&amp;include=eJyFjl0Og0AIhC-0liM1uKUrCT8G1hh7-ppU0yfbJ2bgywzIgHxv4iNKqVgnesqSE3zlTcmWUgUzN1DKxEZ5evMHlepBUF1nN7KeNw9ubMMgnJ2t5SWgvljHXQXNHv2S-9kSvl7e0nz9F77SWFGPJ81DUfi118WWHQWOWT44nHTuW1IYMekNrqJ8kQ" />
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css_EuAX7Oq2OUMPSPBlYTEYOa4Ypn5BzOtM7Uw1SGwyXf8.css?delta=1&amp;language=en&amp;theme=crystal&amp;include=eJyFjl0Og0AIhC-0liM1uKUrCT8G1hh7-ppU0yfbJ2bgywzIgHxv4iNKqVgnesqSE3zlTcmWUgUzN1DKxEZ5evMHlepBUF1nN7KeNw9ubMMgnJ2t5SWgvljHXQXNHv2S-9kSvl7e0nz9F77SWFGPJ81DUfi118WWHQWOWT44nHTuW1IYMekNrqJ8kQ" />
++<link rel="stylesheet" media="all" href="https://unpkg.com/plyr@3.7.8/dist/plyr.css" />
++
++            <script src="https://app.termly.io/resource-blocker/e6672221-f672-41ef-a9ae-4ad178475add?autoBlock=on" async></script>
++
++
++                <link rel="preconnect" href="https://fonts.googleapis.com">
++                <link rel="dns-prefetch" href="https://fonts.googleapis.com">
++                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++                <link rel="dns-prefetch" href="https://fonts.gstatic.com">
++
++                <link rel="icon" type="image/svg+xml" href="/themes/custom/crystal/images/favicon/favicon.svg">
++                <link rel="apple-touch-icon" sizes="180x180"
++                      href="/themes/custom/crystal/images/favicon/apple-touch-icon.png">
++                <link rel="icon" type="image/png" sizes="32x32"
++                      href="/themes/custom/crystal/images/favicon/favicon-32x32.png">
++                <link rel="icon" type="image/png" sizes="16x16"
++                      href="/themes/custom/crystal/images/favicon/favicon-16x16.png">
++                <link rel="manifest" href="/themes/custom/crystal/images/favicon/site.webmanifest">
++                <link rel="mask-icon" href="/themes/custom/crystal/images/favicon/safari-pinned-tab.svg"
++                      color="#00334E">
++                <link rel="shortcut icon" href="/themes/custom/crystal/images/favicon/favicon.ico">
++                <meta name="msapplication-TileColor" content="#ffffff">
++                <meta name="msapplication-config" content="/themes/custom/crystal/images/favicon/browserconfig.xml">
++                <meta name="theme-color" content="#ffffff">
++
++</head>
++
++<body class="season--winter path-node page-node-type-page">
++
++    <!-- Google Tag Manager (noscript) -->
++    <noscript>
++        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXC23NJ"
++                height="0" width="0" style="display:none;visibility:hidden"></iframe>
++    </noscript>
++    <!-- End Google Tag Manager (noscript) -->
++
++<a href="#main-content" class="center-horizontal pos-fixed opacity-0 focusable button primary skip-link">
++    Skip to main content
++</a>
++
++  <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
++    <div class="d-flex flex-direction-column layout-container">
++
++    <header class="transition-ui pos-fixed z-index-30 w-100 bg-white site-header" role="banner">
++    <div class="container d-flex jc-space-between ai-center header-inner">
++
++                    <a href="/" title="Home" rel="home" class="transition-ui d-block logo">
++                <svg fill="none" aria-label="Crystal Ridge" class="d-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 145 50">
++    <path
++            d="M37.393 9.617 21.382.945a3.663 3.663 0 0 0-3.502 0L1.87 9.617A3.54 3.54 0 0 0 0 12.723v24.555c0 1.291.717 2.482 1.87 3.106l16.01 8.671a3.673 3.673 0 0 0 3.501 0l16.011-8.671a3.538 3.538 0 0 0 1.87-3.106V12.723a3.539 3.539 0 0 0-1.87-3.106Z"
++            fill="#00334E" />
++    <path
++            d="m29.33 28.693.301 5.172-9.998 5.565-10.129-5.637V16.208l10.129-5.637 9.999 5.565-.303 5.183a.385.385 0 0 0 .39.403h4.906a.384.384 0 0 0 .388-.414l-.59-6.756a1.72 1.72 0 0 0-.89-1.502L20.501 5.798a1.787 1.787 0 0 0-1.74 0L5.732 13.05c-.552.307-.892.88-.892 1.502V35.45c0 .621.34 1.195.892 1.501l13.03 7.253a1.787 1.787 0 0 0 1.74 0l13.03-7.252c.551-.307.892-.88.892-1.502L35 28.704a.385.385 0 0 0-.389-.413h-4.895a.385.385 0 0 0-.388.403v-.001Z"
++            fill="#7ED3F6" />
++    <path
++            d="m16.18 26.31-2.433-.494-1.197 3.4a.304.304 0 0 0 .235.399l3.602.684.78-2.314 1.64-1.117-.163 3.361-1.653 1.818 2.405 2.716c.124.14.346.14.47 0l2.406-2.716-1.654-1.82-.167-3.36 1.645 1.12.78 2.312 3.601-.684a.304.304 0 0 0 .235-.398l-1.196-3.4-2.435.494-2.428-1.305 2.43-1.305 2.433.495 1.196-3.4a.304.304 0 0 0-.235-.399l-3.601-.684-.78 2.314-1.643 1.092.167-3.336 1.652-1.818-2.405-2.715a.316.316 0 0 0-.47 0l-2.405 2.715 1.653 1.82.169 3.368-1.646-1.128-.78-2.312-3.602.684a.304.304 0 0 0-.235.399l1.197 3.4 2.434-.495 2.442 1.3-2.443 1.31h-.001Z"
++            fill="#fff" />
++    <path
++            d="M57.013 18.337c-1.387 0-2.552-.509-3.461-1.513a5.164 5.164 0 0 1-1.371-3.566c0-1.432.466-2.654 1.385-3.63.922-.978 2.081-1.475 3.447-1.475 1.068 0 2.055.296 2.94.882a.328.328 0 0 0 .48-.134l1.32-2.925a.316.316 0 0 0-.1-.385c-1.627-1.18-3.503-1.776-5.58-1.776-2.621 0-4.892.942-6.75 2.8-1.855 1.854-2.796 4.056-2.796 6.544 0 2.489.962 4.796 2.856 6.605 1.896 1.81 4.143 2.728 6.678 2.728 2.534 0 4.55-.79 6.318-2.348.136-.12.14-.329.012-.458l-2.143-2.159a.333.333 0 0 0-.408-.046c-.952.57-1.902.857-2.828.857ZM72.312 22.234h4.14a.32.32 0 0 0 .302-.44l-2.565-6.253.067-.056c1.646-1.36 2.474-3.038 2.462-4.99 0-1.735-.658-3.26-1.956-4.531-1.297-1.272-2.844-1.917-4.597-1.917h-6.064a.323.323 0 0 0-.326.32v17.547c0 .176.146.32.326.32h4.589c.18 0 .326-.144.326-.32v-4.64c0-.176.146-.32.326-.32h.824c.143 0 .27.092.312.226L72 22.009a.326.326 0 0 0 .312.225h-.001Zm-3.322-9.2V8.017c0-.176.146-.32.326-.32h.536c.554 0 1.03.278 1.416.826.38.54.573 1.207.573 1.983s-.184 1.448-.546 1.993c-.376.566-.828.852-1.343.852h-.636a.323.323 0 0 1-.326-.32v.001ZM82.443 22.246h4.588c.18 0 .327-.143.327-.32v-8.492l.016-.028 5.222-8.867a.32.32 0 0 0-.282-.48h-3.548a.328.328 0 0 0-.282.16l-2.65 4.48a.33.33 0 0 1-.565 0L82.632 4.22a.328.328 0 0 0-.283-.16h-5.3a.32.32 0 0 0-.282.48l5.307 8.992a.316.316 0 0 1 .044.16v8.235c0 .176.146.32.326.32ZM96.572 14.37l.613.324a16.778 16.778 0 0 1 .923.59c.212.145.465.346.786.6l.022.017c.337.267.584.534.755.818.171.285.254.562.254.847 0 .393-.155.71-.46.942a1.703 1.703 0 0 1-1.052.344c-.305 0-.601-.066-.88-.196a2.492 2.492 0 0 1-.777-.58 8.518 8.518 0 0 1-.546-.648c-.14-.186-.305-.437-.495-.746-.035-.059-.07-.113-.101-.164a.33.33 0 0 0-.464-.094l-3.095 2.111a.316.316 0 0 0-.067.466c.937 1.101 1.896 1.954 2.858 2.538 1.064.648 2.306.977 3.692.977 1.734 0 3.222-.555 4.425-1.65 1.196-1.088 1.802-2.447 1.802-4.037 0-1.25-.404-2.377-1.201-3.35-.806-.985-1.843-1.826-3.082-2.5l-.102-.055.008-.017a12.113 12.113 0 0 1-.42-.222 8.43 8.43 0 0 1-.75-.45 15.143 15.143 0 0 1-.644-.482c-.27-.211-.464-.419-.593-.635a1.332 1.332 0 0 1-.205-.687c0-.343.114-.627.337-.846.223-.219.51-.33.85-.33.115 0 .249.023.399.067a2.499 2.499 0 0 1 .725.348 4.012 4.012 0 0 1 .475.393c.054.049.096.088.131.116.068.053.153.137.283.264.048.047.087.087.117.119l2.699-2.816a.317.317 0 0 0-.032-.468c-1.356-1.11-2.968-1.673-4.797-1.673-1.673 0-3.128.535-4.326 1.59-1.195 1.052-1.8 2.372-1.8 3.924 0 2.04 1.257 3.807 3.734 5.25ZM109.098 22.246h4.589c.18 0 .326-.143.326-.32V8.032c0-.177.146-.32.326-.32h3.815a.322.322 0 0 0 .325-.34l-.193-3.012a.323.323 0 0 0-.325-.299h-12.273a.323.323 0 0 0-.325.298l-.204 3.012a.323.323 0 0 0 .325.34h2.962c.18 0 .326.144.326.32v13.896c0 .177.146.32.326.32ZM123.7 4.26l-7.227 17.547a.32.32 0 0 0 .303.44h3.002c.133 0 .253-.08.302-.2l.737-1.787c.05-.12.169-.2.302-.2h5.012c.132 0 .251.079.301.2l.749 1.788c.049.12.169.199.301.199h4.558a.32.32 0 0 0 .302-.44L125.115 4.26a.326.326 0 0 0-.303-.2h-.809a.328.328 0 0 0-.303.2Zm-1.316 12.202.961-2.331a.328.328 0 0 1 .605.003l.932 2.33a.32.32 0 0 1-.303.436h-1.893a.32.32 0 0 1-.302-.439ZM138.744 18.276V4.38a.323.323 0 0 0-.326-.32h-4.588a.323.323 0 0 0-.326.32v17.547c0 .177.146.32.326.32h10.641c.171 0 .314-.13.325-.298l.204-3.012a.323.323 0 0 0-.325-.34h-5.605a.323.323 0 0 1-.326-.32v-.001ZM58.334 39.389c1.646-1.36 2.474-3.039 2.462-4.99 0-1.735-.658-3.26-1.955-4.532-1.298-1.272-2.845-1.917-4.598-1.917H48.18a.323.323 0 0 0-.327.32v17.547c0 .177.146.32.327.32h4.588c.18 0 .326-.143.326-.32v-4.64c0-.176.146-.319.326-.319h.824c.143 0 .27.091.312.225l1.523 4.83a.326.326 0 0 0 .311.225h4.14a.32.32 0 0 0 .303-.44l-2.566-6.253.067-.056Zm-2.961-2.986c-.376.566-.828.853-1.343.853h-.636a.323.323 0 0 1-.325-.32v-5.015c0-.177.145-.32.325-.32h.536c.553 0 1.03.278 1.416.825.38.54.573 1.207.573 1.984 0 .776-.184 1.448-.546 1.993ZM67.968 27.963h-4.6a.323.323 0 0 0-.327.32V45.83c0 .176.146.32.326.32h4.6c.18 0 .327-.144.327-.32V28.283a.323.323 0 0 0-.326-.32ZM77.2 27.975l-5.848-.011a.323.323 0 0 0-.327.32V45.83c0 .176.146.32.326.32h5.876a9.026 9.026 0 0 0 4.658-1.272c1.432-.847 2.568-1.977 3.376-3.358a8.696 8.696 0 0 0 1.224-4.445c0-2.5-.923-4.648-2.744-6.384-1.826-1.741-4.027-2.655-6.54-2.716Zm2.557 12.999c-.785 1.084-1.741 1.634-2.843 1.634h-.347a.323.323 0 0 1-.326-.32V31.847c0-.177.146-.32.326-.32h.36c1.118 0 2.075.567 2.844 1.686.762 1.108 1.148 2.407 1.148 3.86 0 1.454-.39 2.834-1.162 3.9ZM101.09 38.955c.18 0 .326.144.326.32v1.437l-.039.036c-1.1.99-2.224 1.492-3.34 1.492-1.415 0-2.589-.509-3.486-1.514-.892-1-1.345-2.2-1.345-3.566 0-1.455.465-2.724 1.382-3.773.922-1.055 2.074-1.59 3.424-1.59.91-.01 1.901.363 2.938 1.11a.33.33 0 0 0 .491-.126l1.335-2.914a.317.317 0 0 0-.101-.388c-1.627-1.177-3.506-1.774-5.59-1.774h-.025c-2.653.072-4.93 1.026-6.764 2.837-1.83 1.805-2.757 3.999-2.757 6.52v.135c.037 2.55 1.002 4.736 2.868 6.493 1.867 1.758 4.101 2.668 6.642 2.705h.023a10.487 10.487 0 0 0 4.477-1.092 9.894 9.894 0 0 0 3.384-2.73.318.318 0 0 0 .069-.199v-6.247a.323.323 0 0 0-.327-.32h-7.584a.324.324 0 0 0-.326.299l-.166 2.508a.322.322 0 0 0 .325.34h4.164l.002.001ZM117.876 31.274l-.194-3.012a.324.324 0 0 0-.326-.3h-9.876a.323.323 0 0 0-.326.32V45.83c0 .177.146.32.326.32h9.876a.324.324 0 0 0 .326-.3l.194-3.011a.323.323 0 0 0-.326-.34h-4.829a.323.323 0 0 1-.326-.32v-2.045c0-.176.146-.32.326-.32h3.612c.171 0 .313-.129.325-.296l.185-2.52a.321.321 0 0 0-.325-.343h-3.798a.323.323 0 0 1-.326-.32v-4.4c0-.177.146-.32.326-.32h4.83a.322.322 0 0 0 .325-.34h.001Z"
++            fill="#00334E" />
++</svg>
++
++                            </a>
++        
++        <button id="main-menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu"
++                class="d-flex ai-center hide-large-layout hamburger hamburger--squeeze">
++            <span class="hamburger-box">
++                <span class="hamburger-inner">
++                </span>
++            </span>
++            <span class="t-t-uppercase text">
++                Menu
++            </span>
++        </button>
++
++        <div class="transition-visibility visibility-hidden opacity-0 border-radius main-menu">
++            <div class="hide-tp utility">
++
++    
++    
++    
++    <ul class="reset d-flex">
++        <li class="weather-icon">
++            <a href="/mountain-info/snow-report" class="d-block f-icon icon-gradient icon--snow" title="Weather Report">
++                <span class="visually-hidden">Weather Report</span>
++            </a>
++        </li>
++        <li>
++            <a href="/mountain-info/snow-report#webcams" class="d-block f-icon icon-gradient icon--webcam" title="Webcams">
++                <span class="visually-hidden">Webcams</span>
++            </a>
++        </li>
++        <li>
++            <a href="https://shop.crystalridge.com/account" target="_blank"
++               class="d-block f-icon icon-gradient icon--person"
++               title="Account">
++                <span class="visually-hidden">Account</span>
++            </a>
++        </li>
++    </ul>
++
++</div>
++            <nav role="navigation" aria-labelledby="block-crystal-main-menu-menu" id="block-crystal-main-menu" class="block block-menu navigation menu--crystal-ridge-main">
++            
++  <h2 class="visually-hidden" id="block-crystal-main-menu-menu">Crystal Ridge Main</h2>
++  
++
++        
++        <ul class="reset d-flex ai-center jc-center menu">
++                                                <li class="menu-item menu-item--expanded menu-item--active-trail">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-mountain-info"
++                                aria-expanded="false">Mountain Info</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/mountain-info/hours" class="d-flex ai-center" data-drupal-link-system-path="node/99">Hours</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/trail-map" class="d-flex ai-center" data-drupal-link-system-path="node/100">Trail Map</a>
++                                    </li>
++                                            <li class="menu-item menu-item--active-trail">
++                                            <a href="/mountain-info/snow-report" class="d-flex ai-center is-active" data-drupal-link-system-path="node/101" aria-current="page">Snow Report</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/terrain-parks" class="d-flex ai-center" data-drupal-link-system-path="node/103">Terrain Parks</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/snowvana" class="d-flex ai-center" data-drupal-link-system-path="node/286">Snowvana</a>
++                                    </li>
++                                            <li class="menu-item menu-item--collapsed">
++                                            <a href="/mountain-info/events-calendar" class="d-flex ai-center" data-drupal-link-system-path="node/104">Events Calendar</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/safety-responsibility" class="d-flex ai-center" data-drupal-link-system-path="node/105">Safety &amp; Responsibility</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/weddings-events" class="d-flex ai-center" data-drupal-link-system-path="node/138">Weddings &amp; Events</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/mountain-info/our-name" class="d-flex ai-center" data-drupal-link-system-path="node/242">Our Name</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-ski-board"
++                                aria-expanded="false">Ski &amp; Board</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/ski-board/tickets" class="d-flex ai-center" data-drupal-link-system-path="node/108">Tickets</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/ski-board/season-passes" class="d-flex ai-center" data-drupal-link-system-path="node/109">Season Passes</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/ski-board/ski-board-rentals" class="d-flex ai-center" data-drupal-link-system-path="node/197">Ski &amp; Board Rentals</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/ski-board/ski-racing" class="d-flex ai-center" data-drupal-link-system-path="node/111">Ski Racing</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/ski-board/group-bookings" class="d-flex ai-center" data-drupal-link-system-path="node/112">Group Bookings</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/ski-board/first-tracks-fridays" class="d-flex ai-center" data-drupal-link-system-path="node/270">First Tracks Fridays</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/ski-board/buddy-pass-snow-stash-program" class="d-flex ai-center" data-drupal-link-system-path="node/300">Buddy Pass Snow Stash Program</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-tubing"
++                                aria-expanded="false">Tubing</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/tubing/tickets-hours" class="d-flex ai-center" data-drupal-link-system-path="node/114">Tickets &amp; hours</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/tubing/groups-parties" class="d-flex ai-center" data-drupal-link-system-path="node/116">Groups &amp; Parties</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-lessons"
++                                aria-expanded="false">Lessons</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/lessons/lesson-overview" class="d-flex ai-center" data-drupal-link-system-path="node/118">Lesson Overview</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/private-lessons" class="d-flex ai-center" data-drupal-link-system-path="node/120">Private Lessons</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/multi-week-lessons" class="d-flex ai-center" data-drupal-link-system-path="node/121">Multi-Week Lessons</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/terrain-based-learning" class="d-flex ai-center" data-drupal-link-system-path="node/119">Terrain Based Learning</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/beginners-guide" class="d-flex ai-center" data-drupal-link-system-path="node/122">Beginner&#039;s Guide</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lessons/packages-0" class="d-flex ai-center" data-drupal-link-system-path="node/277">Packages</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                                            <li class="menu-item menu-item--expanded">
++                                            <button class="reset-button d-flex ai-center f-icon f-heading"
++                                id="main-menu-contact"
++                                aria-expanded="false">Contact</button>
++                                    <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
++        <ul class="reset menu">
++                                                        <li class="menu-item">
++                                            <a href="/contact/general" class="d-flex ai-center" data-drupal-link-system-path="node/125">General</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/employment" class="d-flex ai-center" data-drupal-link-system-path="node/149">Employment</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/contact/ski-patrol" class="d-flex ai-center" data-drupal-link-system-path="node/124">Ski Patrol</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/contact/our-resorts" class="d-flex ai-center" data-drupal-link-system-path="node/192">Our Resorts</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/contact/faqs-0" class="d-flex ai-center" data-drupal-link-system-path="node/117">FAQ&#039;s</a>
++                                    </li>
++                                            <li class="menu-item menu-item--collapsed">
++                                            <a href="/contact/media-center" class="d-flex ai-center" data-drupal-link-system-path="node/194">Media Center</a>
++                                    </li>
++                                            <li class="menu-item">
++                                            <a href="/lost-items" class="d-flex ai-center" data-drupal-link-system-path="node/50">Lost Items</a>
++                                    </li>
++                    </ul>
++            </div>
++            
++                                    </li>
++                    </ul>
++                
++
++
++  </nav>
++
++        </div>
++
++        <div class="show-tp utility">
++
++    
++    
++    
++    <ul class="reset d-flex">
++        <li class="weather-icon">
++            <a href="/mountain-info/snow-report" class="d-block f-icon icon-gradient icon--snow" title="Weather Report">
++                <span class="visually-hidden">Weather Report</span>
++            </a>
++        </li>
++        <li>
++            <a href="/mountain-info/snow-report#webcams" class="d-block f-icon icon-gradient icon--webcam" title="Webcams">
++                <span class="visually-hidden">Webcams</span>
++            </a>
++        </li>
++        <li>
++            <a href="https://shop.crystalridge.com/account" target="_blank"
++               class="d-block f-icon icon-gradient icon--person"
++               title="Account">
++                <span class="visually-hidden">Account</span>
++            </a>
++        </li>
++    </ul>
++
++</div>
++
++        
++        <a href="https://shop.crystalridge.com" target="_blank" class="button primary">Buy</a>
++
++    </div>
++</header>
++
++<div id="block-alert-bar" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++
++  </div>
++
++
++    
++
++    <main id="main-content" role="main"
++          class="  main-content">
++
++        <div class="  layout-content">
++
++            
++                      <div class="region region-content">
++    <div id="block-crystal-content" class="block block-system block-system-main-block">
++  
++    
++      
++
++<div data-history-node-id="101" class="node node--type-page node--view-mode-full no-hero-image" id="node-101">
++
++    
++
++<div class=" component-node">
++
++    
++    <div data-drupal-messages-fallback class="hidden"></div>
++
++
++    
++
++<div class="container pos-relative row-padding p-t-0 inner-grid row-gap-0 hero no-image ">
++
++        
++        <h1 class="z-index-20 grid-inner-full">Snow Report</h1>
++
++    
++                <img class="fade-in z-index-10 pos-absolute arrow" aria-hidden="true" alt="" loading="lazy"
++     src="/themes/custom/crystal/images/arrow-down-default.webp"  />
++    
++    <div class="parallax pos-absolute fade-in bg-img trees" data-offset="-40"></div>
++
++</div>
++
++    
++            <div class="node-content">
++
++                <div id="block-mountain-report" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++<div class="config_pages config_pages--type--mountain-report config_pages--view-mode--full config_pages--mountain-report--full">
++
++    <div class="container  component-mountain-report">
++
++            <div class="fade-in row inner-grid daily-summary">
++            <div class="content-container">
++                <h2>Daily Summary</h2>
++                <p>Thank you for a great season! We have a busy off season full of weddings/events, snowmaking projects and other hill upgrades. See you all in November!&nbsp;</p>
++
++            </div>
++        </div>
++    
++    <div class="fade-in row m-b-row inner-grid mountain-info">
++
++        
++        
++                    <div class="grid-inner-2-10-large">
++                <div class="columns columns-2">
++                    <div class="column skiing">
++                        <h2 class="h3">Skiing</h2>
++                                                    <div class="border-top border-bottom border-grey d-flex ai-center item">
++                                <div class="h2 m-0 value t-c-status-closed">
++                                    Closed
++                                </div>
++                                <div class="label">
++                                    
++                                </div>
++                            </div>
++                                                    <div class=" border-bottom border-grey d-flex ai-center item">
++                                <div class="h2 m-0 value ">
++                                    0/5
++                                </div>
++                                <div class="label">
++                                    Lifts are open today
++                                </div>
++                            </div>
++                                                    <div class=" border-bottom border-grey d-flex ai-center item">
++                                <div class="h2 m-0 value ">
++                                    0/9
++                                </div>
++                                <div class="label">
++                                    Ski trails are open today
++                                </div>
++                            </div>
++                                            </div>
++                    <div class="column tubing">
++                        <h2 class="h3">Tubing</h2>
++                                                <div class="border-top border-bottom border-grey d-flex ai-center item">
++                            <div class="h2 m-0 value t-c-status-closed">
++                                Closed
++                            </div>
++                            <div class="label">
++                                
++                            </div>
++                        </div>
++                    </div>
++                </div>
++            </div>
++        
++    </div>
++
++</div>
++
++</div>
++
++  </div>
++
++                <div id="block-snow-report" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++<div class="config_pages config_pages--type--snow-report config_pages--view-mode--full config_pages--snow-report--full">
++
++    <div class="f-icon icon-gradient bg-highlight row row-padding  component-snow-report">
++
++    <div class="inner-grid container">
++
++        <div class="grid-inner-full t-align-right content-wrap">
++            <h2>Snow Report</h2>
++
++            
++            <div class="d-flex flex-wrap snow-values">
++                                    <div class="item">
++                        <h3 class="h4">Snow Base</h3>
++                        <div class="value h1">0"</div>
++                    </div>
++                                    <div class="item">
++                        <h3 class="h4">Snow Last 24 Hrs</h3>
++                        <div class="value h1">0"</div>
++                    </div>
++                                    <div class="item">
++                        <h3 class="h4">Snow Last 7 Days</h3>
++                        <div class="value h1">0"</div>
++                    </div>
++                                    <div class="item">
++                        <h3 class="h4">Season Snowfall</h3>
++                        <div class="value h1">0"</div>
++                    </div>
++                            </div>
++
++            <p class="d-flex jc-flex-end">
++                <span class="f-icon icon-gradient tag">
++                    <strong>Updated:</strong>
++                     March 27 - 12:47pm
++                </span>
++            </p>
++
++        </div>
++
++    </div>
++
++</div>
++
++</div>
++
++  </div>
++
++
++                                        <div class="row container inner-grid listing  simple lifts-trails">
++
++    <div class="grid-inner-3-8-large">
++
++        
++        <div class="content ">
++            <div class="fade-in row half"><h2>Trail Status</h2><div class="component-row d-flex ai-center border-bottom border-top f-w-bold header"><div class="cell title">Name</div><div class="cell status">Status</div></div>
++
++<div data-history-node-id="131" class="node node--type-lift-trail node--view-mode-row" id="node-131">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++            
++        
++        Beginner Conveyor 
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="183" class="node node--type-lift-trail node--view-mode-row" id="node-183">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++            
++        
++        Easy Street
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="184" class="node node--type-lift-trail node--view-mode-row" id="node-184">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level intermediate"
++                     title="Intermediate">
++                    Intermediate
++                </div>
++            
++            
++        
++        Crystal Bowl
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="188" class="node node--type-lift-trail node--view-mode-row" id="node-188">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level intermediate"
++                     title="Intermediate">
++                    Intermediate
++                </div>
++            
++            
++        
++        Ridge Runner
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="187" class="node node--type-lift-trail node--view-mode-row" id="node-187">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level advanced"
++                     title="Advanced">
++                    Advanced
++                </div>
++            
++            
++        
++        The Drop
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="186" class="node node--type-lift-trail node--view-mode-row" id="node-186">
++
++    
++
++    <div class="Trail d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level advanced"
++                     title="Advanced">
++                    Advanced
++                </div>
++            
++            
++        
++        Whitnall Way
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++</div><div class="fade-in row half"><h2>Lift Status</h2><div class="component-row d-flex ai-center border-bottom border-top f-w-bold header"><div class="cell title">Name</div><div class="cell status">Status</div></div>
++
++<div data-history-node-id="130" class="node node--type-lift-trail node--view-mode-row" id="node-130">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon double"
++                     title="Double">
++                    Double
++                </div>
++            
++        
++        Double Chair Lift
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="185" class="node node--type-lift-trail node--view-mode-row" id="node-185">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon rope-tow"
++                     title="Rope Tow">
++                    Rope Tow
++                </div>
++            
++        
++        High Speed Rope Tow
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="189" class="node node--type-lift-trail node--view-mode-row" id="node-189">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon rope-tow"
++                     title="Rope Tow">
++                    Rope Tow
++                </div>
++            
++        
++        Summit Handle Tow
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="191" class="node node--type-lift-trail node--view-mode-row" id="node-191">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++            
++                                            <div class="cell f-icon lift-icon conveyor"
++                     title="Conveyor">
++                    Conveyor
++                </div>
++            
++        
++        Tubing Conveyor Lifts
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="190" class="node node--type-lift-trail node--view-mode-row" id="node-190">
++
++    
++
++    <div class="Lift d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++                                            <div class="cell f-icon level beginner"
++                     title="Beginner">
++                    Beginner
++                </div>
++            
++                                            <div class="cell f-icon lift-icon conveyor"
++                     title="Conveyor">
++                    Conveyor
++                </div>
++            
++        
++        Beginner Conveyor 
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++</div><div class="fade-in row half"><h2>Terrain parks</h2><div class="component-row d-flex ai-center border-bottom border-top f-w-bold header"><div class="cell title">Name</div><div class="cell status">Status</div></div>
++
++<div data-history-node-id="182" class="node node--type-lift-trail node--view-mode-row" id="node-182">
++
++    
++
++    <div class="Terrain Park d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Rubble Stoke (Large)
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="129" class="node node--type-lift-trail node--view-mode-row" id="node-129">
++
++    
++
++    <div class="Terrain Park d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Pebble Park (Small)
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++
++
++<div data-history-node-id="181" class="node node--type-lift-trail node--view-mode-row" id="node-181">
++
++    
++
++    <div class="Terrain Park d-flex ai-center border-bottom border-grey pos-relative  component-row">
++
++    <div class="cell title">
++
++        
++        Rocky Road (Medium)
++
++    </div>
++
++    
++    <div class="cell status h3 m-0 t-c-status-closed"
++         title="Closed">
++        Closed
++    </div>
++
++</div>
++
++</div>
++</div>
++        </div>
++        
++    </div>
++
++</div>
++
++
++
++
++                
++
++                                                    
++
++                                    <div class="ullr-widget-container">
++                        <div id="ullr"></div>
++                    </div>
++                    <script src="https://widget.ullr.ski/ullr-widget.js?key=78ca8cff-5d62-45b6-a985-ff4dfce01752" sport="SNOW"
++                            hideParkLogs="false" showFeatures="true" showTrails="false" theme="#6B8CF9"
++                            elementId="ullr"></script>
++                
++
++                <div class="row-padding bg-dark row inner-grid webcams" id="webcams">
++                    <div class="container grid-inner-2-10-large">
++                        <h2 class="fade-in">Live Cams</h2>
++                        <div id="block-webcams" class="block block-config-pages block-config-pages-block">
++  
++    
++      
++
++<div class="config_pages config_pages--type--webcams config_pages--view-mode--full config_pages--webcams--full">
++
++    
++
++<div class=" component-webcams">
++
++    <div class="columns columns-2">
++
++                    
++            
++            
++                    
++            
++                            <div class="fade-in webcam">
++
++                    <h3>Tower Cam</h3>
++
++                    <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
++                        <img src="https://wms.apt9stream.com/ridge/tower-cam_output/dvr_thumbnail.jpg?timestamp=1783612880"
++                             alt="Webcam: Tower Cam" />
++                    </button>
++
++                    <video class="webcam-video" data-src="https://wms.apt9stream.com/ridge/tower-cam_output/playlist_dvr.m3u8" autoplay muted controls
++                           crossorigin playsinline
++                           poster=""></video>
++
++                </div>
++            
++                    
++            
++                            <div class="fade-in webcam">
++
++                    <h3>Whitnall Way</h3>
++
++                    <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
++                        <img src="https://wms.apt9stream.com/ridge/whitnall-way_output/dvr_thumbnail.jpg?timestamp=1783612880"
++                             alt="Webcam: Whitnall Way" />
++                    </button>
++
++                    <video class="webcam-video" data-src="https://wms.apt9stream.com/ridge/whitnall-way_output/playlist.m3u8" autoplay muted controls
++                           crossorigin playsinline
++                           poster=""></video>
++
++                </div>
++            
++                    
++            
++            
++        
++    </div>
++
++</div>
++
++</div>
++
++  </div>
++
++                    </div>
++                </div>
++
++            </div>
++
++            
++
++        
++</div>
++
++</div>
++
++  </div>
++
++  </div>
++
++
++                
++        </div>
++    </main>
++
++    <div class="fade-in row m-b-0 bg-img footer-trees"></div>
++
++<footer class="container site-footer" role="contentinfo">
++    <div class="rte inner-grid row-gap-0">
++
++        <div class="grid-inner-full logo">
++            <a href="/" title="Home" rel="home" class="transition-ui d-block">
++                <img loading="lazy" class="w-100" src="/themes/custom/crystal/logo.svg" alt="Home" />
++            </a>
++        </div>
++
++        <div class="grid-inner-full lh-1 address">
++                
++
++
++
++    
++        
++                        
++            <div class="clearfix text-formatted field field--name-field-address field--type-text-long field--label-hidden field__item"
++                        >
++
++            
++                                    <p>7011 S Ballpark Dr<br>Franklin, WI 53132</p>
++
++                
++            
++            </div>
++
++        
++    
++
++        </div>
++
++        <div class="grid-inner-full hours">
++            
++        </div>
++
++        <nav role="navigation" aria-labelledby="block-crystal-footer-menu" id="block-crystal-footer" class="block block-menu navigation menu--crystal-ridge-footer">
++            
++  <h2 class="visually-hidden" id="block-crystal-footer-menu">Crystal Ridge Footer</h2>
++  
++
++        
++        <ul class="menu reset d-flex flex-wrap">
++                                    <li class="menu-item">
++                <a href="https://shop.crystalridge.com/" class="button-arrow">Buy</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="https://shop.crystalridge.com/forms" class="button-arrow">Waivers</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/directions" class="button-arrow" data-drupal-link-system-path="node/195">Directions</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/employment" class="button-arrow" data-drupal-link-system-path="node/149">Employment</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/lost-items" class="button-arrow" data-drupal-link-system-path="node/50">Lost Items</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="https://crystalridge.com/mountain-info/snow-report#webcams" class="button-arrow">Live Cams</a>
++                            </li>
++            </ul>
++        
++
++
++  </nav>
++
++
++        <div class="copyright-social">
++            <nav role="navigation" aria-labelledby="block-crystal-copyright-menu" id="block-crystal-copyright" class="block block-menu navigation menu--crystal-ridge-copyright">
++            
++  <h2 class="visually-hidden" id="block-crystal-copyright-menu">Crystal Ridge Copyright</h2>
++  
++
++        
++        <ul class="menu reset d-flex">
++                                    <li class="menu-item">
++                <a href="/privacy-policy" class="button-arrow-secondary" data-drupal-link-system-path="node/199">Privacy Policy</a>
++                            </li>
++                                <li class="menu-item">
++                <a href="/terms-conditions" class="button-arrow-secondary" data-drupal-link-system-path="node/198">Terms &amp; Conditions</a>
++                            </li>
++            </ul>
++        
++
++
++  </nav>
++
++            <nav role="navigation" aria-labelledby="block-crystal-social-menu" id="block-crystal-social" class="block block-menu navigation menu--crystal-ridge-social">
++            
++  <h2 class="visually-hidden" id="block-crystal-social-menu">Crystal Ridge Social</h2>
++  
++
++        
++              <ul class="reset d-flex ai-center menu">
++                    <li class="menu-item">
++        <a href="https://www.instagram.com/crystalridgeski" target="_blank" class="f-icon"><span class="visually-hidden">Instagram</span></a>
++              </li>
++                <li class="menu-item">
++        <a href="https://www.facebook.com/crystalridgeski/" target="_blank" class="f-icon"><span class="visually-hidden">Facebook</span></a>
++              </li>
++        </ul>
++  
++
++
++  </nav>
++
++        </div>
++
++        <div class="grid-inner-full resorts">
++            <h2 class="t-t-uppercase t-body t-c-text f-w-normal">
++                Explore our other partner resorts
++            </h2>
++            <ul class="reset d-grid column-gap-base buttons">
++                <li class="switz">
++                    <a href="https://www.littleswitz.com/" class="button large switz" target="_blank">
++                        <img class=""  alt="Little Switz" loading="lazy"
++     src="/themes/custom/switz/logo.svg"  />
++                    </a>
++                </li>
++                <li class="nordic">
++                    <a href="https://www.nordicmountain.com/" class="button large nordic" target="_blank">
++                        <img class=""  alt="Nordic Mountain" loading="lazy"
++     src="/themes/custom/origin/images/logo-nordic-horizontal.svg"  />
++                    </a>
++                </li>
++                <li class="crystal">
++                    <a href="https://crystalridge.com" class="button large crystal" target="_blank">
++                        <img class=""  alt="Crystal Ridge" loading="lazy"
++     src="/themes/custom/crystal/logo.svg"  />
++                    </a>
++                </li>
++            </ul>
++        </div>
++
++        <p class="grid-inner-full t-small t-align-center copyright">
++            &copy; 2026 Schmitz Brothers, LLC., Inc. <br class="hide-tp"> All Rights Reserved
++        </p>
++
++    </div>
++</footer>
++
++
++</div>
++  </div>
++
++
++<script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/101","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"lazy":{"lazysizes":{"lazyClass":"lazyload","loadedClass":"lazyloaded","loadingClass":"lazyloading","preloadClass":"lazypreload","errorClass":"lazyerror","autosizesClass":"lazyautosizes","srcAttr":"data-src","srcsetAttr":"data-srcset","sizesAttr":"data-sizes","minSize":40,"customMedia":[],"init":true,"expFactor":1.5,"hFac":0.8,"loadMode":2,"loadHidden":true,"ricTimeout":0,"throttleDelay":125,"plugins":{"object-fit":"object-fit\/ls.object-fit","parent-fit":"parent-fit\/ls.parent-fit"}},"placeholderSrc":"data:image\/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==","preferNative":false,"minified":true,"libraryPath":"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/lazysizes\/5.3.2"},"user":{"uid":0,"permissionsHash":"c8f0cb91bca7f84fe42e29ba50533fe7b7a78fbf16f320bd29fdd9ee6c541667"}}</script>
++<script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
++<script src="/sites/default/files/js/js_yN4l1hWVo-66HFBHhyLvqQFwl195QDLaSgeuO9Egajo.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=crystal&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8clFlcUlQHmoKISC8cpTk5ITc4sBEJwcXQ"></script>
++<script src="https://cdn.jsdelivr.net/npm/jquery-inview@1.1.2/jquery.inview.min.js"></script>
++<script src="/sites/default/files/js/js_C2y2D8BjRfkBg9YpWdHhy-T2CG1OVgQaRrVUIYLR_3Y.js?scope=footer&amp;delta=3&amp;language=en&amp;theme=crystal&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8clFlcUlQHmoKISC8cpTk5ITc4sBEJwcXQ"></script>
++<script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
++<script src="https://cdn.jsdelivr.net/npm/hls-video-element@1.0/+esm" type="module"></script>
++<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es6,Array.prototype.includes,CustomEvent,Object.entries,Object.values,URL"></script>
++<script src="https://unpkg.com/plyr@3"></script>
++<script src="/sites/default/files/js/js_IoAD7F8niDzuD5AGktzl-wgF7rTNto7xnLSW8Tj6bxM.js?scope=footer&amp;delta=8&amp;language=en&amp;theme=crystal&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8clFlcUlQHmoKISC8cpTk5ITc4sBEJwcXQ"></script>
++
++
++</body>
++
++</html>
+-- 
+2.39.5
+

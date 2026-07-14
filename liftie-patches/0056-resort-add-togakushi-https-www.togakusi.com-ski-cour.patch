@@ -1,0 +1,921 @@
+From fcaae359e1778a45fcf51e02859b577de41dd2d5 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:58:55 -0400
+Subject: [PATCH 56/56] resort: add togakushi
+ (https://www.togakusi.com/ski/course/)
+
+---
+ lib/resorts/togakushi/index.js      |   9 +
+ lib/resorts/togakushi/resort.json   |  16 +
+ lib/resorts/togakushi/sections.js   |  22 +
+ lib/resorts/togakushi/trails.js     |  13 +
+ test/resorts/example/togakushi.html | 682 ++++++++++++++++++++++++++++
+ test/resorts/togakushi-trails.js    | 100 ++++
+ test/resorts/togakushi.js           |  11 +
+ 7 files changed, 853 insertions(+)
+ create mode 100644 lib/resorts/togakushi/index.js
+ create mode 100644 lib/resorts/togakushi/resort.json
+ create mode 100644 lib/resorts/togakushi/sections.js
+ create mode 100644 lib/resorts/togakushi/trails.js
+ create mode 100644 test/resorts/example/togakushi.html
+ create mode 100644 test/resorts/togakushi-trails.js
+ create mode 100644 test/resorts/togakushi.js
+
+diff --git a/lib/resorts/togakushi/index.js b/lib/resorts/togakushi/index.js
+new file mode 100644
+index 00000000..e8b2cde0
+--- /dev/null
++++ b/lib/resorts/togakushi/index.js
+@@ -0,0 +1,9 @@
++import sections from './sections.js';
++
++export default function parse(dom) {
++  return Object.fromEntries(
++    sections(dom)
++      .filter(r => r.section === 'リフト情報')
++      .map(({ name, status }) => [name, status])
++  );
++}
+diff --git a/lib/resorts/togakushi/resort.json b/lib/resorts/togakushi/resort.json
+new file mode 100644
+index 00000000..66bb6651
+--- /dev/null
++++ b/lib/resorts/togakushi/resort.json
+@@ -0,0 +1,16 @@
++{
++  "name": "Togakushi",
++  "url": {
++    "host": "https://www.togakusi.com",
++    "pathname": "/ski/course/"
++  },
++  "trails": true,
++  "tags": [
++    "Japan",
++    "Nagano"
++  ],
++  "ll": [
++    138.0808,
++    36.7745
++  ]
++}
+diff --git a/lib/resorts/togakushi/sections.js b/lib/resorts/togakushi/sections.js
+new file mode 100644
+index 00000000..e9f350d8
+--- /dev/null
++++ b/lib/resorts/togakushi/sections.js
+@@ -0,0 +1,22 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++
++// status blocks are headed by h4.p-course__statusList__item-ttl
++// (リフト情報 lifts / パーク情報 parks / コース情報 courses); each row is
++// <th>name</th><td class="is-open|is-close">
++export default function sections(dom) {
++  const rows = [];
++  let section;
++  for (const node of select(dom, '.p-course__statusList__item-ttl, .p-course__status__table tr')) {
++    if (/ttl/.test(node.attribs?.class ?? '')) {
++      section = findText(node)?.trim();
++      continue;
++    }
++    const name = findText(node.children.find(c => c.name === 'th'));
++    const status = node.children.find(c => c.name === 'td')?.attribs.class?.match(/is-(open|close)/)?.[1];
++    if (name && status) {
++      rows.push({ section, name: name.trim(), status: status === 'close' ? 'closed' : 'open' });
++    }
++  }
++  return rows;
++}
+diff --git a/lib/resorts/togakushi/trails.js b/lib/resorts/togakushi/trails.js
+new file mode 100644
+index 00000000..582a80cc
+--- /dev/null
++++ b/lib/resorts/togakushi/trails.js
+@@ -0,0 +1,13 @@
++import sections from './sections.js';
++
++const courseLevels = { 初級: 'green', 中級: 'blue', 上級: 'black' };
++
++export default function parse(dom) {
++  return sections(dom)
++    .filter(r => r.section !== 'リフト情報')
++    .map(({ section, name, status }) => ({
++      name,
++      status,
++      level: section === 'パーク情報' ? 'terrainPark' : courseLevels[name.match(/（(初級|中級|上級)/)?.[1]]
++    }));
++}
+diff --git a/test/resorts/example/togakushi.html b/test/resorts/example/togakushi.html
+new file mode 100644
+index 00000000..e3716488
+--- /dev/null
++++ b/test/resorts/example/togakushi.html
+@@ -0,0 +1,682 @@
++<!DOCTYPE html>
++<html lang="ja">
++<head>
++  <!-- Global site tag (gtag.js) - Google Analytics -->
++  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108850047-1"></script>
++  <script>
++    window.dataLayer = window.dataLayer || [];
++    function gtag(){dataLayer.push(arguments);}
++    gtag('js', new Date());
++
++    gtag('config', 'UA-108850047-1');
++    gtag('config', 'AW-719362709');
++  </script>
++
++  <script async src="https://s.yimg.jp/images/listing/tool/cv/ytag.js"></script>
++  <script>
++  window.yjDataLayer = window.yjDataLayer || [];
++  function ytag() { yjDataLayer.push(arguments); }
++  ytag({"type":"ycl_cookie"});
++  </script>
++
++  <meta charset="utf-8">
++  <meta name="viewport" content="width=device-width, initial-scale=1">
++  <meta name="description" content="戸隠スキー場では開放感あるゲレンデで初心者から上級者まで楽しめて、フリースタイルパークでは、キッカーやレールなどスキーヤー、スノーボーダーに合わせて地形を活かしたスキー場です。また、忍者修行がテーマのキッズパークも大人気！">
++  
++  <!-- icons -->
++  <link rel="shortcut icon" href="/assets/img/common/favicon.ico">
++  <link rel="apple-touch-icon" href="/assets/img/common/apple-touch-icon.png">
++
++  <!-- font -->
++    <script>
++    (function(d) {
++      var config = {
++        kitId: 'pzg8yla',
++        scriptTimeout: 3000,
++        async: true
++      },
++      h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
++    })(document);
++  </script>
++  <link rel="preconnect" href="https://fonts.googleapis.com">
++  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
++    <!-- Stylesheet -->
++  <link rel="stylesheet" href="/assets/css/common.css?2312152">
++    <link rel="stylesheet" href="/assets/css/course.css?251217">
++
++<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
++
++	<!-- This site is optimized with the Yoast SEO plugin v26.9 - https://yoast.com/product/yoast-seo-wordpress/ -->
++	<title>ゲレンデ | 戸隠スキー場【公式】 | 長野市戸隠で歴史の地で楽しもう</title>
++	<link rel="canonical" href="https://www.togakusi.com/ski/course/" />
++	<meta property="og:locale" content="ja_JP" />
++	<meta property="og:type" content="article" />
++	<meta property="og:title" content="ゲレンデ | 戸隠スキー場【公式】 | 長野市戸隠で歴史の地で楽しもう" />
++	<meta property="og:url" content="https://www.togakusi.com/ski/course/" />
++	<meta property="og:site_name" content="戸隠スキー場【公式】 | 長野市戸隠で歴史の地で楽しもう" />
++	<meta property="article:publisher" content="https://ja-jp.facebook.com/togakushi.togacky" />
++	<meta property="article:modified_time" content="2026-02-17T22:30:41+00:00" />
++	<meta property="og:image" content="https://www.togakusi.com/ski/wp-content/uploads/sites/2/2023/12/img_ogp.png" />
++	<meta property="og:image:width" content="1200" />
++	<meta property="og:image:height" content="630" />
++	<meta property="og:image:type" content="image/png" />
++	<meta name="twitter:card" content="summary_large_image" />
++	<meta name="twitter:site" content="@togacky" />
++	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://www.togakusi.com/ski/course/","url":"https://www.togakusi.com/ski/course/","name":"ゲレンデ | 戸隠スキー場【公式】 | 長野市戸隠で歴史の地で楽しもう","isPartOf":{"@id":"https://www.togakusi.com/ski/#website"},"datePublished":"2023-11-22T03:17:14+00:00","dateModified":"2026-02-17T22:30:41+00:00","breadcrumb":{"@id":"https://www.togakusi.com/ski/course/#breadcrumb"},"inLanguage":"ja","potentialAction":[{"@type":"ReadAction","target":["https://www.togakusi.com/ski/course/"]}]},{"@type":"BreadcrumbList","@id":"https://www.togakusi.com/ski/course/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://www.togakusi.com/ski/"},{"@type":"ListItem","position":2,"name":"ゲレンデ"}]},{"@type":"WebSite","@id":"https://www.togakusi.com/ski/#website","url":"https://www.togakusi.com/ski/","name":"戸隠スキー場【公式】 | 長野市戸隠で歴史の地で楽しもう","description":"雄大な景色を眼前戸隠スキー場では開放感あるゲレンデで初心者から上級者まで楽しめて、フリースタイルパークでは、キッカーやレールなどスキーヤー、スノーボーダーに合わせて地形を活かしたスキー場です。また、忍者修行がテーマのキッズパークも大人気、凛とした空気で心洗われる戸隠スキー場。標高1,748mの山頂エリアからは、大迫力の戸隠連峰を真正面にとらえることができます。広がる360度パノラマは、言葉にできないほどの美しさ。遠く北アルプスの山々が連なり、天気がいいと富士山を望めるビュースポットも人気です。上質な雪と絶景のコントラストが掛け合わさって、大満足の時間をお約束します。","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.togakusi.com/ski/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"ja"}]}</script>
++	<!-- / Yoast SEO plugin. -->
++
++
++<style id='wp-img-auto-sizes-contain-inline-css' type='text/css'>
++img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
++/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
++</style>
++<link rel='stylesheet' id='eo-leaflet.js-css' href='https://www.togakusi.com/ski/wp-content/plugins/event-organiser/lib/leaflet/leaflet.min.css?ver=1.4.0' type='text/css' media='all' />
++<style id='eo-leaflet.js-inline-css' type='text/css'>
++.leaflet-popup-close-button{box-shadow:none!important;}
++/*# sourceURL=eo-leaflet.js-inline-css */
++</style>
++<link rel='stylesheet' id='sbi_styles-css' href='https://www.togakusi.com/ski/wp-content/plugins/instagram-feed-pro/css/sbi-styles.min.css?ver=6.7.0' type='text/css' media='all' />
++		<style type="text/css" id="wp-custom-css">
++			.btn--orange,
++a.btn--orange {
++  color: #fff;
++  background-color: #eb6100;
++}
++.btn--orange:hover,
++a.btn--orange:hover {
++  color: #fff;
++  background: #f56500;
++}
++
++a.btn--radius {
++   border-radius: 100vh;
++}		</style>
++		
++</head>
++<body class="p-course">
++<!-- START index-header -->
++<header class="l-header">
++  <div class="l-header__logo">
++    <a href="/ski/"><img src="/assets/img/common/img_logo02_black.png" alt="TOGAKUSHI SKI FIELD" width="601" height="226"></a>
++  </div>
++  <div class="l-header__content">
++    <nav class="l-header__nav__wrap">
++      <ul class="l-subnav">
++  <li><a href="/ski/access/">アクセス</a></li>
++  <li><a href="/ski/events/">イベント</a></li>
++  <li><a href="/ski/news/">新着情報</a></li>
++  <li><a href="/ski/contact/">お問い合わせ</a></li>
++</ul>      <ul class="l-nav">
++  <li class="is-toTop"><a href="/ski/">TOP</a></li>
++  <li><a href="/ski/about/">戸隠スキー場について</a></li>
++  <li><a href="/ski/course/">ゲレンデ</a></li>
++  <li><a href="/ski/charge/">料金</a></li>
++  <li class="has-child"><span>楽しみ方</span>
++    <ul class="l-nav__sub">
++      <!-- <li><a href="/ski/">スキー</a></li> -->
++      <!-- <li><a href="/ski/">スノーボード</a></li> -->
++      <li><a href="/ski/kids_family/">キッズ <br class="u-sp__block">& ファミリー</a></li>
++      <li><a href="/ski/beginner/">ビギナー</a></li>
++      <li><a href="/ski/expert/">エキスパート</a></li>
++      <li><a href="/ski/#plan">モデルプラン</a></li>
++    </ul>
++  </li>
++  <li><a href="/ski/food/">レストラン & カフェ</a></li>
++  <li><a href="/ski/rental/">施設・レンタル</a></li>
++  <li><a href="/ski/school/">スクール</a></li>
++</ul>    </nav>
++    <div class="l-header__livecamera">
++      <a class="l-livecamera" href="/ski/livecamera/">
++        <span>ライブ<br>カメラ</span>
++      </a>
++    </div>
++    <div id="js-navOpen" class="l-nav__btn-open">
++      <div class="l-nav__btn-open__inner">
++        <p class="u-ff__en">MENU</p>
++      </div>
++    </div>
++  </div>
++</header>
++<!-- END index-header -->
++
++<div id="js-navMenu" class="l-header__menu">
++  <div class="l-header__menu-mask"></div>
++  <div class="l-header__menu__inner">
++    <div class="l-header__menu__content">
++      <ul class="l-nav">
++  <li class="is-toTop"><a href="/ski/">TOP</a></li>
++  <li><a href="/ski/about/">戸隠スキー場について</a></li>
++  <li><a href="/ski/course/">ゲレンデ</a></li>
++  <li><a href="/ski/charge/">料金</a></li>
++  <li class="has-child"><span>楽しみ方</span>
++    <ul class="l-nav__sub">
++      <!-- <li><a href="/ski/">スキー</a></li> -->
++      <!-- <li><a href="/ski/">スノーボード</a></li> -->
++      <li><a href="/ski/kids_family/">キッズ <br class="u-sp__block">& ファミリー</a></li>
++      <li><a href="/ski/beginner/">ビギナー</a></li>
++      <li><a href="/ski/expert/">エキスパート</a></li>
++      <li><a href="/ski/#plan">モデルプラン</a></li>
++    </ul>
++  </li>
++  <li><a href="/ski/food/">レストラン & カフェ</a></li>
++  <li><a href="/ski/rental/">施設・レンタル</a></li>
++  <li><a href="/ski/school/">スクール</a></li>
++</ul>      <ul class="l-subnav">
++  <li><a href="/ski/access/">アクセス</a></li>
++  <li><a href="/ski/events/">イベント</a></li>
++  <li><a href="/ski/news/">新着情報</a></li>
++  <li><a href="/ski/contact/">お問い合わせ</a></li>
++</ul>      <a class="l-header__menu__list-info" href="/ski/course/#status">リフト運行情報</a>
++      <div class="l-header__menu__list-other">
++        <a class="u-ff__en" href="/en/">English</a>
++        <!-- <a class="u-ff__en" href="https://japan-skiguide.com/guide/htm/r0034ens.htm" target="_blank">English</a> -->
++        <a class="" href="/ski/policy/">プライバシーポリシー</a>
++        <a class="" href="/assets/img/doc/report.pdf" target="_blank">安全管理報告書</a></a>
++      </div>
++    </div>
++    <div class="l-header__menu__info">
++      <p class=""><a href="https://maps.app.goo.gl/pypcQeRKYNsFq3BP9" target="_blank">〒381-4101 長野県長野市戸隠3682</a></p>
++      <p class="">TEL.<span data-action="call">026-254-2106</span></p>
++    </div>
++  </div>
++  <div id="js-navClose" class="l-nav__btn-close">
++    <div class="l-nav__btn-open__inner">
++      <span></span><span></span>
++    </div>
++  </div>
++</div>
++<!-- /js-nav-menu -->
++<main>
++
++<div class="p-course__ttl l-page__ttl01">
++  <ul class="l-breadcrumb">
++    <li><a href="/">TOP</a></li>
++    <li>ゲレンデ</li>
++  </ul>
++  <div class="l-page__ttl__inner">
++    <h1 class="l-page__ttl">ゲレンデ<span class="l-page__ttl-sub u-ff__en">GERENDE INFO</span></h1>
++  </div>
++</div>
++
++<section class="l-page__intro">
++  <h2 class="l-page__intro-ttl u-ta__center">バリエーション豊かな<br>19コースと絶景</h2>
++  <p class="l-page__intro-txt u-ta__center">スキーを初めて体験する小さなお子様から<br>大会に出場するエキスパートまで、<br>幅広いお客様に愉しんでいただける19コース。<br>山頂から望む戸隠連峰は、息を呑むほどの絶景です。</p>
++</section>
++
++<section class="p-course__map">
++  <p class="p-course__map__desc u-ta__center">マウスの操作で拡大縮小、各コース・リフトの詳細などが確認できます。</p>
++  <div class="p-course__map__wrap">
++    <iframe src="https://winter.intermaps.com/togakushi" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
++  </div>
++  <div class="p-course__map__btn u-ta__center">
++    <a class="c-btn02 --bg__blue01" href="https://www.togakusi.com/data/gelandemap_2022.pdf" target="_blank"><span>PDFをダウンロード</span></a>
++  </div>
++  <div class="p-course__map__btn u-ta__center">
++    <a class="c-btn02 --bg__blue01" href="https://www.ab-do.jp/org/tileimage/togakushi_gelandemap_2022/index.html" target="_blank"><span>デジタルマップを開く</span></a>
++  </div>
++</section>
++<!-- /map -->
++
++<section class="p-course__info">
++  <div class="c-ttl01">
++    <h3 class="c-ttl01__inner"><span  class="c-ttl01__txt">リフト営業情報</span></h3>
++  </div>
++  <div class="p-course__info__wrap">
++    <table class="c-table01 --bg__blue01">
++      <tbody>
++        <tr>
++          <th>リフト運転時間</th>
++          <td>8:30～16:15<br />
++<span style="display: inline-block;font-size: 85%;">天候等により変更になる可能性がございます<br>中社ゲレンデは1月17日より3月8日までの土日祝のみ営業いたします（祝日は連休のみ*2/11クローズ）</span></td>
++        </tr>
++          <tr>
++          <th>乗車可能な滑走具</th>
++          <td>スキー、スノーボード、チェアスキー、モノスキー、テレマークスキー、ファンスキー、NICO、スノースクート、雪板、スノードライブ<br />
++<span style="display: inline-block;font-size: 85%;">※乳児・幼児とリフトに登場する際はおんぶ紐、抱っこ紐が必須です。利用の際には十分にお気をつけください。</span></td>
++        </tr>
++          <tr>
++          <th>コース数</th>
++          <td>19コース (上級：7　中級：8　初級：4)</td>
++        </tr>
++          <tr>
++          <th>山頂標高</th>
++          <td>1,748m</td>
++        </tr>
++          <tr>
++          <th>山麓標高</th>
++          <td>1,220m</td>
++        </tr>
++        </tbody>
++    </table>
++  </div>
++</section>
++<!-- /info -->
++
++<section id="status" class="p-course__status">
++  <div class="c-ttl01">
++    <h3 class="c-ttl01__inner"><span  class="c-ttl01__txt">リフト・コースの運営状況</span></h3>
++  </div>
++  <div class="p-course__statusList">
++    <div class="p-course__statusList__item --lift">
++      <h4 class="p-course__statusList__item-ttl">リフト情報</h4>
++      <table class="p-course__status__table c-table02 --bg__beige02">
++        <tbody>
++          <tr>
++            <th class="u-clr__blue01 u-ta__center">第2ペアリフト</th>
++            <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">第3クワッドリフト</th>
++            <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">第4高速ペアリフト</th>
++            <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">第5高速ペアリフト</th>
++            <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">第6クワッドリフト</th>
++            <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">中社第1ペアリフト</th>
++            <td class="is-close"><img class="icn" src="/assets/img/course/icn_close.svg" alt="close"></td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">中社第2ペアリフト</th>
++            <td class="is-close"><img class="icn" src="/assets/img/course/icn_close.svg" alt="close"></td>          </tr>
++          </tbody>
++      </table>
++    </div>
++    <!-- /lift -->
++    <div class="p-course__statusList__item --park">
++      <h4 class="p-course__statusList__item-ttl">パーク情報</h4>
++      <table class="p-course__status__table c-table02 --bg__beige02">
++        <tbody>
++          <tr>
++            <th class="u-clr__blue01 u-ta__center">キッズパーク</th>
++            <td>平日クローズ（無料開放）</td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">忍者スロープ</th>
++            <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">戸隠ウェーブパーク</th>
++            <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>          </tr>
++            <tr>
++            <th class="u-clr__blue01 u-ta__center">戸隠雪板パーク</th>
++            <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>          </tr>
++          </tbody>
++      </table>
++    </div>
++    <!-- /park -->
++    <div class="p-course__statusList__item --course">
++      <h4 class="p-course__statusList__item-ttl">コース情報</h4>
++      <div class="p-course__status__table__wrap">
++          <table class="p-course__status__table c-table02 --bg__blue01">
++          <tbody>
++              <tr>
++              <th class="">お仙水コース（初級者）<br><span class="is-note u-clr__gray01">最大斜度17°/ 平均斜度9°/ 距離1500m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">メノウコース（中級者）<br><span class="is-note u-clr__gray01">最大斜度18°/ 平均斜度10°/ 距離1500m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">ドリームコース（初級者）<br><span class="is-note u-clr__gray01">最大斜度15°/ 平均斜度10°/ 距離900m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">しゃくなげコース（中級者）<br><span class="is-note u-clr__gray01">最大斜度26°/ 平均斜度19°/ 距離700m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">とがっきーA（中級者）<br><span class="is-note u-clr__gray01">最大斜度26°/ 平均斜度15°/ 距離1500m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">とがっきーB（中級者）<br><span class="is-note u-clr__gray01">最大斜度28°/ 平均斜度15°/ 距離950m</span></th>
++              <td>ポール利用</td>            </tr>
++              <tr>
++              <th class="">とがっきーC（初心者）<br><span class="is-note u-clr__gray01">最大斜度8°/ 平均斜度6°/ 距離800m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">岩戸コース（ポール専用）<br><span class="is-note u-clr__gray01">最大斜度26°/ 平均斜度18°/ 距離800m</span></th>
++              <td class="is-close"><img class="icn" src="/assets/img/course/icn_close.svg" alt="close"></td>            </tr>
++              <tr>
++              <th class="">高妻コース（中級者）<br><span class="is-note u-clr__gray01">最大斜度27°/ 平均斜度18°/ 距離600m</span></th>
++              <td>非圧雪</td>            </tr>
++              <tr>
++              <th class="">越水中央バーン<br><span class="is-note u-clr__gray01">最大斜度-°/ 平均斜度-°/ 距離-m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">林間コース（初級者）<br><span class="is-note u-clr__gray01">最大斜度10°/ 平均斜度8°/ 距離800m</span></th>
++              <td>中社連絡</td>            </tr>
++            </tbody>
++        </table>
++            <table class="p-course__status__table c-table02 --bg__blue01">
++          <tbody>
++              <tr>
++              <th class="">しらかばコース（中級者）<br><span class="is-note u-clr__gray01">最大斜度26°/ 平均斜度17°/ 距離900m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">パノラマコース（中級者）<br><span class="is-note u-clr__gray01">最大斜度18°/ 平均斜度15°/ 距離340m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">アドベンチャーコース（上級者）<br><span class="is-note u-clr__gray01">最大斜度24°/ 平均斜度22°/ 距離650m</span></th>
++              <td>非圧雪</td>            </tr>
++              <tr>
++              <th class="">チャレンジコース（上級者）<br><span class="is-note u-clr__gray01">最大斜度26°/ 平均斜度22°/ 距離400m</span></th>
++              <td>非圧雪</td>            </tr>
++              <tr>
++              <th class="">チャンピオンコース（上級者）<br><span class="is-note u-clr__gray01">最大斜度31°/ 平均斜度28°/ 距離400m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">シルバーコース（上級者）<br><span class="is-note u-clr__gray01">最大斜度28°/ 平均斜度26°/ 距離600m</span></th>
++              <td class="is-open"><img class="icn" src="/assets/img/course/icn_open.svg" alt="open"></td>            </tr>
++              <tr>
++              <th class="">スイートコース（中級者）<br><span class="is-note u-clr__gray01">最大斜度10°/ 平均斜度5°/ 距離1500m</span></th>
++              <td class="is-close"><img class="icn" src="/assets/img/course/icn_close.svg" alt="close"></td>            </tr>
++              <tr>
++              <th class="">パラダイスコース（上級者）<br><span class="is-note u-clr__gray01">最大斜度22°/ 平均斜度20°/ 距離900m</span></th>
++              <td class="is-close"><img class="icn" src="/assets/img/course/icn_close.svg" alt="close"></td>            </tr>
++              <tr>
++              <th class="">フレッシュコース（上級者）<br><span class="is-note u-clr__gray01">最大斜度29°/ 平均斜度23°/ 距離1100m</span></th>
++              <td class="is-close"><img class="icn" src="/assets/img/course/icn_close.svg" alt="close"></td>            </tr>
++              <tr>
++              <th class="">グランドコース（上級者）<br><span class="is-note u-clr__gray01">最大斜度28°/ 平均斜度25°/ 距離950m</span></th>
++              <td class="is-close"><img class="icn" src="/assets/img/course/icn_close.svg" alt="close"></td>            </tr>
++              <tr>
++              <th class="">中社中央バーン<br><span class="is-note u-clr__gray01">最大斜度-°/ 平均斜度-°/ 距離-m</span></th>
++              <td class="is-close"><img class="icn" src="/assets/img/course/icn_close.svg" alt="close"></td>            </tr>
++            </tbody>
++        </table>
++        </div>
++    </div>
++    <!-- /course -->
++  </div>
++</section>
++<!-- /status -->
++
++<section class="p-course__guide">
++  <div class="c-ttl01">
++    <h3 class="c-ttl01__inner"><span  class="c-ttl01__txt">コース案内</span></h3>
++  </div>
++  <div class="p-courseList">
++    <div class="p-courseList__item ani-fadein js-ani__item">
++      <div class="p-courseList__item-headline">
++        <picture>
++          <source srcset="/assets/img/course/img_course01_main_pc.jpg" media="(min-width: 600px)">
++          <img src="/assets/img/course/img_course01_main_sp.jpg" alt="" />
++        </picture>
++        <div class="item-headline__txt --align__left">
++          <p class="item-headline__ttl__sub">
++            <span class="l-highlight__txt -clr__blue01">正面4枚の個性ある</span>
++          </p>
++          <h5 class="item-headline__ttl">
++            <span class="l-highlight__txt -clr__blue01">上級者コース</span>
++          </h5>
++          <p class="item-headline__summary u-clr__bg">スキー場の正面に構える4コースはそれぞれ特色があり、コブ・不整地・整地など練習にも最適です。北斜面にあるため、午後もコンディションが変わりにくく、1日を通して快適に滑走できます。</p>
++        </div>
++        <!-- <div class="item-headline__btn u-ta__right">
++          <a class="c-btn03 --clr__bg" href="/ski/expert/">コースの詳細を見る</a>
++        </div> -->
++      </div>
++      <div class="p-courseList__item-detailList">
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course01_01.jpg" alt="最高の圧雪バーン" />
++          </figure>
++          <p class="detailList__item-ttl">最高の圧雪バーン</p>
++          <p class="detailList__item-txt">国内屈指の圧雪された斜面はトップクラスのスキーヤーも利用します。最高のグルーミングバーンを体験してください。</p>
++        </div>
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course01_02.jpg" alt="驚くほど軽い粉雪" />
++          </figure>
++          <p class="detailList__item-ttl">驚くほど軽い粉雪</p>
++          <p class="detailList__item-txt">雪がしっかり積もった日は驚くほど軽い粉雪を味わえます。降雪時の朝一急斜面は人気のコースです。</p>
++        </div>
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course01_03.jpg" alt="エキスパートを目指すなら戸隠で" />
++          </figure>
++          <p class="detailList__item-ttl">エキスパートを目指すなら戸隠で</p>
++          <p class="detailList__item-txt">上級スキーヤーが集まる戸隠は上達への近道！バッジテスト取得やレースなど幅広い練習が行えます。</p>
++        </div>
++      </div>
++    </div>
++    <!-- /item -->
++    <div class="p-courseList__item ani-fadein js-ani__item">
++      <div class="p-courseList__item-headline">
++        <picture>
++          <source srcset="/assets/img/course/img_course02_main_pc.jpg" media="(min-width: 600px)">
++          <img src="/assets/img/course/img_course02_main_sp.jpg" alt="" />
++        </picture>
++        <div class="item-headline__txt --align__right">
++          <p class="item-headline__ttl__sub">
++            <span class="l-highlight__txt -clr__blue01">山頂からの絶景も楽しめる！</span>
++          </p>
++          <h5 class="item-headline__ttl">
++            <span class="l-highlight__txt -clr__blue01">初級コース</span>
++          </h5>
++          <p class="item-headline__summary u-clr__bg">スキー・スノーボードとも、初心者に安心の緩やかなコースがあり、すぐにリフトに搭乗できます。360度パノラマビューが広がる山頂は、少し滑りに慣れてきた初級者からOK。大自然を満喫しちゃいましょう。</p>
++        </div>
++        <!-- <div class="item-headline__btn u-ta__right">
++          <a class="c-btn03 --clr__bg" href="/">コースの詳細を見る</a>
++        </div> -->
++      </div>
++      <div class="p-courseList__item-detailList">
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course02_01.jpg" alt="忍者の修行でスキーが上達" />
++          </figure>
++          <p class="detailList__item-ttl">忍者の修行でスキーが上達</p>
++          <p class="detailList__item-txt">大人気の忍者スロープには様々なアトラクションをご用意しました。楽しくチャレンジするうちに自然と上達する設計で、小さなお子様にも大人気！</p>
++        </div>
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course02_02.jpg" alt="お気に入りの道具でGO" />
++          </figure>
++          <p class="detailList__item-ttl">お気に入りの道具でGO</p>
++          <p class="detailList__item-txt">「アカデミーズレンタル戸隠」には、色とりどりのウェアーが勢揃い。毎年新しい用具を入れ替えているので、故障や破損がなく、ビギナーの方も安心です。</p>
++        </div>
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course02_03.jpg" alt="ゲレンデデビューはお任せ" />
++          </figure>
++          <p class="detailList__item-ttl">ゲレンデデビューはお任せ</p>
++          <p class="detailList__item-txt">ゲストハウス岩戸からすぐの第4リフトは、超初心者も乗れるビギナーオススメのリフトです。降り場から乗り場まで同じ傾斜なのも、滑りやすいポイントです！</p>
++        </div>
++      </div>
++    </div>
++    <!-- /item -->
++    <div class="p-courseList__item ani-fadein js-ani__item">
++      <div class="p-courseList__item-headline">
++        <picture>
++          <source srcset="/assets/img/course/img_course03_main_pc.jpg" media="(min-width: 600px)">
++          <img src="/assets/img/course/img_course03_main_sp.jpg" alt="" />
++        </picture>
++        <div class="item-headline__txt --align__left">
++          <p class="item-headline__ttl__sub">
++            <span class="l-highlight__txt -clr__blue01">アイテム充実で飽きさせない</span>
++          </p>
++          <h5 class="item-headline__ttl">
++            <span class="l-highlight__txt -clr__blue01">キッズ & ファミリー</span>
++          </h5>
++          <p class="item-headline__summary u-clr__bg">スキーやスノボードができなくても、家族みんなで雪山を楽しめるのが戸隠スキー場のいいところ。めいっぱい遊び回りたい元気なキッズにも、小さなお子様を預けて冬を謳歌したいパパママにも、全力でお応えします！</p>
++        </div>
++        <!-- <div class="item-headline__btn u-ta__right">
++          <a class="c-btn03 --clr__bg" href="/ski/2023re_top/2023re_kids_family/">コースの詳細を見る</a>
++        </div> -->
++      </div>
++      <div class="p-courseList__item-detailList">
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course03_01.jpg" alt="安心便利なキッズパーク" />
++          </figure>
++          <p class="detailList__item-ttl">安心便利なキッズパーク</p>
++          <p class="detailList__item-txt">キッズパーク内には30mの歩く歩道を完備。スキーを履いたまま移動できるので、気軽に何度でも滑れます。そりとスキーはエリアを分け、事故防止に努めています。</p>
++        </div>
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course03_02.jpg" alt="身軽が嬉しいレンタルグッズ" />
++          </figure>
++          <p class="detailList__item-ttl">身軽が嬉しいレンタルグッズ</p>
++          <p class="detailList__item-txt">ソリなどのレンタル品は、雪山大好きなスタッフが厳選した充実の品揃え。さまざまな遊び道具があり、お子様から大人まで楽しむことができます。</p>
++        </div>
++        <div class="detailList__item">
++          <figure class="detailList__item-img">
++            <img src="/assets/img/course/img_course03_03.jpg" alt="2時間からOKの託児サービス" />
++          </figure>
++          <p class="detailList__item-ttl">2時間からOKの託児サービス</p>
++          <p class="detailList__item-txt">ゲストハウス岩戸内にある託児所は、有資格者の専門スタッフが担当。1歳半からお預かり可能で、暖かい室内にたっぷり遊べる環境を用意しました！</p>
++        </div>
++      </div>
++    </div>
++    <!-- /item -->
++  </div>
++</section>
++<!-- /guide -->
++
++</main>
++<!-- END main -->
++
++<!-- START footer -->
++<footer class="l-footer ">
++  <div class="l-footer__inner">
++    <div class="l-footer__nav">
++      <ul class="l-footer__navList">
++        <li class="is-toTop"><a href="/ski/">TOP</a></li>
++        <!-- <li><a href="/ski/">戸隠スキー場の魅力</a></li> -->
++        <li><a href="/ski/course/">ゲレンデ</a></li>
++        <li><a href="/ski/charge/">料金</a></li>
++        <li><a href="/ski/food/">レストラン & カフェ</a></li>
++        <li><a href="/ski/rental/">施設・レンタル</a></li>
++        <li><a href="/ski/school/">スクール</a></li>
++      </ul>
++      <ul class="l-footer__navList">
++        <li class="has-child"><span>楽しみ方</span>
++          <ul class="l-footer__nav__sub">
++            <!-- <li><a href="/ski/ski/">スキー</a></li> -->
++            <!-- <li><a href="/ski/board/">スノーボード</a></li> -->
++            <li><a href="/ski/kids_family/">キッズ & ファミリー</a></li>
++            <!-- <li><a href="/ski/beginner/">ビギナー</a></li> -->
++            <li><a href="/ski/expert/">エキスパート</a></li>
++            <li><a href="/ski/#plan">モデルプラン</a></li>
++          </ul>
++        </li>
++      </ul>
++      <div class="l-footer__subnav">
++        <ul class="l-footer__subnavList01">
++          <li><a href="/ski/access/">アクセス</a></li>
++          <li><a href="/ski/events/">イベント</a></li>
++          <li><a href="/ski/news/">新着情報</a></li>
++          <li><a href="/ski/contact/">お問い合わせ</a></li>
++        </ul>
++        <ul class="l-footer__subnavList02">
++          <li class="is-language u-ff__en"><a href="/ski/en/" target="_blank">English</a></li>
++          <!-- <li class="is-language u-ff__en"><a href="https://japan-skiguide.com/guide/htm/r0034ens.htm" target="_blank">English</a></li> -->
++          <li><a href="/ski/policy/">プライバシーポリシー</a></li>
++          <li><a href="/assets/img/doc/report.pdf?251107" target="_blank">安全管理報告書</a></li>
++          <li><a href="/assets/img/doc/Conditions_of_carriage.pdf" target="_blank">索道事業運送約款</a></li>
++          <li><a href="/assets/img/doc/activity_rule.pdf" target="_blank">戸隠スキー場内での講習等の規約</a></li>
++          <li><a href="/assets/img/doc/advertisement.pdf" target="_blank">企業の方へ広告のご提案</a></li>
++          <li><a href="/assets/img/doc/terms_of_use.pdf" target="_blank">リフト券利用規定</a></li>
++          <li><a href="https://www.togakusi.com/ski/information/2025/satsuei/" target="_blank">スキー場内での有償の撮影について</a></li>
++        </ul>
++      </div>
++    </div>
++    <div class="l-footer__info">
++      <div class="l-footer__logo">
++        <a href="/ski/"><img src="/assets/img/common/img_logo01_white.png" alt="TOGAKUSHI SKI FIELD" width="601" height="226"></a>
++      </div>
++      <a class="l-footer__btn" href="/ski/course/#status">リフト運行情報</a>
++      <p class="l-footer__add">長野県長野市戸隠3682</p>
++      <p class="l-footer__tel">TEL.<span data-action="call">026-254-2106</span></p>
++      <span class="l-footer__copy u-ff__en">&copy;2022 Togakushi Ski Field</span>
++    </div>
++  </div>
++  <div class="l-pagetop u-ff__en"><a href="#">page TOP</a></div>
++</footer>
++<!-- END footer -->
++
++<script type="speculationrules">
++{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/ski/*"},{"not":{"href_matches":["/ski/wp-*.php","/ski/wp-admin/*","/ski/wp-content/uploads/sites/2/*","/ski/wp-content/*","/ski/wp-content/plugins/*","/ski/wp-content/themes/ski2019/*","/ski/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
++</script>
++<!-- Custom Feeds for Instagram JS -->
++<script type="text/javascript">
++var sbiajaxurl = "https://www.togakusi.com/ski/wp-admin/admin-ajax.php";
++
++</script>
++<script type="text/javascript" src="https://www.togakusi.com/ski/wp-content/plugins/page-links-to/dist/new-tab.js?ver=3.3.7" id="page-links-to-js"></script>
++<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=6LcBwOkUAAAAACOPySaVbC0gbzJRStSpAnAuaRco&amp;ver=3.0" id="google-recaptcha-js"></script>
++<script type="text/javascript" src="https://www.togakusi.com/ski/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=3.15.0" id="wp-polyfill-js"></script>
++<script type="text/javascript" id="wpcf7-recaptcha-js-before">
++/* <![CDATA[ */
++var wpcf7_recaptcha = {
++    "sitekey": "6LcBwOkUAAAAACOPySaVbC0gbzJRStSpAnAuaRco",
++    "actions": {
++        "homepage": "homepage",
++        "contactform": "contactform"
++    }
++};
++//# sourceURL=wpcf7-recaptcha-js-before
++/* ]]> */
++</script>
++<script type="text/javascript" src="https://www.togakusi.com/ski/wp-content/plugins/contact-form-7/modules/recaptcha/index.js?ver=6.1.5" id="wpcf7-recaptcha-js"></script>
++
++
++<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
++<script src="/assets/js/slick.min.js?231210"></script>
++<script src="/assets/js/jquery.matchHeight-min.js?231210"></script>
++<script src="/assets/js/lity.min.js?231210"></script>
++<script src="/assets/js/common.js?231210"></script>
++
++<script>
++//------------ iframe スクロール制御 ------------//
++$(function() {
++  var map = $('iframe');
++  map.css('pointer-events', 'none');
++  $('.p-course__map__wrap').click(function() {
++    $(this).find(map).css('pointer-events', 'auto');
++  });
++  map.mouseout(function() {
++    map.css('pointer-events', 'none');
++  });
++});
++</script>
++
++<script type="speculationrules">
++{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/ski/*"},{"not":{"href_matches":["/ski/wp-*.php","/ski/wp-admin/*","/ski/wp-content/uploads/sites/2/*","/ski/wp-content/*","/ski/wp-content/plugins/*","/ski/wp-content/themes/ski2019/*","/ski/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
++</script>
++<!-- Custom Feeds for Instagram JS -->
++<script type="text/javascript">
++var sbiajaxurl = "https://www.togakusi.com/ski/wp-admin/admin-ajax.php";
++
++</script>
++<!-- Yahoo Code for your Target List -->
++<script type="text/javascript" language="javascript">
++/* <![CDATA[ */
++var yahoo_retargeting_id = 'SA147TATZV';
++var yahoo_retargeting_label = '';
++var yahoo_retargeting_page_type = '';
++var yahoo_retargeting_items = [{item_id: '', category_id: '', price: '', quantity: ''}];
++/* ]]> */
++</script>
++<script type="text/javascript" language="javascript" src="https://b92.yahoo.co.jp/js/s_retargeting.js"></script>
++
++
++<!-- Meta Pixel Code -->
++<script>
++  !function(f,b,e,v,n,t,s)
++  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
++  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
++  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
++  n.queue=[];t=b.createElement(e);t.async=!0;
++  t.src=v;s=b.getElementsByTagName(e)[0];
++  s.parentNode.insertBefore(t,s)}(window, document,'script',
++  'https://connect.facebook.net/en_US/fbevents.js');
++  fbq('init', '115649231636307');
++  fbq('track', 'PageView');
++</script>
++<noscript><img height="1" width="1" style="display:none"
++  src="https://www.facebook.com/tr?id=115649231636307&ev=PageView&noscript=1"
++/></noscript>
++<!-- End Meta Pixel Code -->
++
++</body>
++</html>
+diff --git a/test/resorts/togakushi-trails.js b/test/resorts/togakushi-trails.js
+new file mode 100644
+index 00000000..f49c7b33
+--- /dev/null
++++ b/test/resorts/togakushi-trails.js
+@@ -0,0 +1,100 @@
++import trails from '../trails/index.js';
++
++trails('togakushi', [
++  {
++    'name': '忍者スロープ',
++    'status': 'open',
++    'level': 'terrainPark'
++  },
++  {
++    'name': '戸隠ウェーブパーク',
++    'status': 'open',
++    'level': 'terrainPark'
++  },
++  {
++    'name': '戸隠雪板パーク',
++    'status': 'open',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'お仙水コース（初級者）',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'メノウコース（中級者）',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'ドリームコース（初級者）',
++    'status': 'open',
++    'level': 'green'
++  },
++  {
++    'name': 'しゃくなげコース（中級者）',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'とがっきーA（中級者）',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'とがっきーC（初心者）',
++    'status': 'open'
++  },
++  {
++    'name': '岩戸コース（ポール専用）',
++    'status': 'closed'
++  },
++  {
++    'name': '越水中央バーン',
++    'status': 'open'
++  },
++  {
++    'name': 'しらかばコース（中級者）',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'パノラマコース（中級者）',
++    'status': 'open',
++    'level': 'blue'
++  },
++  {
++    'name': 'チャンピオンコース（上級者）',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'シルバーコース（上級者）',
++    'status': 'open',
++    'level': 'black'
++  },
++  {
++    'name': 'スイートコース（中級者）',
++    'status': 'closed',
++    'level': 'blue'
++  },
++  {
++    'name': 'パラダイスコース（上級者）',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'フレッシュコース（上級者）',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': 'グランドコース（上級者）',
++    'status': 'closed',
++    'level': 'black'
++  },
++  {
++    'name': '中社中央バーン',
++    'status': 'closed'
++  }
++]);
+diff --git a/test/resorts/togakushi.js b/test/resorts/togakushi.js
+new file mode 100644
+index 00000000..7dea7a2a
+--- /dev/null
++++ b/test/resorts/togakushi.js
+@@ -0,0 +1,11 @@
++import lifts from '../lifts/index.js';
++
++lifts('togakushi', 'html', {
++  '第2ペアリフト': 'open',
++  '第3クワッドリフト': 'open',
++  '第4高速ペアリフト': 'open',
++  '第5高速ペアリフト': 'open',
++  '第6クワッドリフト': 'open',
++  '中社第1ペアリフト': 'closed',
++  '中社第2ペアリフト': 'closed'
++});
+-- 
+2.39.5
+

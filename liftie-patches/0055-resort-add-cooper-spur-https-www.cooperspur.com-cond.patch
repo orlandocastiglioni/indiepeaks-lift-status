@@ -1,0 +1,1546 @@
+From e36d1b23c70f5d664968032970d157e328f33cde Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 13 Jul 2026 19:55:32 -0400
+Subject: [PATCH 55/56] resort: add cooper-spur
+ (https://www.cooperspur.com/conditions-report/)
+
+---
+ lib/resorts/cooper-spur/index.js      |   15 +
+ lib/resorts/cooper-spur/resort.json   |   15 +
+ test/resorts/cooper-spur.js           |    6 +
+ test/resorts/example/cooper-spur.html | 1466 +++++++++++++++++++++++++
+ 4 files changed, 1502 insertions(+)
+ create mode 100644 lib/resorts/cooper-spur/index.js
+ create mode 100644 lib/resorts/cooper-spur/resort.json
+ create mode 100644 test/resorts/cooper-spur.js
+ create mode 100644 test/resorts/example/cooper-spur.html
+
+diff --git a/lib/resorts/cooper-spur/index.js b/lib/resorts/cooper-spur/index.js
+new file mode 100644
+index 00000000..37d6e353
+--- /dev/null
++++ b/lib/resorts/cooper-spur/index.js
+@@ -0,0 +1,15 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++
++// conditions page is one feature list mixing weather, parking and the two
++// lifts - keep only the lift-shaped entries
++export default {
++  selector: '.eael-feature-list-content-box',
++  parse: box => {
++    const name = findText(select(box.children, '.eael-feature-list-title')[0])?.trim();
++    const status = findText(select(box.children, '.eael-feature-list-content')[0])?.trim();
++    if (name && status && /lift|tow|chair|carpet/i.test(name)) {
++      return { name, status };
++    }
++  }
++};
+diff --git a/lib/resorts/cooper-spur/resort.json b/lib/resorts/cooper-spur/resort.json
+new file mode 100644
+index 00000000..0dea772f
+--- /dev/null
++++ b/lib/resorts/cooper-spur/resort.json
+@@ -0,0 +1,15 @@
++{
++  "name": "Cooper Spur",
++  "url": {
++    "host": "https://www.cooperspur.com",
++    "pathname": "/conditions-report/"
++  },
++  "tags": [
++    "Oregon",
++    "Mt Hood"
++  ],
++  "ll": [
++    -121.6273,
++    45.4479
++  ]
++}
+diff --git a/test/resorts/cooper-spur.js b/test/resorts/cooper-spur.js
+new file mode 100644
+index 00000000..cc5097ed
+--- /dev/null
++++ b/test/resorts/cooper-spur.js
+@@ -0,0 +1,6 @@
++import lifts from '../lifts/index.js';
++
++lifts('cooper-spur', 'html', {
++  'Homestead Lift': 'closed',
++  'Rope Tow': 'closed'
++});
+diff --git a/test/resorts/example/cooper-spur.html b/test/resorts/example/cooper-spur.html
+new file mode 100644
+index 00000000..7a0028f2
+--- /dev/null
++++ b/test/resorts/example/cooper-spur.html
+@@ -0,0 +1,1466 @@
++<!doctype html>
++<html lang="en-US">
++<head>
++	<meta charset="UTF-8">
++	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10.0, user-scalable=yes">
++	<link rel="profile" href="http://gmpg.org/xfn/11">
++	<script type="text/javascript" data-cookieconsent="ignore">
++	window.dataLayer = window.dataLayer || [];
++
++	function gtag() {
++		dataLayer.push(arguments);
++	}
++
++	gtag("consent", "default", {
++		ad_personalization: "denied",
++		ad_storage: "denied",
++		ad_user_data: "denied",
++		analytics_storage: "denied",
++		functionality_storage: "denied",
++		personalization_storage: "denied",
++		security_storage: "granted",
++		wait_for_update: 500,
++	});
++	gtag("set", "ads_data_redaction", true);
++	</script>
++<script type="text/javascript"
++		id="Cookiebot"
++		src="https://consent.cookiebot.com/uc.js"
++		data-implementation="wp"
++		data-cbid="59b48db4-c2ab-4cfb-87ce-0e055f681054"
++							data-blockingmode="auto"
++	></script>
++<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
++<link rel='preconnect' href='https://fonts.googleapis.com'>
++<link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
++
++	<!-- This site is optimized with the Yoast SEO plugin v27.8 - https://yoast.com/product/yoast-seo-wordpress/ -->
++	<title>Weather Conditions Report - at Cooper Spur Mountain Resort</title>
++	<meta name="description" content="Current weather conditions report for the Cooper Spur Ski Area, updated daily for your convenience. Includes a live stream video of the ski.." />
++	<link rel="canonical" href="https://cooperspur.com/conditions-report/" />
++	<meta property="og:locale" content="en_US" />
++	<meta property="og:type" content="article" />
++	<meta property="og:title" content="Weather Conditions Report - at Cooper Spur Mountain Resort" />
++	<meta property="og:description" content="Current weather conditions report for the Cooper Spur Ski Area, updated daily for your convenience. Includes a live stream video of the ski.." />
++	<meta property="og:url" content="https://cooperspur.com/conditions-report/" />
++	<meta property="og:site_name" content="Cooper Spur Mountain Resort" />
++	<meta property="article:modified_time" content="2026-04-19T21:56:04+00:00" />
++	<meta property="og:image" content="https://cooperspur.com/wp-content/uploads/2018/11/skiing.jpg" />
++	<meta name="twitter:card" content="summary_large_image" />
++	<meta name="twitter:label1" content="Est. reading time" />
++	<meta name="twitter:data1" content="1 minute" />
++	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https:\/\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\/\/cooperspur.com\/conditions-report\/","url":"https:\/\/cooperspur.com\/conditions-report\/","name":"Weather Conditions Report - at Cooper Spur Mountain Resort","isPartOf":{"@id":"https:\/\/cooperspur.com\/#website"},"primaryImageOfPage":{"@id":"https:\/\/cooperspur.com\/conditions-report\/#primaryimage"},"image":{"@id":"https:\/\/cooperspur.com\/conditions-report\/#primaryimage"},"thumbnailUrl":"https:\/\/cooperspur.com\/wp-content\/uploads\/2018\/11\/skiing.jpg","datePublished":"2018-11-20T17:18:22+00:00","dateModified":"2026-04-19T21:56:04+00:00","description":"Current weather conditions report for the Cooper Spur Ski Area, updated daily for your convenience. Includes a live stream video of the ski..","breadcrumb":{"@id":"https:\/\/cooperspur.com\/conditions-report\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\/\/cooperspur.com\/conditions-report\/"]}]},{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/cooperspur.com\/conditions-report\/#primaryimage","url":"https:\/\/cooperspur.com\/wp-content\/uploads\/2018\/11\/skiing.jpg","contentUrl":"https:\/\/cooperspur.com\/wp-content\/uploads\/2018\/11\/skiing.jpg","width":958,"height":250,"caption":"Skiing at Cooper Spur Ski Area"},{"@type":"BreadcrumbList","@id":"https:\/\/cooperspur.com\/conditions-report\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/cooperspur.com\/"},{"@type":"ListItem","position":2,"name":"Conditions Report"}]},{"@type":"WebSite","@id":"https:\/\/cooperspur.com\/#website","url":"https:\/\/cooperspur.com\/","name":"Cooper Spur Mountain Resort","description":"Lodging on Mount Hood","publisher":{"@id":"https:\/\/cooperspur.com\/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\/\/cooperspur.com\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https:\/\/cooperspur.com\/#organization","name":"Cooper Spur Mountain Resort","url":"https:\/\/cooperspur.com\/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/cooperspur.com\/#\/schema\/logo\/image\/","url":"https:\/\/cooperspur.com\/wp-content\/uploads\/2020\/10\/cropped-CooperSpurMtResort_logo.jpg","contentUrl":"https:\/\/cooperspur.com\/wp-content\/uploads\/2020\/10\/cropped-CooperSpurMtResort_logo.jpg","width":1471,"height":918,"caption":"Cooper Spur Mountain Resort"},"image":{"@id":"https:\/\/cooperspur.com\/#\/schema\/logo\/image\/"}}]}</script>
++	<!-- / Yoast SEO plugin. -->
++
++
++<link rel='dns-prefetch' href='//www.googletagmanager.com' />
++<link rel='dns-prefetch' href='//www.google.com' />
++<link rel='dns-prefetch' href='//cdnjs.cloudflare.com' />
++<link rel='dns-prefetch' href='//cdn.jsdelivr.net' />
++<link rel='dns-prefetch' href='//fonts.googleapis.com' />
++<link rel="alternate" type="application/rss+xml" title="Cooper Spur Mountain Resort &raquo; Feed" href="https://cooperspur.com/feed/" />
++<link rel="alternate" type="application/rss+xml" title="Cooper Spur Mountain Resort &raquo; Comments Feed" href="https://cooperspur.com/comments/feed/" />
++                <script type="text/javascript">
++                    let mp_ajax_url = "https://cooperspur.com/wp-admin/admin-ajax.php";
++                    var ajaxurl = "https://cooperspur.com/wp-admin/admin-ajax.php";
++                    let mpwem_ajax_url = "https://cooperspur.com/wp-admin/admin-ajax.php";
++                    let mpwem_currency_symbol = "&#36;";
++                    let mpwem_currency_position = "left";
++                    let mpwem_currency_decimal = ".";
++                    let mpwem_currency_thousands_separator = ",";
++                    let mpwem_num_of_decimal = "2";
++                    let mpwem_empty_image_url = "https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/images/no_image.png";
++                    let mpwem_date_format = "D d M , yy";
++                    //let mp_nonce = wp_create_nonce('mep-ajax-nonce');
++                </script>
++				<style id="wp-img-auto-sizes-contain-inline-css">
++img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
++/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
++</style>
++<link rel='stylesheet' id='dashicons-css' href='https://cooperspur.com/wp-includes/css/dashicons.min.css?ver=7.0.1' media='all' />
++<link rel='stylesheet' id='menu-icons-extra-css' href='https://cooperspur.com/wp-content/plugins/menu-icons/css/extra.min.css?ver=0.13.23' media='all' />
++<link rel='stylesheet' id='embedpress-css-css' href='https://cooperspur.com/wp-content/plugins/embedpress/assets/css/embedpress.css?ver=1781211330' media='all' />
++<link rel='stylesheet' id='embedpress-blocks-style-css' href='https://cooperspur.com/wp-content/plugins/embedpress/assets/css/blocks.build.css?ver=1781211330' media='all' />
++<style id="wp-emoji-styles-inline-css">
++
++	img.wp-smiley, img.emoji {
++		display: inline !important;
++		border: none !important;
++		box-shadow: none !important;
++		height: 1em !important;
++		width: 1em !important;
++		margin: 0 0.07em !important;
++		vertical-align: -0.1em !important;
++		background: none !important;
++		padding: 0 !important;
++	}
++/*# sourceURL=wp-emoji-styles-inline-css */
++</style>
++<link rel='stylesheet' id='mep-blocks-style-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/inc/../assets/blocks/style.css?ver=1781211333' media='all' />
++<style id="global-styles-inline-css">
++:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--primary: var(--customify-primary, #235787);--wp--preset--color--primary-container: var(--customify-primary-container, #e3eaf0);--wp--preset--color--secondary: var(--customify-secondary, #c3512f);--wp--preset--color--secondary-container: var(--customify-secondary-container, #f5e2dd);--wp--preset--color--accent: var(--customify-accent, #ffd042);--wp--preset--color--accent-container: var(--customify-accent-container, #f0e6c9);--wp--preset--color--body-text: var(--customify-text, #2b2b2b);--wp--preset--color--surface: var(--customify-surface, #f9f9f9);--wp--preset--color--base: var(--customify-base, #ffffff);--wp--preset--color--text-muted: var(--customify-text-muted, #6b6b6b);--wp--preset--color--divider: var(--customify-border, #ececec);--wp--preset--color--divider-strong: var(--customify-border-strong, #939393);--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 28px;--wp--preset--font-size--x-large: 36px;--wp--preset--font-size--normal: 16px;--wp--preset--font-size--xx-large: 48px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:root { --wp--style--global--content-size: 863px;--wp--style--global--wide-size: 1200px; }:where(body) { margin: 0; }.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }.wp-site-blocks > .alignright { float: right; margin-left: 2em; }.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }:where(.wp-site-blocks) > * { margin-block-start: 1.5rem; margin-block-end: 0; }:where(.wp-site-blocks) > :first-child { margin-block-start: 0; }:where(.wp-site-blocks) > :last-child { margin-block-end: 0; }:root { --wp--style--block-gap: 1.5rem; }:root :where(.is-layout-flow) > :first-child{margin-block-start: 0;}:root :where(.is-layout-flow) > :last-child{margin-block-end: 0;}:root :where(.is-layout-flow) > *{margin-block-start: 1.5rem;margin-block-end: 0;}:root :where(.is-layout-constrained) > :first-child{margin-block-start: 0;}:root :where(.is-layout-constrained) > :last-child{margin-block-end: 0;}:root :where(.is-layout-constrained) > *{margin-block-start: 1.5rem;margin-block-end: 0;}:root :where(.is-layout-flex){gap: 1.5rem;}:root :where(.is-layout-grid){gap: 1.5rem;}.is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{background-color: #ffffff;color: #686868;font-size: 16px;line-height: 1.75;padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-primary-color{color: var(--wp--preset--color--primary) !important;}.has-primary-container-color{color: var(--wp--preset--color--primary-container) !important;}.has-secondary-color{color: var(--wp--preset--color--secondary) !important;}.has-secondary-container-color{color: var(--wp--preset--color--secondary-container) !important;}.has-accent-color{color: var(--wp--preset--color--accent) !important;}.has-accent-container-color{color: var(--wp--preset--color--accent-container) !important;}.has-body-text-color{color: var(--wp--preset--color--body-text) !important;}.has-surface-color{color: var(--wp--preset--color--surface) !important;}.has-base-color{color: var(--wp--preset--color--base) !important;}.has-text-muted-color{color: var(--wp--preset--color--text-muted) !important;}.has-divider-color{color: var(--wp--preset--color--divider) !important;}.has-divider-strong-color{color: var(--wp--preset--color--divider-strong) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-primary-background-color{background-color: var(--wp--preset--color--primary) !important;}.has-primary-container-background-color{background-color: var(--wp--preset--color--primary-container) !important;}.has-secondary-background-color{background-color: var(--wp--preset--color--secondary) !important;}.has-secondary-container-background-color{background-color: var(--wp--preset--color--secondary-container) !important;}.has-accent-background-color{background-color: var(--wp--preset--color--accent) !important;}.has-accent-container-background-color{background-color: var(--wp--preset--color--accent-container) !important;}.has-body-text-background-color{background-color: var(--wp--preset--color--body-text) !important;}.has-surface-background-color{background-color: var(--wp--preset--color--surface) !important;}.has-base-background-color{background-color: var(--wp--preset--color--base) !important;}.has-text-muted-background-color{background-color: var(--wp--preset--color--text-muted) !important;}.has-divider-background-color{background-color: var(--wp--preset--color--divider) !important;}.has-divider-strong-background-color{background-color: var(--wp--preset--color--divider-strong) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-primary-border-color{border-color: var(--wp--preset--color--primary) !important;}.has-primary-container-border-color{border-color: var(--wp--preset--color--primary-container) !important;}.has-secondary-border-color{border-color: var(--wp--preset--color--secondary) !important;}.has-secondary-container-border-color{border-color: var(--wp--preset--color--secondary-container) !important;}.has-accent-border-color{border-color: var(--wp--preset--color--accent) !important;}.has-accent-container-border-color{border-color: var(--wp--preset--color--accent-container) !important;}.has-body-text-border-color{border-color: var(--wp--preset--color--body-text) !important;}.has-surface-border-color{border-color: var(--wp--preset--color--surface) !important;}.has-base-border-color{border-color: var(--wp--preset--color--base) !important;}.has-text-muted-border-color{border-color: var(--wp--preset--color--text-muted) !important;}.has-divider-border-color{border-color: var(--wp--preset--color--divider) !important;}.has-divider-strong-border-color{border-color: var(--wp--preset--color--divider-strong) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}.has-normal-font-size{font-size: var(--wp--preset--font-size--normal) !important;}.has-xx-large-font-size{font-size: var(--wp--preset--font-size--xx-large) !important;}
++:root :where(.wp-block-icon svg){width: 24px;}
++:root :where(.wp-block-pullquote){border-top-color: currentColor;border-top-width: 4px;border-top-style: solid;border-bottom-color: currentColor;border-bottom-width: 4px;border-bottom-style: solid;text-align: center;font-size: 1.5em;line-height: 1.6;padding-top: 3em;padding-bottom: 3em;}
++:root :where(.wp-block-search){border-radius: 2px;padding-top: 0;padding-bottom: 0;}
++:root :where(.wp-block-separator){border-color: currentColor;border-width: 2px;}
++:root :where(.wp-block-quote){border-color: currentColor;border-width: 4px;border-style: solid;border-left-width: 4px;padding-left: 1em;}
++:root :where(.wp-block-table > table){border-width: 0;}
++/*# sourceURL=global-styles-inline-css */
++</style>
++<link rel='stylesheet' id='twe-preview-css' href='https://cooperspur.com/wp-content/plugins/3r-elementor-timeline-widget/assets/css/style.css?ver=2.7.4' media='all' />
++<link rel='stylesheet' id='mep-calendar-css-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/calendar/calendar.css?ver=1783905893' media='all' />
++<link rel='stylesheet' id='msb-front-css' href='https://cooperspur.com/wp-content/plugins/mystickymenu/dist/css/mystickymenu-front.css?ver=2.9.0' media='all' />
++<link rel='stylesheet' id='woocommerce-general-css' href='https://cooperspur.com/wp-content/themes/customify/build/css/frontend/woocommerce.min.css?ver=10.8.1' media='all' />
++<style id="woocommerce-inline-inline-css">
++.woocommerce form .form-row .required { visibility: visible; }
++/*# sourceURL=woocommerce-inline-inline-css */
++</style>
++<link rel='stylesheet' id='wpa-style-css' href='https://cooperspur.com/wp-content/plugins/wp-accessibility/css/wpa-style.css?ver=2.3.3' media='all' />
++<style id="wpa-style-inline-css">
++:root { --admin-bar-top : 7px; }
++/*# sourceURL=wpa-style-inline-css */
++</style>
++<link rel='stylesheet' id='eae-css-css' href='https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/css/eae.min.css?ver=1.14.5' media='all' />
++<link rel='stylesheet' id='eae-peel-css-css' href='https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/lib/peel/peel.css?ver=1.14.5' media='all' />
++<link rel='stylesheet' id='font-awesome-4-shim-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/v4-shims.min.css?ver=1.0' media='all' />
++<link rel='stylesheet' id='font-awesome-5-all-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/all.min.css?ver=1.6.25' media='all' />
++<link rel='stylesheet' id='vegas-css-css' href='https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/lib/vegas/vegas.min.css?ver=2.4.0' media='all' />
++<link rel='stylesheet' id='flickity-css' href='https://cooperspur.com/wp-content/plugins/iconic-woo-attribute-swatches/assets/vendor/flickity/flickity.min.css?ver=1.17.1' media='all' />
++<link rel='stylesheet' id='iconic-was-styles-css' href='https://cooperspur.com/wp-content/plugins/iconic-woo-attribute-swatches/assets/frontend/css/main.min.css?ver=1.17.1' media='all' />
++<link rel='stylesheet' id='elementor-frontend-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=4.1.3' media='all' />
++<link rel='stylesheet' id='eael-general-css' href='https://cooperspur.com/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/css/view/general.min.css?ver=6.6.7' media='all' />
++<link rel='stylesheet' id='eael-2437-css' href='https://cooperspur.com/wp-content/uploads/essential-addons-elementor/eael-2437.css?ver=1776610564' media='all' />
++<link rel='stylesheet' id='elementor-icons-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css?ver=5.49.0' media='all' />
++<style id="elementor-icons-inline-css">
++
++		.elementor-add-new-section .elementor-add-templately-promo-button{
++            background-color: #5d4fff !important;
++            background-image: url(https://cooperspur.com/wp-content/plugins/essential-addons-for-elementor-lite/assets/admin/images/templately/logo-icon.svg);
++            background-repeat: no-repeat;
++            background-position: center center;
++            position: relative;
++        }
++        
++		.elementor-add-new-section .elementor-add-templately-promo-button > i{
++            height: 12px;
++        }
++        
++        body .elementor-add-new-section .elementor-add-section-area-button {
++            margin-left: 0;
++        }
++
++		.elementor-add-new-section .elementor-add-templately-promo-button{
++            background-color: #5d4fff !important;
++            background-image: url(https://cooperspur.com/wp-content/plugins/essential-addons-for-elementor-lite/assets/admin/images/templately/logo-icon.svg);
++            background-repeat: no-repeat;
++            background-position: center center;
++            position: relative;
++        }
++        
++		.elementor-add-new-section .elementor-add-templately-promo-button > i{
++            height: 12px;
++        }
++        
++        body .elementor-add-new-section .elementor-add-section-area-button {
++            margin-left: 0;
++        }
++/*# sourceURL=elementor-icons-inline-css */
++</style>
++<link rel='stylesheet' id='elementor-post-4935-css' href='https://cooperspur.com/wp-content/uploads/elementor/css/post-4935.css?ver=1782905897' media='all' />
++<link rel='stylesheet' id='widget-alert-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/css/widget-alert.min.css?ver=4.1.3' media='all' />
++<link rel='stylesheet' id='widget-image-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/css/widget-image.min.css?ver=4.1.3' media='all' />
++<link rel='stylesheet' id='widget-heading-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/css/widget-heading.min.css?ver=4.1.3' media='all' />
++<link rel='stylesheet' id='widget-icon-box-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/css/widget-icon-box.min.css?ver=4.1.3' media='all' />
++<link rel='stylesheet' id='widget-blockquote-css' href='https://cooperspur.com/wp-content/plugins/elementor-pro/assets/css/widget-blockquote.min.css?ver=4.1.1' media='all' />
++<link rel='stylesheet' id='elementor-icons-shared-0-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/fontawesome.min.css?ver=5.15.3' media='all' />
++<link rel='stylesheet' id='elementor-icons-fa-brands-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/brands.min.css?ver=5.15.3' media='all' />
++<link rel='stylesheet' id='elementor-post-2437-css' href='https://cooperspur.com/wp-content/uploads/elementor/css/post-2437.css?ver=1782906279' media='all' />
++<link rel='stylesheet' id='tawcvs-frontend-css' href='https://cooperspur.com/wp-content/plugins/variation-swatches-for-woocommerce/assets/css/frontend.css?ver=2.2.7' media='all' />
++<link rel='stylesheet' id='select2-css' href='https://cooperspur.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=10.8.1' media='all' />
++<link rel='stylesheet' id='mp_jquery_ui-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/jquery-ui.min.css?ver=1.13.2' media='all' />
++<link rel='stylesheet' id='mp_font_awesome-430-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css?ver=4.3.0' media='all' />
++<link rel='stylesheet' id='mp_font_awesome-660-css' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css?ver=6.6.0' media='all' />
++<link rel='stylesheet' id='mp_font_awesome-css' href='//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css?ver=5.15.4' media='all' />
++<link rel='stylesheet' id='mp_flat_icon-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/flaticon/flaticon.css?ver=7.0.1' media='all' />
++<link rel='stylesheet' id='mp_owl_carousel-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/owl_carousel/owl.carousel.min.css?ver=2.3.4' media='all' />
++<link rel='stylesheet' id='mpwem_slick-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/slick/slick.css?ver=1.8.1' media='all' />
++<link rel='stylesheet' id='mpwem_slick_theme-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/slick/slick_theme.css?ver=1.8.1' media='all' />
++<link rel='stylesheet' id='mpwem_global-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/mp_style/mpwem_global.css?ver=1783905894' media='all' />
++<link rel='stylesheet' id='mage-icons-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/mage-icon/css/mage-icon.css?ver=1783905894' media='all' />
++<link rel='stylesheet' id='mep-timeline-min-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/timeline/timeline.min.css?ver=1.0.0' media='all' />
++<link rel='stylesheet' id='mep-calendar-min-style-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/calender/calendar.min.css?ver=7.0.1' media='all' />
++<link rel='stylesheet' id='mpwem_style-css' href='https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/frontend/mpwem_style.css?ver=1783905894' media='all' />
++<link rel='stylesheet' id='font-awesome-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/font-awesome.min.css?ver=4.7.0' media='all' />
++<link rel='stylesheet' id='customify-google-font-css' href='//fonts.googleapis.com/css?family=Bitter:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&#038;display=swap&#038;ver=0.4.20' media='all' />
++<link rel='stylesheet' id='customify-style-css' href='https://cooperspur.com/wp-content/themes/customify/build/css/frontend/style-theme.min.css?ver=0.4.20' media='all' />
++<style id="customify-style-inline-css">
++:root {--customify-typo-body-font-size: 18px;}:root { --wp--style--global--wide-size: 1248px; } .customify-container, .layout-contained, .site-framed .site, .site-boxed .site { max-width: 1248px; }.site-content.content-narrow { --wp--style--global--content-size: 800px; --wp--style--global--wide-size: calc(800px + 400px); }body.single-post { --wp--style--global--content-size: 863px; }.site-branding .site-description {font-family: "Baskerville";}#page-cover {background-image: url("https://cooperspur.com/wp-content/themes/customify/build/images/default-cover.jpg");}.header--row:not(.header--transparent).header-top .header--row-inner  {background-color: #5b0018;} .header--row.header-top .cb-row--desktop .col-v2-left {display: flex;flex-direction: row;justify-content: flex-start;align-items: center;}.header--row.header-top .cb-row--desktop .col-v2-center {display: flex;flex-direction: row;justify-content: center;align-items: center;}.header--row.header-top .cb-row--desktop .col-v2-right {display: flex;flex-direction: row;justify-content: flex-end;align-items: center;}.header--row.header-top .cb-row--mobile .col-v2-left {display: flex;flex-direction: row;justify-content: flex-start;align-items: center;}.header--row.header-top .cb-row--mobile .col-v2-center {display: flex;flex-direction: row;justify-content: center;align-items: center;}.header--row.header-top .cb-row--mobile .col-v2-right {display: flex;flex-direction: row;justify-content: flex-end;align-items: center;}.header--row.header-main .cb-row--desktop .col-v2-left {display: flex;flex-direction: row;justify-content: flex-start;align-items: center;}.header--row.header-main .cb-row--desktop .col-v2-center {display: flex;flex-direction: row;justify-content: center;align-items: center;}.header--row.header-main .cb-row--desktop .col-v2-right {display: flex;flex-direction: row;justify-content: flex-end;align-items: center;}.header--row.header-main .cb-row--mobile .col-v2-left {display: flex;flex-direction: row;justify-content: flex-start;align-items: center;}.header--row.header-main .cb-row--mobile .col-v2-center {display: flex;flex-direction: row;justify-content: center;align-items: center;}.header--row.header-main .cb-row--mobile .col-v2-right {display: flex;flex-direction: row;justify-content: flex-end;align-items: center;}.header--row.header-bottom .cb-row--desktop .col-v2-left {display: flex;flex-direction: row;justify-content: flex-start;align-items: center;}.header--row.header-bottom .cb-row--desktop .col-v2-center {display: flex;flex-direction: row;justify-content: center;align-items: center;}.header--row.header-bottom .cb-row--desktop .col-v2-right {display: flex;flex-direction: row;justify-content: flex-end;align-items: center;}.header--row.header-bottom .cb-row--mobile .col-v2-left {display: flex;flex-direction: row;justify-content: flex-start;align-items: center;}.header--row.header-bottom .cb-row--mobile .col-v2-center {display: flex;flex-direction: row;justify-content: center;align-items: center;}.header--row.header-bottom .cb-row--mobile .col-v2-right {display: flex;flex-direction: row;justify-content: flex-end;align-items: center;}.sub-menu .li-duplicator {display:none !important;}.header-search_icon-item .header-search-modal  {border-style: solid;} .header-search_icon-item .search-field  {border-style: solid;} .dark-mode .header-search_box-item .search-form-fields, .header-search_box-item .search-form-fields  {border-style: solid;} .builder-item--primary-menu .nav-menu-desktop .primary-menu-ul > li > a  {color: #282828; text-decoration-color: #282828;} .header--row:not(.header--transparent) .builder-item--primary-menu .nav-menu-desktop .primary-menu-ul > li > a:hover, .header--row:not(.header--transparent) .builder-item--primary-menu .nav-menu-desktop .primary-menu-ul > li.current-menu-item > a, .header--row:not(.header--transparent) .builder-item--primary-menu .nav-menu-desktop .primary-menu-ul > li.current-menu-ancestor > a, .header--row:not(.header--transparent) .builder-item--primary-menu .nav-menu-desktop .primary-menu-ul > li.current-menu-parent > a  {color: #606060; text-decoration-color: #606060;} .builder-item--primary-menu .nav-menu-desktop .primary-menu-ul > li > a,.builder-item-sidebar .primary-menu-sidebar .primary-menu-ul > li > a {font-family: "Bitter";font-style: normal;font-weight: normal;text-transform: none;font-size: 15px;}a.item--button  {background-color: #7a0028;} #cb-row--footer-main .row-v2, #cb-row--footer-main .col-v2 {column-gap: 30px; gap: 30px}#cb-row--footer-bottom .row-v2, #cb-row--footer-bottom .col-v2 {column-gap: 30px; gap: 30px}.comment-form-rating a, .star-rating,.comment-form-rating a:hover, .comment-form-rating a:focus, .star-rating:hover, .star-rating:focus{    color: #c3512f;}span.onsale{    background-color: #77a464;}/* CSS for desktop */#page-cover .page-cover-inner {min-height: 300px;}.header--row.header-top .customify-grid, .header--row.header-top .style-full-height .primary-menu-ul > li > a {min-height: 33px;}.header--row.header-main .customify-grid, .header--row.header-main .style-full-height .primary-menu-ul > li > a {min-height: 90px;}.header--row.header-bottom .customify-grid, .header--row.header-bottom .style-full-height .primary-menu-ul > li > a {min-height: 55px;}#header-menu-sidebar-inner {display: flex;flex-direction: column;}#header-menu-sidebar-inner > * {width: 100%;}#header-menu-sidebar-inner .item--inner {display: flex;justify-content: flex-start;}.site-header .site-branding img { max-width: 186px; } .site-header .cb-row--mobile .site-branding img { width: 186px; }.header--row .builder-item--logo, .builder-item.builder-item--group .item--inner.builder-item--logo {margin-top: 12px;margin-right: 12px;margin-bottom: 12px;margin-left: 12px;}.header--row .builder-first--nav-icon {text-align: right;}.header-search_icon-item .search-submit {margin-left: -40px;}.header-search_box-item .search-submit{margin-left: -40px;} .header-search_box-item .woo_bootster_search .search-submit{margin-left: -40px;} .header-search_box-item .header-search-form button.search-submit{margin-left:-40px;}.header--row .builder-first--primary-menu {text-align: right;}#cb-row--footer-main .col-v2-left {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-left > * {width: 100%;}#cb-row--footer-main .col-v2-left .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-center {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-center > * {width: 100%;}#cb-row--footer-main .col-v2-center .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-right {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-right > * {width: 100%;}#cb-row--footer-main .col-v2-right .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-col4 {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-col4 > * {width: 100%;}#cb-row--footer-main .col-v2-col4 .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-bottom .col-v2-left {display: flex;flex-direction: column;}#cb-row--footer-bottom .col-v2-left > * {width: 100%;}#cb-row--footer-bottom .col-v2-left .item--inner {display: flex;justify-content: flex-start;}/* CSS for tablet */@media screen and (max-width: 1024px) { #page-cover .page-cover-inner {min-height: 250px;}.header--row .builder-first--nav-icon {text-align: right;}.header-search_icon-item .search-submit {margin-left: -40px;}.header-search_box-item .search-submit{margin-left: -40px;} .header-search_box-item .woo_bootster_search .search-submit{margin-left: -40px;} .header-search_box-item .header-search-form button.search-submit{margin-left:-40px;}#cb-row--footer-main .col-v2-left {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-left > * {width: 100%;}#cb-row--footer-main .col-v2-left .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-center {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-center > * {width: 100%;}#cb-row--footer-main .col-v2-center .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-right {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-right > * {width: 100%;}#cb-row--footer-main .col-v2-right .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-col4 {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-col4 > * {width: 100%;}#cb-row--footer-main .col-v2-col4 .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-bottom .col-v2-left {display: flex;flex-direction: column;}#cb-row--footer-bottom .col-v2-left > * {width: 100%;}#cb-row--footer-bottom .col-v2-left .item--inner {display: flex;justify-content: flex-start;} }/* CSS for mobile */@media screen and (max-width: 568px) { #page-cover .page-cover-inner {min-height: 200px;}.header--row.header-top .customify-grid, .header--row.header-top .style-full-height .primary-menu-ul > li > a {min-height: 33px;}#header-menu-sidebar-inner {display: flex;flex-direction: column;}#header-menu-sidebar-inner > * {width: 100%;}#header-menu-sidebar-inner .item--inner {display: flex;justify-content: flex-start;}.header--row .builder-first--nav-icon {text-align: right;}.header-search_icon-item .search-submit {margin-left: -40px;}.header-search_box-item .search-submit{margin-left: -40px;} .header-search_box-item .woo_bootster_search .search-submit{margin-left: -40px;} .header-search_box-item .header-search-form button.search-submit{margin-left:-40px;}#cb-row--footer-main .col-v2-left {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-left > * {width: 100%;}#cb-row--footer-main .col-v2-left .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-center {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-center > * {width: 100%;}#cb-row--footer-main .col-v2-center .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-right {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-right > * {width: 100%;}#cb-row--footer-main .col-v2-right .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-main .col-v2-col4 {display: flex;flex-direction: column;}#cb-row--footer-main .col-v2-col4 > * {width: 100%;}#cb-row--footer-main .col-v2-col4 .item--inner {display: flex;justify-content: flex-start;}#cb-row--footer-bottom .col-v2-left {display: flex;flex-direction: column;}#cb-row--footer-bottom .col-v2-left > * {width: 100%;}#cb-row--footer-bottom .col-v2-left .item--inner {display: flex;justify-content: flex-start;} }
++/*# sourceURL=customify-style-inline-css */
++</style>
++<style id="customify-layout-style-inline-css">
++body.main-layout-content{--wp--style--global--content-size:1184px;--wp--style--global--wide-size:1584px}body.main-layout-content-sidebar,body.main-layout-sidebar-content{--wp--style--global--wide-size:863px}body.main-layout-sidebar-content-sidebar,body.main-layout-sidebar-sidebar-content,body.main-layout-content-sidebar-sidebar{--wp--style--global--content-size:542px;--wp--style--global--wide-size:542px}.site-content.content-full-width{--wp--style--global--content-size:calc(100vw - 64px);--wp--style--global--wide-size:calc(100vw - 64px)}.site-content.content-full-stretched{--wp--style--global--content-size:100vw;--wp--style--global--wide-size:100vw}
++/*# sourceURL=customify-layout-style-inline-css */
++</style>
++<link rel='stylesheet' id='elementor-gf-local-roboto-css' href='https://cooperspur.com/wp-content/uploads/elementor/google-fonts/css/roboto.css?ver=1751295520' media='all' />
++<link rel='stylesheet' id='elementor-gf-local-robotoslab-css' href='https://cooperspur.com/wp-content/uploads/elementor/google-fonts/css/robotoslab.css?ver=1751295529' media='all' />
++<link rel='stylesheet' id='elementor-gf-local-bitter-css' href='https://cooperspur.com/wp-content/uploads/elementor/google-fonts/css/bitter.css?ver=1751295540' media='all' />
++<link rel='stylesheet' id='elementor-icons-fa-solid-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/solid.min.css?ver=5.15.3' media='all' />
++<link rel='stylesheet' id='elementor-icons-fa-regular-css' href='https://cooperspur.com/wp-content/plugins/elementor/assets/lib/font-awesome/css/regular.min.css?ver=5.15.3' media='all' />
++
++<style id='customify-palette-tokens-inline-css'>
++:root{--customify-base: #ffffff;--customify-text: #2b2b2b;--customify-primary: #235787;--customify-secondary: #c3512f;--customify-accent: #ffd042;--customify-text-muted: #6b6b6b;--customify-body-text: #3a3a3a;--customify-primary-hover: #204e7a;--customify-link: #235787;--customify-link-hover: #235787;--customify-heading: #2b2b2b;--customify-widget-title: #2b2b2b;--customify-on-primary: #FFFFFF;--customify-on-secondary: #FFFFFF;--customify-on-accent: #1A1A1A;--customify-on-surface: #1A1A1A;--customify-border: #ececec;--customify-heading: var(--customify-text, #2b2b2b);--customify-widget-title: var(--customify-text, #2b2b2b);--customify-link: var(--customify-primary, #235787);--customify-link-hover: var(--customify-link, #235787);}@supports (color: color-mix(in oklab, red, blue)){:root{--customify-text-muted: color-mix(in oklab, var(--customify-text) 70%, var(--customify-base));--customify-border: color-mix(in oklab, var(--customify-text) 9%, var(--customify-base));--customify-primary-hover: color-mix(in oklab, var(--customify-primary), black 10%);}}body{background-color:var(--customify-base, #ffffff)}.site-content .content-area{background-color:var(--customify-base, #ffffff)}.site-content{background-color:var(--customify-base, #ffffff)}
++</style>
++<script id="woocommerce-google-analytics-integration-gtag-js-after">
++/* Google Analytics for WooCommerce (gtag.js) */
++					window.dataLayer = window.dataLayer || [];
++					function gtag(){dataLayer.push(arguments);}
++					// Set up default consent state.
++					for ( const mode of [{"analytics_storage":"denied","ad_storage":"denied","ad_user_data":"denied","ad_personalization":"denied","region":["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IS","IE","IT","LV","LI","LT","LU","MT","NL","NO","PL","PT","RO","SK","SI","ES","SE","GB","CH"]}] || [] ) {
++						gtag( "consent", "default", { "wait_for_update": 500, ...mode } );
++					}
++					gtag("js", new Date());
++					gtag("set", "developer_id.dOGY3NW", true);
++					gtag("config", "G-LHPHV84JWF", {"track_404":true,"allow_google_signals":true,"logged_in":false,"linker":{"domains":[],"allow_incoming":false},"custom_map":{"dimension1":"logged_in"}});
++//# sourceURL=woocommerce-google-analytics-integration-gtag-js-after
++</script>
++<script id="jquery-core-js-extra">
++var mep_ajax = {"url":"https://cooperspur.com/wp-admin/admin-ajax.php","nonce":"bdf76ea751"};
++//# sourceURL=jquery-core-js-extra
++</script>
++<script id="jquery-core-js" src="https://cooperspur.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
++<script id="jquery-migrate-js" src="https://cooperspur.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
++<script id="jquery-js-after">
++if (typeof (window.wpfReadyList) == "undefined") {
++			var v = jQuery.fn.jquery;
++			if (v && parseInt(v) >= 3 && window.self === window.top) {
++				var readyList=[];
++				window.originalReadyMethod = jQuery.fn.ready;
++				jQuery.fn.ready = function(){
++					if(arguments.length && arguments.length > 0 && typeof arguments[0] === "function") {
++						readyList.push({"c": this, "a": arguments});
++					}
++					return window.originalReadyMethod.apply( this, arguments );
++				};
++				window.wpfReadyList = readyList;
++			}}
++//# sourceURL=jquery-js-after
++</script>
++<script data-wp-strategy="defer" defer id="wc-jquery-blockui-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.7.0-wc.10.8.1"></script>
++<script id="wc-add-to-cart-js-extra">
++var wc_add_to_cart_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","i18n_view_cart":"View cart","cart_url":"https://cooperspur.com/checkout/","is_cart":"","cart_redirect_after_add":"no"};
++//# sourceURL=wc-add-to-cart-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="wc-add-to-cart-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min.js?ver=10.8.1"></script>
++<script data-wp-strategy="defer" defer id="wc-js-cookie-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min.js?ver=2.1.4-wc.10.8.1"></script>
++<script id="woocommerce-js-extra">
++var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","i18n_password_show":"Show password","i18n_password_hide":"Hide password","qty_pm":"1"};
++//# sourceURL=woocommerce-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="woocommerce-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=10.8.1"></script>
++<script id="eae-iconHelper-js" src="https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/js/iconHelper.js?ver=1.0"></script>
++<script data-wp-strategy="defer" defer id="selectWoo-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/selectWoo/selectWoo.full.min.js?ver=1.0.9-wc.10.8.1"></script>
++<script data-wp-strategy="defer" defer id="wc-select2-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/select2/select2.full.min.js?ver=4.0.3-wc.10.8.1"></script>
++<script id="mpwem_slick-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/slick/slick.min.js?ver=1.8.1"></script>
++<link rel="https://api.w.org/" href="https://cooperspur.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://cooperspur.com/wp-json/wp/v2/pages/2437" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://cooperspur.com/xmlrpc.php?rsd" />
++<meta name="generator" content="WordPress 7.0.1" />
++<meta name="generator" content="WooCommerce 10.8.1" />
++<link rel='shortlink' href='https://cooperspur.com/?p=2437' />
++<style id="mystickymenu" type="text/css">#mysticky-nav { width:100%; position: static; height: auto !important; }#mysticky-nav.wrapfixed { position:fixed; left: 0px; margin-top:0px;  z-index: 99990; -webkit-transition: 0.3s; -moz-transition: 0.3s; -o-transition: 0.3s; transition: 0.3s; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; filter: alpha(opacity=100); opacity:1; background-color: #f2f2f2;}#mysticky-nav.wrapfixed .myfixed{ background-color: #f2f2f2; position: relative;top: auto;left: auto;right: auto;}#mysticky-nav.wrapfixed ul li.menu-item a { color: #474747;}#mysticky-nav .myfixed { margin:0 auto; float:none; border:0px; background:none; max-width:100%; }</style>			<style type="text/css">
++																															</style>
++				<noscript><style>.woocommerce-product-gallery{ opacity: 1 !important; }</style></noscript>
++	<meta name="generator" content="Elementor 4.1.3; features: additional_custom_breakpoints; settings: css_print_method-external, google_font-enabled, font_display-auto">
++<style>.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>			<style>
++				.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload),
++				.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload) * {
++					background-image: none !important;
++				}
++				@media screen and (max-height: 1024px) {
++					.e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload),
++					.e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload) * {
++						background-image: none !important;
++					}
++				}
++				@media screen and (max-height: 640px) {
++					.e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload),
++					.e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload) * {
++						background-image: none !important;
++					}
++				}
++			</style>
++			<link rel="icon" href="https://cooperspur.com/wp-content/uploads/2019/02/CooperSpurMtResort32.jpg" sizes="32x32" />
++<link rel="icon" href="https://cooperspur.com/wp-content/uploads/2019/02/CooperSpurMtResort32.jpg" sizes="192x192" />
++<link rel="apple-touch-icon" href="https://cooperspur.com/wp-content/uploads/2019/02/CooperSpurMtResort32.jpg" />
++<meta name="msapplication-TileImage" content="https://cooperspur.com/wp-content/uploads/2019/02/CooperSpurMtResort32.jpg" />
++<style id="customify-footer-col-layout">#cb-row--footer-main .col-v2-col5 { display: none !important; } #cb-row--footer-main .row-v2 { display: grid !important; grid-template-columns: 1fr 1fr 1fr 1fr; } @media (max-width: 1024px) { #cb-row--footer-main .row-v2 { display: grid !important; grid-template-columns: 1fr 1fr; } } @media (max-width: 568px) { #cb-row--footer-main .row-v2 { display: grid !important; grid-template-columns: 1fr; } } #cb-row--footer-bottom .col-v2-center, #cb-row--footer-bottom .col-v2-right, #cb-row--footer-bottom .col-v2-col4, #cb-row--footer-bottom .col-v2-col5 { display: none !important; } #cb-row--footer-bottom .row-v2 { display: grid !important; grid-template-columns: 1fr; } @media (max-width: 1024px) { #cb-row--footer-bottom .row-v2 { display: grid !important; grid-template-columns: 1fr; } } @media (max-width: 568px) { #cb-row--footer-bottom .row-v2 { display: grid !important; grid-template-columns: 1fr; } } </style>
++                <style>
++					:root {
++						--d_container_width: 1320px;
++						--sidebar_left: 280px;
++						--sidebar_right: 300px;
++						--main_section: calc(100% - 300px);
++						--dmpl: 40px;
++						--dmp: 20px;
++						--dmp_negetive: -20px;
++						--dmp_xs: 10px;
++						--dmp_xxs: 5px;
++						--dmp_xs_negative: -10px;
++						--dbrl: 10px;
++						--dbr: 5px;
++						--d_shadow: 0 0 2px #665F5F7A;
++					}
++					/*****Font size********/
++					:root {
++						--fs: 14px;
++						--fw: normal;
++						--fs_small: 11px;
++						--fs_label: 16px;
++						--fs_h6: 16px;
++						--fs_h5: 18px;
++						--fs_h4: 22px;
++						--fs_h3: 25px;
++						--fs_h2: 30px;
++						--fs_h1: 35px;
++						--fw-thin: 300; /*font weight medium*/
++						--fw-normal: 500; /*font weight medium*/
++						--fw-medium: 600; /*font weight medium*/
++						--fw-bold: bold; /*font weight bold*/
++					}
++					/*****Button********/
++					:root {
++						--button_bg: #ea8125;
++						--color_button: #fff;
++						--button_fs: 16px;
++						--button_height: 40px;
++						--button_height_xs: 30px;
++						--button_width: 120px;
++						--button_shadows: 0 8px 12px rgb(51 65 80 / 6%), 0 14px 44px rgb(51 65 80 / 11%);
++					}
++					/*******Color***********/
++					:root {
++						--d_color: #303030;
++						--color_border: #DDD;
++						--color_active: #0E6BB7;
++						--color_section: #FAFCFE;
++						--color_theme: #6046FF;
++						--color_theme_ee: #6046FFee;
++						--color_theme_cc: #6046FFcc;
++						--color_theme_aa: #6046FFaa;
++						--color_theme_88: #6046FF88;
++						--color_theme_77: #6046FF77;
++						--color_theme_alter: #fff;
++						--color_warning: #f8d7da;
++						--color_primary: #007bff;
++						--color_secondary: #6c757d;
++						--color_black: #000;
++						--color_success: #006607;
++						--color_danger: #dc3545;
++						--color_required: #C00;
++						--color_white: #FFFFFF;
++						--color_light: #F2F2F2;
++						--color_light_1: #BBB;
++						--color_light_2: #EAECEE;
++						--color_light_3: #878787;
++						--color_light_4: #f9f9f9;
++						--color_info: #666;
++						--color_yellow: #FEBB02;
++						--color_blue: #815DF2;
++						--color_navy_blue: #007CBA;
++						--color_1: #0C5460;
++						--color_2: #0CB32612;
++						--color_3: #FAFCFE;
++						--color_4: #6148BA;
++						--color_5: #BCB;
++						--color_6: #ffbe30;
++						--color_7: #F1F5FF;
++						--color_dark: #303030;
++						--color_gray: #D3D3D3;
++						--color_green: #32C1A4;
++						--color_red: #ED5A54;
++						--color_orange: #FFBE00;
++					}
++					@media only screen and (max-width: 1100px) {
++						:root {
++							--fs: 14px;
++							--fs_small: 12px;
++							--fs_label: 15px;
++							--fs_h4: 20px;
++							--fs_h3: 22px;
++							--fs_h2: 25px;
++							--fs_h1: 30px;
++							--dmpl: 32px;
++							--dmp: 16px;
++							--dmp_negetive: -16px;
++							--dmp_xs: 8px;
++							--dmp_xs_negative: -8px;
++						}
++					}
++					@media only screen and (max-width: 700px) {
++						:root {
++							--fs: 12px;
++							--fs_small: 10px;
++							--fs_label: 13px;
++							--fs_h6: 15px;
++							--fs_h5: 16px;
++							--fs_h4: 18px;
++							--fs_h3: 20px;
++							--fs_h2: 22px;
++							--fs_h1: 24px;
++							--dmp: 10px;
++							--dmp_xs: 5px;
++							--dmp_xs_negative: -5px;
++							--button_fs: 14px;
++						}
++					}
++                </style>
++				</head>
++
++<body class="wp-singular page-template-default page page-id-2437 wp-custom-logo wp-embed-responsive wp-theme-customify theme-customify woocommerce-no-js content main-layout-content site-full-width menu_sidebar_slide_left woocommerce later-wc-version elementor-default elementor-kit-4935 elementor-page elementor-page-2437">
++<div id="page" class="site box-shadow">
++	<a class="skip-link screen-reader-text" href="#site-content">Skip to content</a>
++	<a class="close is-size-medium  close-panel close-sidebar-panel" href="#">
++        <span class="hamburger hamburger--squeeze is-active">
++            <span class="hamburger-box">
++              <span class="hamburger-inner"><span class="screen-reader-text">Menu</span></span>
++            </span>
++        </span>
++        <span class="screen-reader-text">Close</span>
++        </a><header id="masthead" class="site-header header-v2"><div id="masthead-inner" class="site-header-inner">							<div  class="header-top header--row layout-full-contained"  id="cb-row--header-top"  data-row-id="top"  data-show-on="desktop">
++								<div class="header--row-inner header-top-inner dark-mode">
++									<div class="customify-container">
++										<div class="customify-grid  cb-row--desktop hide-on-mobile hide-on-tablet customify-grid-middle"><div class="row-v2 row-v2-top no-center"><div class="col-v2 col-v2-left cc-3"><div class="item--inner builder-item--html" data-section="header_html" data-item-id="html" ><div class="builder-header-html-item item--html"><p><a href="tel:5413526692">541-352-6692</a></p>
++</div></div></div><div class="col-v2 col-v2-center cc-3"></div><div class="col-v2 col-v2-right cc-3"><div class="item--inner builder-item--social-icons" data-section="header_social_icons" data-item-id="social-icons" ><ul class="header-social-icons customify-builder-social-icons color-default"><li><a class="social-icon-facebook shape-circle" rel="nofollow noopener" target="_blank" href="https://www.facebook.com/CooperSpur/" aria-label="Facebook"><i class="social-icon fa fa-facebook" title="Facebook"></i></a></li><li></a></li><li></a></li><li><a class="social-icon-instagram shape-circle" rel="nofollow noopener" target="_blank" href="https://www.instagram.com/cooperspurmountainresort/?hl=en" aria-label="Instagram"><i class="social-icon fa fa-instagram" title="Instagram"></i></a></li><li><a class="social-icon-pinterest shape-circle" rel="nofollow noopener" target="_blank" href="https://www.pinterest.com/mthoodmeadowsweddings/" aria-label="Pinterest"><i class="social-icon fa fa-pinterest" title="Pinterest"></i></a></li></ul></div></div></div></div>									</div>
++								</div>
++							</div>
++														<div  class="header-main header--row layout-full-contained"  id="cb-row--header-main"  data-row-id="main"  data-show-on="desktop mobile">
++								<div class="header--row-inner header-main-inner light-mode">
++									<div class="customify-container">
++										<div class="customify-grid  cb-row--desktop hide-on-mobile hide-on-tablet customify-grid-middle"><div class="row-v2 row-v2-main no-center"><div class="col-v2 col-v2-left cc-3"><div class="item--inner builder-item--logo" data-section="title_tagline" data-item-id="logo" ><div class="site-branding logo-top no-tran-logo">
++						<a href="https://cooperspur.com/" class="logo-link" rel="home" itemprop="url">
++				<img class="site-img-logo" src="https://cooperspur.com/wp-content/uploads/2020/10/cropped-CooperSpurMtResort_logo.jpg" alt="Cooper Spur Mountain Resort">
++							</a>
++					</div><!-- .site-branding --></div></div><div class="col-v2 col-v2-center cc-3"></div><div class="col-v2 col-v2-right cc-3"><div class="item--inner builder-item--nav-icon" data-section="header_menu_icon" data-item-id="nav-icon" ><button type="button" class="menu-mobile-toggle item-button is-size-desktop-medium is-size-tablet-medium is-size-mobile-medium"  aria-label="nav icon">
++			<span class="hamburger hamburger--squeeze">
++				<span class="hamburger-box">
++					<span class="hamburger-inner"></span>
++				</span>
++			</span>
++			<span class="nav-icon--label hide-on-tablet hide-on-mobile">Menu</span></button></div><div class="item--inner builder-item--wc_cart" data-section="wc_cart" data-item-id="wc_cart" ><div class="d-align-right builder-header-wc_cart-item item--wc_cart"><a href="https://cooperspur.com/cart/" class="cart-item-link text-uppercase text-small link-meta"><span class="cart-text cart-label wc-cart-mobile-hide wc-cart-tablet-show wc-cart-desktop-show">Cart</span><span class="cart-subtotal cart-label wc-cart-mobile-hide wc-cart-tablet-show wc-cart-desktop-hide"><span class="customify-wc-sub-total">Free</span></span></a><div class="cart-dropdown-box widget-area"><div class="widget woocommerce widget_shopping_cart"><h2 class="widgettitle">Cart</h2><div class="widget_shopping_cart_content"></div></div></div></div></div><div class="item--inner builder-item--button" data-section="header_button" data-item-id="button" ><a href="https://resnexus.com/resnexus/reservations/book/4E8DF784-54D7-4D11-81A4-6850BA899B2E?ID=1663" class="item--button customify-btn customify-builder-btn is-icon-before">Book Now</a></div></div></div></div><div class="cb-row--mobile hide-on-desktop customify-grid customify-grid-middle"><div class="row-v2 row-v2-main no-center"><div class="col-v2 col-v2-left cc-3"><div class="item--inner builder-item--logo" data-section="title_tagline" data-item-id="logo" ><div class="site-branding logo-top no-tran-logo">
++						<a href="https://cooperspur.com/" class="logo-link" rel="home" itemprop="url">
++				<img class="site-img-logo" src="https://cooperspur.com/wp-content/uploads/2020/10/cropped-CooperSpurMtResort_logo.jpg" alt="Cooper Spur Mountain Resort">
++							</a>
++					</div><!-- .site-branding --></div></div><div class="col-v2 col-v2-center cc-3"></div><div class="col-v2 col-v2-right cc-3"><div class="item--inner builder-item--search_icon" data-section="search_icon" data-item-id="search_icon" ><div class="header-search_icon-item item--search_icon">		<a class="search-icon" href="#" aria-label="open search tool">
++			<span class="ic-search">
++				<svg aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21">
++					<path fill="currentColor" fill-rule="evenodd" d="M12.514 14.906a8.264 8.264 0 0 1-4.322 1.21C3.668 16.116 0 12.513 0 8.07 0 3.626 3.668.023 8.192.023c4.525 0 8.193 3.603 8.193 8.047 0 2.033-.769 3.89-2.035 5.307l4.999 5.552-1.775 1.597-5.06-5.62zm-4.322-.843c3.37 0 6.102-2.684 6.102-5.993 0-3.31-2.732-5.994-6.102-5.994S2.09 4.76 2.09 8.07c0 3.31 2.732 5.993 6.102 5.993z"></path>
++				</svg>
++			</span>
++			<span class="ic-close">
++				<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="612px" height="612px" viewBox="0 0 612 612" fill="currentColor" style="enable-background:new 0 0 612 612;" xml:space="preserve"><g><g id="cross"><g><polygon points="612,36.004 576.521,0.603 306,270.608 35.478,0.603 0,36.004 270.522,306.011 0,575.997 35.478,611.397 306,341.411 576.521,611.397 612,575.997 341.459,306.011 " /></g></g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
++			</span>
++			<span class="arrow-down"></span>
++		</a>
++		<div class="header-search-modal-wrapper">
++			<form class="header-search-modal header-search-form" action="https://cooperspur.com/">
++				<label>
++					<span class="screen-reader-text">Search for:</span>
++					<input type="search" class="search-field" placeholder="Search ..." value="" name="s" title="Search for:" />
++				</label>
++				<button type="submit" class="search-submit" aria-label="submit search">
++					<svg aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21">
++						<path fill="currentColor" fill-rule="evenodd" d="M12.514 14.906a8.264 8.264 0 0 1-4.322 1.21C3.668 16.116 0 12.513 0 8.07 0 3.626 3.668.023 8.192.023c4.525 0 8.193 3.603 8.193 8.047 0 2.033-.769 3.89-2.035 5.307l4.999 5.552-1.775 1.597-5.06-5.62zm-4.322-.843c3.37 0 6.102-2.684 6.102-5.993 0-3.31-2.732-5.994-6.102-5.994S2.09 4.76 2.09 8.07c0 3.31 2.732 5.993 6.102 5.993z"></path>
++					</svg>
++				</button>
++			</form>
++		</div>
++		</div></div><div class="item--inner builder-item--nav-icon" data-section="header_menu_icon" data-item-id="nav-icon" ><button type="button" class="menu-mobile-toggle item-button is-size-desktop-medium is-size-tablet-medium is-size-mobile-medium"  aria-label="nav icon">
++			<span class="hamburger hamburger--squeeze">
++				<span class="hamburger-box">
++					<span class="hamburger-inner"></span>
++				</span>
++			</span>
++			<span class="nav-icon--label hide-on-tablet hide-on-mobile">Menu</span></button></div></div></div></div>									</div>
++								</div>
++							</div>
++														<div  class="header-bottom header--row layout-full-contained"  id="cb-row--header-bottom"  data-row-id="bottom"  data-show-on="desktop">
++								<div class="header--row-inner header-bottom-inner light-mode">
++									<div class="customify-container">
++										<div class="customify-grid  cb-row--desktop hide-on-mobile hide-on-tablet customify-grid-middle"><div class="row-v2 row-v2-bottom no-center no-right"><div class="col-v2 col-v2-left cc-3"><div class="item--inner builder-item--primary-menu has_menu" data-section="header_menu_primary" data-item-id="primary-menu" ><nav  id="site-navigation-bottom-desktop" class="site-navigation primary-menu primary-menu-bottom nav-menu-desktop primary-menu-desktop style-plain"><ul id="menu-menu-1" class="primary-menu-ul menu nav-menu"><li id="menu-item--bottom-desktop-5499" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5499"><a href="#"><span class="link-before">Lodging<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--bottom-desktop-5528" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5528"><a href="https://cooperspur.com/lodging/"><span class="link-before">Room Styles</span></a></li>
++	<li id="menu-item--bottom-desktop-2314" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2314"><a href="https://cooperspur.com/lodging-deals/"><span class="link-before">Lodging Deals</span></a></li>
++</ul>
++</li>
++<li id="menu-item--bottom-desktop-5501" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5501"><a href="#"><span class="link-before">Amenities<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--bottom-desktop-2376" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2376"><a href="https://cooperspur.com/amenities/"><span class="link-before">Amenities</span></a></li>
++	<li id="menu-item--bottom-desktop-2390" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2390"><a href="https://cooperspur.com/mt-hood-meadows/"><span class="link-before">Specials With Mt. Hood Meadows</span></a></li>
++	<li id="menu-item--bottom-desktop-23371" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-23371"><a href="https://cooperspur.com/things-to-do-nearby/"><span class="link-before">Things To Do Nearby</span></a></li>
++	<li id="menu-item--bottom-desktop-2313" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2313"><a href="https://cooperspur.com/resort-map/"><span class="link-before">Resort Map</span></a></li>
++</ul>
++</li>
++<li id="menu-item--bottom-desktop-5502" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5502"><a href="#"><span class="link-before">Recreation<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--bottom-desktop-2342" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2342"><a href="https://cooperspur.com/biking-mt-hood/"><span class="link-before">Biking Mt. Hood</span></a></li>
++	<li id="menu-item--bottom-desktop-2341" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2341"><a href="https://cooperspur.com/hiking-mt-hood/"><span class="link-before">Hiking Mt. Hood</span></a></li>
++	<li id="menu-item--bottom-desktop-2370" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2370"><a href="https://cooperspur.com/water-play/"><span class="link-before">Water Play</span></a></li>
++	<li id="menu-item--bottom-desktop-2369" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2369"><a href="https://cooperspur.com/mt-hood/"><span class="link-before">Mt. Hood</span></a></li>
++	<li id="menu-item--bottom-desktop-2368" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2368"><a href="https://cooperspur.com/scenic-drives/"><span class="link-before">Scenic Drives</span></a></li>
++	<li id="menu-item--bottom-desktop-2367" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2367"><a href="https://cooperspur.com/hood-river/"><span class="link-before">Hood River</span></a></li>
++</ul>
++</li>
++<li id="menu-item--bottom-desktop-5505" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5505"><a href="#"><span class="link-before">Dining &#038; Events<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--bottom-desktop-2556" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2556"><a href="https://cooperspur.com/dining/"><span class="link-before">Dining/Crooked Tree Tavern &#038; Grill</span></a></li>
++	<li id="menu-item--bottom-desktop-2557" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2557"><a href="https://cooperspur.com/events-3/"><span class="link-before">Cooper Spur Events</span></a></li>
++</ul>
++</li>
++<li id="menu-item--bottom-desktop-31337" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-31337"><a href="#"><span class="link-before">Groups &#038; Weddings<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--bottom-desktop-13953" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-13953"><a href="https://cooperspur.com/groups-plus-catering/"><span class="link-before">Private Groups</span></a></li>
++	<li id="menu-item--bottom-desktop-31338" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-31338"><a href="https://cooperspur.com/weddings/"><span class="link-before">Weddings</span></a></li>
++</ul>
++</li>
++<li id="menu-item--bottom-desktop-5506" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-ancestor current-menu-parent menu-item-has-children menu-item-5506"><a href="#"><span class="link-before">Snow Play<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--bottom-desktop-18552" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-18552"><a href="https://cooperspur.com/downhill-riding/"><span class="link-before">Downhill Riding</span></a></li>
++	<li id="menu-item--bottom-desktop-2392" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2392"><a href="https://cooperspur.com/cross-country-skiing-snowshoeing/"><span class="link-before">Cross Country Skiing &#038; Snowshoeing</span></a></li>
++	<li id="menu-item--bottom-desktop-29067" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-29067"><a href="https://cooperspur.com/indy-ski-pass/"><span class="link-before">Indy Ski Pass</span></a></li>
++	<li id="menu-item--bottom-desktop-2440" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-2437 current_page_item menu-item-2440"><a href="https://cooperspur.com/conditions-report/" aria-current="page"><span class="link-before">Conditions Report</span></a></li>
++</ul>
++</li>
++<li id="menu-item--bottom-desktop-5507" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5507"><a href="#"><span class="link-before">About<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--bottom-desktop-1886" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1886"><a href="https://cooperspur.com/history/"><span class="link-before">History</span></a></li>
++	<li id="menu-item--bottom-desktop-1909" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1909"><a href="https://cooperspur.com/sustainability/"><span class="link-before">Sustainability</span></a></li>
++	<li id="menu-item--bottom-desktop-6588" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6588"><a href="https://cooperspur.com/gallery/"><span class="link-before">Gallery</span></a></li>
++	<li id="menu-item--bottom-desktop-1888" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1888"><a href="https://cooperspur.com/contact-us/"><span class="link-before">Contact Us</span></a></li>
++</ul>
++</li>
++<li id="menu-item--bottom-desktop-24631" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-24631"><a href="https://cooperspur.com/faq/"><span class="link-before">FAQ</span></a></li>
++</ul></nav></div></div><div class="col-v2 col-v2-center cc-3"></div><div class="col-v2 col-v2-right cc-3"></div></div></div>									</div>
++								</div>
++							</div>
++							<div id="header-menu-sidebar" class="header-menu-sidebar menu-sidebar-panel dark-mode"><div id="header-menu-sidebar-bg" class="header-menu-sidebar-bg"><div id="header-menu-sidebar-inner" class="header-menu-sidebar-inner"><div class="builder-item-sidebar mobile-item--html"><div class="item--inner" data-item-id="html" data-section="header_html"><div class="builder-header-html-item item--html"><p><a href="tel:5413526692">541-352-6692</a></p>
++</div></div></div><div class="builder-item-sidebar mobile-item--search_box"><div class="item--inner" data-item-id="search_box" data-section="search_box"><div class="header-search_box-item item--search_box">		<form class="header-search-form " action="https://cooperspur.com/">
++			<div class="search-form-fields">
++				<span class="screen-reader-text">Search for:</span>
++				
++				<input type="search" class="search-field" placeholder="Search ..." value="" name="s" title="Search for:" />
++
++							</div>
++			<button type="submit" class="search-submit" aria-label="Submit Search">
++				<svg aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21">
++					<path fill="currentColor" fill-rule="evenodd" d="M12.514 14.906a8.264 8.264 0 0 1-4.322 1.21C3.668 16.116 0 12.513 0 8.07 0 3.626 3.668.023 8.192.023c4.525 0 8.193 3.603 8.193 8.047 0 2.033-.769 3.89-2.035 5.307l4.999 5.552-1.775 1.597-5.06-5.62zm-4.322-.843c3.37 0 6.102-2.684 6.102-5.993 0-3.31-2.732-5.994-6.102-5.994S2.09 4.76 2.09 8.07c0 3.31 2.732 5.993 6.102 5.993z"></path>
++				</svg>
++			</button>
++		</form>
++		</div></div></div><div class="builder-item-sidebar mobile-item--primary-menu mobile-item--menu "><div class="item--inner" data-item-id="primary-menu" data-section="header_menu_primary"><nav  id="site-navigation-sidebar-mobile" class="site-navigation primary-menu primary-menu-sidebar nav-menu-mobile primary-menu-mobile style-plain"><ul id="menu-menu-1" class="primary-menu-ul menu nav-menu"><li id="menu-item--sidebar-mobile-5499" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5499"><a href="#"><span class="link-before">Lodging<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--sidebar-mobile-5528" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5528"><a href="https://cooperspur.com/lodging/"><span class="link-before">Room Styles</span></a></li>
++	<li id="menu-item--sidebar-mobile-2314" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2314"><a href="https://cooperspur.com/lodging-deals/"><span class="link-before">Lodging Deals</span></a></li>
++</ul>
++</li>
++<li id="menu-item--sidebar-mobile-5501" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5501"><a href="#"><span class="link-before">Amenities<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--sidebar-mobile-2376" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2376"><a href="https://cooperspur.com/amenities/"><span class="link-before">Amenities</span></a></li>
++	<li id="menu-item--sidebar-mobile-2390" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2390"><a href="https://cooperspur.com/mt-hood-meadows/"><span class="link-before">Specials With Mt. Hood Meadows</span></a></li>
++	<li id="menu-item--sidebar-mobile-23371" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-23371"><a href="https://cooperspur.com/things-to-do-nearby/"><span class="link-before">Things To Do Nearby</span></a></li>
++	<li id="menu-item--sidebar-mobile-2313" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2313"><a href="https://cooperspur.com/resort-map/"><span class="link-before">Resort Map</span></a></li>
++</ul>
++</li>
++<li id="menu-item--sidebar-mobile-5502" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5502"><a href="#"><span class="link-before">Recreation<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--sidebar-mobile-2342" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2342"><a href="https://cooperspur.com/biking-mt-hood/"><span class="link-before">Biking Mt. Hood</span></a></li>
++	<li id="menu-item--sidebar-mobile-2341" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2341"><a href="https://cooperspur.com/hiking-mt-hood/"><span class="link-before">Hiking Mt. Hood</span></a></li>
++	<li id="menu-item--sidebar-mobile-2370" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2370"><a href="https://cooperspur.com/water-play/"><span class="link-before">Water Play</span></a></li>
++	<li id="menu-item--sidebar-mobile-2369" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2369"><a href="https://cooperspur.com/mt-hood/"><span class="link-before">Mt. Hood</span></a></li>
++	<li id="menu-item--sidebar-mobile-2368" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2368"><a href="https://cooperspur.com/scenic-drives/"><span class="link-before">Scenic Drives</span></a></li>
++	<li id="menu-item--sidebar-mobile-2367" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2367"><a href="https://cooperspur.com/hood-river/"><span class="link-before">Hood River</span></a></li>
++</ul>
++</li>
++<li id="menu-item--sidebar-mobile-5505" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5505"><a href="#"><span class="link-before">Dining &#038; Events<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--sidebar-mobile-2556" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2556"><a href="https://cooperspur.com/dining/"><span class="link-before">Dining/Crooked Tree Tavern &#038; Grill</span></a></li>
++	<li id="menu-item--sidebar-mobile-2557" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2557"><a href="https://cooperspur.com/events-3/"><span class="link-before">Cooper Spur Events</span></a></li>
++</ul>
++</li>
++<li id="menu-item--sidebar-mobile-31337" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-31337"><a href="#"><span class="link-before">Groups &#038; Weddings<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--sidebar-mobile-13953" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-13953"><a href="https://cooperspur.com/groups-plus-catering/"><span class="link-before">Private Groups</span></a></li>
++	<li id="menu-item--sidebar-mobile-31338" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-31338"><a href="https://cooperspur.com/weddings/"><span class="link-before">Weddings</span></a></li>
++</ul>
++</li>
++<li id="menu-item--sidebar-mobile-5506" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-ancestor current-menu-parent menu-item-has-children menu-item-5506"><a href="#"><span class="link-before">Snow Play<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--sidebar-mobile-18552" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-18552"><a href="https://cooperspur.com/downhill-riding/"><span class="link-before">Downhill Riding</span></a></li>
++	<li id="menu-item--sidebar-mobile-2392" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2392"><a href="https://cooperspur.com/cross-country-skiing-snowshoeing/"><span class="link-before">Cross Country Skiing &#038; Snowshoeing</span></a></li>
++	<li id="menu-item--sidebar-mobile-29067" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-29067"><a href="https://cooperspur.com/indy-ski-pass/"><span class="link-before">Indy Ski Pass</span></a></li>
++	<li id="menu-item--sidebar-mobile-2440" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-2437 current_page_item menu-item-2440"><a href="https://cooperspur.com/conditions-report/" aria-current="page"><span class="link-before">Conditions Report</span></a></li>
++</ul>
++</li>
++<li id="menu-item--sidebar-mobile-5507" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-5507"><a href="#"><span class="link-before">About<span class="nav-icon-angle">&nbsp;</span></span></a>
++<ul class="sub-menu sub-lv-0">
++	<li id="menu-item--sidebar-mobile-1886" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1886"><a href="https://cooperspur.com/history/"><span class="link-before">History</span></a></li>
++	<li id="menu-item--sidebar-mobile-1909" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1909"><a href="https://cooperspur.com/sustainability/"><span class="link-before">Sustainability</span></a></li>
++	<li id="menu-item--sidebar-mobile-6588" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6588"><a href="https://cooperspur.com/gallery/"><span class="link-before">Gallery</span></a></li>
++	<li id="menu-item--sidebar-mobile-1888" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1888"><a href="https://cooperspur.com/contact-us/"><span class="link-before">Contact Us</span></a></li>
++</ul>
++</li>
++<li id="menu-item--sidebar-mobile-24631" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-24631"><a href="https://cooperspur.com/faq/"><span class="link-before">FAQ</span></a></li>
++</ul></nav></div></div><div class="builder-item-sidebar mobile-item--social-icons"><div class="item--inner" data-item-id="social-icons" data-section="header_social_icons"><ul class="header-social-icons customify-builder-social-icons color-default"><li><a class="social-icon-facebook shape-circle" rel="nofollow noopener" target="_blank" href="https://www.facebook.com/CooperSpur/" aria-label="Facebook"><i class="social-icon fa fa-facebook" title="Facebook"></i></a></li><li></a></li><li></a></li><li><a class="social-icon-instagram shape-circle" rel="nofollow noopener" target="_blank" href="https://www.instagram.com/cooperspurmountainresort/?hl=en" aria-label="Instagram"><i class="social-icon fa fa-instagram" title="Instagram"></i></a></li><li><a class="social-icon-pinterest shape-circle" rel="nofollow noopener" target="_blank" href="https://www.pinterest.com/mthoodmeadowsweddings/" aria-label="Pinterest"><i class="social-icon fa fa-pinterest" title="Pinterest"></i></a></li></ul></div></div><div class="builder-item-sidebar mobile-item--button"><div class="item--inner" data-item-id="button" data-section="header_button"><a href="https://resnexus.com/resnexus/reservations/book/4E8DF784-54D7-4D11-81A4-6850BA899B2E?ID=1663" class="item--button customify-btn customify-builder-btn is-icon-before">Book Now</a></div></div></div></div></div></div></header>		<div id="page-titlebar" class="page-header--item page-titlebar ">
++			<div class="page-titlebar-inner customify-container">
++				<h1 class="titlebar-title h4">Conditions Report</h1>			</div>
++		</div>
++					<div id="page-breadcrumb" class="page-header--item page-breadcrumb breadcrumb--below_titlebar  text-uppercase text-xsmall link-meta">
++				<div class="page-breadcrumb-inner customify-container">
++					<ul class="page-breadcrumb-list">
++						<li class="home"><span><a title="Go to Cooper Spur Mountain Resort." href="https://cooperspur.com" class="home"><span>Cooper Spur Mountain Resort</span></a></span></li>
++<li class="post post-page current-item"><span class="post post-page current-item">Conditions Report</span></li>
++					</ul>
++				</div>
++			</div>
++				<div id="site-content" class="site-content site-content-boxed">
++		<div class="customify-container">
++			<div class="customify-grid">
++				<main id="main" class="content-area customify-col-12">
++						<div class="content-inner">
++		<article id="post-2437" class="post-2437 page type-page status-publish hentry">
++	
++	<div class="entry-content">
++				<div data-elementor-type="wp-post" data-elementor-id="2437" class="elementor elementor-2437" data-elementor-post-type="page">
++						<section class="has_eae_slider elementor-section elementor-top-section elementor-element elementor-element-780dae2 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-eae-slider="48088" data-id="780dae2" data-element_type="section" data-e-type="section">
++						<div class="elementor-container elementor-column-gap-default">
++					<div class="has_eae_slider elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-297f72d" data-eae-slider="36732" data-id="297f72d" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-78e5091 elementor-alert-warning elementor-widget elementor-widget-alert" data-id="78e5091" data-element_type="widget" data-e-type="widget" data-widget_type="alert.default">
++				<div class="elementor-widget-container">
++							<div class="elementor-alert" role="alert">
++
++						<span class="elementor-alert-title">We look forward to seeing you for the 2026-27 season</span>
++			
++			
++						<button type="button" class="elementor-alert-dismiss" aria-label="Dismiss this alert.">
++									<span aria-hidden="true">&times;</span>
++							</button>
++			
++		</div>
++						</div>
++				</div>
++					</div>
++		</div>
++					</div>
++		</section>
++				<section class="has_eae_slider elementor-section elementor-top-section elementor-element elementor-element-8cf0246 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-eae-slider="10583" data-id="8cf0246" data-element_type="section" data-e-type="section">
++						<div class="elementor-container elementor-column-gap-default">
++					<div class="has_eae_slider elementor-column elementor-col-50 elementor-top-column elementor-element elementor-element-7fa4b29" data-eae-slider="72132" data-id="7fa4b29" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-cac93b5 elementor-widget elementor-widget-image" data-id="cac93b5" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
++				<div class="elementor-widget-container">
++															<img fetchpriority="high" decoding="async" width="843" height="220" src="https://cooperspur.com/wp-content/uploads/2018/11/skiing.jpg" class="attachment-large size-large wp-image-2219" alt="Cooper Spur Ski Area" srcset="https://cooperspur.com/wp-content/uploads/2018/11/skiing.jpg 958w, https://cooperspur.com/wp-content/uploads/2018/11/skiing-300x78.jpg 300w, https://cooperspur.com/wp-content/uploads/2018/11/skiing-768x200.jpg 768w" sizes="(max-width: 843px) 100vw, 843px" />															</div>
++				</div>
++				<div class="elementor-element elementor-element-2ce2993 elementor-widget elementor-widget-text-editor" data-id="2ce2993" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
++				<div class="elementor-widget-container">
++									<h5><span style="color: #686868;font-family: -apple-system, BlinkMacSystemFont,">Last Updated:  March 16th, 2026</span></h5>								</div>
++				</div>
++				<div class="elementor-element elementor-element-ce77e9f elementor-widget elementor-widget-eael-feature-list" data-id="ce77e9f" data-element_type="widget" data-e-type="widget" data-widget_type="eael-feature-list.default">
++				<div class="elementor-widget-container">
++							<div class="-icon-position-left -tablet-icon-position-left -mobile-icon-position-left">
++			<ul id="eael-feature-list-ce77e9f" class="eael-feature-list-items circle framed connector-type-classic eael-feature-list-vertical" data-layout-tablet="vertical" data-layout-mobile="vertical">
++			                <li class="eael-feature-list-item elementor-repeater-item-7a10a4b">
++                                            <span class="connector" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-tablet" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-mobile" style="right: calc(100% - 43px); left: 0;"></span>
++                    
++						<div class="eael-feature-list-icon-box">
++							<div class="eael-feature-list-icon-inner">
++
++								<span class="eael-feature-list-icon fl-icon-0">
++
++		<i aria-hidden="true" class="fas fa-temperature-low"></i>								</span>
++							</div>
++						</div>
++						<div class="eael-feature-list-content-box">
++                            <p class="eael-feature-list-title">Temperature</p>						<p class="eael-feature-list-content">41°F</p>
++						</div>
++
++					</li>
++				                <li class="eael-feature-list-item elementor-repeater-item-de991fc">
++                                            <span class="connector" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-tablet" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-mobile" style="right: calc(100% - 43px); left: 0;"></span>
++                    
++						<div class="eael-feature-list-icon-box">
++							<div class="eael-feature-list-icon-inner">
++
++								<span class="eael-feature-list-icon fl-icon-1">
++
++		<i aria-hidden="true" class="fas fa-skiing"></i>								</span>
++							</div>
++						</div>
++						<div class="eael-feature-list-content-box">
++                            <p class="eael-feature-list-title">General Conditions</p>						<p class="eael-feature-list-content">Partly cloudy </p>
++						</div>
++
++					</li>
++				                <li class="eael-feature-list-item elementor-repeater-item-b7dffeb">
++                                            <span class="connector" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-tablet" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-mobile" style="right: calc(100% - 43px); left: 0;"></span>
++                    
++						<div class="eael-feature-list-icon-box">
++							<div class="eael-feature-list-icon-inner">
++
++								<span class="eael-feature-list-icon fl-icon-2">
++
++		<i aria-hidden="true" class="fas fa-parking"></i>								</span>
++							</div>
++						</div>
++						<div class="eael-feature-list-content-box">
++                            <p class="eael-feature-list-title">Parking</p>						<p class="eael-feature-list-content">Closed </p>
++						</div>
++
++					</li>
++				                <li class="eael-feature-list-item elementor-repeater-item-022b0b4">
++                                            <span class="connector" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-tablet" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-mobile" style="right: calc(100% - 43px); left: 0;"></span>
++                    
++						<div class="eael-feature-list-icon-box">
++							<div class="eael-feature-list-icon-inner">
++
++								<span class="eael-feature-list-icon fl-icon-3">
++
++		<i aria-hidden="true" class="far fa-snowflake"></i>								</span>
++							</div>
++						</div>
++						<div class="eael-feature-list-content-box">
++                            <p class="eael-feature-list-title">New Snow</p>						<p class="eael-feature-list-content">0"</p>
++						</div>
++
++					</li>
++				                <li class="eael-feature-list-item elementor-repeater-item-cb5a38e">
++                                            <span class="connector" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-tablet" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-mobile" style="right: calc(100% - 43px); left: 0;"></span>
++                    
++						<div class="eael-feature-list-icon-box">
++							<div class="eael-feature-list-icon-inner">
++
++								<span class="eael-feature-list-icon fl-icon-4">
++
++		<i aria-hidden="true" class="fas fa-snowplow"></i>								</span>
++							</div>
++						</div>
++						<div class="eael-feature-list-content-box">
++                            <p class="eael-feature-list-title">Snow Depth</p>						<p class="eael-feature-list-content">0" </p>
++						</div>
++
++					</li>
++				                <li class="eael-feature-list-item elementor-repeater-item-b7fdd51">
++                                            <span class="connector" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-tablet" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-mobile" style="right: calc(100% - 43px); left: 0;"></span>
++                    
++						<div class="eael-feature-list-icon-box">
++							<div class="eael-feature-list-icon-inner">
++
++								<span class="eael-feature-list-icon fl-icon-5">
++
++		<i aria-hidden="true" class="fas fa-home"></i>								</span>
++							</div>
++						</div>
++						<div class="eael-feature-list-content-box">
++                            <p class="eael-feature-list-title">Homestead Lift</p>						<p class="eael-feature-list-content">Closed</p>
++						</div>
++
++					</li>
++				                <li class="eael-feature-list-item elementor-repeater-item-ea9a305">
++                                            <span class="connector" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-tablet" style="right: calc(100% - 43px); left: 0;"></span>
++                        <span class="connector connector-mobile" style="right: calc(100% - 43px); left: 0;"></span>
++                    
++						<div class="eael-feature-list-icon-box">
++							<div class="eael-feature-list-icon-inner">
++
++								<span class="eael-feature-list-icon fl-icon-6">
++
++		<i aria-hidden="true" class="fas fa-mountain"></i>								</span>
++							</div>
++						</div>
++						<div class="eael-feature-list-content-box">
++                            <p class="eael-feature-list-title">Rope Tow</p>						<p class="eael-feature-list-content">Closed</p>
++						</div>
++
++					</li>
++							</ul>
++		</div>
++						</div>
++				</div>
++					</div>
++		</div>
++				<div class="has_eae_slider elementor-column elementor-col-50 elementor-top-column elementor-element elementor-element-dc83d3f" data-eae-slider="90285" data-id="dc83d3f" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-3f4e00a elementor-widget elementor-widget-heading" data-id="3f4e00a" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
++				<div class="elementor-widget-container">
++					<h4 class="elementor-heading-title elementor-size-default">Live Mountain Cam</h4>				</div>
++				</div>
++				<div class="elementor-element elementor-element-1e66d76 elementor-widget elementor-widget-image" data-id="1e66d76" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
++				<div class="elementor-widget-container">
++												<figure class="wp-caption">
++										<img decoding="async" width="480" height="704" src="https://cooperspur.com/wp-content/uploads/2019/01/image.jpg" class="attachment-full size-full wp-image-2665" alt="Cooper Ski Area Webcam" srcset="https://cooperspur.com/wp-content/uploads/2019/01/image.jpg 480w, https://cooperspur.com/wp-content/uploads/2019/01/image-205x300.jpg 205w" sizes="(max-width: 480px) 100vw, 480px" />											<figcaption class="widget-image-caption wp-caption-text">Live View of the Cooper Spur Ski Area</figcaption>
++										</figure>
++									</div>
++				</div>
++					</div>
++		</div>
++					</div>
++		</section>
++				<section class="has_eae_slider elementor-section elementor-top-section elementor-element elementor-element-e1e44c5 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-eae-slider="31287" data-id="e1e44c5" data-element_type="section" data-e-type="section">
++						<div class="elementor-container elementor-column-gap-default">
++					<div class="has_eae_slider elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-fc9d318" data-eae-slider="73917" data-id="fc9d318" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-53660ad elementor-view-default elementor-position-block-start elementor-mobile-position-block-start elementor-widget elementor-widget-icon-box" data-id="53660ad" data-element_type="widget" data-e-type="widget" data-widget_type="icon-box.default">
++				<div class="elementor-widget-container">
++							<div class="elementor-icon-box-wrapper">
++
++						<div class="elementor-icon-box-icon">
++				<span  class="elementor-icon">
++				<i aria-hidden="true" class="fas fa-road"></i>				</span>
++			</div>
++			
++						<div class="elementor-icon-box-content">
++
++									<h3 class="elementor-icon-box-title">
++						<span  >
++							Road Conditions and Lift Status change with the weather and wind conditions						</span>
++					</h3>
++				
++									<p class="elementor-icon-box-description">
++						Please plan accordingly.					</p>
++				
++			</div>
++			
++		</div>
++						</div>
++				</div>
++					</div>
++		</div>
++				<div class="has_eae_slider elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-12e10bf" data-eae-slider="3463" data-id="12e10bf" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-8a00938 elementor-view-default elementor-position-block-start elementor-mobile-position-block-start elementor-widget elementor-widget-icon-box" data-id="8a00938" data-element_type="widget" data-e-type="widget" data-widget_type="icon-box.default">
++				<div class="elementor-widget-container">
++							<div class="elementor-icon-box-wrapper">
++
++						<div class="elementor-icon-box-icon">
++				<span  class="elementor-icon">
++				<i aria-hidden="true" class="fas fa-car"></i>				</span>
++			</div>
++			
++						<div class="elementor-icon-box-content">
++
++									<h3 class="elementor-icon-box-title">
++						<span  >
++							Chains and/or traction tires are sometimes required on Cloud Cap Road to the Ski Area.						</span>
++					</h3>
++				
++									<p class="elementor-icon-box-description">
++						Come Prepared.					</p>
++				
++			</div>
++			
++		</div>
++						</div>
++				</div>
++					</div>
++		</div>
++				<div class="has_eae_slider elementor-column elementor-col-33 elementor-top-column elementor-element elementor-element-cd1def2" data-eae-slider="2460" data-id="cd1def2" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-e851ea7 elementor-view-default elementor-position-block-start elementor-mobile-position-block-start elementor-widget elementor-widget-icon-box" data-id="e851ea7" data-element_type="widget" data-e-type="widget" data-widget_type="icon-box.default">
++				<div class="elementor-widget-container">
++							<div class="elementor-icon-box-wrapper">
++
++						<div class="elementor-icon-box-icon">
++				<span  class="elementor-icon">
++				<i aria-hidden="true" class="fas fa-parking"></i>				</span>
++			</div>
++			
++						<div class="elementor-icon-box-content">
++
++									<h3 class="elementor-icon-box-title">
++						<span  >
++							SnoPark Permits are required at the Ski Area and the 
++Tilly Jane Trailhead						</span>
++					</h3>
++				
++									<p class="elementor-icon-box-description">
++						Purchase yours at the Ski Area Lodge <br>or Hotel Front Desk.					</p>
++				
++			</div>
++			
++		</div>
++						</div>
++				</div>
++					</div>
++		</div>
++					</div>
++		</section>
++				<section class="has_eae_slider elementor-section elementor-top-section elementor-element elementor-element-8dd5fac elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-eae-slider="98202" data-id="8dd5fac" data-element_type="section" data-e-type="section">
++						<div class="elementor-container elementor-column-gap-default">
++					<div class="has_eae_slider elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-89a29e3" data-eae-slider="37782" data-id="89a29e3" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<section class="has_eae_slider elementor-section elementor-inner-section elementor-element elementor-element-c814166 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-eae-slider="26986" data-id="c814166" data-element_type="section" data-e-type="section">
++						<div class="elementor-container elementor-column-gap-default">
++					<div class="has_eae_slider elementor-column elementor-col-100 elementor-inner-column elementor-element elementor-element-863f245" data-eae-slider="9728" data-id="863f245" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-54ed212 elementor-button-info elementor-align-center elementor-widget elementor-widget-button" data-id="54ed212" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
++				<div class="elementor-widget-container">
++									<div class="elementor-button-wrapper">
++					<a class="elementor-button elementor-button-link elementor-size-lg" href="https://tripcheck.com/Pages/Road-Conditions?curRegion=2&#038;mainNav=RoadConditions" target="_blank" aria-label="Arrow Icon">
++						<span class="elementor-button-content-wrapper">
++						<span class="elementor-button-icon">
++				<i aria-hidden="true" class="fas fa-arrow-right"></i>			</span>
++									<span class="elementor-button-text">Road Conditions &amp; Web Cams</span>
++					</span>
++					</a>
++				</div>
++								</div>
++				</div>
++				<div class="elementor-element elementor-element-fd7c56f elementor-blockquote--skin-quotation elementor-blockquote--align-center elementor-widget elementor-widget-blockquote" data-id="fd7c56f" data-element_type="widget" data-e-type="widget" data-widget_type="blockquote.default">
++				<div class="elementor-widget-container">
++							<blockquote class="elementor-blockquote">
++			<p class="elementor-blockquote__content">
++				When snow falls...nature listens			</p>
++							<div class="e-q-footer">
++											<cite class="elementor-blockquote__author">Antoinette Van Kleeff</cite>
++														</div>
++					</blockquote>
++						</div>
++				</div>
++					</div>
++		</div>
++					</div>
++		</section>
++					</div>
++		</div>
++					</div>
++		</section>
++				<section class="has_eae_slider elementor-section elementor-top-section elementor-element elementor-element-816c0ca elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-eae-slider="91178" data-id="816c0ca" data-element_type="section" data-e-type="section">
++						<div class="elementor-container elementor-column-gap-default">
++					<div data-wts-url="https://www.cooperspur.com/lodging/" data-wts-link="yes" data-wts-new-window="" class="has_eae_slider elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-21a7dcf ae-link-yes" data-eae-slider="85823" data-id="21a7dcf" data-element_type="column" data-e-type="column">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-5a58239 elementor-widget elementor-widget-template" data-id="5a58239" data-element_type="widget" data-e-type="widget" data-widget_type="template.default">
++				<div class="elementor-widget-container">
++							<div class="elementor-template">
++					<div data-elementor-type="page" data-elementor-id="6848" class="elementor elementor-6848" data-elementor-post-type="elementor_library">
++						<section class="has_eae_slider elementor-section elementor-top-section elementor-element elementor-element-6d8d160 elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-eae-slider="43751" data-id="6d8d160" data-element_type="section" data-e-type="section">
++						<div class="elementor-container elementor-column-gap-default">
++					<div data-wts-url="https://www.cooperspur.com/lodging/" data-wts-link="yes" data-wts-new-window="" class="has_eae_slider elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-5dd71749 ae-link-yes" data-eae-slider="53948" data-id="5dd71749" data-element_type="column" data-e-type="column" data-settings="{&quot;background_background&quot;:&quot;slideshow&quot;,&quot;background_slideshow_gallery&quot;:[{&quot;id&quot;:12305,&quot;url&quot;:&quot;https:\/\/www.cooperspur.com\/wp-content\/uploads\/2021\/07\/inn-at-cooper-spur-banner-2.jpg&quot;}],&quot;background_slideshow_loop&quot;:&quot;yes&quot;,&quot;background_slideshow_slide_duration&quot;:5000,&quot;background_slideshow_slide_transition&quot;:&quot;fade&quot;,&quot;background_slideshow_transition_duration&quot;:500}">
++			<div class="elementor-widget-wrap elementor-element-populated">
++						<div class="elementor-element elementor-element-54958e4e content-align-cta-default elementor-widget elementor-widget-eael-cta-box" data-id="54958e4e" data-element_type="widget" data-e-type="widget" data-widget_type="eael-cta-box.default">
++				<div class="elementor-widget-container">
++							<div class="eael-call-to-action cta-basic bg-lite cta-preset-1">
++        <h2 class="title eael-cta-heading">Our Mountain Lodge Awaits</h2><p><br />Ready to start planning your trip? Peruse our accommodations and amenities to see everything that Cooper Spur has to offer!</p><a href="https://www.cooperspur.com/lodging/" aria-label="View Lodging Button" class="cta-button cta-preset-1  ">View Lodging</a>	</div>
++								</div>
++				</div>
++					</div>
++		</div>
++					</div>
++		</section>
++				</div>
++				</div>
++						</div>
++				</div>
++					</div>
++		</div>
++					</div>
++		</section>
++				</div>
++			</div><!-- .entry-content -->
++
++</article><!-- #post-2437 -->
++	</div><!-- #.content-inner -->
++              			</main><!-- #main -->
++					</div><!-- #.customify-grid -->
++	</div><!-- #.customify-container -->
++</div><!-- #content -->
++<footer class="site-footer" id="site-footer">							<div  class="footer-main footer--row layout-full-contained"  id="cb-row--footer-main"  data-row-id="main"  data-show-on="desktop">
++								<div class="footer--row-inner footer-main-inner dark-mode">
++									<div class="customify-container">
++										<div class="customify-grid customify-grid-middle"><div class="row-v2 row-v2-main full-cols"><div class="col-v2 col-v2-left cc-4"><div class="item--inner builder-item--footer-1" data-section="sidebar-widgets-footer-1" data-item-id="footer-1" ><div class="widget-area"><section id="nav_menu-7" class="widget widget_nav_menu"><h4 class="widget-title">More Information</h4><div class="menu-footer-menu-container"><ul id="menu-footer-menu" class="menu"><li id="menu-item-28792" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28792"><a href="https://cooperspur.com/ada-statement/">ADA Statement</a></li>
++<li id="menu-item-28793" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28793"><a href="https://cooperspur.com/contact-us/">Contact Us</a></li>
++<li id="menu-item-28794" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28794"><a href="https://cooperspur.com/downhill-riding/">Downhill Riding</a></li>
++<li id="menu-item-28795" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28795"><a href="https://cooperspur.com/enews-sign-up/">eNews Sign Up</a></li>
++<li id="menu-item-28796" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28796"><a href="https://cooperspur.com/faq/" title="Frequently Asked Questions">FAQ</a></li>
++<li id="menu-item-28797" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28797"><a href="https://cooperspur.com/jobs/">Jobs</a></li>
++<li id="menu-item-28798" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28798"><a href="https://cooperspur.com/lodging-deals/">Lodging Deals</a></li>
++<li id="menu-item-28799" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28799"><a href="https://cooperspur.com/release-indemnification-form/">Release &#038; Indemnification Form</a></li>
++</ul></div></section></div></div></div><div class="col-v2 col-v2-center cc-4"><div class="item--inner builder-item--footer-2" data-section="sidebar-widgets-footer-2" data-item-id="footer-2" ><div class="widget-area"><section id="custom_html-5" class="widget_text widget widget_custom_html"><h4 class="widget-title">Find us on Google:</h4><div class="textwidget custom-html-widget"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2800.2095123674844!2d-121.59246648445955!3d45.425277779100476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54be0243a5ebfe1f%3A0xd5b7941756b8a8a5!2sCooper%20Spur%20Mountain%20Resort!5e0!3m2!1sen!2sus!4v1603304415465!5m2!1sen!2sus" width="300" height="250" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0" aria-label="Google Map"></iframe></div></section></div></div></div><div class="col-v2 col-v2-right cc-4"><div class="item--inner builder-item--footer-3" data-section="sidebar-widgets-footer-3" data-item-id="footer-3" ><div class="widget-area"><section id="text-19" class="widget widget_text"><h4 class="widget-title">Our Address:</h4>			<div class="textwidget"><p><a href="https://www.google.com/search?q=cooper%20spur&amp;oq=cooper+spur&amp;aqs=chrome.0.69i59j35i39j46i20i175i199i263j0l2j46i175i199j69i60l2.2888j0j7&amp;sourceid=chrome&amp;ie=UTF-8&amp;sxsrf=ALeKk03nukMm1P5YZDfE8EmF1DaL5M2kfA:1603334567745&amp;npsic=0&amp;rflfq=1&amp;rlha=0&amp;rllag=45406971,-121625552,3422&amp;tbm=lcl&amp;rldimm=15399940278776801445&amp;lqi=Cgtjb29wZXIgc3B1ckiVmIKg_4GAgAhaIgoLY29vcGVyIHNwdXIQABABGAAYASILY29vcGVyIHNwdXI&amp;phdesc=Rfzxa7dA2gA&amp;ved=2ahUKEwiy8fbalsfsAhWLqp4KHe8sB-QQvS4wAHoECAwQHA&amp;rldoc=1&amp;tbs=lrf:!1m4!1u2!2m2!2m1!1e1!2m1!1e2!3sIAE,lf:1,lf_ui:1&amp;rlst=f#rlfi=hd:;si:15399940278776801445,l,Cgtjb29wZXIgc3B1ckiVmIKg_4GAgAhaIgoLY29vcGVyIHNwdXIQABABGAAYASILY29vcGVyIHNwdXI,y,Rfzxa7dA2gA;mv:[[45.4279541,-121.58538989999998],[45.3779968,-121.67663019999999]];tbs:lrf:!1m4!1u2!2m2!2m1!1e1!2m1!1e2!3sIAE,lf:1,lf_ui:1">Cooper Spur Mt. Resort</a><br />
++10755 Cooper Spur Rd,<br />
++Mt Hood, OR 97041<br />
++<a href="https://www.google.com/search?q=cooper%20spur&amp;oq=cooper+spur&amp;aqs=chrome.0.69i59j35i39j46i20i175i199i263j0l2j46i175i199j69i60l2.2888j0j7&amp;sourceid=chrome&amp;ie=UTF-8&amp;sxsrf=ALeKk03nukMm1P5YZDfE8EmF1DaL5M2kfA:1603334567745&amp;npsic=0&amp;rflfq=1&amp;rlha=0&amp;rllag=45406971,-121625552,3422&amp;tbm=lcl&amp;rldimm=15399940278776801445&amp;lqi=Cgtjb29wZXIgc3B1ckiVmIKg_4GAgAhaIgoLY29vcGVyIHNwdXIQABABGAAYASILY29vcGVyIHNwdXI&amp;phdesc=Rfzxa7dA2gA&amp;ved=2ahUKEwiy8fbalsfsAhWLqp4KHe8sB-QQvS4wAHoECAwQHA&amp;rldoc=1&amp;tbs=lrf:!1m4!1u2!2m2!2m1!1e1!2m1!1e2!3sIAE,lf:1,lf_ui:1&amp;rlst=f#" data-dtype="d3ifr" data-local-attribute="d3ph" data-ved="2ahUKEwjV6uTglsfsAhVKoZ4KHRExA9gQkAgoADAHegQIEBAW"><span role="link" aria-label="Call Phone Number (541) 352-6692">(541) 352-6692</span></a></p>
++</div>
++		</section></div></div></div><div class="col-v2 col-v2-col4 cc-4"><div class="item--inner builder-item--footer-social-icons" data-section="footer_social_icons" data-item-id="footer-social-icons" ><ul class="footer-social-icons customify-builder-social-icons color-default"><li><a class="social-icon-facebook shape-circle" rel="nofollow noopener" target="_blank" href="https://www.facebook.com/CooperSpur/" aria-label="Facebook"><i class="social-icon fa fa-facebook" title="Facebook"></i></a></li><li></a></li><li></a></li><li><a class="social-icon-instagram shape-circle" rel="nofollow noopener" target="_blank" href="https://www.instagram.com/cooperspurmountainresort/?hl=en" aria-label="Instagram"><i class="social-icon fa fa-instagram" title="Instagram"></i></a></li><li><a class="social-icon-pinterest shape-circle" rel="nofollow noopener" target="_blank" href="https://www.pinterest.com/mthoodmeadowsweddings/" aria-label="Pinterest"><i class="social-icon fa fa-pinterest" title="Pinterest"></i></a></li></ul></div></div></div></div>									</div>
++								</div>
++							</div>
++														<div  class="footer-bottom footer--row layout-full-contained"  id="cb-row--footer-bottom"  data-row-id="bottom"  data-show-on="desktop">
++								<div class="footer--row-inner footer-bottom-inner dark-mode">
++									<div class="customify-container">
++										<div class="customify-grid customify-grid-middle"><div class="row-v2 row-v2-bottom full-cols"><div class="col-v2 col-v2-left cc-1"><div class="item--inner builder-item--footer_copyright" data-section="footer_copyright" data-item-id="footer_copyright" ><div class="builder-footer-copyright-item footer-copyright"><p>Copyright &copy; 2026 Cooper Spur Mountain Resort &#8211; <a href="https://www.cooperspur.com/privacy-policy/">Privacy Policy</a></p>
++</div></div></div></div></div>									</div>
++								</div>
++							</div>
++							</footer></div><!-- #page -->
++
++<script type='text/javascript'>
++/* <![CDATA[ */
++var rtb_pickadate = {"date_format":"mmmm d, yyyy","time_format":"h:i A","disable_dates":[2,3,["2026",4,"14"]],"schedule_open":[{"weekdays":{"friday":"1","saturday":"1","sunday":"1"},"time":{"start":"8:00 AM","end":"8:45 PM"}},{"weekdays":{"monday":"1","thursday":"1"},"time":{"start":"11:00 AM","end":"8:45 PM"}}],"schedule_closed":[{"date":"2026\/05\/14"}],"multiple_locations_enabled":false,"early_bookings":"30","late_bookings":"60","enable_max_reservations":null,"location_timeslot_party_rules":true,"max_people":null,"enable_tables":null,"date_onload":"empty","time_interval":"30","first_day":"1","allow_past":false,"date_today_label":"Today","date_clear_label":"Clear","date_close_label":"Close","time_clear_label":"Clear"}
++/* ]]> */
++</script>
++<script type="speculationrules">
++{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/customify/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
++</script>
++<script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/app/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:'86ddc52a68cc73307a7c49e10f507690'})})</script>			<script>
++				const lazyloadRunObserver = () => {
++					const lazyloadBackgrounds = document.querySelectorAll( `.e-con.e-parent:not(.e-lazyloaded)` );
++					const lazyloadBackgroundObserver = new IntersectionObserver( ( entries ) => {
++						entries.forEach( ( entry ) => {
++							if ( entry.isIntersecting ) {
++								let lazyloadBackground = entry.target;
++								if( lazyloadBackground ) {
++									lazyloadBackground.classList.add( 'e-lazyloaded' );
++								}
++								lazyloadBackgroundObserver.unobserve( entry.target );
++							}
++						});
++					}, { rootMargin: '200px 0px 200px 0px' } );
++					lazyloadBackgrounds.forEach( ( lazyloadBackground ) => {
++						lazyloadBackgroundObserver.observe( lazyloadBackground );
++					} );
++				};
++				const events = [
++					'DOMContentLoaded',
++					'elementor/lazyload/observe',
++				];
++				events.forEach( ( event ) => {
++					document.addEventListener( event, lazyloadRunObserver );
++				} );
++			</script>
++				<script type='text/javascript'>
++		(function () {
++			var c = document.body.className;
++			c = c.replace(/woocommerce-no-js/, 'woocommerce-js');
++			document.body.className = c;
++		})();
++	</script>
++	
++<div id="photoswipe-fullscreen-dialog" class="pswp" tabindex="-1" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Full screen image">
++	<div class="pswp__bg"></div>
++	<div class="pswp__scroll-wrap">
++		<div class="pswp__container">
++			<div class="pswp__item"></div>
++			<div class="pswp__item"></div>
++			<div class="pswp__item"></div>
++		</div>
++		<div class="pswp__ui pswp__ui--hidden">
++			<div class="pswp__top-bar">
++				<div class="pswp__counter"></div>
++				<button class="pswp__button pswp__button--zoom" aria-label="Zoom in/out"></button>
++				<button class="pswp__button pswp__button--fs" aria-label="Toggle fullscreen"></button>
++				<button class="pswp__button pswp__button--share" aria-label="Share"></button>
++				<button class="pswp__button pswp__button--close" aria-label="Close (Esc)"></button>
++				<div class="pswp__preloader">
++					<div class="pswp__preloader__icn">
++						<div class="pswp__preloader__cut">
++							<div class="pswp__preloader__donut"></div>
++						</div>
++					</div>
++				</div>
++			</div>
++			<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
++				<div class="pswp__share-tooltip"></div>
++			</div>
++			<button class="pswp__button pswp__button--arrow--left" aria-label="Previous (arrow left)"></button>
++			<button class="pswp__button pswp__button--arrow--right" aria-label="Next (arrow right)"></button>
++			<div class="pswp__caption">
++				<div class="pswp__caption__center"></div>
++			</div>
++		</div>
++	</div>
++</div>
++<script type="text/template" id="tmpl-variation-template">
++	<div class="woocommerce-variation-description">{{{ data.variation.variation_description }}}</div>
++	<div class="woocommerce-variation-price">{{{ data.variation.price_html }}}</div>
++	<div class="woocommerce-variation-availability">{{{ data.variation.availability_html }}}</div>
++</script>
++<script type="text/template" id="tmpl-unavailable-variation-template">
++	<p role="alert">Sorry, this product is unavailable. Please choose a different combination.</p>
++</script>
++<link rel='stylesheet' id='weeconnectpay-payment-fields-css-css' href='https://cooperspur.com/wp-content/plugins/weeconnectpay/site/css/weeconnect-public.css?ver=4.1.2' media='all' />
++<link rel='stylesheet' id='wc-blocks-style-css' href='https://cooperspur.com/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks.css?ver=wc-10.8.1' media='all' />
++<link rel='stylesheet' id='eael-6848-css' href='https://cooperspur.com/wp-content/uploads/essential-addons-elementor/eael-6848.css?ver=1776610564' media='all' />
++<link rel='stylesheet' id='elementor-post-6848-css' href='https://cooperspur.com/wp-content/uploads/elementor/css/post-6848.css?ver=1782906279' media='all' />
++<link rel='stylesheet' id='embedpress-elementor-css-css' href='https://cooperspur.com/wp-content/plugins/embedpress/assets/css/embedpress-elementor.css?ver=1781211330' media='all' />
++<link rel='stylesheet' id='photoswipe-css' href='https://cooperspur.com/wp-content/plugins/woocommerce/assets/css/photoswipe/photoswipe.min.css?ver=10.8.1' media='all' />
++<link rel='stylesheet' id='photoswipe-default-skin-css' href='https://cooperspur.com/wp-content/plugins/woocommerce/assets/css/photoswipe/default-skin/default-skin.min.css?ver=10.8.1' media='all' />
++<script id="jquery-ui-core-js" src="https://cooperspur.com/wp-includes/js/jquery/ui/core.min.js?ver=1.13.3"></script>
++<script id="jquery-ui-menu-js" src="https://cooperspur.com/wp-includes/js/jquery/ui/menu.min.js?ver=1.13.3"></script>
++<script id="wp-dom-ready-js" src="https://cooperspur.com/wp-includes/js/dist/dom-ready.min.js?ver=a06281ae5cf5500e9317"></script>
++<script id="wp-hooks-js" src="https://cooperspur.com/wp-includes/js/dist/hooks.min.js?ver=7496969728ca0f95732d"></script>
++<script id="wp-i18n-js" src="https://cooperspur.com/wp-includes/js/dist/i18n.min.js?ver=781d11515ad3d91786ec"></script>
++<script id="wp-i18n-js-after">
++wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
++//# sourceURL=wp-i18n-js-after
++</script>
++<script id="wp-a11y-js" src="https://cooperspur.com/wp-includes/js/dist/a11y.min.js?ver=af934e5259bc51b8718e"></script>
++<script id="jquery-ui-autocomplete-js" src="https://cooperspur.com/wp-includes/js/jquery/ui/autocomplete.min.js?ver=1.13.3"></script>
++<script data-wp-strategy="async" id="google-tag-manager-js" src="https://www.googletagmanager.com/gtag/js?id=G-LHPHV84JWF"></script>
++<script id="woocommerce-google-analytics-integration-js" src="https://cooperspur.com/wp-content/plugins/woocommerce-google-analytics-integration/assets/js/build/main.js?ver=609ae83e1aacdc1c017a"></script>
++<script id="fullcalendar-js-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/calendar/fullcalendar.index.global.min.js?ver=6.1.17"></script>
++<script id="mep-calendar-js-js-extra">
++var mepCalendar = {"ajaxurl":"https://cooperspur.com/wp-admin/admin-ajax.php","nonce":"6a43514060","settings":{"mep_cal_default_view":"dayGridMonth","mep_cal_first_day":"1","mep_cal_calendar_width":"100%","mep_cal_calendar_height":"auto","mep_cal_event_source":"all","mep_cal_specific_events":"","mep_cal_event_color":"#3a87ad","mep_cal_event_text_color":"#ffffff","mep_cal_today_color":"#fcf8e3","mep_cal_header_bg":"#2c3e50","mep_cal_header_text":"#ffffff","mep_cal_border_color":"#ddd","mep_cal_sold_out_color":"#dc3545","mep_cal_low_stock_color":"#ffc107","mep_cal_low_stock_threshold":"5","mep_cal_weekday_bg_sun":"","mep_cal_weekday_bg_mon":"","mep_cal_weekday_bg_tue":"","mep_cal_weekday_bg_wed":"","mep_cal_weekday_bg_thu":"","mep_cal_weekday_bg_fri":"","mep_cal_weekday_bg_sat":"","mep_cal_day_background_rules":[],"mep_cal_show_tooltip":"yes","mep_cal_hide_expired":"no","mep_cal_show_year_nav":"yes","mep_cal_show_prev_next":"yes","mep_cal_show_expired_events":"yes","mep_cal_expired_event_color":"#999999","mep_cal_expired_text_color":"#ffffff","mep_cal_expired_opacity":"0.6","mep_cal_event_click":"navigate","mep_cal_show_thumbnail":"yes","mep_cal_show_view_switcher":"yes","mep_cal_show_venue":"no","mep_cal_show_speakers":"no","mep_cal_show_extra_services":"no","mep_cal_locale":""},"i18n":{"today":"Today","month":"Month","week":"Week","day":"Day","list":"List","noEvents":"No events to display","allDay":"All Day","soldOut":"Sold Out","available":"Available","total":"Total","sold":"Sold","reserved":"Reserved","price":"Price","location":"Location","organizer":"Organizer","recurring":"Recurring","multiDate":"Multi Date","virtual":"Virtual","allCategories":"All Categories","searchEvents":"Search events...","seats":"Seats","ticketType":"Ticket Type","prevYear":"Prev Year","nextYear":"Next Year","expired":"Expired","venue":"Venue","speakers":"Speakers","extraServices":"Extra Services","bookNow":"Book Now","viewDetails":"View Details","close":"Close","from":"From","to":"To","online":"Online","offline":"In Person","organizerFilter":"All Organizers","locationFilter":"Location, city, or country","startDate":"Start Date","endDate":"End Date","resetFilters":"Reset Filters","loadingSeats":"Loading seat details..."}};
++//# sourceURL=mep-calendar-js-js-extra
++</script>
++<script id="mep-calendar-js-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/calendar/calendar.js?ver=1783905893"></script>
++<script data-wp-strategy="defer" defer id="morphext-js-js" src="https://cooperspur.com/wp-content/plugins/mystickymenu/dist/js/morphext.js?ver=2.9.0"></script>
++<script id="welcomebar-frontjs-js-extra">
++var welcomebar_frontjs = {"ajaxurl":"https://cooperspur.com/wp-admin/admin-ajax.php","days":"Days","hours":"Hours","minutes":"Minutes","seconds":"Seconds","ajax_nonce":"d5f9915dc9"};
++//# sourceURL=welcomebar-frontjs-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="welcomebar-frontjs-js" src="https://cooperspur.com/wp-content/plugins/mystickymenu/dist/js/welcomebar-front.js?ver=2.9.0"></script>
++<script data-wp-strategy="defer" defer id="detectmobilebrowser-js" src="https://cooperspur.com/wp-content/plugins/mystickymenu/dist/js/detectmobilebrowser.js?ver=2.9.0"></script>
++<script id="mystickymenu-js-extra">
++var option = {"mystickyClass":".primary-menu","activationHeight":"0","disableWidth":"0","disableLargeWidth":"0","adminBar":"false","device_desktop":"1","device_mobile":"1","mystickyTransition":"slide","mysticky_disable_down":"false"};
++//# sourceURL=mystickymenu-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="mystickymenu-js" src="https://cooperspur.com/wp-content/plugins/mystickymenu/dist/js/mystickymenu.js?ver=2.9.0"></script>
++<script id="eae-main-js-extra">
++var eae = {"ajaxurl":"https://cooperspur.com/wp-admin/admin-ajax.php","current_url":"aHR0cHM6Ly9jb29wZXJzcHVyLmNvbS9jb25kaXRpb25zLXJlcG9ydC8=","nonce":"0a15215a1c","plugin_url":"https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/"};
++var eae_editor = {"plugin_url":"https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/"};
++//# sourceURL=eae-main-js-extra
++</script>
++<script id="eae-main-js" src="https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/js/eae.min.js?ver=1.14.5"></script>
++<script id="eae-index-js" src="https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/build/index.min.js?ver=1.14.5"></script>
++<script id="font-awesome-4-shim-js" src="https://cooperspur.com/wp-content/plugins/elementor/assets/lib/font-awesome/js/v4-shims.min.js?ver=1.0"></script>
++<script id="animated-main-js" src="https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/js/animated-main.min.js?ver=1.0"></script>
++<script id="eae-particles-js" src="https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/js/particles.min.js?ver=2.0.0"></script>
++<script id="wts-magnific-js" src="https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/lib/magnific.min.js?ver=1.1.0"></script>
++<script id="vegas-js" src="https://cooperspur.com/wp-content/plugins/addon-elements-for-elementor-page-builder/assets/lib/vegas/vegas.min.js?ver=2.4.0"></script>
++<script id="flickity-js" src="https://cooperspur.com/wp-content/plugins/iconic-woo-attribute-swatches/assets/vendor/flickity/flickity.pkgd.min.js?ver=1.17.1"></script>
++<script id="wc-accounting-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/accounting/accounting.min.js?ver=0.4.2"></script>
++<script id="iconic-was-scripts-js-extra">
++var iconic_was_vars = {"ajaxurl":"https://cooperspur.com/wp-admin/admin-ajax.php","nonce":"9366f19a71","is_mobile":"","currency":{"format_num_decimals":2,"format_symbol":"&#36;","format_decimal_sep":".","format_thousand_sep":",","format":"%s%v","price_display_suffix":""},"i18n":{"calculating":"Calculating Price...","no_selection":"No selection"}};
++//# sourceURL=iconic-was-scripts-js-extra
++</script>
++<script id="iconic-was-scripts-js" src="https://cooperspur.com/wp-content/plugins/iconic-woo-attribute-swatches/assets/frontend/js/main.min.js?ver=1.17.1"></script>
++<script id="eael-general-js-extra">
++var localize = {"ajaxurl":"https://cooperspur.com/wp-admin/admin-ajax.php","nonce":"9866ff034c","i18n":{"added":"Added ","compare":"Compare","loading":"Loading..."},"eael_translate_text":{"required_text":"is a required field","invalid_text":"Invalid","billing_text":"Billing","shipping_text":"Shipping","fg_mfp_counter_text":"of"},"page_permalink":"https://cooperspur.com/conditions-report/","cart_redirectition":"no","cart_page_url":"https://cooperspur.com/cart/","el_breakpoints":{"mobile":{"label":"Mobile Portrait","value":767,"default_value":767,"direction":"max","is_enabled":true},"mobile_extra":{"label":"Mobile Landscape","value":880,"default_value":880,"direction":"max","is_enabled":false},"tablet":{"label":"Tablet Portrait","value":1024,"default_value":1024,"direction":"max","is_enabled":true},"tablet_extra":{"label":"Tablet Landscape","value":1200,"default_value":1200,"direction":"max","is_enabled":false},"laptop":{"label":"Laptop","value":1366,"default_value":1366,"direction":"max","is_enabled":false},"widescreen":{"label":"Widescreen","value":2400,"default_value":2400,"direction":"min","is_enabled":false}}};
++//# sourceURL=eael-general-js-extra
++</script>
++<script id="eael-general-js" src="https://cooperspur.com/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/js/view/general.min.js?ver=6.6.7"></script>
++<script id="eael-2437-js" src="https://cooperspur.com/wp-content/uploads/essential-addons-elementor/eael-2437.js?ver=1776610564"></script>
++<script id="elementor-webpack-runtime-js" src="https://cooperspur.com/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=4.1.3"></script>
++<script id="elementor-frontend-modules-js" src="https://cooperspur.com/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=4.1.3"></script>
++<script id="elementor-frontend-js-extra">
++var EAELImageMaskingConfig = {"svg_dir_url":"https://cooperspur.com/wp-content/plugins/essential-addons-for-elementor-lite/assets/front-end/img/image-masking/svg-shapes/"};
++//# sourceURL=elementor-frontend-js-extra
++</script>
++<script id="elementor-frontend-js-before">
++var elementorFrontendConfig = {"environmentMode":{"edit":false,"wpPreview":false,"isScriptDebug":false},"i18n":{"shareOnFacebook":"Share on Facebook","shareOnTwitter":"Share on Twitter","pinIt":"Pin it","download":"Download","downloadImage":"Download image","fullscreen":"Fullscreen","zoom":"Zoom","share":"Share","playVideo":"Play Video","previous":"Previous","next":"Next","close":"Close","a11yCarouselPrevSlideMessage":"Previous slide","a11yCarouselNextSlideMessage":"Next slide","a11yCarouselFirstSlideMessage":"This is the first slide","a11yCarouselLastSlideMessage":"This is the last slide","a11yCarouselPaginationBulletMessage":"Go to slide"},"is_rtl":false,"breakpoints":{"xs":0,"sm":480,"md":768,"lg":1025,"xl":1440,"xxl":1600},"responsive":{"breakpoints":{"mobile":{"label":"Mobile Portrait","value":767,"default_value":767,"direction":"max","is_enabled":true},"mobile_extra":{"label":"Mobile Landscape","value":880,"default_value":880,"direction":"max","is_enabled":false},"tablet":{"label":"Tablet Portrait","value":1024,"default_value":1024,"direction":"max","is_enabled":true},"tablet_extra":{"label":"Tablet Landscape","value":1200,"default_value":1200,"direction":"max","is_enabled":false},"laptop":{"label":"Laptop","value":1366,"default_value":1366,"direction":"max","is_enabled":false},"widescreen":{"label":"Widescreen","value":2400,"default_value":2400,"direction":"min","is_enabled":false}},"hasCustomBreakpoints":false},"version":"4.1.3","is_static":false,"experimentalFeatures":{"additional_custom_breakpoints":true,"theme_builder_v2":true,"global_classes_should_enforce_capabilities":true,"e_variables":true,"e_opt_in_v4_page":true,"e_components":true,"e_interactions":true,"e_widget_creation":true,"import-export-customization":true,"e_pro_atomic_form":true,"e_pro_variables":true,"e_pro_interactions":true},"urls":{"assets":"https:\/\/cooperspur.com\/wp-content\/plugins\/elementor\/assets\/","ajaxurl":"https:\/\/cooperspur.com\/wp-admin\/admin-ajax.php","uploadUrl":"https:\/\/cooperspur.com\/wp-content\/uploads"},"nonces":{"floatingButtonsClickTracking":"f073302fbb","atomicFormsSendForm":"0219f7d8bd"},"swiperClass":"swiper","settings":{"page":[],"editorPreferences":[]},"kit":{"active_breakpoints":["viewport_mobile","viewport_tablet"],"global_image_lightbox":"yes","lightbox_enable_counter":"yes","lightbox_enable_fullscreen":"yes","lightbox_enable_zoom":"yes","lightbox_enable_share":"yes","lightbox_title_src":"title","lightbox_description_src":"description","woocommerce_notices_elements":[]},"post":{"id":2437,"title":"Weather%20Conditions%20Report%20-%20at%20Cooper%20Spur%20Mountain%20Resort","excerpt":"","featuredImage":false}};
++//# sourceURL=elementor-frontend-js-before
++</script>
++<script id="elementor-frontend-js" src="https://cooperspur.com/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=4.1.3"></script>
++<script id="sourcebuster-js-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/sourcebuster/sourcebuster.min.js?ver=10.8.1"></script>
++<script id="wc-order-attribution-js-extra">
++var wc_order_attribution = {"params":{"lifetime":1.0e-5,"session":30,"base64":false,"ajaxurl":"https://cooperspur.com/wp-admin/admin-ajax.php","prefix":"wc_order_attribution_","allowTracking":true},"fields":{"source_type":"current.typ","referrer":"current_add.rf","utm_campaign":"current.cmp","utm_source":"current.src","utm_medium":"current.mdm","utm_content":"current.cnt","utm_id":"current.id","utm_term":"current.trm","utm_source_platform":"current.plt","utm_creative_format":"current.fmt","utm_marketing_tactic":"current.tct","session_entry":"current_add.ep","session_start_time":"current_add.fd","session_pages":"session.pgs","session_count":"udata.vst","user_agent":"udata.uag"}};
++//# sourceURL=wc-order-attribution-js-extra
++</script>
++<script id="wc-order-attribution-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/frontend/order-attribution.min.js?ver=10.8.1"></script>
++<script id="tawcvs-frontend-js-extra">
++var tawcvs_config = {"large_product_threshold":"100"};
++//# sourceURL=tawcvs-frontend-js-extra
++</script>
++<script id="tawcvs-frontend-js" src="https://cooperspur.com/wp-content/plugins/variation-swatches-for-woocommerce/assets/js/frontend.js?ver=2.2.7"></script>
++<script id="gforms_recaptcha_recaptcha-js-extra">
++var gforms_recaptcha_recaptcha_strings = {"nonce":"8cf6f40f5c","disconnect":"Disconnecting","change_connection_type":"Resetting","spinner":"https://cooperspur.com/wp-content/plugins/gravityforms/images/spinner.svg","connection_type":"classic","disable_badge":"","change_connection_type_title":"Change Connection Type","change_connection_type_message":"Changing the connection type will delete your current settings.  Do you want to proceed?","disconnect_title":"Disconnect","disconnect_message":"Disconnecting from reCAPTCHA will delete your current settings.  Do you want to proceed?","site_key":"6LcGIYcnAAAAABqMpCyP5ggDBIv_AHvOkSrCvM4n"};
++//# sourceURL=gforms_recaptcha_recaptcha-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="gforms_recaptcha_recaptcha-js" src="https://www.google.com/recaptcha/api.js?render=6LcGIYcnAAAAABqMpCyP5ggDBIv_AHvOkSrCvM4n&#038;ver=2.2.2"></script>
++<script data-wp-strategy="defer" defer id="gforms_recaptcha_frontend-js" src="https://cooperspur.com/wp-content/plugins/gravityformsrecaptcha/js/frontend.min.js?ver=2.2.2"></script>
++<script id="jquery-ui-datepicker-js" src="https://cooperspur.com/wp-includes/js/jquery/ui/datepicker.min.js?ver=1.13.3"></script>
++<script id="jquery-ui-datepicker-js-after">
++jQuery(function(jQuery){jQuery.datepicker.setDefaults({"closeText":"Close","currentText":"Today","monthNames":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"nextText":"Next","prevText":"Previous","dayNames":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"dayNamesShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"dayNamesMin":["S","M","T","W","T","F","S"],"dateFormat":"MM d, yy","firstDay":1,"isRTL":false});});
++//# sourceURL=jquery-ui-datepicker-js-after
++</script>
++<script id="jquery-ui-accordion-js" src="https://cooperspur.com/wp-includes/js/jquery/ui/accordion.min.js?ver=1.13.3"></script>
++<script id="mp_owl_carousel-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/owl_carousel/owl.carousel.min.js?ver=2.3.4"></script>
++<script id="mpwem_global-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/mp_style/mpwem_global.js?ver=1783905894"></script>
++<script id="mep-mixitup-min-js-js" src="https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.3.0/mixitup.min.js?ver=3.3.0"></script>
++<script id="mep-countdown-js-js" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js?ver=1"></script>
++<script id="mep-moment-js-js" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js?ver=1"></script>
++<script id="mep-timeline-min-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/timeline/timeline.min.js?ver=1"></script>
++<script id="mep-calendar-scripts-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/helper/calender/calendar.min.js?ver=1"></script>
++<script id="filter_pagination-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/frontend/filter_pagination.js?ver=1783905894"></script>
++<script id="mpwem_script-js-extra">
++var mpwem_script_var = {"url":"https://cooperspur.com/wp-admin/admin-ajax.php","nonce":"a48f9ef3cd"};
++//# sourceURL=mpwem_script-js-extra
++</script>
++<script id="mpwem_script-js" src="https://cooperspur.com/wp-content/plugins/mage-eventpress/assets/frontend/mpwem_script.js?ver=1783905894"></script>
++<script id="customify-themejs-js-extra">
++var Customify_JS = {"is_rtl":"","css_media_queries":{"all":"%s","desktop":"%s","tablet":"@media screen and (max-width: 1024px) { %s }","mobile":"@media screen and (max-width: 568px) { %s }"},"sidebar_menu_no_duplicator":"1","wc_open_cart":""};
++//# sourceURL=customify-themejs-js-extra
++</script>
++<script id="customify-themejs-js" src="https://cooperspur.com/wp-content/themes/customify/build/js/frontend/theme.min.js?ver=0.4.20"></script>
++<script id="plugin-woocommerce-js" src="https://cooperspur.com/wp-content/themes/customify/build/js/frontend/woocommerce.min.js?ver=0.4.20"></script>
++<script id="wp-accessibility-js-extra">
++var wpa = {"skiplinks":{"enabled":false,"output":""},"target":"1","tabindex":"1","underline":{"enabled":false,"target":"a"},"videos":"","dir":"ltr","viewport":"1","lang":"en-US","titles":"1","labels":"1","wpalabels":{"s":"Search","author":"Name","email":"Email","url":"Website","comment":"Comment"},"alt":"","altSelector":".hentry img[alt]:not([alt=\"\"]), .comment-content img[alt]:not([alt=\"\"]), #content img[alt]:not([alt=\"\"]),.entry-content img[alt]:not([alt=\"\"])","current":"","errors":"","tracking":"","ajaxurl":"https://cooperspur.com/wp-admin/admin-ajax.php","security":"4d3bbee2a7","action":"wpa_stats_action","url":"https://cooperspur.com/conditions-report/","post_id":"2437","continue":"","pause":"Pause video","play":"Play video","restUrl":"https://cooperspur.com/wp-json/wp/v2/media","ldType":"button","ldHome":"https://cooperspur.com","ldText":"\u003Cspan class=\"dashicons dashicons-media-text\" aria-hidden=\"true\"\u003E\u003C/span\u003E\u003Cspan class=\"screen-reader\"\u003ELong Description\u003C/span\u003E"};
++//# sourceURL=wp-accessibility-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="wp-accessibility-js" src="https://cooperspur.com/wp-content/plugins/wp-accessibility/js/wp-accessibility.min.js?ver=2.3.3"></script>
++<script id="wc-cart-fragments-js-extra">
++var wc_cart_fragments_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","cart_hash_key":"wc_cart_hash_111c0c565901957ca581a4f3dcc0f420","fragment_name":"wc_fragments_111c0c565901957ca581a4f3dcc0f420","request_timeout":"5000"};
++//# sourceURL=wc-cart-fragments-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="wc-cart-fragments-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min.js?ver=10.8.1"></script>
++<script id="eael-6848-js" src="https://cooperspur.com/wp-content/uploads/essential-addons-elementor/eael-6848.js?ver=1776610564"></script>
++<script id="woocommerce-google-analytics-integration-data-js-after">
++window.ga4w = { data: {"cart":{"items":[],"coupons":[],"totals":{"currency_code":"USD","total_price":0,"currency_minor_unit":2}},"list_name":"Product List"}, settings: {"tracker_function_name":"gtag","events":["purchase","add_to_cart","remove_from_cart","view_item_list","select_content","view_item","begin_checkout","add_shipping_info","add_payment_info"],"identifier":"product_sku","currency":{"decimalSeparator":".","thousandSeparator":",","precision":2}} }; document.dispatchEvent(new Event("ga4w:ready"));
++//# sourceURL=woocommerce-google-analytics-integration-data-js-after
++</script>
++<script id="elementor-pro-webpack-runtime-js" src="https://cooperspur.com/wp-content/plugins/elementor-pro/assets/js/webpack-pro.runtime.min.js?ver=4.1.1"></script>
++<script id="elementor-pro-frontend-js-before">
++var ElementorProFrontendConfig = {"ajaxurl":"https:\/\/cooperspur.com\/wp-admin\/admin-ajax.php","nonce":"6477b01fc0","urls":{"assets":"https:\/\/cooperspur.com\/wp-content\/plugins\/elementor-pro\/assets\/","rest":"https:\/\/cooperspur.com\/wp-json\/"},"settings":{"lazy_load_background_images":true},"popup":{"hasPopUps":false},"shareButtonsNetworks":{"facebook":{"title":"Facebook","has_counter":true},"twitter":{"title":"Twitter"},"linkedin":{"title":"LinkedIn","has_counter":true},"pinterest":{"title":"Pinterest","has_counter":true},"reddit":{"title":"Reddit","has_counter":true},"vk":{"title":"VK","has_counter":true},"odnoklassniki":{"title":"OK","has_counter":true},"tumblr":{"title":"Tumblr"},"digg":{"title":"Digg"},"skype":{"title":"Skype"},"stumbleupon":{"title":"StumbleUpon","has_counter":true},"mix":{"title":"Mix"},"telegram":{"title":"Telegram"},"pocket":{"title":"Pocket","has_counter":true},"xing":{"title":"XING","has_counter":true},"whatsapp":{"title":"WhatsApp"},"email":{"title":"Email"},"print":{"title":"Print"},"x-twitter":{"title":"X"},"threads":{"title":"Threads"}},"woocommerce":{"menu_cart":{"cart_page_url":"https:\/\/cooperspur.com\/cart\/","checkout_page_url":"https:\/\/cooperspur.com\/checkout\/","fragments_nonce":"1b5d589669"}},"facebook_sdk":{"lang":"en_US","app_id":""},"lottie":{"defaultAnimationUrl":"https:\/\/cooperspur.com\/wp-content\/plugins\/elementor-pro\/modules\/lottie\/assets\/animations\/default.json"}};
++//# sourceURL=elementor-pro-frontend-js-before
++</script>
++<script id="elementor-pro-frontend-js" src="https://cooperspur.com/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=4.1.1"></script>
++<script id="pro-elements-handlers-js" src="https://cooperspur.com/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.1"></script>
++<script data-wp-strategy="defer" defer id="wc-zoom-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/zoom/jquery.zoom.min.js?ver=1.7.21-wc.10.8.1"></script>
++<script data-wp-strategy="defer" defer id="wc-flexslider-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/flexslider/jquery.flexslider.min.js?ver=2.7.2-wc.10.8.1"></script>
++<script data-wp-strategy="defer" defer id="wc-photoswipe-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/photoswipe/photoswipe.min.js?ver=4.1.1-wc.10.8.1"></script>
++<script data-wp-strategy="defer" defer id="wc-photoswipe-ui-default-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/photoswipe/photoswipe-ui-default.min.js?ver=4.1.1-wc.10.8.1"></script>
++<script id="underscore-js" src="https://cooperspur.com/wp-includes/js/underscore.min.js?ver=1.13.8"></script>
++<script id="wp-util-js-extra">
++var _wpUtilSettings = {"ajax":{"url":"/wp-admin/admin-ajax.php"}};
++//# sourceURL=wp-util-js-extra
++</script>
++<script id="wp-util-js" src="https://cooperspur.com/wp-includes/js/wp-util.min.js?ver=7.0.1"></script>
++<script id="wc-add-to-cart-variation-js-extra">
++var wc_add_to_cart_variation_params = {"wc_ajax_url":"/?wc-ajax=%%endpoint%%","i18n_no_matching_variations_text":"Sorry, no products matched your selection. Please choose a different combination.","i18n_make_a_selection_text":"Please select some product options before adding this product to your cart.","i18n_unavailable_text":"Sorry, this product is unavailable. Please choose a different combination.","i18n_reset_alert_text":"Your selection has been reset. Please select some product options before adding this product to your cart."};
++//# sourceURL=wc-add-to-cart-variation-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="wc-add-to-cart-variation-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart-variation.min.js?ver=10.8.1"></script>
++<script id="wc-single-product-js-extra">
++var wc_single_product_params = {"i18n_required_rating_text":"Please select a rating","i18n_rating_options":["1 of 5 stars","2 of 5 stars","3 of 5 stars","4 of 5 stars","5 of 5 stars"],"i18n_product_gallery_trigger_text":"View full-screen image gallery","review_rating_required":"yes","flexslider":{"rtl":false,"animation":"slide","smoothHeight":true,"directionNav":false,"controlNav":"thumbnails","slideshow":false,"animationSpeed":500,"animationLoop":false,"allowOneSlide":false},"zoom_enabled":"1","zoom_options":[],"photoswipe_enabled":"1","photoswipe_options":{"shareEl":false,"closeOnScroll":false,"history":false,"hideAnimationDuration":0,"showAnimationDuration":0},"flexslider_enabled":"1"};
++//# sourceURL=wc-single-product-js-extra
++</script>
++<script data-wp-strategy="defer" defer id="wc-single-product-js" src="https://cooperspur.com/wp-content/plugins/woocommerce/assets/js/frontend/single-product.min.js?ver=10.8.1"></script>
++<script id="wp-emoji-settings" type="application/json">
++{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://cooperspur.com/wp-includes/js/wp-emoji-release.min.js?ver=7.0.1"}}
++</script>
++<script type="module">
++/*! This file is auto-generated */
++const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(window._wpemojiSettings=a,"wpEmojiSettingsSupports"),s=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const a=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===a[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,a){let r;const o=(r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),s=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(e=>{s[e]=t(o,e,n,a)}),s}function r(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}a.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),c.toString(),p.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"});const r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=e=>{i(n=e.data),r.terminate(),t(n)})}catch(e){}i(n=f(s,u,c,p))}t(n)}).then(e=>{for(const n in e)a.supports[n]=e[n],a.supports.everything=a.supports.everything&&a.supports[n],"flag"!==n&&(a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&a.supports[n]);var t;a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&!a.supports.flag,a.supports.everything||((t=a.source||{}).concatemoji?r(t.concatemoji):t.wpemoji&&t.twemoji&&(r(t.twemoji),r(t.wpemoji)))});
++//# sourceURL=https://cooperspur.com/wp-includes/js/wp-emoji-loader.min.js
++</script>
++<script>
++document.addEventListener("DOMContentLoaded", function () {
++
++  // -------------------------------------------------------
++  // 1. Fix Elementor Accordion Tabs (remove nested <a>)
++  // -------------------------------------------------------
++  document.querySelectorAll(".elementor-tab-title a.elementor-accordion-title").forEach(link => {
++    const span = document.createElement('span');
++    span.className = link.className;
++    span.textContent = link.textContent;
++    link.replaceWith(span);
++  });
++
++  // -------------------------------------------------------
++  // 2. Strip interactive role from listbox buttons
++  // -------------------------------------------------------
++  document.querySelectorAll('ul[role="listbox"] li button').forEach(button => {
++    const span = document.createElement('span');
++    span.className = button.className;
++    span.textContent = button.textContent;
++    span.style.cursor = 'pointer';
++    span.setAttribute('aria-hidden', 'true');
++    span.addEventListener('click', () => button.click());
++    button.replaceWith(span);
++  });
++
++  // -------------------------------------------------------
++  // 3. Fix Date and Time Pickers ARIA Attributes
++  // -------------------------------------------------------
++  ["rtb-date", "rtb-time"].forEach(id => {
++    const el = document.getElementById(id);
++    if (!el) return;
++    el.setAttribute("role", "combobox");
++    el.setAttribute("aria-haspopup", "dialog");
++    el.setAttribute("aria-expanded", "false");
++    const owns = el.getAttribute("aria-owns");
++    if (owns) {
++      el.setAttribute('aria-controls', owns);
++      el.removeAttribute('aria-owns');
++    }
++    if (el.hasAttribute('readonly')) {
++      el.setAttribute('aria-readonly', 'true');
++    }
++  });
++
++  // -------------------------------------------------------
++  // 4. FAQ link aria-label
++  // -------------------------------------------------------
++  document.querySelectorAll('a[href*="/faq"]').forEach(link => {
++    if (link.textContent.trim() === 'FAQ') {
++      link.setAttribute('aria-label', 'Frequently Asked Questions');
++    }
++  });
++
++  // -------------------------------------------------------
++  // 5. Logo link aria-label
++  // -------------------------------------------------------
++  const homeUrl = window.location.origin + "/";
++  document.querySelectorAll(`a.logo-link[href^="${homeUrl}"]`).forEach((link, index) => {
++    if (!link.hasAttribute("aria-label")) {
++      link.setAttribute("aria-label",
++        index === 0
++          ? "Cooper Spur Mountain Resort Home"
++          : `Cooper Spur Mountain Resort Home (Logo ${index + 1})`
++      );
++    }
++  });
++
++  // -------------------------------------------------------
++  // 6. Gallery lightbox links
++  // -------------------------------------------------------
++  document.querySelectorAll('a[data-elementor-open-lightbox="yes"]').forEach(el => {
++    el.setAttribute('role', 'button');
++    el.setAttribute('aria-haspopup', 'dialog');
++    if (!el.getAttribute('aria-label')) {
++      el.setAttribute('aria-label', 'Open image in lightbox');
++    }
++  });
++
++  // -------------------------------------------------------
++  // 7. Lightbox keyboard navigation
++  // -------------------------------------------------------
++  (function () {
++    var FOCUSABLE = [
++      '.dialog-close-button',
++      '.elementor-slideshow__header [tabindex="0"]',
++      '.elementor-swiper-button-next',
++      '.elementor-swiper-button-prev'
++    ].join(', ');
++
++    var CLICKABLE = [
++      '.eicon-zoom-in-bold',
++      '.eicon-frame-expand',
++      '.eicon-share-arrow',
++      '.elementor-swiper-button-next',
++      '.elementor-swiper-button-prev',
++      '.dialog-close-button'
++    ].join(', ');
++
++    function patchButtons() {
++      document.querySelectorAll(CLICKABLE).forEach(function (btn) {
++        if (btn.dataset.kbPatched) return;
++        btn.dataset.kbPatched = 'true';
++        btn.addEventListener('keydown', function (e) {
++          if (e.key === 'Enter' || e.key === ' ') {
++            e.preventDefault();
++            e.stopImmediatePropagation();
++            btn.click();
++          }
++        }, true);
++      });
++    }
++
++    document.addEventListener('keydown', function (e) {
++      if (e.key !== 'Tab') return;
++      var lightbox = document.querySelector('.dialog-lightbox-widget');
++      if (!lightbox || window.getComputedStyle(lightbox).display === 'none') return;
++      var focusable = Array.from(lightbox.querySelectorAll(FOCUSABLE))
++        .filter(el => el.offsetWidth > 0 || el.closest('.elementor-lightbox'));
++      var currentIndex = focusable.indexOf(document.activeElement);
++      if (currentIndex === -1) return;
++      e.preventDefault();
++      e.stopImmediatePropagation();
++      var nextIndex = e.shiftKey
++        ? (currentIndex - 1 + focusable.length) % focusable.length
++        : (currentIndex + 1) % focusable.length;
++      focusable[nextIndex].focus();
++    }, true);
++
++    document.addEventListener('focusin', function (e) {
++      var lightbox = document.querySelector('.dialog-lightbox-widget');
++      if (!lightbox || !lightbox.contains(e.target)) return;
++      var swiper = document.querySelector('.elementor-lightbox .swiper');
++      if (swiper) swiper.classList.remove('elementor-slideshow--ui-hidden');
++    }, true);
++
++    patchButtons();
++    new MutationObserver(patchButtons).observe(document.body, { childList: true, subtree: true });
++  })();
++
++  // -------------------------------------------------------
++  // 8. Desktop nav: submenu keyboard support + ARIA
++  // -------------------------------------------------------
++  document.querySelectorAll(
++    '#site-navigation-bottom-desktop .menu-item-has-children > a'
++  ).forEach(link => {
++    const li = link.closest('.menu-item-has-children');
++    link.setAttribute('aria-haspopup', 'true');
++    link.setAttribute('aria-expanded', 'false');
++
++    link.addEventListener('keydown', function (e) {
++      if (e.key === 'Enter' || e.key === ' ') {
++        e.preventDefault();
++        const isOpen = li.classList.contains('focus');
++        li.classList.toggle('focus', !isOpen);
++        link.setAttribute('aria-expanded', String(!isOpen));
++      }
++      if (e.key === 'Escape') {
++        li.classList.remove('focus');
++        link.setAttribute('aria-expanded', 'false');
++        link.focus();
++      }
++    });
++
++    li.addEventListener('focusout', function () {
++      setTimeout(() => {
++        if (!li.contains(document.activeElement)) {
++          li.classList.remove('focus');
++          link.setAttribute('aria-expanded', 'false');
++        }
++      }, 100);
++    });
++  });
++
++  // -------------------------------------------------------
++  // 9. Mobile nav toggle
++  // -------------------------------------------------------
++  const mobileToggle = document.querySelector('.menu-mobile-toggle');
++  if (mobileToggle) {
++    mobileToggle.setAttribute('aria-label', 'Open navigation menu');
++    mobileToggle.setAttribute('aria-expanded', 'false');
++    mobileToggle.setAttribute('aria-controls', 'site-navigation-sidebar-mobile');
++    mobileToggle.addEventListener('click', function () {
++      const isOpen = this.getAttribute('aria-expanded') === 'true';
++      this.setAttribute('aria-expanded', String(!isOpen));
++      this.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
++    });
++  }
++
++  // -------------------------------------------------------
++  // 10. Nav landmark labels
++  // -------------------------------------------------------
++  const desktopNav = document.querySelector('#site-navigation-bottom-desktop');
++  const mobileNav  = document.querySelector('#site-navigation-sidebar-mobile');
++  if (desktopNav) desktopNav.setAttribute('aria-label', 'Main');
++  if (mobileNav)  mobileNav.setAttribute('aria-label', 'Main mobile');
++
++});
++	
++</script>
++
++</body>
++</html>
+-- 
+2.39.5
+
