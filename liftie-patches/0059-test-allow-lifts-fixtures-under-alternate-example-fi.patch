@@ -1,0 +1,41 @@
+From 532d037f95df46c3d2d8d250e30b58c58570ec19 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:17:44 +0000
+Subject: [PATCH 59/77] test: allow lifts fixtures under alternate example
+ filenames
+
+Same opts.example escape hatch the trails harness has. Needed so fixture
+refreshes can ship as new files: several upstream example pages contain
+CRLF lines, and a patch that modifies or deletes them cannot survive
+git-am's CR stripping - replacement fixtures are added under a new name
+instead, leaving the old file untouched.
+---
+ test/lifts/index.js | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/test/lifts/index.js b/test/lifts/index.js
+index c41ec9b..71500f1 100644
+--- a/test/lifts/index.js
++++ b/test/lifts/index.js
+@@ -6,7 +6,8 @@ import makeParse from '../../lib/lifts/parse.js';
+ import parser from '../../lib/lifts/parser.js';
+ 
+ export default async function testResort(name, ext, expected, opts = {}) {
+-  const filename = resolve(import.meta.dirname, `../resorts/example/${name}.${ext}`);
++  const { example = name, ...testOpts } = opts;
++  const filename = resolve(import.meta.dirname, `../resorts/example/${example}.${ext}`);
+   const parse = await makeParse(name);
+ 
+   function testHTML(_t, done) {
+@@ -34,7 +35,7 @@ export default async function testResort(name, ext, expected, opts = {}) {
+   }
+ 
+   const tested = ext === 'json' ? testJSON : testHTML;
+-  test(`${name} should return lift status`, opts, tested);
++  test(`${name} should return lift status`, testOpts, tested);
+ }
+ 
+ testResort.only = (...args) => testResort(...args, { only: true });
+-- 
+2.43.0
+

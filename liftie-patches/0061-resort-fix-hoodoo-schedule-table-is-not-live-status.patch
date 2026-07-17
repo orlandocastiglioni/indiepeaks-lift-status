@@ -1,0 +1,2569 @@
+From 21789fa800f489a0db290b8f23d5d898abee3a04 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 12:59:00 +0000
+Subject: [PATCH 61/77] resort: fix hoodoo - schedule table is not live status
+
+#tablepress-10 lists LIFT | HOURS (the page footnote says it is the plan,
+not status). The old parser called any non-CLOSED cell 'open', reporting
+6/7 lifts open in July, and the newly added thead row became a phantom
+lift literally named 'LIFT' (status open). Scope to tbody and map posted
+hours to 'scheduled'; fixture refreshed to the current page.
+---
+ lib/resorts/hoodoo/index.js           |    7 +-
+ test/resorts/example/hoodoo-2026.html | 2503 +++++++++++++++++++++++++
+ test/resorts/hoodoo.js                |   11 +-
+ 3 files changed, 2514 insertions(+), 7 deletions(-)
+ create mode 100644 test/resorts/example/hoodoo-2026.html
+
+diff --git a/lib/resorts/hoodoo/index.js b/lib/resorts/hoodoo/index.js
+index 2464a67..e1c41cd 100644
+--- a/lib/resorts/hoodoo/index.js
++++ b/lib/resorts/hoodoo/index.js
+@@ -1,10 +1,13 @@
+ export default {
+-  selector: '#tablepress-10 tr',
++  // #tablepress-10 is a LIFT | HOURS schedule, not live status: rows with
++  // posted hours are only *planned* to run (the page's own footnote), so
++  // they map to scheduled, never open; tbody skips the LIFT/HOURS header
++  selector: '#tablepress-10 tbody tr',
+   parse: {
+     name: 0,
+     status: {
+       child: 1,
+-      fn: s => (s === 'CLOSED' ? 'closed' : 'open')
++      fn: s => (s === 'CLOSED' ? 'closed' : 'scheduled')
+     }
+   }
+ };
+diff --git a/test/resorts/example/hoodoo-2026.html b/test/resorts/example/hoodoo-2026.html
+new file mode 100644
+index 0000000..7e4fb80
+--- /dev/null
++++ b/test/resorts/example/hoodoo-2026.html
+@@ -0,0 +1,2503 @@
++<!DOCTYPE html>
++<html lang="en-US" class="loading-site no-js">
++<head>
++	<meta charset="UTF-8" />
++	<link rel="profile" href="https://gmpg.org/xfn/11" />
++	<link rel="pingback" href="https://hoodoo.com/xmlrpc.php" />
++
++	<script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
++<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
++<meta name="viewport" content="width=device-width, initial-scale=1" />
++	<!-- This site is optimized with the Yoast SEO plugin v25.3.1 - https://yoast.com/wordpress/plugins/seo/ -->
++	<title>Mountain &amp; Lift Status - Hoodoo Ski Area</title>
++	<link rel="canonical" href="https://hoodoo.com/the-mountain/mountain-lift-status/" />
++	<meta property="og:locale" content="en_US" />
++	<meta property="og:type" content="article" />
++	<meta property="og:title" content="Mountain &amp; Lift Status - Hoodoo Ski Area" />
++	<meta property="og:url" content="https://hoodoo.com/the-mountain/mountain-lift-status/" />
++	<meta property="og:site_name" content="Hoodoo Ski Area" />
++	<meta property="article:modified_time" content="2024-12-08T19:55:11+00:00" />
++	<meta name="twitter:card" content="summary_large_image" />
++	<meta name="twitter:label1" content="Est. reading time" />
++	<meta name="twitter:data1" content="1 minute" />
++	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://hoodoo.com/the-mountain/mountain-lift-status/","url":"https://hoodoo.com/the-mountain/mountain-lift-status/","name":"Mountain & Lift Status - Hoodoo Ski Area","isPartOf":{"@id":"https://hoodoo.com/#website"},"datePublished":"2018-09-18T21:17:38+00:00","dateModified":"2024-12-08T19:55:11+00:00","breadcrumb":{"@id":"https://hoodoo.com/the-mountain/mountain-lift-status/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://hoodoo.com/the-mountain/mountain-lift-status/"]}]},{"@type":"BreadcrumbList","@id":"https://hoodoo.com/the-mountain/mountain-lift-status/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://hoodoo.com/"},{"@type":"ListItem","position":2,"name":"The Mountain","item":"https://hoodoo.com/the-mountain/"},{"@type":"ListItem","position":3,"name":"Mountain &#038; Lift Status"}]},{"@type":"WebSite","@id":"https://hoodoo.com/#website","url":"https://hoodoo.com/","name":"Hoodoo Ski Area","description":"Central Oregon’s original ski area and your destination for family-friendly fun in your backyard!","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://hoodoo.com/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}</script>
++	<!-- / Yoast SEO plugin. -->
++
++
++<link rel='dns-prefetch' href='//hoodoo18.wpengine.com' />
++<link rel='dns-prefetch' href='//hoodoo.com' />
++<link rel='prefetch' href='https://hoodoo.com/wp-content/themes/flatsome/assets/js/flatsome.js?ver=e1ad26bd5672989785e1' />
++<link rel='prefetch' href='https://hoodoo.com/wp-content/themes/flatsome/assets/js/chunk.slider.js?ver=3.19.14' />
++<link rel='prefetch' href='https://hoodoo.com/wp-content/themes/flatsome/assets/js/chunk.popups.js?ver=3.19.14' />
++<link rel='prefetch' href='https://hoodoo.com/wp-content/themes/flatsome/assets/js/chunk.tooltips.js?ver=3.19.14' />
++<link rel="alternate" type="application/rss+xml" title="Hoodoo Ski Area &raquo; Feed" href="https://hoodoo.com/feed/" />
++<link rel="alternate" type="text/calendar" title="Hoodoo Ski Area &raquo; iCal Feed" href="https://hoodoo.com/events/?ical=1" />
++<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://hoodoo.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fhoodoo.com%2Fthe-mountain%2Fmountain-lift-status%2F" />
++<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://hoodoo.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fhoodoo.com%2Fthe-mountain%2Fmountain-lift-status%2F&#038;format=xml" />
++<style id="wp-img-auto-sizes-contain-inline-css">
++img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
++/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
++</style>
++<link rel='stylesheet' id='tribe-events-pro-mini-calendar-block-styles-css' href='https://hoodoo.com/wp-content/plugins/events-calendar-pro/build/css/tribe-events-pro-mini-calendar-block.css?ver=7.6.0.1' media='all' />
++<style id="wp-emoji-styles-inline-css">
++
++	img.wp-smiley, img.emoji {
++		display: inline !important;
++		border: none !important;
++		box-shadow: none !important;
++		height: 1em !important;
++		width: 1em !important;
++		margin: 0 0.07em !important;
++		vertical-align: -0.1em !important;
++		background: none !important;
++		padding: 0 !important;
++	}
++/*# sourceURL=wp-emoji-styles-inline-css */
++</style>
++
++<style id="global-styles-inline-css">
++:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--primary: #215c91;--wp--preset--color--secondary: #a2cefa;--wp--preset--color--success: #32bddc;--wp--preset--color--alert: #2762e1;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(body) { margin: 0; }.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }.wp-site-blocks > .alignright { float: right; margin-left: 2em; }.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}.is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){margin-left: auto !important;margin-right: auto !important;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}a:where(:not(.wp-element-button)){text-decoration: none;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-primary-color{color: var(--wp--preset--color--primary) !important;}.has-secondary-color{color: var(--wp--preset--color--secondary) !important;}.has-success-color{color: var(--wp--preset--color--success) !important;}.has-alert-color{color: var(--wp--preset--color--alert) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-primary-background-color{background-color: var(--wp--preset--color--primary) !important;}.has-secondary-background-color{background-color: var(--wp--preset--color--secondary) !important;}.has-success-background-color{background-color: var(--wp--preset--color--success) !important;}.has-alert-background-color{background-color: var(--wp--preset--color--alert) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-primary-border-color{border-color: var(--wp--preset--color--primary) !important;}.has-secondary-border-color{border-color: var(--wp--preset--color--secondary) !important;}.has-success-border-color{border-color: var(--wp--preset--color--success) !important;}.has-alert-border-color{border-color: var(--wp--preset--color--alert) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
++/*# sourceURL=global-styles-inline-css */
++</style>
++
++<link rel='stylesheet' id='font-awesome-css' href='https://hoodoo.com/wp-content/plugins/import-eventbrite-events/assets/css/font-awesome.min.css?ver=1.7.7' media='all' />
++<link rel='stylesheet' id='import-eventbrite-events-front-css' href='https://hoodoo.com/wp-content/plugins/import-eventbrite-events/assets/css/import-eventbrite-events.css?ver=1.7.7' media='all' />
++<link rel='stylesheet' id='import-eventbrite-events-front-style2-css' href='https://hoodoo.com/wp-content/plugins/import-eventbrite-events/assets/css/grid-style2.css?ver=1.7.7' media='all' />
++<link rel='stylesheet' id='tablepress-default-css' href='https://hoodoo.com/wp-content/plugins/tablepress/css/build/default.css?ver=3.1.3' media='all' />
++<link rel='stylesheet' id='flatsome-main-css' href='https://hoodoo.com/wp-content/themes/flatsome/assets/css/flatsome.css?ver=3.19.14' media='all' />
++<style id="flatsome-main-inline-css">
++@font-face {
++				font-family: "fl-icons";
++				font-display: block;
++				src: url(https://hoodoo.com/wp-content/themes/flatsome/assets/css/icons/fl-icons.eot?v=3.19.14);
++				src:
++					url(https://hoodoo.com/wp-content/themes/flatsome/assets/css/icons/fl-icons.eot#iefix?v=3.19.14) format("embedded-opentype"),
++					url(https://hoodoo.com/wp-content/themes/flatsome/assets/css/icons/fl-icons.woff2?v=3.19.14) format("woff2"),
++					url(https://hoodoo.com/wp-content/themes/flatsome/assets/css/icons/fl-icons.ttf?v=3.19.14) format("truetype"),
++					url(https://hoodoo.com/wp-content/themes/flatsome/assets/css/icons/fl-icons.woff?v=3.19.14) format("woff"),
++					url(https://hoodoo.com/wp-content/themes/flatsome/assets/css/icons/fl-icons.svg?v=3.19.14#fl-icons) format("svg");
++			}
++/*# sourceURL=flatsome-main-inline-css */
++</style>
++<link rel='stylesheet' id='flatsome-style-css' href='https://hoodoo.com/wp-content/themes/hoodoo-ski-resort-child-theme/style.css?ver=3.0' media='all' />
++<script id="my-script-js" src="https://hoodoo18.wpengine.com/wp-content/themes/hoodoo-ski-resort-child-theme/custom-javascript.js"></script>
++<script id="jquery-core-js" src="https://hoodoo.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
++<script id="jquery-migrate-js" src="https://hoodoo.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
++<link rel="https://api.w.org/" href="https://hoodoo.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://hoodoo.com/wp-json/wp/v2/pages/4281" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://hoodoo.com/xmlrpc.php?rsd" />
++<link rel='shortlink' href='https://hoodoo.com/?p=4281' />
++<meta name="tec-api-version" content="v1"><meta name="tec-api-origin" content="https://hoodoo.com"><link rel="alternate" href="https://hoodoo.com/wp-json/tribe/events/v1/" /><!-- Global site tag (gtag.js) - Google Analytics -->
++<script async src="https://www.googletagmanager.com/gtag/js?id=UA-7545831-9"></script>
++<script>
++  window.dataLayer = window.dataLayer || [];
++  function gtag(){dataLayer.push(arguments);}
++  gtag('js', new Date());
++
++  gtag('config', 'UA-7545831-9');
++gtag('config', 'G-59R4NZBM45');
++</script>
++<link rel="icon" href="https://hoodoo.com/wp-content/uploads/2022/10/cropped-Hoodoo-H-Favicon-Blue-32x32.png" sizes="32x32" />
++<link rel="icon" href="https://hoodoo.com/wp-content/uploads/2022/10/cropped-Hoodoo-H-Favicon-Blue-192x192.png" sizes="192x192" />
++<link rel="apple-touch-icon" href="https://hoodoo.com/wp-content/uploads/2022/10/cropped-Hoodoo-H-Favicon-Blue-180x180.png" />
++<meta name="msapplication-TileImage" content="https://hoodoo.com/wp-content/uploads/2022/10/cropped-Hoodoo-H-Favicon-Blue-270x270.png" />
++<style id="custom-css" type="text/css">:root {--primary-color: #215c91;--fs-color-primary: #215c91;--fs-color-secondary: #a2cefa;--fs-color-success: #32bddc;--fs-color-alert: #2762e1;--fs-experimental-link-color: #215c91;--fs-experimental-link-color-hover: #32bddc;}.tooltipster-base {--tooltip-color: #fff;--tooltip-bg-color: #000;}.off-canvas-right .mfp-content, .off-canvas-left .mfp-content {--drawer-width: 300px;}.header-main{height: 99px}#logo img{max-height: 99px}#logo{width:349px;}.header-bottom{min-height: 35px}.header-top{min-height: 35px}.transparent .header-main{height: 110px}.transparent #logo img{max-height: 110px}.has-transparent + .page-title:first-of-type,.has-transparent + #main > .page-title,.has-transparent + #main > div > .page-title,.has-transparent + #main .page-header-wrapper:first-of-type .page-title{padding-top: 190px;}.transparent .header-wrapper{background-color: rgba(36,86,173,0.44)!important;}.transparent .top-divider{display: none;}.header.show-on-scroll,.stuck .header-main{height:70px!important}.stuck #logo img{max-height: 70px!important}.header-bg-color {background-color: #215c91}.header-bottom {background-color: #a2cefa}.header-main .nav > li > a{line-height: 16px }.stuck .header-main .nav > li > a{line-height: 50px }.header-bottom-nav > li > a{line-height: 15px }@media (max-width: 549px) {.header-main{height: 70px}#logo img{max-height: 70px}}.nav-dropdown-has-arrow.nav-dropdown-has-border li.has-dropdown:before{border-bottom-color: #a2cefa;}.nav .nav-dropdown{border-color: #a2cefa }.nav-dropdown{font-size:120%}.nav-dropdown-has-arrow li.has-dropdown:after{border-bottom-color: #215c91;}.nav .nav-dropdown{background-color: #215c91}.header-top{background-color:#a2cefa!important;}body{color: #424242}body{font-size: 110%;}@media screen and (max-width: 549px){body{font-size: 100%;}}body{font-family: Poppins, sans-serif;}body {font-weight: 500;font-style: normal;}.nav > li > a {font-family: Mukta, sans-serif;}.mobile-sidebar-levels-2 .nav > li > ul > li > a {font-family: Mukta, sans-serif;}.nav > li > a,.mobile-sidebar-levels-2 .nav > li > ul > li > a {font-weight: 700;font-style: normal;}h1,h2,h3,h4,h5,h6,.heading-font, .off-canvas-center .nav-sidebar.nav-vertical > li > a{font-family: Poppins, sans-serif;}h1,h2,h3,h4,h5,h6,.heading-font,.banner h1,.banner h2 {font-weight: 800;font-style: normal;}.alt-font{font-family: Poppins, sans-serif;}.alt-font {font-weight: 800!important;font-style: normal!important;}.header:not(.transparent) .header-bottom-nav.nav > li > a:hover,.header:not(.transparent) .header-bottom-nav.nav > li.active > a,.header:not(.transparent) .header-bottom-nav.nav > li.current > a,.header:not(.transparent) .header-bottom-nav.nav > li > a.active,.header:not(.transparent) .header-bottom-nav.nav > li > a.current{color: #215c91;}.header-bottom-nav.nav-line-bottom > li > a:before,.header-bottom-nav.nav-line-grow > li > a:before,.header-bottom-nav.nav-line > li > a:before,.header-bottom-nav.nav-box > li > a:hover,.header-bottom-nav.nav-box > li.active > a,.header-bottom-nav.nav-pills > li > a:hover,.header-bottom-nav.nav-pills > li.active > a{color:#FFF!important;background-color: #215c91;}input[type='submit'], input[type="button"], button:not(.icon), .button:not(.icon){border-radius: 10px!important}.footer-1{background-color: #383838}.absolute-footer, html{background-color: #383838}.nav-vertical-fly-out > li + li {border-top-width: 1px; border-top-style: solid;}.label-new.menu-item > a:after{content:"New";}.label-hot.menu-item > a:after{content:"Hot";}.label-sale.menu-item > a:after{content:"Sale";}.label-popular.menu-item > a:after{content:"Popular";}</style><style id="kirki-inline-styles">/* devanagari */
++@font-face {
++  font-family: 'Poppins';
++  font-style: normal;
++  font-weight: 500;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/poppins/pxiByp8kv8JHgFVrLGT9Z11lFc-K.woff2) format('woff2');
++  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF, U+11B00-11B09;
++}
++/* latin-ext */
++@font-face {
++  font-family: 'Poppins';
++  font-style: normal;
++  font-weight: 500;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/poppins/pxiByp8kv8JHgFVrLGT9Z1JlFc-K.woff2) format('woff2');
++  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
++}
++/* latin */
++@font-face {
++  font-family: 'Poppins';
++  font-style: normal;
++  font-weight: 500;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/poppins/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2) format('woff2');
++  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
++}
++/* devanagari */
++@font-face {
++  font-family: 'Poppins';
++  font-style: normal;
++  font-weight: 800;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/poppins/pxiByp8kv8JHgFVrLDD4Z11lFc-K.woff2) format('woff2');
++  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF, U+11B00-11B09;
++}
++/* latin-ext */
++@font-face {
++  font-family: 'Poppins';
++  font-style: normal;
++  font-weight: 800;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/poppins/pxiByp8kv8JHgFVrLDD4Z1JlFc-K.woff2) format('woff2');
++  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
++}
++/* latin */
++@font-face {
++  font-family: 'Poppins';
++  font-style: normal;
++  font-weight: 800;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/poppins/pxiByp8kv8JHgFVrLDD4Z1xlFQ.woff2) format('woff2');
++  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
++}/* devanagari */
++@font-face {
++  font-family: 'Mukta';
++  font-style: normal;
++  font-weight: 700;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/mukta/iJWHBXyXfDDVXbF6iGmc8WDm7Q.woff2) format('woff2');
++  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF, U+11B00-11B09;
++}
++/* latin-ext */
++@font-face {
++  font-family: 'Mukta';
++  font-style: normal;
++  font-weight: 700;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/mukta/iJWHBXyXfDDVXbF6iGmT8WDm7Q.woff2) format('woff2');
++  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
++}
++/* latin */
++@font-face {
++  font-family: 'Mukta';
++  font-style: normal;
++  font-weight: 700;
++  font-display: swap;
++  src: url(https://hoodoo.com/wp-content/fonts/mukta/iJWHBXyXfDDVXbF6iGmd8WA.woff2) format('woff2');
++  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
++}</style></head>
++
++<body class="wp-singular page-template page-template-page-blank page-template-page-blank-php page page-id-4281 page-child parent-pageid-4252 wp-theme-flatsome wp-child-theme-hoodoo-ski-resort-child-theme tribe-no-js page-template-hoodoo-ski-resort-child-theme header-shadow lightbox nav-dropdown-has-arrow nav-dropdown-has-border">
++
++
++<a class="skip-link screen-reader-text" href="#main">Skip to content</a>
++
++<div id="wrapper">
++
++	
++	<header id="header" class="header header-full-width has-sticky sticky-shrink">
++		<div class="header-wrapper">
++			<div id="top-bar" class="header-top hide-for-sticky nav-dark">
++    <div class="flex-row container">
++      <div class="flex-col hide-for-medium flex-left">
++          <ul class="nav nav-left medium-nav-center nav-small  nav-divided">
++                        </ul>
++      </div>
++
++      <div class="flex-col hide-for-medium flex-center">
++          <ul class="nav nav-center nav-small  nav-divided">
++                        </ul>
++      </div>
++
++      <div class="flex-col hide-for-medium flex-right">
++         <ul class="nav top-bar-nav nav-right nav-small  nav-divided">
++              <li class="html custom html_nav_position_text_top"><a href="tel:5418223799"><font size="3"><strong>PHONE 541-822-3799</strong></font></a></li>          </ul>
++      </div>
++
++            <div class="flex-col show-for-medium flex-grow">
++          <ul class="nav nav-center nav-small mobile-nav  nav-divided">
++              <li class="html header-button-1">
++	<div class="header-button">
++		<a href="/know-the-code/" class="button primary is-medium"  style="border-radius:10px;">
++		<span>Skier Responsibility Code</span>
++	</a>
++	</div>
++</li>
++<li class="html header-button-2">
++	<div class="header-button">
++		<a href="https://skihoodoo.resortstore.net/en/accounts/login/" target="_blank" class="button primary" rel="noopener"  style="border-radius:10px;">
++		<span>Setup a Profile</span>
++	</a>
++	</div>
++</li>
++          </ul>
++      </div>
++      
++    </div>
++</div>
++<div id="masthead" class="header-main show-logo-center nav-dark">
++      <div class="header-inner flex-row container logo-center medium-logo-center" role="navigation">
++
++          <!-- Logo -->
++          <div id="logo" class="flex-col logo">
++            
++<!-- Header logo -->
++<a href="https://hoodoo.com/" title="Hoodoo Ski Area - Central Oregon’s original ski area and your destination for family-friendly fun in your backyard!" rel="home">
++		<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="header_logo header-logo" alt="Hoodoo Ski Area"/><img  width="968" height="644" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-White-NO-BG.png" class="header-logo-dark" alt="Hoodoo Ski Area"/></a>
++          </div>
++
++          <!-- Mobile Left Elements -->
++          <div class="flex-col show-for-medium flex-left">
++            <ul class="mobile-nav nav nav-left ">
++              <li class="nav-icon has-icon">
++  		<a href="#" data-open="#main-menu" data-pos="left" data-bg="main-menu-overlay" data-color="dark" class="is-small" aria-label="Menu" aria-controls="main-menu" aria-expanded="false">
++
++		  <i class="icon-menu" ></i>
++		  <span class="menu-title uppercase hide-for-small">Menu</span>		</a>
++	</li>
++            </ul>
++          </div>
++
++          <!-- Left Elements -->
++          <div class="flex-col hide-for-medium flex-left
++            ">
++            <ul class="header-nav header-nav-main nav nav-left  nav-size-xlarge nav-spacing-large nav-uppercase" >
++              <li class="html header-button-1">
++	<div class="header-button">
++		<a href="/know-the-code/" class="button primary is-medium"  style="border-radius:10px;">
++		<span>Skier Responsibility Code</span>
++	</a>
++	</div>
++</li>
++            </ul>
++          </div>
++
++          <!-- Right Elements -->
++          <div class="flex-col hide-for-medium flex-right">
++            <ul class="header-nav header-nav-main nav nav-right  nav-size-xlarge nav-spacing-large nav-uppercase">
++              <li class="html header-button-2">
++	<div class="header-button">
++		<a href="https://skihoodoo.resortstore.net/en/accounts/login/" target="_blank" class="button primary" rel="noopener"  style="border-radius:10px;">
++		<span>Setup a Profile</span>
++	</a>
++	</div>
++</li>
++<li class="html header-social-icons ml-0">
++	<div class="social-icons follow-icons" ><a href="https://www.facebook.com/HoodooRecreation/" target="_blank" data-label="Facebook" class="icon plain facebook tooltip" title="Follow on Facebook" aria-label="Follow on Facebook" rel="noopener nofollow" ><i class="icon-facebook" ></i></a><a href="https://www.instagram.com/skihoodoo/" target="_blank" data-label="Instagram" class="icon plain instagram tooltip" title="Follow on Instagram" aria-label="Follow on Instagram" rel="noopener nofollow" ><i class="icon-instagram" ></i></a><a href="https://x.com/HoodooSki" data-label="X" target="_blank" class="icon plain x tooltip" title="Follow on X" aria-label="Follow on X" rel="noopener nofollow" ><i class="icon-x" ></i></a></div></li>
++            </ul>
++          </div>
++
++          <!-- Mobile Right Elements -->
++          <div class="flex-col show-for-medium flex-right">
++            <ul class="mobile-nav nav nav-right ">
++                          </ul>
++          </div>
++
++      </div>
++
++            <div class="container"><div class="top-divider full-width"></div></div>
++      </div>
++<div id="wide-nav" class="header-bottom wide-nav nav-dark hide-for-medium">
++    <div class="flex-row container">
++
++                        <div class="flex-col hide-for-medium flex-left">
++                <ul class="nav header-nav header-bottom-nav nav-left  nav-size-large nav-spacing-large nav-uppercase">
++                    <li id="menu-item-4257" class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-menu-ancestor current-menu-parent current-page-parent current_page_parent current_page_ancestor menu-item-has-children menu-item-4257 active menu-item-design-default has-dropdown"><a href="https://hoodoo.com/the-mountain/" class="nav-top-link" aria-expanded="false" aria-haspopup="menu">The Mountain<i class="icon-angle-down" ></i></a>
++<ul class="sub-menu nav-dropdown nav-dropdown-simple dark dropdown-uppercase">
++	<li id="menu-item-4238" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4238"><a href="https://hoodoo.com/the-mountain/webcams/">Live Cams</a></li>
++	<li id="menu-item-4287" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-4281 current_page_item menu-item-4287 active"><a href="https://hoodoo.com/the-mountain/mountain-lift-status/" aria-current="page">Mountain &#038; Lift Status</a></li>
++	<li id="menu-item-4235" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4235"><a href="https://hoodoo.com/the-mountain/mountain-conditions/">Mountain Conditions</a></li>
++	<li id="menu-item-8865" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8865"><a href="https://hoodoo.com/the-mountain/weather-forecast/">Weather Forecast</a></li>
++	<li id="menu-item-9032" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-9032"><a href="/hours">Hours</a></li>
++</ul>
++</li>
++<li id="menu-item-4221" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4221 menu-item-design-default has-dropdown"><a href="https://hoodoo.com/explore/" class="nav-top-link" aria-expanded="false" aria-haspopup="menu">Explore<i class="icon-angle-down" ></i></a>
++<ul class="sub-menu nav-dropdown nav-dropdown-simple dark dropdown-uppercase">
++	<li id="menu-item-4259" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4259"><a href="https://hoodoo.com/explore/trail-map/">Trail Map</a></li>
++	<li id="menu-item-4244" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4244"><a href="https://hoodoo.com/explore/group-rates/">Group Events &#038; Discounts</a></li>
++	<li id="menu-item-5559" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5559"><a href="https://hoodoo.com/explore/chuck/">Chuck’s Page</a></li>
++</ul>
++</li>
++<li id="menu-item-4303" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4303 menu-item-design-default has-dropdown"><a href="https://hoodoo.com/things-to-do/" class="nav-top-link" aria-expanded="false" aria-haspopup="menu">Things To Do<i class="icon-angle-down" ></i></a>
++<ul class="sub-menu nav-dropdown nav-dropdown-simple dark dropdown-uppercase">
++	<li id="menu-item-4241" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4241"><a href="https://hoodoo.com/things-to-do/autobahn-tubing-park/">Autobahn Tubing Park</a></li>
++	<li id="menu-item-4348" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4348"><a href="https://hoodoo.com/things-to-do/night-skiing/">Night Skiing</a></li>
++	<li id="menu-item-4240" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4240"><a href="https://hoodoo.com/things-to-do/nordic-skiing/">Nordic Skiing</a></li>
++	<li id="menu-item-5239" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5239"><a href="https://hoodoo.com/things-to-do/races/">Races</a></li>
++	<li id="menu-item-9975" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9975"><a href="https://hoodoo.com/things-to-do/explore-sisters/">Explore Sisters</a></li>
++</ul>
++</li>
++<li id="menu-item-4420" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4420 menu-item-design-default has-dropdown"><a href="https://hoodoo.com/ski-ride-school/" class="nav-top-link" aria-expanded="false" aria-haspopup="menu">Ski &#038; Ride School<i class="icon-angle-down" ></i></a>
++<ul class="sub-menu nav-dropdown nav-dropdown-simple dark dropdown-uppercase">
++	<li id="menu-item-8790" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8790"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/categories/10000-ski-ride-school_104/">Book a Lesson</a></li>
++	<li id="menu-item-4422" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4422"><a href="https://hoodoo.com/ski-ride-school/lessons/">Lessons &#038; Programs</a></li>
++	<li id="menu-item-10539" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10539"><a href="https://hoodoo.com/about-ski-ride-school/">About SRS</a></li>
++	<li id="menu-item-10644" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10644"><a href="https://hoodoo.com/ski-ride-school/tips-for-a-great-day/">Ski &#038; Ride School FAQ’s</a></li>
++	<li id="menu-item-10540" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10540"><a href="https://hoodoo.com/ski-ride-school-instructors/">Coaches</a></li>
++</ul>
++</li>
++<li id="menu-item-4262" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4262 menu-item-design-default has-dropdown"><a href="https://hoodoo.com/rates/" class="nav-top-link" aria-expanded="false" aria-haspopup="menu">Rates<i class="icon-angle-down" ></i></a>
++<ul class="sub-menu nav-dropdown nav-dropdown-simple dark dropdown-uppercase">
++	<li id="menu-item-10580" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10580"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/category/40000-season-pass/40100-all-mountain_228/">Season Passes</a></li>
++	<li id="menu-item-4578" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4578"><a href="https://hoodoo.com/rates/hoodoo-anycard-5-day-ticket-package/">AnyCard – 5 Lift Ticket Deal</a></li>
++	<li id="menu-item-4245" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4245"><a href="https://hoodoo.com/rates/lift-tickets/">Lift Tickets</a></li>
++	<li id="menu-item-4246" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4246"><a href="https://hoodoo.com/rates/rentals/">Rental Rates</a></li>
++	<li id="menu-item-4247" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4247"><a href="https://hoodoo.com/rates/rv-rates/">RV Rates</a></li>
++	<li id="menu-item-4317" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4317"><a href="https://hoodoo.com/rates/lift-ticket-deals/">Ticket Deals</a></li>
++	<li id="menu-item-10854" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10854"><a href="https://apps.1risk.cloud/1waiverKioskv3/?a=aHR0cHM6Ly9teS4xcmlzay5uZXQvaG9vZG9vYXBpfDk4MDYzZjk4MGZiYjRhZGNiODBjZDJiZGVkMjllYjUyfDk=">Sign Lift Ticket/Rental Waiver</a></li>
++	<li id="menu-item-8782" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8782"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/category/60000-gift-certificates_143/">Gift Certificates</a></li>
++	<li id="menu-item-5082" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5082"><a href="https://hoodoo.com/rates/indy-pass/">Indy Pass</a></li>
++</ul>
++</li>
++<li id="menu-item-4264" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4264 menu-item-design-default"><a href="https://hoodoo.com/lodging/" class="nav-top-link">Lodging</a></li>
++<li id="menu-item-4380" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4380 menu-item-design-default"><a href="https://hoodoo.com/employment/" class="nav-top-link">Employment</a></li>
++<li id="menu-item-8428" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8428 menu-item-design-default"><a href="/events/" class="nav-top-link">Calendar</a></li>
++<li id="menu-item-9241" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-9241 menu-item-design-default has-dropdown"><a href="#" class="nav-top-link" aria-expanded="false" aria-haspopup="menu">Shop<i class="icon-angle-down" ></i></a>
++<ul class="sub-menu nav-dropdown nav-dropdown-simple dark dropdown-uppercase">
++	<li id="menu-item-10892" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10892"><a href="https://skihoodoo.resortstore.net/en/catalogue/categories/20000-lift-tickets_144/">Lift Tickets</a></li>
++	<li id="menu-item-8781" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8781"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/category/50000-anycard_137/">AnyCards</a></li>
++	<li id="menu-item-10607" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10607"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/category/60000-gift-certificates_143/">Gift Certificates</a></li>
++	<li id="menu-item-9240" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9240"><a href="https://hoodoo.com/hillside-ski-sport/">Hillside Ski &#038; Sport</a></li>
++	<li id="menu-item-9484" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-9484"><a target="_blank" rel="noopener" href="https://centraloregondaily.com/hoodooperks/">Hoodoo Perks</a></li>
++</ul>
++</li>
++<li id="menu-item-8426" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8426 menu-item-design-default"><a href="https://hoodoo.com/blog/" class="nav-top-link">News</a></li>
++                </ul>
++            </div>
++            
++            
++                        <div class="flex-col hide-for-medium flex-right flex-grow">
++              <ul class="nav header-nav header-bottom-nav nav-right  nav-size-large nav-spacing-large nav-uppercase">
++                   <li class="html custom html_top_right_text"><a data-animate="bounceInUp" href="https://skihoodoo.resortstore.net/en/accounts/login/" target="_blank" class="button white is-underline" rel="noopener"  >
++		<span>Setup a Profile</span>
++	</a>
++</li>              </ul>
++            </div>
++            
++            
++    </div>
++</div>
++
++<div class="header-bg-container fill"><div class="header-bg-image fill"></div><div class="header-bg-color fill"></div></div>		</div>
++	</header>
++
++	
++	<main id="main" class="">
++
++
++<div id="content" role="main" class="content-area">
++
++		
++			
++  <div class="banner has-hover" id="banner-45995069">
++          <div class="banner-inner fill">
++        <div class="banner-bg fill" >
++            <img fetchpriority="high" decoding="async" width="2560" height="1707" src="https://hoodoo.com/wp-content/uploads/2020/11/Hoodoo-Lift-Operator-scaled.jpg" class="bg attachment-original size-original" alt="" />                        <div class="overlay"></div>            
++                    </div>
++		
++        <div class="banner-layers container">
++            <div class="fill banner-link"></div>            
++   <div id="text-box-2144514686" class="text-box banner-layer x50 md-x50 lg-x50 y50 md-y50 lg-y50 res-text">
++                                <div class="text-box-content text dark">
++              
++              <div class="text-inner text-center">
++                  
++	<div id="text-2134803280" class="text">
++		
++<h1><span style="font-size: 130%;">MOUNTAIN &amp; LIFT STATUS</span></h1>
++		
++<style>
++#text-2134803280 {
++  text-align: center;
++}
++</style>
++	</div>
++	
++              </div>
++           </div>
++                            
++<style>
++#text-box-2144514686 {
++  width: 100%;
++}
++#text-box-2144514686 .text-box-content {
++  font-size: 100%;
++}
++@media (min-width:550px) {
++  #text-box-2144514686 {
++    width: 60%;
++  }
++}
++</style>
++    </div>
++ 
++        </div>
++      </div>
++
++            
++<style>
++#banner-45995069 {
++  padding-top: 90%;
++}
++#banner-45995069 .overlay {
++  background-color: rgba(0, 0, 0, 0.192);
++}
++#banner-45995069 .banner-bg img {
++  object-position: 62% 23%;
++}
++@media (min-width:550px) {
++  #banner-45995069 {
++    padding-top: 40%;
++  }
++}
++</style>
++  </div>
++
++
++<div class="row align-middle"  id="row-874591932">
++
++	<div id="col-900554304" class="col medium-4 small-12 large-4"  >
++				<div class="col-inner text-center"  >
++			
++			
++	<div id="gap-823483506" class="gap-element clearfix show-for-small" style="display:block; height:auto;">
++		
++<style>
++#gap-823483506 {
++  padding-top: 30px;
++}
++</style>
++	</div>
++	
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_402725236">
++		<a class="" href="https://www.threecreeksbrewpub.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img decoding="async" width="1020" height="725" src="https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-1125x800.png" class="attachment-large size-large" alt="" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-1125x800.png 1125w, https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-562x400.png 562w, https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-768x546.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-1536x1092.png 1536w, https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-2048x1457.png 2048w" sizes="(max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_402725236 {
++  width: 60%;
++}
++@media (min-width:550px) {
++  #image_402725236 {
++    width: 100%;
++  }
++}
++</style>
++	</div>
++	
++		</div>
++					</div>
++
++	
++
++	<div id="col-837229457" class="col medium-8 small-12 large-8"  >
++				<div class="col-inner"  >
++			
++			
++	<div id="gap-660242351" class="gap-element clearfix hide-for-small" style="display:block; height:auto;">
++		
++<style>
++#gap-660242351 {
++  padding-top: 40px;
++}
++</style>
++	</div>
++	
++<p class="lead">Located just 21 miles from Hoodoo, Three Creeks Brew Pub crafts world class beers with the finest malts, NW grown hops and pristine Cascade Mountain water. Stop by their family friendly brewpub in Sisters to warm up after the slopes while enjoying award-winning food, beer and cocktails, served with small town hospitality.</p>
++<div class="is-divider divider clearfix" style="max-width:60%;"></div>
++		</div>
++					</div>
++
++	
++</div>
++	<div id="gap-914364678" class="gap-element clearfix" style="display:block; height:auto;">
++		
++<style>
++#gap-914364678 {
++  padding-top: 20px;
++}
++</style>
++	</div>
++	
++<div class="row"  id="row-1348465111">
++
++	<div id="col-1351126955" class="col small-12 large-12"  >
++				<div class="col-inner"  >
++			
++			
++<div class="row"  id="row-1541992711">
++
++
++	<div id="col-1416923611" class="col small-12 large-12"  >
++				<div class="col-inner"  >
++			
++			
++
++<div class="container section-title-container" ><h4 class="section-title section-title-normal"><b></b><span class="section-title-main" >conditions report and trail status</span><b></b></h4></div>
++
++<p><span id="tablepress-3-description" class="tablepress-table-description tablepress-table-description-id-3"><b>Conditions report for <a href="https://hoodoo.com/event/winter-carnival-presented-by-coenergy-propane-and-crux/">Winter Carnival</a> Saturday, March 14, 2026<br />
++Operating Hours: 9 AM to 9 PM</b> <br />
++<br />
++Good morning everyone and welcome to Winter Carnival 2026. We were determined to be able to be open today come hell or high water and, well, It seems the universe took us a little too literally. The rain may be taking its toll on our base but we’re not about to let it crush our spirits, we’ve got a party to throw. We do not, unfortunately, have enough snow for the Dummy Downhill or the snow sculpture competition today but there are still plenty of festivities to enjoy including our famous fireworks. As an added bonus we should be seeing a little bit of new snow falling in the early morning hours before the day gives way to partly sunny skies. <br />
++<br />
++Grooming continues to be rather limited in the steeper terrain due to low snow levels but otherwise remains consistent with what has been getting groomed recently. Surfaces are likely to be soft and fun. As the snowpack continues to shrink please be aware that marked, unmarked, and hidden hazards exist, ride with caution, and always, always scout before you send it! <br />
++<br />
++First time up since we put our new system in? All riders must now create a profile online and purchase a reloadable $5 RFID card to ride. Once your profile has been set up you will be able to purchase tickets online that load directly to your card and sign our waiver. No need to wait in line at the mountain! On your first visit simply scan and print your pass at one of our convenient Ski-osks.<br />
++<br />
++The snow is not super deep yet but it is never too soon to learn about deep snow safety. Want to learn more? Check out  <a href="http://www.deepsnowsafety.org/">deepsnowsafety.org</a>. <br />
++<br />
++Are you a first-time rider? Want to brush up on safer ways to load lifts and move around the mountain? Check out <a href="https://discoversnow.org/discoversnow/Safety/DS/Safety/Safety.aspx?hkey=942c3630-3f67-4a73-94ac-0e179224c2e1">discoversnow.org</a> and give yourself a better, safer start. <br />
++<b>-- </b><br />
++<br />
++<b>Base (as of 2 AM):</b> 16 inches<br />
++<b>New Snow: </b> We have received no new snow since yesterday.<br />
++<br />
++<b> <u>Forecast as of 2 AM  (Most recent NOAA spot weather <a href="https://forecast.weather.gov/MapClick.php?lat=44.401410682066405&amp;lon=-121.88301086425781&amp;site=pqr&amp;smap=1&amp;unit=0&amp;lg=en&amp;FcstType=text#.Y9-P0nbMLD7">here.</a>)</u> <br />
++Forecast is for the top of Manzanita at 5000 ft. elevation.</b>  <br />
++Breezy with a chance of snow then partly sunny. Winds will die down going into the evening hours. <br />
++<br />
++<b>Snow Forecast:</b> Less than one inch today, no snow accumulation expected tonight. <br />
++<br />
++<b>Wind:</b> West 13 to 20 miles per hour with gusts up to 34 miles per hour today and 5 to 9 miles per hour tonight becoming light and variable. <br />
++<br />
++<b> <u>Temperature</b> </u> <br />
++<b>Overnight:</b> Low of 29°<br />
++ <b>Today:</b> High of 35°<br />
++<b>Tonight:</b> Low of 21°<br />
++<br />
++Grooming continues to be rather limited in the steeper terrain due to low snow levels but otherwise remains consistent with what has been getting groomed recently. Surfaces are likely to be soft and fun. As the snowpack continues to shrink please be aware that marked, unmarked, and hidden hazards exist, ride with caution, and always, always scout before you send it! <br />
++<br />
++Also check out our <a href="https://www.santiampassskipatrol.org/wx/weather.htm">full weather sensor page</a> and <a href="https://www.santiampassskipatrol.org/wx/weather4.htm">full picture page</a> courtesy of <a href="https://santiampsp.org/">Santiam Pass Ski Patrol</a> for the most up-to-date, site-specific information.<br />
++<br />
++<b>-- </b><br />
++<br />
++There are no reservations or passes required to park at Hoodoo. Parking is on a first come, first served basis but please do not arrive before 7 AM on snow days to allow snow removal crews to clear the parking lot. <br />
++<br />
++<b>Camping at Hoodoo is by reservation only</b> and is not first come, first served. Please make a reservation to camp at <a href="https://skihoodoo.com/rates/rv-rates/">SkiHoodoo.com</a>.<br />
++<br />
++Hoodoo does not require an Oregon Sno-Park Permit to park in our parking lot, however, Oregon Sno-Park Permits are required to park along the access road or at nearby Ray Benson and Santiam Sno-Parks.<br />
++<br />
++There is currently no sledding allowed anywhere on the Hoodoo property.<br />
++<br />
++*Please note this page is written by a Hoodoo Groomer. While getting you the latest information is quite important, getting terrain prepped and ready for you takes precedence. On days when the grooming is challenging or it is snowing like crazy this report may come out later in the morning. <br />
++<br />
++Keep checking this page for the latest updates and conditions and don’t forget to do that thing that you do Hoodoo!<br />
++<br />
++<b>Grooming Information for Saturday, March 14, 2026</b></span>
++
++<table id="tablepress-3" class="tablepress tablepress-id-3" aria-describedby="tablepress-3-description">
++<thead>
++<tr class="row-1">
++	<th class="column-1">Trail</th><th class="column-2">Difficulty/Color</th><th class="column-3">Status</th><th class="column-4">Groomed</th><th class="column-5">Night Ski</th>
++</tr>
++</thead>
++<tbody class="row-striping row-hover">
++<tr class="row-2">
++	<td class="column-1">OVER EASY, LOWER (Below top of Manzanita)</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-3">
++	<td class="column-1">HESITATION</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-4">
++	<td class="column-1">THREE CREEKS</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-5">
++	<td class="column-1">BLUE VALLEY</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-6">
++	<td class="column-1">FRANK'S FLIGHT</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-7">
++	<td class="column-1">BIG DIPPER, LOWER (TOP OF THE WALL to BLUE VALLEY)</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-8">
++	<td class="column-1">HEADWALL<br />
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-9">
++	<td class="column-1">TOP OF THE WALL</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-10">
++	<td class="column-1">POWDER VALLEY 1</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-11">
++	<td class="column-1">POWDER VALLEY 2</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-12">
++	<td class="column-1">POWDER VALLEY 3</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-13">
++	<td class="column-1">POWDER VALLEY ROAD</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-14">
++	<td class="column-1">HOME RUN</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-15">
++	<td class="column-1">RV ROW</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-16">
++	<td class="column-1">OVER EASY, UPPER (Hoodoo Summit to RED ROAD)</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-17">
++	<td class="column-1">IMPOSSIBLE DREAM, UPPER (Hoodoo Summit to OVER EASY)</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"> </td>
++</tr>
++<tr class="row-18">
++	<td class="column-1">MAMBO</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-19">
++	<td class="column-1">DIVE</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"> </td>
++</tr>
++<tr class="row-20">
++	<td class="column-1">GRANDSTAND</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-21">
++	<td class="column-1">FACE</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"> </td>
++</tr>
++<tr class="row-22">
++	<td class="column-1">OVER EASY, MIDDLE (RED ROAD to top of Manzanita)</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-23">
++	<td class="column-1">BIG DIPPER, UPPER (RED ROAD to TOP OF THE WALL)</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-24">
++	<td class="column-1">SCHUSS CHUTE</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-25">
++	<td class="column-1">RED ROAD</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-26">
++	<td class="column-1">MIDWAY FLATS</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-27">
++	<td class="column-1">CHUCK'S BACKSIDE</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-28">
++	<td class="column-1">CRATER</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-29">
++	<td class="column-1">ART'S ALLEY</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-30">
++	<td class="column-1">GRIPPER</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-31">
++	<td class="column-1">ANGEL'S FLIGHT</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-32">
++	<td class="column-1">DOOBA'S DESCENT</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-33">
++	<td class="column-1">SLALOM COURSE</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-34">
++	<td class="column-1">RED VALLEY</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-35">
++	<td class="column-1">MIDWAY VALLEY</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">OPEN</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/black-check-e1537406099973.png" alt="" width="30" height="28" class="alignnone size-full wp-image-4285" /></td>
++</tr>
++<tr class="row-36">
++	<td class="column-1">CATCHLINE</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-37">
++	<td class="column-1">TINY TREAT</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-38">
++	<td class="column-1">LEAP OF FAITH</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-39">
++	<td class="column-1">HODAG'S HORN</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-1-e1537405512802.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4310" />MOST DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-40">
++	<td class="column-1">DANTE'S VISION</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-41">
++	<td class="column-1">IMPOSSIBLE DREAM, LOWER (below OVER EASY)</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-42">
++	<td class="column-1">RABBIT RUN</td><td class="column-2"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/a532489-e1537405546495.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4283" />MORE DIFFICULT</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++<tr class="row-43">
++	<td class="column-1">HODAG'S TAIL</td><td class="column-2"><img decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/download-e1537405555373.png" alt="" width="30" height="30" class="alignnone size-full wp-image-4282" />EASIER</td><td class="column-3">CLOSED</td><td class="column-4"><img loading="lazy" decoding="async" src="https://hoodoo.com/wp-content/uploads/2018/09/red-x-e1537406111797.png" alt="" width="24" height="30" class="alignnone size-full wp-image-4286" /></td><td class="column-5"></td>
++</tr>
++</tbody>
++</table>
++<!-- #tablepress-3 from cache --></p>
++<div class="container section-title-container" ><h4 class="section-title section-title-normal"><b></b><span class="section-title-main" >Ski Schedule</span><b></b></h4></div>
++
++<p><span id="tablepress-9-description" class="tablepress-table-description tablepress-table-description-id-9"></span>
++
++<table id="tablepress-9" class="tablepress tablepress-id-9" aria-describedby="tablepress-9-description">
++<thead>
++<tr class="row-1">
++	<th class="column-1">DATE</th><th class="column-2">DAY</th><th class="column-3">SCHEDULE</th>
++</tr>
++</thead>
++<tbody class="row-striping row-hover">
++<tr class="row-2">
++	<td class="column-1">3/12</td><td class="column-2">THURSDAY</td><td class="column-3">9 AM to 9 PM</td>
++</tr>
++<tr class="row-3">
++	<td class="column-1">3/13</td><td class="column-2">FRIDAY</td><td class="column-3">9 AM to 9 PM </td>
++</tr>
++<tr class="row-4">
++	<td class="column-1">3/14</td><td class="column-2">SATURDAY</td><td class="column-3">9 AM to 9 PM</td>
++</tr>
++<tr class="row-5">
++	<td class="column-1">3/15</td><td class="column-2">SUNDAY</td><td class="column-3">9 AM to 4 PM</td>
++</tr>
++<tr class="row-6">
++	<td class="column-1">3/16</td><td class="column-2">MONDAY</td><td class="column-3">CLOSED</td>
++</tr>
++<tr class="row-7">
++	<td class="column-1">3/17</td><td class="column-2">TUESDAY</td><td class="column-3">CLOSED </td>
++</tr>
++</tbody>
++</table>
++<!-- #tablepress-9 from cache --></p>
++	<div id="gap-735738201" class="gap-element clearfix" style="display:block; height:auto;">
++		
++<style>
++#gap-735738201 {
++  padding-top: 20px;
++}
++</style>
++	</div>
++	
++
++<div class="container section-title-container" ><h4 class="section-title section-title-normal"><b></b><span class="section-title-main" >LIFTS SCHEDULED</span><b></b></h4></div>
++
++<p>
++<table id="tablepress-10" class="tablepress tablepress-id-10" aria-describedby="tablepress-10-description">
++<thead>
++<tr class="row-1">
++	<th class="column-1"><STRONG>LIFT</th><th class="column-2">HOURS</th>
++</tr>
++</thead>
++<tbody class="row-striping row-hover">
++<tr class="row-2">
++	<td class="column-1">HAROLD'S MAGIC CARPET</td><td class="column-2">9 AM to 4 PM</td>
++</tr>
++<tr class="row-3">
++	<td class="column-1">EASY RIDER</td><td class="column-2">9 AM to 9 PM</td>
++</tr>
++<tr class="row-4">
++	<td class="column-1">MANZANITA</td><td class="column-2">9 AM to 9 PM</td>
++</tr>
++<tr class="row-5">
++	<td class="column-1">ED</td><td class="column-2">9 AM to 9 PM</td>
++</tr>
++<tr class="row-6">
++	<td class="column-1">BIG GREEN MACHINE</td><td class="column-2">9 AM to 4 PM</td>
++</tr>
++<tr class="row-7">
++	<td class="column-1">HODAG <br />
++</td><td class="column-2">CLOSED</td>
++</tr>
++</tbody>
++</table>
++<span id="tablepress-10-description" class="tablepress-table-description tablepress-table-description-id-10">*Lift schedule is what we plan to open and is dependent upon conditions. Chair status may change in the event of inclement weather or mechanical or staffing issues. </span>
++<!-- #tablepress-10 from cache --></p>
++	<div id="gap-1439263634" class="gap-element clearfix" style="display:block; height:auto;">
++		
++<style>
++#gap-1439263634 {
++  padding-top: 20px;
++}
++</style>
++	</div>
++	
++
++<div class="container section-title-container" ><h4 class="section-title section-title-normal"><b></b><span class="section-title-main" >AUTOBAHN TUBING PARK</span><b></b></h4></div>
++
++<p>
++<table id="tablepress-11" class="tablepress tablepress-id-11" aria-describedby="tablepress-11-description">
++<thead>
++<tr class="row-1">
++	<td class="column-1"></td><td class="column-2"></td>
++</tr>
++</thead>
++<tbody class="row-striping row-hover">
++<tr class="row-2">
++	<td class="column-1"><Strong>STATUS FOR:</td><td class="column-2"><FONT COLOR=#ff0000> <b>THE AUTOBAHN IS CLOSED</FONT COLOR=></B><br />
++</td>
++</tr>
++<tr class="row-3">
++	<td class="column-1">REGULAR SCHEDULE</td><td class="column-2">10 AM to 4 PM SATURDAYS, SUNDAYS, and HOLIDAY MONDAYS</td>
++</tr>
++</tbody>
++</table>
++<span id="tablepress-11-description" class="tablepress-table-description tablepress-table-description-id-11"></span>
++<!-- #tablepress-11 from cache --></p>
++<p>*Days may vary depending on snow pack conditions. For more details, visit the <strong><a href="https://hoodoo.com/autobahn-tubing-park/">Autobahn</a></strong> page.</p>
++	<div id="gap-1311728322" class="gap-element clearfix" style="display:block; height:auto;">
++		
++<style>
++#gap-1311728322 {
++  padding-top: 20px;
++}
++</style>
++	</div>
++	
++
++<div class="container section-title-container" ><h4 class="section-title section-title-normal"><b></b><span class="section-title-main" >NORDIC TRAILS</span><b></b></h4></div>
++
++<p>
++<table id="tablepress-12" class="tablepress tablepress-id-12">
++<thead>
++<tr class="row-1">
++	<th class="column-1"><STRONG>HOURS</th><th class="column-2"><b><FONT COLOR=#ff0000>THE NORDIC TRAILS ARE CLOSED</FONT COLOR=></th>
++</tr>
++</thead>
++<tbody class="row-striping row-hover">
++<tr class="row-2">
++	<td class="column-1">LOWER TRAILS</td><td class="column-2">CLOSED</td>
++</tr>
++<tr class="row-3">
++	<td class="column-1">CLOSED</td><td class="column-2">MONDAY, TUESDAY,  and WEDNESDAY</td>
++</tr>
++<tr class="row-4">
++	<td class="column-1">UPPER TRAILS</td><td class="column-2">CLOSED</td>
++</tr>
++<tr class="row-5">
++	<td class="column-1">REGULAR SCHEDULE</td><td class="column-2">THURSDAYS through SUNDAYS, and HOLIDAY MONDAYS.</td>
++</tr>
++</tbody>
++</table>
++<!-- #tablepress-12 from cache --></p>
++
++		</div>
++				
++<style>
++#col-1416923611 > .col-inner {
++  padding: 0px 10px 0px 0px;
++  margin: 0px 0px 0px 0px;
++}
++</style>
++	</div>
++
++	
++
++</div>
++		</div>
++					</div>
++
++	
++</div>
++<p><!-- Global site tag (gtag.js) - Google Ads: 995121633 --> <script async="" src="https://www.googletagmanager.com/gtag/js?id=AW-995121633"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-995121633'); </script></p>
++	<div id="gap-1980315398" class="gap-element clearfix" style="display:block; height:auto;">
++		
++<style>
++#gap-1980315398 {
++  padding-top: 200px;
++}
++@media (min-width:550px) {
++  #gap-1980315398 {
++    padding-top: 30px;
++  }
++}
++</style>
++	</div>
++	
++
++			
++		
++</div>
++
++
++
++</main>
++
++<footer id="footer" class="footer-wrapper">
++
++	
++	<section class="section dark" id="section_1509810582">
++		<div class="section-bg fill" >
++									
++			
++
++		</div>
++
++		
++
++		<div class="section-content relative">
++			
++
++<div class="row row-large align-center row-divided"  id="row-745756209">
++
++
++	<div id="col-625360606" class="col medium-4 small-12 large-4"  >
++				<div class="col-inner text-left"  >
++			
++			
++
++<p><strong>HOURS</strong></p>
++<p>Closed until next season.  </p>
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-571455079" class="col medium-4 small-12 large-4"  >
++				<div class="col-inner"  >
++			
++			
++
++<h3>Quick Links</h3>
++<hr />
++<p><a href="https://hoodoo.com/the-mountain/weather-forecast/">Weather Forecast</a><br />
++<a href="https://hoodoo.com/the-mountain/road-conditions/">Road Conditions</a><br />
++<a href="https://hoodoo.com/faq/">Frequently Asked Questions</a><br />
++<a href="https://hoodoo.com/things-to-do/about/">About</a><br />
++<a href="https://hoodoo.com/hoodoo-history/">History</a><br />
++<a href="https://hoodoo.com/employment/">Employment</a><br />
++<a href="https://hoodoo.com/donations/">Donations</a></p>
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1574888876" class="col medium-4 small-12 large-4"  >
++				<div class="col-inner"  >
++			
++			
++
++<h3><a href="https://hoodoo.com/events-2/">Upcoming Events</a></h3>
++<p> </p>
++<p> </p>
++<p> </p>
++
++		</div>
++					</div>
++
++	
++
++</div>
++
++		</div>
++
++		
++<style>
++#section_1509810582 {
++  padding-top: 30px;
++  padding-bottom: 30px;
++  background-color: #215c91;
++}
++</style>
++	</section>
++	
++
++	<section class="section" id="section_1194305522">
++		<div class="section-bg fill" >
++									
++			
++
++		</div>
++
++		
++
++		<div class="section-content relative">
++			
++
++<div class="slider-wrapper relative" id="slider-915972293" >
++    <div class="slider slider-type-fade slider-nav-circle slider-nav-large slider-nav-light slider-style-normal"
++        data-flickity-options='{
++            "cellAlign": "center",
++            "imagesLoaded": true,
++            "lazyLoad": 1,
++            "freeScroll": false,
++            "wrapAround": true,
++            "autoPlay": 3500,
++            "pauseAutoPlayOnHover" : false,
++            "prevNextButtons": false,
++            "contain" : true,
++            "adaptiveHeight" : true,
++            "dragThreshold" : 10,
++            "percentPosition": true,
++            "pageDots": false,
++            "rightToLeft": false,
++            "draggable": false,
++            "selectedAttraction": 0.1,
++            "parallax" : 0,
++            "friction": 0.6        }'
++        >
++        
++
++<div class="row row-small row-full-width align-equal align-center row-divided"  id="row-15246138">
++
++
++	<div id="col-1350754196" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_889644515">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_889644515 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-389132566" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1380712006">
++		<a class="" href="https://www.firstinterstatebank.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="473" src="https://hoodoo.com/wp-content/uploads/2021/10/first-interstate-bank-logo-1400x649.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2021/10/first-interstate-bank-logo-1400x649.png 1400w, https://hoodoo.com/wp-content/uploads/2021/10/first-interstate-bank-logo-800x371.png 800w, https://hoodoo.com/wp-content/uploads/2021/10/first-interstate-bank-logo-768x356.png 768w, https://hoodoo.com/wp-content/uploads/2021/10/first-interstate-bank-logo-1536x712.png 1536w, https://hoodoo.com/wp-content/uploads/2021/10/first-interstate-bank-logo-2048x949.png 2048w, https://hoodoo.com/wp-content/uploads/2021/10/first-interstate-bank-logo-510x236.png 510w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_1380712006 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1088477520" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_677097363">
++		<a class="" href="https://blackbutteranch.com" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="510" height="453" src="https://hoodoo.com/wp-content/uploads/2018/01/black_butte_ranch.png" class="attachment-large size-large" alt="Lodging for Ski Hoodoo Resort - Black Butte Ranch" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2018/01/black_butte_ranch.png 510w, https://hoodoo.com/wp-content/uploads/2018/01/black_butte_ranch-350x311.png 350w, https://hoodoo.com/wp-content/uploads/2018/01/black_butte_ranch-450x400.png 450w" sizes="auto, (max-width: 510px) 100vw, 510px" />						
++					</div>
++						</a>		
++<style>
++#image_677097363 {
++  width: 59%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1098703064" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_782458662">
++		<a class="" href="https://www.pepsi.com/en-us/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="574" src="https://hoodoo.com/wp-content/uploads/2023/10/Pepsi-Logo-1400x788.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2023/10/Pepsi-Logo-1400x788.png 1400w, https://hoodoo.com/wp-content/uploads/2023/10/Pepsi-Logo-711x400.png 711w, https://hoodoo.com/wp-content/uploads/2023/10/Pepsi-Logo-768x432.png 768w, https://hoodoo.com/wp-content/uploads/2023/10/Pepsi-Logo-1536x864.png 1536w, https://hoodoo.com/wp-content/uploads/2023/10/Pepsi-Logo-2048x1152.png 2048w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_782458662 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-163043344" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_536919515">
++		<a class="" href="https://www.armadaskis.com/en-us" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="600" height="403" src="https://hoodoo.com/wp-content/uploads/2023/10/armadafull1.jpg" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2023/10/armadafull1.jpg 600w, https://hoodoo.com/wp-content/uploads/2023/10/armadafull1-596x400.jpg 596w" sizes="auto, (max-width: 600px) 100vw, 600px" />						
++					</div>
++						</a>		
++<style>
++#image_536919515 {
++  width: 82%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-864452364" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1961761603">
++		<a class="" href="https://cruxfermentation.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="358" src="https://hoodoo.com/wp-content/uploads/2022/10/Crux-Master-Logo-1400x492.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Crux-Master-Logo-1400x492.png 1400w, https://hoodoo.com/wp-content/uploads/2022/10/Crux-Master-Logo-800x281.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/Crux-Master-Logo-768x270.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/Crux-Master-Logo-1536x539.png 1536w, https://hoodoo.com/wp-content/uploads/2022/10/Crux-Master-Logo.png 1925w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_1961761603 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++<div class="row row-small row-full-width align-equal align-center row-divided"  id="row-1497667001">
++
++
++	<div id="col-1880813608" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1016511778">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_1016511778 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-991556219" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_352625231">
++		<a class="" href="https://lakecreeklodge.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="991" height="800" src="https://hoodoo.com/wp-content/uploads/2021/12/Lake-Creek-Lodge-logo-991x800.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2021/12/Lake-Creek-Lodge-logo-991x800.png 991w, https://hoodoo.com/wp-content/uploads/2021/12/Lake-Creek-Lodge-logo-495x400.png 495w, https://hoodoo.com/wp-content/uploads/2021/12/Lake-Creek-Lodge-logo-768x620.png 768w, https://hoodoo.com/wp-content/uploads/2021/12/Lake-Creek-Lodge-logo-510x412.png 510w, https://hoodoo.com/wp-content/uploads/2021/12/Lake-Creek-Lodge-logo.png 1500w" sizes="auto, (max-width: 991px) 100vw, 991px" />						
++					</div>
++						</a>		
++<style>
++#image_352625231 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-530722305" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1999619648">
++		<a class="" href="https://www.playeugene.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1009" height="413" src="https://hoodoo.com/wp-content/uploads/2022/10/Play_EugenePrimary.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Play_EugenePrimary.png 1009w, https://hoodoo.com/wp-content/uploads/2022/10/Play_EugenePrimary-800x327.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/Play_EugenePrimary-768x314.png 768w" sizes="auto, (max-width: 1009px) 100vw, 1009px" />						
++					</div>
++						</a>		
++<style>
++#image_1999619648 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-407914027" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_2103204037">
++		<a class="" href="https://avidcider.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="268" height="120" src="https://hoodoo.com/wp-content/uploads/2022/10/Screenshot-2024-11-22-at-10.08.49 AM.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++						</a>		
++<style>
++#image_2103204037 {
++  width: 91%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-260930288" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1099944629">
++		<a class="" href="https://www.volvocarsbend.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="712" height="800" src="https://hoodoo.com/wp-content/uploads/2022/10/PBR_logo_NoSlash-712x800.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/PBR_logo_NoSlash-712x800.png 712w, https://hoodoo.com/wp-content/uploads/2022/10/PBR_logo_NoSlash-356x400.png 356w, https://hoodoo.com/wp-content/uploads/2022/10/PBR_logo_NoSlash-768x862.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/PBR_logo_NoSlash.png 984w" sizes="auto, (max-width: 712px) 100vw, 712px" />						
++					</div>
++						</a>		
++<style>
++#image_1099944629 {
++  width: 71%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1699831751" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1556810129">
++		<a class="" href="https://www.bergsskishop.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1" height="1" src="https://hoodoo.com/wp-content/uploads/2023/10/bergs-logo-black-1.svg" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++						</a>		
++<style>
++#image_1556810129 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++<div class="row row-small row-full-width align-equal align-center row-divided"  id="row-775850206">
++
++
++	<div id="col-265596974" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1262358571">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_1262358571 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1167827036" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1219985431">
++		<a class="" href="https://abliscbd.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="800" height="800" src="https://hoodoo.com/wp-content/uploads/2022/10/Ablis-w-Buddha-Square-White-on-Black-800x800.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Ablis-w-Buddha-Square-White-on-Black-800x800.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/Ablis-w-Buddha-Square-White-on-Black-400x400.png 400w, https://hoodoo.com/wp-content/uploads/2022/10/Ablis-w-Buddha-Square-White-on-Black-280x280.png 280w, https://hoodoo.com/wp-content/uploads/2022/10/Ablis-w-Buddha-Square-White-on-Black-768x768.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/Ablis-w-Buddha-Square-White-on-Black.png 1000w" sizes="auto, (max-width: 800px) 100vw, 800px" />						
++					</div>
++						</a>		
++<style>
++#image_1219985431 {
++  width: 69%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1609900782" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_2065213344">
++		<a class="" href="https://drinkforth.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="872" height="800" src="https://hoodoo.com/wp-content/uploads/2021/12/Forth_DG_Stacked_Logo_Vertical-872x800.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2021/12/Forth_DG_Stacked_Logo_Vertical-872x800.png 872w, https://hoodoo.com/wp-content/uploads/2021/12/Forth_DG_Stacked_Logo_Vertical-436x400.png 436w, https://hoodoo.com/wp-content/uploads/2021/12/Forth_DG_Stacked_Logo_Vertical-768x705.png 768w, https://hoodoo.com/wp-content/uploads/2021/12/Forth_DG_Stacked_Logo_Vertical-1536x1410.png 1536w, https://hoodoo.com/wp-content/uploads/2021/12/Forth_DG_Stacked_Logo_Vertical-510x468.png 510w, https://hoodoo.com/wp-content/uploads/2021/12/Forth_DG_Stacked_Logo_Vertical.png 1920w" sizes="auto, (max-width: 872px) 100vw, 872px" />						
++					</div>
++						</a>		
++<style>
++#image_2065213344 {
++  width: 81%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1518091387" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_383064152">
++		<a class="" href="https://www.fivepine.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="500" height="257" src="https://hoodoo.com/wp-content/uploads/2021/12/FivePine-Logo_Web_500x257.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++						</a>		
++<style>
++#image_383064152 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1679410398" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_147249894">
++		<a class="" href="https://coenergy.net/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="822" height="448" src="https://hoodoo.com/wp-content/uploads/2021/10/coenergy-propane-logo.jpg" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2021/10/coenergy-propane-logo.jpg 822w, https://hoodoo.com/wp-content/uploads/2021/10/coenergy-propane-logo-734x400.jpg 734w, https://hoodoo.com/wp-content/uploads/2021/10/coenergy-propane-logo-768x419.jpg 768w, https://hoodoo.com/wp-content/uploads/2021/10/coenergy-propane-logo-510x278.jpg 510w" sizes="auto, (max-width: 822px) 100vw, 822px" />						
++					</div>
++						</a>		
++<style>
++#image_147249894 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1929411709" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1663992520">
++		<a class="" href="https://edelrid.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="474" height="141" src="https://hoodoo.com/wp-content/uploads/2023/10/th.jpg" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++						</a>		
++<style>
++#image_1663992520 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++<div class="row row-small row-full-width align-equal row-divided"  id="row-2063011205">
++
++
++	<div id="col-1418401333" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_2078008608">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_2078008608 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1841878900" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1700705625">
++		<a class="" href="https://bigfootbeverages.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="377" src="https://hoodoo.com/wp-content/uploads/2022/11/Bigfoot-On-Multi-Color-1400x517.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/11/Bigfoot-On-Multi-Color-1400x517.png 1400w, https://hoodoo.com/wp-content/uploads/2022/11/Bigfoot-On-Multi-Color-800x296.png 800w, https://hoodoo.com/wp-content/uploads/2022/11/Bigfoot-On-Multi-Color-768x284.png 768w, https://hoodoo.com/wp-content/uploads/2022/11/Bigfoot-On-Multi-Color-1536x568.png 1536w, https://hoodoo.com/wp-content/uploads/2022/11/Bigfoot-On-Multi-Color-2048x757.png 2048w, https://hoodoo.com/wp-content/uploads/2022/11/Bigfoot-On-Multi-Color-510x188.png 510w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_1700705625 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1205278516" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_394505353">
++		<a class="" href="https://www.luckeyswoodsman.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="300" height="300" src="https://hoodoo.com/wp-content/uploads/2022/11/Copy-of-1.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/11/Copy-of-1.png 300w, https://hoodoo.com/wp-content/uploads/2022/11/Copy-of-1-280x280.png 280w, https://hoodoo.com/wp-content/uploads/2022/11/Copy-of-1-100x100.png 100w" sizes="auto, (max-width: 300px) 100vw, 300px" />						
++					</div>
++						</a>		
++<style>
++#image_394505353 {
++  width: 83%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-851561688" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1141111387">
++		<a class="" href="https://www.discoverpacifico.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="500" height="402" src="https://hoodoo.com/wp-content/uploads/2022/10/Pacifico-Full-Color-Logo.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Pacifico-Full-Color-Logo.png 500w, https://hoodoo.com/wp-content/uploads/2022/10/Pacifico-Full-Color-Logo-498x400.png 498w" sizes="auto, (max-width: 500px) 100vw, 500px" />						
++					</div>
++						</a>		
++<style>
++#image_1141111387 {
++  width: 84%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-178315511" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1761749467">
++								<div class="img-inner dark" >
++			<img width="1020" height="655" src="https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-10.35.22-AM-1246x800.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-10.35.22-AM-1246x800.png 1246w, https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-10.35.22-AM-623x400.png 623w, https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-10.35.22-AM-768x493.png 768w, https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-10.35.22-AM-510x327.png 510w, https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-10.35.22-AM.png 1414w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++								
++<style>
++#image_1761749467 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-2127499055" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1453261993">
++		<a class="" href="https://avidcider.com/seven-peaks-hard-seltzers/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="508" src="https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-5.16.47-PM.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-5.16.47-PM.png 1280w, https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-5.16.47-PM-768x383.png 768w, https://hoodoo.com/wp-content/uploads/2022/11/Screen-Shot-2022-11-06-at-5.16.47-PM-510x254.png 510w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_1453261993 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++<div class="row row-small row-full-width align-equal align-center"  id="row-1257450401">
++
++
++	<div id="col-1912967863" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_483751513">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_483751513 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1021369996" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_61382339">
++		<a class="" href="https://www.wildridebrew.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="945" height="800" src="https://hoodoo.com/wp-content/uploads/2022/10/Wild_Ride_Brew_Main-Logo-High-945x800.jpg" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Wild_Ride_Brew_Main-Logo-High-945x800.jpg 945w, https://hoodoo.com/wp-content/uploads/2022/10/Wild_Ride_Brew_Main-Logo-High-473x400.jpg 473w, https://hoodoo.com/wp-content/uploads/2022/10/Wild_Ride_Brew_Main-Logo-High-768x650.jpg 768w, https://hoodoo.com/wp-content/uploads/2022/10/Wild_Ride_Brew_Main-Logo-High-1536x1300.jpg 1536w, https://hoodoo.com/wp-content/uploads/2022/10/Wild_Ride_Brew_Main-Logo-High-2048x1733.jpg 2048w" sizes="auto, (max-width: 945px) 100vw, 945px" />						
++					</div>
++						</a>		
++<style>
++#image_61382339 {
++  width: 89%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1156303685" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1867490338">
++		<a class="" href="https://www.cascadespiritsco.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="320" height="366" src="https://hoodoo.com/wp-content/uploads/2023/10/Cascade-Spirits.webp" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++						</a>		
++<style>
++#image_1867490338 {
++  width: 68%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-541775845" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_715961769">
++		<a class="" href="https://www.google.com/aclk?sa=L&#038;ai=DChsSEwjH1b-p1JOSAxW11MIEHan-HI4YACICCAEQAxoCcHY&#038;ae=2&#038;co=1&#038;ase=2&#038;gclid=Cj0KCQiAg63LBhDtARIsAJygHZ7UBlnnvjEC5pjrXxgKJWV-WosppL8uu-3_p04RrUiz1UqQJxi8aYsaAr3NEALw_wcB&#038;ei=9xFsaYDXPM7u0PEP6q_lOQ&#038;cid=CAASWeRorXRPlMdJqnVcXfQyfvZu1F0eUV6buTgjHGbGDlA_2wF7qIUgOLRcVAmpQ2OqvbEFII5ogo4VV4T6dM2IFitn6rqqI-fszXwKhB_UtODKv-Rdc8RoNifo&#038;cce=2&#038;category=acrcp_v1_71&#038;sig=AOD64_12eRgBSXjd8XdtfW0vQqqfFOFC_w&#038;q&#038;sqi=2&#038;nis=4&#038;adurl&#038;ved=2ahUKEwjArrmp1JOSAxVONzQIHepXOQcQ0Qx6BAhOEAQ" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="360" height="135" src="https://hoodoo.com/wp-content/uploads/2021/12/Best-Western-Ponderosa-logo.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++						</a>		
++<style>
++#image_715961769 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1138616183" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1392712580">
++		<a class="" href="https://snoplanks.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="580" src="https://hoodoo.com/wp-content/uploads/2022/10/Black-Side-Text-1400x796.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Black-Side-Text-1400x796.png 1400w, https://hoodoo.com/wp-content/uploads/2022/10/Black-Side-Text-704x400.png 704w, https://hoodoo.com/wp-content/uploads/2022/10/Black-Side-Text-768x437.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/Black-Side-Text-1536x873.png 1536w, https://hoodoo.com/wp-content/uploads/2022/10/Black-Side-Text-2048x1164.png 2048w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_1392712580 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1793094877" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1239862417">
++		<a class="" href="https://www.thebarnhs.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="960" height="434" src="https://hoodoo.com/wp-content/uploads/2022/11/Barn-Logo-.jpg" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/11/Barn-Logo-.jpg 960w, https://hoodoo.com/wp-content/uploads/2022/11/Barn-Logo--800x362.jpg 800w, https://hoodoo.com/wp-content/uploads/2022/11/Barn-Logo--768x347.jpg 768w, https://hoodoo.com/wp-content/uploads/2022/11/Barn-Logo--510x231.jpg 510w" sizes="auto, (max-width: 960px) 100vw, 960px" />						
++					</div>
++						</a>		
++<style>
++#image_1239862417 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++<div class="row row-small row-full-width align-equal align-center row-divided"  id="row-390611275">
++
++
++	<div id="col-715542543" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_2116228194">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_2116228194 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-762066043" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1974301806">
++		<a class="" href="https://www.google.com/aclk?sa=L&#038;pf=1&#038;ai=DChsSEwi90-Tg1ZOSAxVTKq0GHZJIAQgYACICCAEQABoCcHY&#038;co=1&#038;ase=2&#038;gclid=Cj0KCQiAg63LBhDtARIsAJygHZ6V66x01DK2f15LoL4PUDZj0V7I44tvWQ0PG0QMFK2jNj7S3uTJesAaAky9EALw_wcB&#038;cid=CAASWeRoFBEvk9ijQYC7bIfZ5Gp8xlISH9ummXZ-WtgW3-SMJjCVpuThkVf-hOsZZVLeYRxjSnuI0PnZlH6RNQtlqRWw89q55vQrXe2q0vg6_7KyzHpAENo8Ge8U&#038;cce=2&#038;category=acrcp_v1_32&#038;sig=AOD64_2lQ2T8xTOgS0Ipin_e41ehQtEYDg&#038;q&#038;nis=4&#038;adurl=https://www.cabinns.com/property/whiskey-rock-cabin/HA-3214199848?gad_source%3D1%26gad_campaignid%3D22188963813%26gbraid%3D0AAAAApVd2pg3-u_SvjTdpXpQbPA1gZZoH%26gclid%3DCj0KCQiAg63LBhDtARIsAJygHZ6V66x01DK2f15LoL4PUDZj0V7I44tvWQ0PG0QMFK2jNj7S3uTJesAaAky9EALw_wcB&#038;ved=2ahUKEwijv97g1ZOSAxWYFzQIHREnF6kQ0Qx6BAg6EAE" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="547" height="418" src="https://hoodoo.com/wp-content/uploads/2022/10/Screenshot-2026-01-17-at-2.55.17-PM.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Screenshot-2026-01-17-at-2.55.17-PM.png 547w, https://hoodoo.com/wp-content/uploads/2022/10/Screenshot-2026-01-17-at-2.55.17-PM-523x400.png 523w" sizes="auto, (max-width: 547px) 100vw, 547px" />						
++					</div>
++						</a>		
++<style>
++#image_1974301806 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1253812911" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_30025253">
++		<a class="" href="https://www.sunriverbrewingcompany.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="625" height="630" src="https://hoodoo.com/wp-content/uploads/2022/10/Sunriver-Brewing.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Sunriver-Brewing.png 625w, https://hoodoo.com/wp-content/uploads/2022/10/Sunriver-Brewing-397x400.png 397w" sizes="auto, (max-width: 625px) 100vw, 625px" />						
++					</div>
++						</a>		
++<style>
++#image_30025253 {
++  width: 91%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-560509652" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_2107782579">
++		<a class="" href="https://www.snowdaysfoundation.org/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="290" src="https://hoodoo.com/wp-content/uploads/2022/10/Snowdays_logo-1400x398.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Snowdays_logo-1400x398.png 1400w, https://hoodoo.com/wp-content/uploads/2022/10/Snowdays_logo-800x227.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/Snowdays_logo-768x218.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/Snowdays_logo-1536x437.png 1536w, https://hoodoo.com/wp-content/uploads/2022/10/Snowdays_logo-2048x582.png 2048w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_2107782579 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-262934115" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_577704187">
++		<a class="" href="https://www.threecreeksbrewpub.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="725" src="https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-1125x800.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-1125x800.png 1125w, https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-562x400.png 562w, https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-768x546.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-1536x1092.png 1536w, https://hoodoo.com/wp-content/uploads/2022/10/Three-Creeks-Brew-Pub-Logo-2048x1457.png 2048w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_577704187 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1258158668" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_17454328">
++		<a class="" href="https://www.ponderosaproperties.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="708" height="611" src="https://hoodoo.com/wp-content/uploads/2026/01/PP-LOGO-2016.jpg" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2026/01/PP-LOGO-2016.jpg 708w, https://hoodoo.com/wp-content/uploads/2026/01/PP-LOGO-2016-464x400.jpg 464w" sizes="auto, (max-width: 708px) 100vw, 708px" />						
++					</div>
++						</a>		
++<style>
++#image_17454328 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++<div class="row row-small row-full-width align-equal align-center row-divided"  id="row-1913210183">
++
++
++	<div id="col-1056468582" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1839966635">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_1839966635 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-209890001" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_320659255">
++		<a class="" href="https://jarritos.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="800" height="800" src="https://hoodoo.com/wp-content/uploads/2022/10/JAR_newlogoColor-1-800x800.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/JAR_newlogoColor-1-800x800.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/JAR_newlogoColor-1-400x400.png 400w, https://hoodoo.com/wp-content/uploads/2022/10/JAR_newlogoColor-1-280x280.png 280w, https://hoodoo.com/wp-content/uploads/2022/10/JAR_newlogoColor-1-768x768.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/JAR_newlogoColor-1.png 1080w" sizes="auto, (max-width: 800px) 100vw, 800px" />						
++					</div>
++						</a>		
++<style>
++#image_320659255 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-712760915" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_622443704">
++		<a class="" href="http://breakingfreemediagroup.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="668" height="185" src="https://hoodoo.com/wp-content/uploads/2022/11/BreakingFree_TITLE_Color.jpg" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/11/BreakingFree_TITLE_Color.jpg 668w, https://hoodoo.com/wp-content/uploads/2022/11/BreakingFree_TITLE_Color-510x141.jpg 510w" sizes="auto, (max-width: 668px) 100vw, 668px" />						
++					</div>
++						</a>		
++<style>
++#image_622443704 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-469749488" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1572755489" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1817720357">
++		<a class="" href="https://www.coldspringsresort.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="360" src="https://hoodoo.com/wp-content/uploads/2022/10/Cold-Springs-logo-1400x494.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/Cold-Springs-logo-1400x494.png 1400w, https://hoodoo.com/wp-content/uploads/2022/10/Cold-Springs-logo-800x283.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/Cold-Springs-logo-768x271.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/Cold-Springs-logo-1536x542.png 1536w, https://hoodoo.com/wp-content/uploads/2022/10/Cold-Springs-logo.png 1920w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_1817720357 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-704558582" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1511034605">
++								<div class="img-inner dark" >
++			<img width="1020" height="769" src="https://hoodoo.com/wp-content/uploads/2019/01/peak-sports-logo.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2019/01/peak-sports-logo.png 1024w, https://hoodoo.com/wp-content/uploads/2019/01/peak-sports-logo-510x384.png 510w, https://hoodoo.com/wp-content/uploads/2019/01/peak-sports-logo-531x400.png 531w, https://hoodoo.com/wp-content/uploads/2019/01/peak-sports-logo-768x579.png 768w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++								
++<style>
++#image_1511034605 {
++  width: 82%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++<div class="row row-small row-full-width align-equal align-center row-divided"  id="row-298406824">
++
++
++	<div id="col-1981153477" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_303396244">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_303396244 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1271688914" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1281125883">
++		<a class="" href="https://wholesum.agency" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="475" src="https://hoodoo.com/wp-content/uploads/2022/11/Wholesum-Logo-2022.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/11/Wholesum-Logo-2022.png 1185w, https://hoodoo.com/wp-content/uploads/2022/11/Wholesum-Logo-2022-800x373.png 800w, https://hoodoo.com/wp-content/uploads/2022/11/Wholesum-Logo-2022-768x358.png 768w, https://hoodoo.com/wp-content/uploads/2022/11/Wholesum-Logo-2022-510x238.png 510w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_1281125883 {
++  width: 91%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-232797948" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_2007808310">
++		<a class="" href="https://bestdaybrewing.com/?srsltid=AfmBOork0HCX482zkGnyBH4LLexPf3DorCSZ1NOqkgwe21E6DzA1JMV_" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="257" src="https://hoodoo.com/wp-content/uploads/2022/10/BestDay_StackedLeftBlue-1400x353.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/BestDay_StackedLeftBlue-1400x353.png 1400w, https://hoodoo.com/wp-content/uploads/2022/10/BestDay_StackedLeftBlue-800x202.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/BestDay_StackedLeftBlue-768x193.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/BestDay_StackedLeftBlue-1536x387.png 1536w, https://hoodoo.com/wp-content/uploads/2022/10/BestDay_StackedLeftBlue.png 1981w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_2007808310 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-762884226" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-47215971" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_233515268">
++		<a class="" href="https://tallmanbrewing.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="297" src="https://hoodoo.com/wp-content/uploads/2023/10/tallman-logo-black-1400x407.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2023/10/tallman-logo-black-1400x407.png 1400w, https://hoodoo.com/wp-content/uploads/2023/10/tallman-logo-black-800x233.png 800w, https://hoodoo.com/wp-content/uploads/2023/10/tallman-logo-black-768x223.png 768w, https://hoodoo.com/wp-content/uploads/2023/10/tallman-logo-black.png 1500w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_233515268 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-264768606" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1767416816">
++		<a class="" href="https://exploresisters.com" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="900" height="318" src="https://hoodoo.com/wp-content/uploads/2022/10/sisters_logo_evergreen_rgb_900px_w_72ppi.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/sisters_logo_evergreen_rgb_900px_w_72ppi.png 900w, https://hoodoo.com/wp-content/uploads/2022/10/sisters_logo_evergreen_rgb_900px_w_72ppi-800x283.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/sisters_logo_evergreen_rgb_900px_w_72ppi-768x271.png 768w" sizes="auto, (max-width: 900px) 100vw, 900px" />						
++					</div>
++						</a>		
++<style>
++#image_1767416816 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++<div class="row row-small row-full-width align-equal row-divided"  id="row-1172196144">
++
++
++	<div id="col-1716015105" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++<h1 class="alt-font" style="text-align: center;">Our Partners</h1>
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1873919924">
++								<div class="img-inner dark" >
++			<img width="495" height="319" src="https://hoodoo.com/wp-content/uploads/2022/10/Hoodoo-Ski-Logo-Blue-NO-BG.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++								
++<style>
++#image_1873919924 {
++  width: 100%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-141275768" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_416565237">
++		<a class="" href="https://www.tactics.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="225" height="225" src="https://hoodoo.com/wp-content/uploads/2022/11/download.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/11/download.png 225w, https://hoodoo.com/wp-content/uploads/2022/11/download-100x100.png 100w" sizes="auto, (max-width: 225px) 100vw, 225px" />						
++					</div>
++						</a>		
++<style>
++#image_416565237 {
++  width: 74%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-750699796" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner"  >
++			
++			
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-1404199978" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1074291873">
++		<a class="" href="https://rainierbeer.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="1020" height="372" src="https://hoodoo.com/wp-content/uploads/2022/10/RNR-Logo-RGB_Wordmark_Illustrated-Red-1400x510.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" srcset="https://hoodoo.com/wp-content/uploads/2022/10/RNR-Logo-RGB_Wordmark_Illustrated-Red-1400x510.png 1400w, https://hoodoo.com/wp-content/uploads/2022/10/RNR-Logo-RGB_Wordmark_Illustrated-Red-800x291.png 800w, https://hoodoo.com/wp-content/uploads/2022/10/RNR-Logo-RGB_Wordmark_Illustrated-Red-768x280.png 768w, https://hoodoo.com/wp-content/uploads/2022/10/RNR-Logo-RGB_Wordmark_Illustrated-Red-1536x559.png 1536w, https://hoodoo.com/wp-content/uploads/2022/10/RNR-Logo-RGB_Wordmark_Illustrated-Red-2048x745.png 2048w" sizes="auto, (max-width: 1020px) 100vw, 1020px" />						
++					</div>
++						</a>		
++<style>
++#image_1074291873 {
++  width: 90%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-374523260" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++
++		</div>
++					</div>
++
++	
++
++	<div id="col-2031827175" class="col medium-2 small-12 large-2"  >
++				<div class="col-inner text-center"  >
++			
++			
++
++	<div class="img has-hover x md-x lg-x y md-y lg-y" id="image_1809155599">
++		<a class="" href="https://oregonbungee.com/" target="_blank" rel="noopener" >						<div class="img-inner dark" >
++			<img width="401" height="349" src="https://hoodoo.com/wp-content/uploads/2022/10/logo.png" class="attachment-large size-large" alt="" decoding="async" loading="lazy" />						
++					</div>
++						</a>		
++<style>
++#image_1809155599 {
++  width: 84%;
++}
++</style>
++	</div>
++	
++
++
++		</div>
++					</div>
++
++	
++
++</div>
++
++     </div>
++
++     <div class="loading-spin dark large centered"></div>
++
++	</div>
++
++
++
++		</div>
++
++		
++<style>
++#section_1194305522 {
++  padding-top: 30px;
++  padding-bottom: 30px;
++  margin-bottom: 15px;
++  min-height: 150px;
++  background-color: rgb(255,255,255);
++}
++</style>
++	</section>
++	
++<div class="absolute-footer dark medium-text-center small-text-center">
++  <div class="container clearfix">
++
++          <div class="footer-secondary pull-right">
++                  <div class="footer-text inline-block small-block">
++            <p><span style="font-size: 75%;"><a href="https://wholesumagency.com/">Site Designed & Powered by The Wholesum Agency</a></span></p>          </div>
++                      </div>
++    
++    <div class="footer-primary pull-left">
++              <div class="menu-secondary-container"><ul id="menu-secondary" class="links footer-nav uppercase"><li id="menu-item-4035" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4035"><a href="https://hoodoo.com/directions/">Directions</a></li>
++<li id="menu-item-4036" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4036"><a href="https://hoodoo.com/know-the-code/">Know the Code</a></li>
++<li id="menu-item-4051" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4051"><a href="https://hoodoo.com/employment/">Employment</a></li>
++<li id="menu-item-10584" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10584"><a href="https://hoodoo.com/app-tos-privacy/">Hoodoo App – Terms and Conditions + Privacy Policy</a></li>
++<li id="menu-item-194" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-194"><a href="https://hoodoo.com/blog/">News</a></li>
++<li id="menu-item-4039" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4039"><a href="https://hoodoo.com/contact/">Contact Us</a></li>
++</ul></div>            <div class="copyright-footer">
++        Copyright 2026 © <strong>Hoodoo Ski Area</strong>      </div>
++          </div>
++  </div>
++</div>
++
++<a href="#top" class="back-to-top button icon invert plain fixed bottom z-1 is-outline hide-for-medium circle" id="top-link" aria-label="Go to top"><i class="icon-angle-up" ></i></a>
++
++</footer>
++
++</div>
++
++<div id="main-menu" class="mobile-sidebar no-scrollbar mfp-hide">
++
++	
++	<div class="sidebar-menu no-scrollbar ">
++
++		
++					<ul class="nav nav-sidebar nav-vertical nav-uppercase" data-tab="1">
++				<li class="html header-button-1">
++	<div class="header-button">
++		<a href="/know-the-code/" class="button primary is-medium"  style="border-radius:10px;">
++		<span>Skier Responsibility Code</span>
++	</a>
++	</div>
++</li>
++<li class="html header-button-2">
++	<div class="header-button">
++		<a href="https://skihoodoo.resortstore.net/en/accounts/login/" target="_blank" class="button primary" rel="noopener"  style="border-radius:10px;">
++		<span>Setup a Profile</span>
++	</a>
++	</div>
++</li>
++<li class="html custom html_top_right_text"><a data-animate="bounceInUp" href="https://skihoodoo.resortstore.net/en/accounts/login/" target="_blank" class="button white is-underline" rel="noopener"  >
++		<span>Setup a Profile</span>
++	</a>
++</li><li class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-menu-ancestor current-menu-parent current-page-parent current_page_parent current_page_ancestor menu-item-has-children menu-item-4257"><a href="https://hoodoo.com/the-mountain/">The Mountain</a>
++<ul class="sub-menu nav-sidebar-ul children">
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4238"><a href="https://hoodoo.com/the-mountain/webcams/">Live Cams</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-4281 current_page_item menu-item-4287"><a href="https://hoodoo.com/the-mountain/mountain-lift-status/" aria-current="page">Mountain &#038; Lift Status</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4235"><a href="https://hoodoo.com/the-mountain/mountain-conditions/">Mountain Conditions</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8865"><a href="https://hoodoo.com/the-mountain/weather-forecast/">Weather Forecast</a></li>
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-9032"><a href="/hours">Hours</a></li>
++</ul>
++</li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4221"><a href="https://hoodoo.com/explore/">Explore</a>
++<ul class="sub-menu nav-sidebar-ul children">
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4259"><a href="https://hoodoo.com/explore/trail-map/">Trail Map</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4244"><a href="https://hoodoo.com/explore/group-rates/">Group Events &#038; Discounts</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5559"><a href="https://hoodoo.com/explore/chuck/">Chuck’s Page</a></li>
++</ul>
++</li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4303"><a href="https://hoodoo.com/things-to-do/">Things To Do</a>
++<ul class="sub-menu nav-sidebar-ul children">
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4241"><a href="https://hoodoo.com/things-to-do/autobahn-tubing-park/">Autobahn Tubing Park</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4348"><a href="https://hoodoo.com/things-to-do/night-skiing/">Night Skiing</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4240"><a href="https://hoodoo.com/things-to-do/nordic-skiing/">Nordic Skiing</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5239"><a href="https://hoodoo.com/things-to-do/races/">Races</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9975"><a href="https://hoodoo.com/things-to-do/explore-sisters/">Explore Sisters</a></li>
++</ul>
++</li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4420"><a href="https://hoodoo.com/ski-ride-school/">Ski &#038; Ride School</a>
++<ul class="sub-menu nav-sidebar-ul children">
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8790"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/categories/10000-ski-ride-school_104/">Book a Lesson</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4422"><a href="https://hoodoo.com/ski-ride-school/lessons/">Lessons &#038; Programs</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10539"><a href="https://hoodoo.com/about-ski-ride-school/">About SRS</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10644"><a href="https://hoodoo.com/ski-ride-school/tips-for-a-great-day/">Ski &#038; Ride School FAQ’s</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10540"><a href="https://hoodoo.com/ski-ride-school-instructors/">Coaches</a></li>
++</ul>
++</li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-4262"><a href="https://hoodoo.com/rates/">Rates</a>
++<ul class="sub-menu nav-sidebar-ul children">
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10580"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/category/40000-season-pass/40100-all-mountain_228/">Season Passes</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4578"><a href="https://hoodoo.com/rates/hoodoo-anycard-5-day-ticket-package/">AnyCard – 5 Lift Ticket Deal</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4245"><a href="https://hoodoo.com/rates/lift-tickets/">Lift Tickets</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4246"><a href="https://hoodoo.com/rates/rentals/">Rental Rates</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4247"><a href="https://hoodoo.com/rates/rv-rates/">RV Rates</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4317"><a href="https://hoodoo.com/rates/lift-ticket-deals/">Ticket Deals</a></li>
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10854"><a href="https://apps.1risk.cloud/1waiverKioskv3/?a=aHR0cHM6Ly9teS4xcmlzay5uZXQvaG9vZG9vYXBpfDk4MDYzZjk4MGZiYjRhZGNiODBjZDJiZGVkMjllYjUyfDk=">Sign Lift Ticket/Rental Waiver</a></li>
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8782"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/category/60000-gift-certificates_143/">Gift Certificates</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5082"><a href="https://hoodoo.com/rates/indy-pass/">Indy Pass</a></li>
++</ul>
++</li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4264"><a href="https://hoodoo.com/lodging/">Lodging</a></li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4380"><a href="https://hoodoo.com/employment/">Employment</a></li>
++<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8428"><a href="/events/">Calendar</a></li>
++<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-9241"><a href="#">Shop</a>
++<ul class="sub-menu nav-sidebar-ul children">
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10892"><a href="https://skihoodoo.resortstore.net/en/catalogue/categories/20000-lift-tickets_144/">Lift Tickets</a></li>
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-8781"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/category/50000-anycard_137/">AnyCards</a></li>
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10607"><a target="_blank" rel="noopener" href="https://skihoodoo.resortstore.net/en/catalogue/category/60000-gift-certificates_143/">Gift Certificates</a></li>
++	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-9240"><a href="https://hoodoo.com/hillside-ski-sport/">Hillside Ski &#038; Sport</a></li>
++	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-9484"><a target="_blank" rel="noopener" href="https://centraloregondaily.com/hoodooperks/">Hoodoo Perks</a></li>
++</ul>
++</li>
++<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8426"><a href="https://hoodoo.com/blog/">News</a></li>
++<li class="html header-social-icons ml-0">
++	<div class="social-icons follow-icons" ><a href="https://www.facebook.com/HoodooRecreation/" target="_blank" data-label="Facebook" class="icon plain facebook tooltip" title="Follow on Facebook" aria-label="Follow on Facebook" rel="noopener nofollow" ><i class="icon-facebook" ></i></a><a href="https://www.instagram.com/skihoodoo/" target="_blank" data-label="Instagram" class="icon plain instagram tooltip" title="Follow on Instagram" aria-label="Follow on Instagram" rel="noopener nofollow" ><i class="icon-instagram" ></i></a><a href="https://x.com/HoodooSki" data-label="X" target="_blank" class="icon plain x tooltip" title="Follow on X" aria-label="Follow on X" rel="noopener nofollow" ><i class="icon-x" ></i></a></div></li>
++			</ul>
++		
++		
++	</div>
++
++	
++</div>
++<script type="speculationrules">
++{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/hoodoo-ski-resort-child-theme/*","/wp-content/themes/flatsome/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
++</script>
++		<script>
++		( function ( body ) {
++			'use strict';
++			body.className = body.className.replace( /\btribe-no-js\b/, 'tribe-js' );
++		} )( document.body );
++		</script>
++			<div class="flatsome-cookies">
++		<div class="flatsome-cookies__inner">
++			<div class="flatsome-cookies__text">
++				This site uses cookies to offer you a better browsing experience. By browsing this website, you agree to our use of cookies.			</div>
++			<div class="flatsome-cookies__buttons">
++								<a href="#" class="button primary flatsome-cookies__accept-btn"  >
++		<span>Accept</span>
++	</a>
++			</div>
++		</div>
++	</div>
++	<script> /* <![CDATA[ */var tribe_l10n_datatables = {"aria":{"sort_ascending":": activate to sort column ascending","sort_descending":": activate to sort column descending"},"length_menu":"Show _MENU_ entries","empty_table":"No data available in table","info":"Showing _START_ to _END_ of _TOTAL_ entries","info_empty":"Showing 0 to 0 of 0 entries","info_filtered":"(filtered from _MAX_ total entries)","zero_records":"No matching records found","search":"Search:","all_selected_text":"All items on this page were selected. ","select_all_link":"Select all pages","clear_selection":"Clear Selection.","pagination":{"all":"All","next":"Next","previous":"Previous"},"select":{"rows":{"0":"","_":": Selected %d rows","1":": Selected 1 row"}},"datepicker":{"dayNames":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"dayNamesShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"dayNamesMin":["S","M","T","W","T","F","S"],"monthNames":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesShort":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesMin":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"nextText":"Next","prevText":"Prev","currentText":"Today","closeText":"Done","today":"Today","clear":"Clear"}};/* ]]> */ </script><script id="flatsome-instant-page-js" src="https://hoodoo.com/wp-content/themes/flatsome/inc/extensions/flatsome-instant-page/flatsome-instant-page.js?ver=1.2.1"></script>
++<script id="flatsome-live-search-js" src="https://hoodoo.com/wp-content/themes/flatsome/inc/extensions/flatsome-live-search/flatsome-live-search.js?ver=3.19.14"></script>
++<script id="hoverIntent-js" src="https://hoodoo.com/wp-includes/js/hoverIntent.min.js?ver=1.10.2"></script>
++<script id="flatsome-js-js-extra">
++var flatsomeVars = {"theme":{"version":"3.19.14"},"ajaxurl":"https://hoodoo.com/wp-admin/admin-ajax.php","rtl":"","sticky_height":"70","stickyHeaderHeight":"0","scrollPaddingTop":"0","assets_url":"https://hoodoo.com/wp-content/themes/flatsome/assets/","lightbox":{"close_markup":"\u003Cbutton title=\"%title%\" type=\"button\" class=\"mfp-close\"\u003E\u003Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-x\"\u003E\u003Cline x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"\u003E\u003C/line\u003E\u003Cline x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"\u003E\u003C/line\u003E\u003C/svg\u003E\u003C/button\u003E","close_btn_inside":false},"user":{"can_edit_pages":false},"i18n":{"mainMenu":"Main Menu","toggleButton":"Toggle"},"options":{"cookie_notice_version":"1","swatches_layout":false,"swatches_disable_deselect":false,"swatches_box_select_event":false,"swatches_box_behavior_selected":false,"swatches_box_update_urls":"1","swatches_box_reset":false,"swatches_box_reset_limited":false,"swatches_box_reset_extent":false,"swatches_box_reset_time":300,"search_result_latency":"0"}};
++//# sourceURL=flatsome-js-js-extra
++</script>
++<script id="flatsome-js-js" src="https://hoodoo.com/wp-content/themes/flatsome/assets/js/flatsome.js?ver=e1ad26bd5672989785e1"></script>
++<script id="flatsome-cookie-notice-js" src="https://hoodoo.com/wp-content/themes/flatsome/inc/extensions/flatsome-cookie-notice/flatsome-cookie-notice.js?ver=3.12.0"></script>
++<script id="tablepress-datatables-js" src="https://hoodoo.com/wp-content/plugins/tablepress/js/jquery.datatables.min.js?ver=3.1.3"></script>
++<script id="tablepress-datatables-js-after">
++var DT_TP = {};
++jQuery(($)=>{
++var DT_language={"en_US":{}};
++DT_TP['3'] = new DataTable('#tablepress-3',{language:DT_language['en_US'],order:[],orderClasses:false,paging:false,searching:false,info:false,scrollX:true});
++DT_TP['9'] = new DataTable('#tablepress-9',{language:DT_language['en_US'],ordering:false,paging:false,searching:false,info:false,scrollX:true});
++DT_TP['10'] = new DataTable('#tablepress-10',{language:DT_language['en_US'],ordering:false,paging:false,searching:false,info:false,scrollX:true});
++});
++//# sourceURL=tablepress-datatables-js-after
++</script>
++<script id="wp-emoji-settings" type="application/json">
++{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://hoodoo.com/wp-includes/js/wp-emoji-release.min.js?ver=7.0"}}
++</script>
++<script type="module">
++/*! This file is auto-generated */
++const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(window._wpemojiSettings=a,"wpEmojiSettingsSupports"),s=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const a=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===a[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,a){let r;const o=(r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),s=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(e=>{s[e]=t(o,e,n,a)}),s}function r(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}a.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),c.toString(),p.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"});const r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=e=>{i(n=e.data),r.terminate(),t(n)})}catch(e){}i(n=f(s,u,c,p))}t(n)}).then(e=>{for(const n in e)a.supports[n]=e[n],a.supports.everything=a.supports.everything&&a.supports[n],"flag"!==n&&(a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&a.supports[n]);var t;a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&!a.supports.flag,a.supports.everything||((t=a.source||{}).concatemoji?r(t.concatemoji):t.wpemoji&&t.twemoji&&(r(t.twemoji),r(t.wpemoji)))});
++//# sourceURL=https://hoodoo.com/wp-includes/js/wp-emoji-loader.min.js
++</script>
++
++<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1c945d0a8252c24',t:'MTc4NDI5MTU4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
++</html>
+diff --git a/test/resorts/hoodoo.js b/test/resorts/hoodoo.js
+index f6dc2cd..11f3b0f 100644
+--- a/test/resorts/hoodoo.js
++++ b/test/resorts/hoodoo.js
+@@ -1,9 +1,10 @@
+ import lifts from '../lifts/index.js';
+ 
+ lifts('hoodoo', 'html', {
+-  'MANZANITA': 'open',
+-  'EASY RIDER': 'open',
+-  'ED': 'open',
+-  'BIG GREEN MACHINE': 'closed',
++  "HAROLD'S MAGIC CARPET": 'scheduled',
++  'EASY RIDER': 'scheduled',
++  'MANZANITA': 'scheduled',
++  'ED': 'scheduled',
++  'BIG GREEN MACHINE': 'scheduled',
+   'HODAG': 'closed'
+-});
++}, { example: 'hoodoo-2026' });
+-- 
+2.43.0
+

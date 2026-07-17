@@ -1,0 +1,61 @@
+From 2aa28c45912a272e99e313904c4db7d97e53a501 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:03:08 +0000
+Subject: [PATCH 68/77] resort: fix sasquatch-mountain - CMS junk row published
+ as a lift
+
+The intermaps feed contains an unfinished entry literally named
+'new object by hemlock_resort' inside the LIFT group; it showed in the app
+as a closed lift. Skip names matching /^new object/; fixture extended to
+cover the case.
+---
+ lib/resorts/sasquatch-mountain/index.js     |  7 ++++++-
+ test/resorts/example/sasquatch-mountain.xml | 14 +++++++++++++-
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/lib/resorts/sasquatch-mountain/index.js b/lib/resorts/sasquatch-mountain/index.js
+index 5002f33..bb6a387 100644
+--- a/lib/resorts/sasquatch-mountain/index.js
++++ b/lib/resorts/sasquatch-mountain/index.js
+@@ -15,7 +15,12 @@ export default {
+   parse: {
+     // HACK: `ELEMENTGROUP[NAME="LIFT"]` should work instead of this
+     filter: element => element.parent.attribs.NAME === 'LIFT',
+-    name: 2,
++    name: {
++      // the feed carries unfinished CMS entries like
++      // "new object by hemlock_resort" - skip them
++      child: 2,
++      fn: n => (/^new object/i.test(n) ? undefined : n)
++    },
+     status: {
+       child: 4,
+       fn: s => code2status[s]
+diff --git a/test/resorts/example/sasquatch-mountain.xml b/test/resorts/example/sasquatch-mountain.xml
+index 41d1d4b..c18009b 100644
+--- a/test/resorts/example/sasquatch-mountain.xml
++++ b/test/resorts/example/sasquatch-mountain.xml
+@@ -294,7 +294,19 @@
+                     <Summer>0</Summer>
+                     <Summer_bis>3</Summer_bis>
+                 </ELEMENT>
+-            </ELEMENTGROUP>
++            <ELEMENT>
++                    <ID>999999</ID>
++                    <Initial></Initial>
++                    <Name>new object by hemlock_resort</Name>
++                    <Type>606</Type>
++                    <Status>7</Status>
++                    <AdditionalStatus>128</AdditionalStatus>
++                    <Active>activ</Active>
++                    <Priority>0</Priority>
++                    <Summer>0</Summer>
++                    <Summer_bis>3</Summer_bis>
++                </ELEMENT>
++                </ELEMENTGROUP>
+             <ELEMENTGROUP NAME="SLOPE">
+                 <LASTUPDATE>2022-01-02T04:31:18</LASTUPDATE>
+                 <ELEMENT>
+-- 
+2.43.0
+

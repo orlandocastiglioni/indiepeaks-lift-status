@@ -1,0 +1,349 @@
+From 33fcf195f84f89b4da1b9006f27048bdf4830793 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:08:49 +0000
+Subject: [PATCH 77/77] style: biome formatting for the parser fixes
+
+---
+ lib/resorts/big-moose/trails.js          |   4 +-
+ lib/resorts/pitztaler-gletscher/index.js |   4 +-
+ test/resorts/chinapeak.js                |  27 ++--
+ test/resorts/hoodoo.js                   |  21 +--
+ test/resorts/owlshead.js                 |  21 +--
+ test/resorts/red-lodge-mountain.js       |  23 +--
+ test/resorts/skiwelt-trails.js           | 174 ++++++++++++-----------
+ 7 files changed, 151 insertions(+), 123 deletions(-)
+
+diff --git a/lib/resorts/big-moose/trails.js b/lib/resorts/big-moose/trails.js
+index 776efc2..97863d4 100644
+--- a/lib/resorts/big-moose/trails.js
++++ b/lib/resorts/big-moose/trails.js
+@@ -32,7 +32,9 @@ export default function parse(dom) {
+     // the Upper Mountain section annotates items with their real rating
+     // ("Upper Penobscot - Blue Square") - strip it and let it win over the
+     // section level
+-    const suffix = name?.match(/\s*-\s*(green circle|blue square|black diamond|double black(?: diamond)?|terrain park)\s*$/i);
++    const suffix = name?.match(
++      /\s*-\s*(green circle|blue square|black diamond|double black(?: diamond)?|terrain park)\s*$/i
++    );
+     if (suffix) {
+       name = name.slice(0, suffix.index).trim();
+       level = sectionLevel(suffix[1]);
+diff --git a/lib/resorts/pitztaler-gletscher/index.js b/lib/resorts/pitztaler-gletscher/index.js
+index 9ad5555..88d4abd 100644
+--- a/lib/resorts/pitztaler-gletscher/index.js
++++ b/lib/resorts/pitztaler-gletscher/index.js
+@@ -15,7 +15,9 @@ export default {
+     const status = dot.attribs.class.replace('tableDot', '').trim();
+     // cells prefix names with the area code - "GLE || Gletscherexpress" -
+     // which reads badly as a display name
+-    const name = allText(nameCell).replace(/^\s*(GLE|RIFF)\s*\|\|\s*/, '').trim();
++    const name = allText(nameCell)
++      .replace(/^\s*(GLE|RIFF)\s*\|\|\s*/, '')
++      .trim();
+     return { name, status: status || 'open' };
+   }
+ };
+diff --git a/test/resorts/chinapeak.js b/test/resorts/chinapeak.js
+index a6cacce..dc5054f 100644
+--- a/test/resorts/chinapeak.js
++++ b/test/resorts/chinapeak.js
+@@ -1,13 +1,18 @@
+ import lifts from '../lifts/index.js';
+ 
+-lifts('chinapeak', 'html', {
+-  'Chair 1': 'closed',
+-  'Chair 2': 'closed',
+-  'Chair 4': 'closed',
+-  'Chair 5': 'closed',
+-  'Chair 6': 'closed',
+-  'Chair 7': 'closed',
+-  'Kids Carpet': 'closed',
+-  'Juniper Carpet': 'closed',
+-  'Boulder Carpet': 'closed'
+-}, { example: 'chinapeak-2026' });
++lifts(
++  'chinapeak',
++  'html',
++  {
++    'Chair 1': 'closed',
++    'Chair 2': 'closed',
++    'Chair 4': 'closed',
++    'Chair 5': 'closed',
++    'Chair 6': 'closed',
++    'Chair 7': 'closed',
++    'Kids Carpet': 'closed',
++    'Juniper Carpet': 'closed',
++    'Boulder Carpet': 'closed'
++  },
++  { example: 'chinapeak-2026' }
++);
+diff --git a/test/resorts/hoodoo.js b/test/resorts/hoodoo.js
+index 11f3b0f..febe904 100644
+--- a/test/resorts/hoodoo.js
++++ b/test/resorts/hoodoo.js
+@@ -1,10 +1,15 @@
+ import lifts from '../lifts/index.js';
+ 
+-lifts('hoodoo', 'html', {
+-  "HAROLD'S MAGIC CARPET": 'scheduled',
+-  'EASY RIDER': 'scheduled',
+-  'MANZANITA': 'scheduled',
+-  'ED': 'scheduled',
+-  'BIG GREEN MACHINE': 'scheduled',
+-  'HODAG': 'closed'
+-}, { example: 'hoodoo-2026' });
++lifts(
++  'hoodoo',
++  'html',
++  {
++    "HAROLD'S MAGIC CARPET": 'scheduled',
++    'EASY RIDER': 'scheduled',
++    'MANZANITA': 'scheduled',
++    'ED': 'scheduled',
++    'BIG GREEN MACHINE': 'scheduled',
++    'HODAG': 'closed'
++  },
++  { example: 'hoodoo-2026' }
++);
+diff --git a/test/resorts/owlshead.js b/test/resorts/owlshead.js
+index 5497cae..589cc2c 100644
+--- a/test/resorts/owlshead.js
++++ b/test/resorts/owlshead.js
+@@ -1,10 +1,15 @@
+ import lifts from '../lifts/index.js';
+ 
+-lifts('owlshead', 'html', {
+-  'Summit': 'closed',
+-  'Family': 'closed',
+-  'Blue': 'closed',
+-  'Panorama': 'closed',
+-  'Lake': 'closed',
+-  'Magic carpet': 'closed'
+-}, { example: 'owlshead-2026' });
++lifts(
++  'owlshead',
++  'html',
++  {
++    'Summit': 'closed',
++    'Family': 'closed',
++    'Blue': 'closed',
++    'Panorama': 'closed',
++    'Lake': 'closed',
++    'Magic carpet': 'closed'
++  },
++  { example: 'owlshead-2026' }
++);
+diff --git a/test/resorts/red-lodge-mountain.js b/test/resorts/red-lodge-mountain.js
+index bf307e9..c37e9fc 100644
+--- a/test/resorts/red-lodge-mountain.js
++++ b/test/resorts/red-lodge-mountain.js
+@@ -1,11 +1,16 @@
+ import lifts from '../lifts/index.js';
+ 
+-lifts('red-lodge-mountain', 'html', {
+-  'Magic Carpet': 'closed',
+-  'Triple Chair': 'closed',
+-  'The Stache Express': 'closed',
+-  'Willow Creek': 'closed',
+-  'Grizzly Peak': 'closed',
+-  'Cole Creek': 'closed',
+-  'Palisades': 'closed'
+-}, { example: 'red-lodge-mountain-2026' });
++lifts(
++  'red-lodge-mountain',
++  'html',
++  {
++    'Magic Carpet': 'closed',
++    'Triple Chair': 'closed',
++    'The Stache Express': 'closed',
++    'Willow Creek': 'closed',
++    'Grizzly Peak': 'closed',
++    'Cole Creek': 'closed',
++    'Palisades': 'closed'
++  },
++  { example: 'red-lodge-mountain-2026' }
++);
+diff --git a/test/resorts/skiwelt-trails.js b/test/resorts/skiwelt-trails.js
+index 7c115da..9d26178 100644
+--- a/test/resorts/skiwelt-trails.js
++++ b/test/resorts/skiwelt-trails.js
+@@ -1,87 +1,91 @@
+ import trails from '../trails/index.js';
+ 
+-trails('skiwelt', [
+-  { name: 'Fun Park - Jump-Line', status: 'closed', level: 'blue' },
+-  { name: 'Fun Park - Jib-Line', status: 'closed', level: 'blue' },
+-  { name: 'Kaslach Abfahrt', status: 'closed', level: 'black' },
+-  { name: 'Umfahrung', status: 'closed', level: 'blue' },
+-  { name: 'Streif', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Brixen Abfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Tanzer Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Kälberalm Abfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Hochbrixen Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Kälberalm Südabfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Rennstrecke Brixen', status: 'closed', level: 'blue' },
+-  { name: 'Südabfahrt-Hohe Salve', status: 'closed', level: 'black' },
+-  { name: 'Zinsbergabfahrt', status: 'closed', level: 'green' },
+-  { name: 'Poldanger Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Holzalm Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Joch Abfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Filzboden Abfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Geschwindigkeitsmessstrecke Brixen', status: 'closed', level: 'green' },
+-  { name: 'Übungslift Hochbrixen Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Skischullift Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Kandleralm Abfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Umfahrung Marast', status: 'closed', level: 'blue' },
+-  { name: 'Götschen Abfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Schusterbühel Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Direttissima - Jochbahn', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Umfahrung Otten', status: 'closed', level: 'green' },
+-  { name: 'Talabfahrt Hopfgarten', status: 'closed', level: 'blue' },
+-  { name: 'Talabfahrt Hopfgarten Umfahrung Skiroute', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Rigi-Mittelstation Hopfgarten', status: 'closed', level: 'blue' },
+-  { name: 'Hohe Salve - Rigi', status: 'closed', level: 'blue' },
+-  { name: 'Schernthannabfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Skiweg Schernthann Wildbichl - Foisching', status: 'closed', level: 'green' },
+-  { name: 'Foischingabfahrt', status: 'closed', level: 'green' },
+-  { name: 'Skiroute Klaus', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Zauberteppich Bodenschmied', status: 'closed', level: 'green' },
+-  { name: 'Zauberteppich Högerfeld', status: 'closed', level: 'green' },
+-  { name: 'Rigi-Kraftalm', status: 'closed', level: 'green' },
+-  { name: 'Talabfahrt Itter', status: 'closed', level: 'blue' },
+-  { name: 'Kraftalm - Kasbichl', status: 'closed', level: 'green' },
+-  { name: 'Rigi - Kraftalm Skiweg', status: 'closed', level: 'green' },
+-  { name: 'Tellerschlepplift-Salvista Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Piste Kleine Salve', status: 'closed', level: 'green' },
+-  { name: 'Skiroute Hexen6er-Kasbichl', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Familienabfahrt', status: 'closed', level: 'green' },
+-  { name: 'Hohe Salve - Kraftalmabfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Talabfahrt Söll', status: 'closed', level: 'blue' },
+-  { name: 'Black Eagle (Gipfelabfahrt)', status: 'closed', level: 'black' },
+-  { name: 'Gipfel - Hangbrücke', status: 'closed', level: 'black' },
+-  { name: 'Black Pipe', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Keatabfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Trainingsstrecke Keat', status: 'closed', level: 'blue' },
+-  { name: 'Skiweg Keat Siller - Hochsöll', status: 'closed', level: 'green' },
+-  { name: 'Stöcklabfahrt', status: 'closed', level: 'green' },
+-  { name: 'Hexen6er-Abfahrt', status: 'closed', level: 'blue' },
+-  { name: 'Rinnerabfahrt', status: 'closed', level: 'green' },
+-  { name: 'Hexenwelle', status: 'closed', level: 'blue' },
+-  { name: 'Boardercross - Red Viper', status: 'closed', level: 'blue' },
+-  { name: 'Hans im Glück Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Hans im Glück Skiparcours', status: 'closed', level: 'blue' },
+-  { name: 'Siller-Keat', status: 'closed', level: 'blue' },
+-  { name: 'Skiweg (Silleralmschiweg)', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Knollnabfahrt', status: 'closed', level: 'green' },
+-  { name: 'Hexenteppich Abfahrt', status: 'closed', level: 'green' },
+-  { name: 'Trainingsstrecke Stöckl', status: 'closed', level: 'green' },
+-  { name: 'Talabfahrt bis Mittelstation', status: 'closed', level: 'blue' },
+-  { name: '80c nach Ellmau', status: 'closed', level: 'doubleBlack' },
+-  { name: '80 Talabfahrt bis Mittelstation (Bergbahn Ellmau - Going)', status: 'closed', level: 'blue' },
+-  { name: 'nach Scheffau', status: 'closed', level: 'blue' },
+-  { name: 'Ellmi´s Zauberteppich Abfahrt III', status: 'closed', level: 'green' },
+-  { name: 'Talabfahrt Hartkaiserbahn', status: 'closed', level: 'green' },
+-  { name: 'Harmstätt', status: 'closed', level: 'blue' },
+-  { name: 'Hartkaiserbahn Talabfahrt', status: 'closed', level: 'black' },
+-  { name: 'Talabfahrt Fraunwalden', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Schmiedalm zur Rübezahlalm', status: 'closed', level: 'doubleBlack' },
+-  { name: 'Umfahrung Seppenbauer', status: 'closed', level: 'green' },
+-  { name: 'Ranhart', status: 'closed', level: 'blue' },
+-  { name: 'Schmiedalm', status: 'closed', level: 'blue' },
+-  { name: 'Ellmis 6er', status: 'closed', level: 'green' },
+-  { name: 'Kaiserexpress', status: 'closed', level: 'green' },
+-  { name: 'Verbindung Eiberg - Ellmau/Going', status: 'closed', level: 'green' },
+-  { name: 'Verbindung Übungslift Berg - Ellmau/Going', status: 'closed', level: 'green' },
+-  { name: 'Verbinung Ostlift - Tanzboden', status: 'closed', level: 'green' },
+-  { name: 'Köglbahn', status: 'closed', level: 'blue' }
+-], { ext: 'json', example: 'skiwelt-trails' });
++trails(
++  'skiwelt',
++  [
++    { name: 'Fun Park - Jump-Line', status: 'closed', level: 'blue' },
++    { name: 'Fun Park - Jib-Line', status: 'closed', level: 'blue' },
++    { name: 'Kaslach Abfahrt', status: 'closed', level: 'black' },
++    { name: 'Umfahrung', status: 'closed', level: 'blue' },
++    { name: 'Streif', status: 'closed', level: 'doubleBlack' },
++    { name: 'Brixen Abfahrt', status: 'closed', level: 'blue' },
++    { name: 'Tanzer Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Kälberalm Abfahrt', status: 'closed', level: 'blue' },
++    { name: 'Hochbrixen Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Kälberalm Südabfahrt', status: 'closed', level: 'blue' },
++    { name: 'Rennstrecke Brixen', status: 'closed', level: 'blue' },
++    { name: 'Südabfahrt-Hohe Salve', status: 'closed', level: 'black' },
++    { name: 'Zinsbergabfahrt', status: 'closed', level: 'green' },
++    { name: 'Poldanger Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Holzalm Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Joch Abfahrt', status: 'closed', level: 'blue' },
++    { name: 'Filzboden Abfahrt', status: 'closed', level: 'blue' },
++    { name: 'Geschwindigkeitsmessstrecke Brixen', status: 'closed', level: 'green' },
++    { name: 'Übungslift Hochbrixen Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Skischullift Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Kandleralm Abfahrt', status: 'closed', level: 'blue' },
++    { name: 'Umfahrung Marast', status: 'closed', level: 'blue' },
++    { name: 'Götschen Abfahrt', status: 'closed', level: 'blue' },
++    { name: 'Schusterbühel Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Direttissima - Jochbahn', status: 'closed', level: 'doubleBlack' },
++    { name: 'Umfahrung Otten', status: 'closed', level: 'green' },
++    { name: 'Talabfahrt Hopfgarten', status: 'closed', level: 'blue' },
++    { name: 'Talabfahrt Hopfgarten Umfahrung Skiroute', status: 'closed', level: 'doubleBlack' },
++    { name: 'Rigi-Mittelstation Hopfgarten', status: 'closed', level: 'blue' },
++    { name: 'Hohe Salve - Rigi', status: 'closed', level: 'blue' },
++    { name: 'Schernthannabfahrt', status: 'closed', level: 'blue' },
++    { name: 'Skiweg Schernthann Wildbichl - Foisching', status: 'closed', level: 'green' },
++    { name: 'Foischingabfahrt', status: 'closed', level: 'green' },
++    { name: 'Skiroute Klaus', status: 'closed', level: 'doubleBlack' },
++    { name: 'Zauberteppich Bodenschmied', status: 'closed', level: 'green' },
++    { name: 'Zauberteppich Högerfeld', status: 'closed', level: 'green' },
++    { name: 'Rigi-Kraftalm', status: 'closed', level: 'green' },
++    { name: 'Talabfahrt Itter', status: 'closed', level: 'blue' },
++    { name: 'Kraftalm - Kasbichl', status: 'closed', level: 'green' },
++    { name: 'Rigi - Kraftalm Skiweg', status: 'closed', level: 'green' },
++    { name: 'Tellerschlepplift-Salvista Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Piste Kleine Salve', status: 'closed', level: 'green' },
++    { name: 'Skiroute Hexen6er-Kasbichl', status: 'closed', level: 'doubleBlack' },
++    { name: 'Familienabfahrt', status: 'closed', level: 'green' },
++    { name: 'Hohe Salve - Kraftalmabfahrt', status: 'closed', level: 'blue' },
++    { name: 'Talabfahrt Söll', status: 'closed', level: 'blue' },
++    { name: 'Black Eagle (Gipfelabfahrt)', status: 'closed', level: 'black' },
++    { name: 'Gipfel - Hangbrücke', status: 'closed', level: 'black' },
++    { name: 'Black Pipe', status: 'closed', level: 'doubleBlack' },
++    { name: 'Keatabfahrt', status: 'closed', level: 'blue' },
++    { name: 'Trainingsstrecke Keat', status: 'closed', level: 'blue' },
++    { name: 'Skiweg Keat Siller - Hochsöll', status: 'closed', level: 'green' },
++    { name: 'Stöcklabfahrt', status: 'closed', level: 'green' },
++    { name: 'Hexen6er-Abfahrt', status: 'closed', level: 'blue' },
++    { name: 'Rinnerabfahrt', status: 'closed', level: 'green' },
++    { name: 'Hexenwelle', status: 'closed', level: 'blue' },
++    { name: 'Boardercross - Red Viper', status: 'closed', level: 'blue' },
++    { name: 'Hans im Glück Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Hans im Glück Skiparcours', status: 'closed', level: 'blue' },
++    { name: 'Siller-Keat', status: 'closed', level: 'blue' },
++    { name: 'Skiweg (Silleralmschiweg)', status: 'closed', level: 'doubleBlack' },
++    { name: 'Knollnabfahrt', status: 'closed', level: 'green' },
++    { name: 'Hexenteppich Abfahrt', status: 'closed', level: 'green' },
++    { name: 'Trainingsstrecke Stöckl', status: 'closed', level: 'green' },
++    { name: 'Talabfahrt bis Mittelstation', status: 'closed', level: 'blue' },
++    { name: '80c nach Ellmau', status: 'closed', level: 'doubleBlack' },
++    { name: '80 Talabfahrt bis Mittelstation (Bergbahn Ellmau - Going)', status: 'closed', level: 'blue' },
++    { name: 'nach Scheffau', status: 'closed', level: 'blue' },
++    { name: 'Ellmi´s Zauberteppich Abfahrt III', status: 'closed', level: 'green' },
++    { name: 'Talabfahrt Hartkaiserbahn', status: 'closed', level: 'green' },
++    { name: 'Harmstätt', status: 'closed', level: 'blue' },
++    { name: 'Hartkaiserbahn Talabfahrt', status: 'closed', level: 'black' },
++    { name: 'Talabfahrt Fraunwalden', status: 'closed', level: 'doubleBlack' },
++    { name: 'Schmiedalm zur Rübezahlalm', status: 'closed', level: 'doubleBlack' },
++    { name: 'Umfahrung Seppenbauer', status: 'closed', level: 'green' },
++    { name: 'Ranhart', status: 'closed', level: 'blue' },
++    { name: 'Schmiedalm', status: 'closed', level: 'blue' },
++    { name: 'Ellmis 6er', status: 'closed', level: 'green' },
++    { name: 'Kaiserexpress', status: 'closed', level: 'green' },
++    { name: 'Verbindung Eiberg - Ellmau/Going', status: 'closed', level: 'green' },
++    { name: 'Verbindung Übungslift Berg - Ellmau/Going', status: 'closed', level: 'green' },
++    { name: 'Verbinung Ostlift - Tanzboden', status: 'closed', level: 'green' },
++    { name: 'Köglbahn', status: 'closed', level: 'blue' }
++  ],
++  { ext: 'json', example: 'skiwelt-trails' }
++);
+-- 
+2.43.0
+

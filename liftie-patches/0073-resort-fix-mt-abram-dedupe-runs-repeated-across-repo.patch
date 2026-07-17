@@ -1,0 +1,59 @@
+From 1fd2a38210eb5efab726695f9f0c8b478acfd238 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:06:05 +0000
+Subject: [PATCH 73/77] resort: fix mt-abram - dedupe runs repeated across
+ report grids
+
+'Mahoosuc Meadow' and 'Easy Rider to Rough Rider' appear in two grids on
+the report page and were published twice. Keep the first occurrence.
+---
+ lib/resorts/mt-abram/trails.js  | 4 ++++
+ test/resorts/mt-abram-trails.js | 9 ---------
+ 2 files changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/lib/resorts/mt-abram/trails.js b/lib/resorts/mt-abram/trails.js
+index c59dc83..6bc0b9a 100644
+--- a/lib/resorts/mt-abram/trails.js
++++ b/lib/resorts/mt-abram/trails.js
+@@ -2,7 +2,11 @@ import { isLift } from './index.js';
+ import rows from './rows.js';
+ 
+ export default function parse(dom) {
++  // a few runs repeat across the page's report grids ("Mahoosuc Meadow",
++  // "Easy Rider to Rough Rider") - keep the first occurrence
++  const seen = new Set();
+   return rows(dom)
+     .filter(r => r.level || !isLift(r.name))
++    .filter(({ name }) => !seen.has(name) && seen.add(name))
+     .map(({ name, status, level }) => ({ name, status, level }));
+ }
+diff --git a/test/resorts/mt-abram-trails.js b/test/resorts/mt-abram-trails.js
+index 003da0f..078bd80 100644
+--- a/test/resorts/mt-abram-trails.js
++++ b/test/resorts/mt-abram-trails.js
+@@ -1,11 +1,6 @@
+ import trails from '../trails/index.js';
+ 
+ trails('mt-abram', [
+-  {
+-    'name': 'Mahoosuc Meadow',
+-    'status': 'closed',
+-    'level': 'green'
+-  },
+   {
+     'name': 'Mahoosuc Meadow',
+     'status': 'closed',
+@@ -220,10 +215,6 @@ trails('mt-abram', [
+     'name': 'Easy Rider to Rough Rider',
+     'status': 'closed'
+   },
+-  {
+-    'name': 'Easy Rider to Rough Rider',
+-    'status': 'closed'
+-  },
+   {
+     'name': 'Skyline Drive to Rough Rider',
+     'status': 'closed'
+-- 
+2.43.0
+

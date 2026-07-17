@@ -1,0 +1,45 @@
+From a17d4a3c47454b1a0783b46434ebfdac3ca3c281 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:00:32 +0000
+Subject: [PATCH 65/77] resort: fix eagle-point - 'Terrain Parks' heading
+ published as a lift
+
+The lift list comes from the runs table's section-heading rows; one of
+those headings is the 'Terrain Parks' trail group, which showed up in the
+app as a sixth lift. Skip it by name.
+---
+ lib/resorts/eagle-point/index.js | 5 +++++
+ test/resorts/eagle-point.js      | 3 +--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/lib/resorts/eagle-point/index.js b/lib/resorts/eagle-point/index.js
+index 7e5254b..76fac8b 100644
+--- a/lib/resorts/eagle-point/index.js
++++ b/lib/resorts/eagle-point/index.js
+@@ -7,6 +7,11 @@ export default {
+   parse: row => {
+     const name = findText(select(row.children, 'td.label')[0]);
+     const status = select(row.children, 'td.main-status')[0]?.attribs.class.match(/status-([a-z]+)/)?.[1];
++    // the runs table also has a 'Terrain Parks' heading row - a trail
++    // group, not a lift
++    if (name === 'Terrain Parks') {
++      return;
++    }
+     if (name && status) {
+       return { name, status };
+     }
+diff --git a/test/resorts/eagle-point.js b/test/resorts/eagle-point.js
+index 803e285..92911e4 100644
+--- a/test/resorts/eagle-point.js
++++ b/test/resorts/eagle-point.js
+@@ -5,6 +5,5 @@ lifts('eagle-point', 'html', {
+   'Monarch Triple Chair': 'closed',
+   'Skyline Double Chair': 'closed',
+   'Tushar Peaks Surface Lift': 'closed',
+-  'Canyonside Double Chair': 'closed',
+-  'Terrain Parks': 'closed'
++  'Canyonside Double Chair': 'closed'
+ });
+-- 
+2.43.0
+

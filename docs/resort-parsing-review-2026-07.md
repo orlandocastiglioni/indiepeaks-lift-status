@@ -21,6 +21,23 @@ itself is clean — every user-visible bug originates in the scraped data.
 
 ---
 
+> **Update 2026-07-17 — fixes implemented.** Every recommendation below that
+> can be fixed from here now ships as `liftie-patches/0059–0077` (19 patches:
+> 16 parser/config fixes, a coerce addition, a test-harness helper, and
+> formatting). Verified by replicating the production procedure from
+> `pi-setup/RESTORE.md`: upstream 4.3.5 + `git am --keep-cr` of all 77
+> patches applies cleanly and the full suite passes 269/269. Replaced
+> fixtures ship as new `*-2026` files (pure adds) because the old scraped
+> fixtures contain CRLF lines that no modify/delete patch can survive
+> byte-exactly in both apply modes. Still open, as documented below:
+> palcall-tsumagoi (source 403s), caberfae/winterplace and the other
+> season-start re-verifications, and the optional publisher stale-open
+> guard. `pi-setup/liftie-publish.py` now matches the Pi's resort list
+> (rikert, manning-park-xc added). **Apply on the Pi with the normal
+> RESTORE.md step; then the next publish cycle replaces the bad data.**
+
+---
+
 ## 1 · CRITICAL — wrong or phantom data in the app today
 
 ### hoodoo — schedule table parsed as live status

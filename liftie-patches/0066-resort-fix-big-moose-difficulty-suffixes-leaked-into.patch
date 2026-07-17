@@ -1,0 +1,97 @@
+From 5d7997fa24d2fdefbf7edec75826a9558c5bad35 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:01:21 +0000
+Subject: [PATCH 66/77] resort: fix big-moose - difficulty suffixes leaked into
+ trail names with wrong level
+
+Items in the 'Upper Mountain (Advanced Backcountry Terrain)' section carry
+their real rating in the item name ('Upper Penobscot - Blue Square') but
+were published with the section's doubleBlack level and the suffix left in
+the display name. Strip the suffix and let it override the section level.
+---
+ lib/resorts/big-moose/trails.js  | 14 ++++++++++++--
+ test/resorts/big-moose-trails.js | 20 ++++++++++----------
+ 2 files changed, 22 insertions(+), 12 deletions(-)
+
+diff --git a/lib/resorts/big-moose/trails.js b/lib/resorts/big-moose/trails.js
+index 0fe6c14..776efc2 100644
+--- a/lib/resorts/big-moose/trails.js
++++ b/lib/resorts/big-moose/trails.js
+@@ -4,6 +4,7 @@ import { findText } from '../../tools/domutil.js';
+ function sectionLevel(title = '') {
+   if (/green/i.test(title)) return 'green';
+   if (/blue/i.test(title)) return 'blue';
++  if (/double black/i.test(title)) return 'doubleBlack';
+   if (/black diamond/i.test(title)) return 'black';
+   if (/backcountry|upper mountain/i.test(title)) return 'doubleBlack';
+   if (/terrain park/i.test(title)) return 'terrainPark';
+@@ -26,11 +27,20 @@ export default function parse(dom) {
+     if (!m || !(m[1] in levels)) {
+       continue;
+     }
+-    const name = findText(h4)?.trim();
++    let name = findText(h4)?.trim();
++    let level = levels[m[1]];
++    // the Upper Mountain section annotates items with their real rating
++    // ("Upper Penobscot - Blue Square") - strip it and let it win over the
++    // section level
++    const suffix = name?.match(/\s*-\s*(green circle|blue square|black diamond|double black(?: diamond)?|terrain park)\s*$/i);
++    if (suffix) {
++      name = name.slice(0, suffix.index).trim();
++      level = sectionLevel(suffix[1]);
++    }
+     const price = select(h4.parent.children, '[data-ux=PriceMajor]')[0];
+     const status = findText(price)?.match(/^\s*(open|closed)/i);
+     if (name && status) {
+-      rows.push({ name, status: status[1], level: levels[m[1]] });
++      rows.push({ name, status: status[1], level });
+     }
+   }
+   return rows;
+diff --git a/test/resorts/big-moose-trails.js b/test/resorts/big-moose-trails.js
+index ed0dc75..1098757 100644
+--- a/test/resorts/big-moose-trails.js
++++ b/test/resorts/big-moose-trails.js
+@@ -112,29 +112,29 @@ trails('big-moose', [
+     'level': 'black'
+   },
+   {
+-    'name': 'Upper Penobscot - Blue Square',
++    'name': 'Upper Penobscot',
+     'status': 'closed',
+-    'level': 'doubleBlack'
++    'level': 'blue'
+   },
+   {
+-    'name': 'East Branch - Blue Square',
++    'name': 'East Branch',
+     'status': 'open',
+-    'level': 'doubleBlack'
++    'level': 'blue'
+   },
+   {
+-    'name': 'St Croix - Black Diamond',
++    'name': 'St Croix',
+     'status': 'closed',
+-    'level': 'doubleBlack'
++    'level': 'black'
+   },
+   {
+-    'name': 'Moose River - Black Diamond',
++    'name': 'Moose River',
+     'status': 'closed',
+-    'level': 'doubleBlack'
++    'level': 'black'
+   },
+   {
+-    'name': 'Piscataquis (The Cat) - Black Diamond',
++    'name': 'Piscataquis (The Cat)',
+     'status': 'closed',
+-    'level': 'doubleBlack'
++    'level': 'black'
+   },
+   {
+     'name': 'Terrain Park',
+-- 
+2.43.0
+

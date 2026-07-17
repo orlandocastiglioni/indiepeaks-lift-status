@@ -1,0 +1,2268 @@
+From d83bac0019c33a33d337d321e71b90322f37b6c4 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 12:59:43 +0000
+Subject: [PATCH 63/77] resort: fix chinapeak - footnote rows published as
+ lifts
+
+The conditions page renders a '*:' footnote marker and a 'Tubing Hill Not
+Available This Season:' announcement in the same .chair-bar markup as real
+lifts, so the app showed lifts named '*' and the full announcement. Filter
+one-character and 'not available' names and strip the trailing colon
+conditionally; fixture refreshed to the current page.
+---
+ lib/resorts/chinapeak/index.js           |   10 +-
+ test/resorts/chinapeak.js                |    6 +-
+ test/resorts/example/chinapeak-2026.html | 2206 ++++++++++++++++++++++
+ 3 files changed, 2218 insertions(+), 4 deletions(-)
+ create mode 100644 test/resorts/example/chinapeak-2026.html
+
+diff --git a/lib/resorts/chinapeak/index.js b/lib/resorts/chinapeak/index.js
+index 78140b3..e45d86d 100644
+--- a/lib/resorts/chinapeak/index.js
++++ b/lib/resorts/chinapeak/index.js
+@@ -3,7 +3,15 @@ export default {
+   parse: {
+     name: {
+       child: 0,
+-      fn: s => s.trim().slice(0, -1)
++      // the page renders footnotes ("*:") and announcements ("Tubing Hill
++      // Not Available This Season:") in the same chair-bar markup - skip them
++      fn: s => {
++        const name = s.trim().replace(/:\s*$/, '');
++        if (name.length < 2 || /not available/i.test(name)) {
++          return;
++        }
++        return name;
++      }
+     },
+     status: 1
+   }
+diff --git a/test/resorts/chinapeak.js b/test/resorts/chinapeak.js
+index 297b1af..a6cacce 100644
+--- a/test/resorts/chinapeak.js
++++ b/test/resorts/chinapeak.js
+@@ -8,6 +8,6 @@ lifts('chinapeak', 'html', {
+   'Chair 6': 'closed',
+   'Chair 7': 'closed',
+   'Kids Carpet': 'closed',
+-  'Boulder Carpet': 'closed',
+-  'Juniper Carpet': 'closed'
+-});
++  'Juniper Carpet': 'closed',
++  'Boulder Carpet': 'closed'
++}, { example: 'chinapeak-2026' });
+diff --git a/test/resorts/example/chinapeak-2026.html b/test/resorts/example/chinapeak-2026.html
+new file mode 100644
+index 0000000..b4a8309
+--- /dev/null
++++ b/test/resorts/example/chinapeak-2026.html
+@@ -0,0 +1,2206 @@
++<!DOCTYPE html>
++<html>
++    <head>
++        <meta charset="utf-8" />
++        <meta name="viewport" content="width=device-width, initial-scale=1.0">
++        <meta name="keywords" content="china peak, lift tickets deals, skiing lesson, snowboarding lessons, ski resorts in california, shaver lake rentals, ski california, costco lift tickets, lake tahoe ski resorts, ski tahoe deals, china peak mountain resort, china peak snow report, dodge ridge ski area, resorts at lake tahoe, california ski resorts, ski report, ski vacations, winter vacations, learn to ski, learn to snowboard, fresno sports, fresno attractions, huntington lake, college pass, black pass, powder alliance, season pass, china peak season pass, web cam, ski report, snow report" />
++        <meta name="description" content="China Peak Mountain Resort - California's premier ski and winter vacation spot. Located only 65 miles northeast of Fresno at scenic Huntington Lake. China Peak Mountain Resort provides a big Sierra experience close to home with total acreage, elevations, vertical rise and terrain comparable to many Lake Tahoe resorts. China Peak has 1,679 feet of vertical with a base elevation of 7,030 and a peak of just over 8,700 feet.  The resort offers seven chairlifts, a T-bar and three moving carpets for the beginner skiers and snowboarders." />
++        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
++        <title>
++            China Peak Mountain Resort | California Ski Resort
++        </title>
++        <!--<link href="css/style2.css" type="text/css" rel="stylesheet" />-->
++        <link href="/Content/bootstrap.css" rel="stylesheet"/>
++<link href="/Content/site.css" rel="stylesheet"/>
++
++        <script src="/Scripts/modernizr-2.6.2.js"></script>
++
++        <script src="/Scripts/jquery-1.10.2.js"></script>
++
++
++        <script src="/Scripts/jquery.cycle2.min.js" type="text/javascript"></script>
++
++        <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
++        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
++
++
++  <!-- Google tag (gtag.js) NEW NOV 15TH-->
++<script async src="https://www.googletagmanager.com/gtag/js?id=G-HSZ5STKGET"></script>
++<script>
++  window.dataLayer = window.dataLayer || [];
++  function gtag(){dataLayer.push(arguments);}
++  gtag('js', new Date());
++
++  gtag('config', 'G-HSZ5STKGET');
++</script>
++		
++		
++		
++		
++		<!-- AdRoll -->
++		
++		<script type="text/javascript">
++    adroll_adv_id = "23ZGLQQNGNAXRDAK5ANC43";
++    adroll_pix_id = "JE5OJ7M27JG2NBRIGLBTRE";
++    adroll_version = "2.0";
++
++    (function(w, d, e, o, a) {
++        w.__adroll_loaded = true;
++        w.adroll = w.adroll || [];
++        w.adroll.f = [ 'setProperties', 'identify', 'track' ];
++        var roundtripUrl = "https://s.adroll.com/j/" + adroll_adv_id
++                + "/roundtrip.js";
++        for (a = 0; a < w.adroll.f.length; a++) {
++            w.adroll[w.adroll.f[a]] = w.adroll[w.adroll.f[a]] || (function(n) {
++                return function() {
++                    w.adroll.push([ n, arguments ])
++                }
++            })(w.adroll.f[a])
++        }
++
++        e = d.createElement('script');
++        o = d.getElementsByTagName('script')[0];
++        e.async = 1;
++        e.src = roundtripUrl;
++        o.parentNode.insertBefore(e, o);
++    })(window, document);
++    adroll.track("pageView");
++    </script>
++		
++		<!-- End AdRoll -->
++		
++		
++			
++		<!-- Google Tag Manager -->
++
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++
++})(window,document,'script','dataLayer','GTM-K3WSB98B');</script>
++
++<!-- End Google Tag Manager -->
++		
++		
++		
++		<!-- Google Tag Manager -->
++		
++<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++})(window,document,'script','dataLayer','GTM-NT238N3');</script>
++
++		<!-- End Google Tag Manager -->
++		
++
++		
++		<script async src='
++https://tag.simpli.fi/sifitag/159705f0-4c2e-0138-7010-067f653fa718
++'></script> 
++
++        <style>
++                body {
++                    padding-bottom: 0px;
++                    width: 100%;
++                    height: 100%;
++                    background: #FEFEFE;
++                }
++
++                h2 {
++                    font-family: 'Oswald', sans-serif;
++                    font-size: 36px;
++                    color: #004580;
++                    font-weight: normal;
++                }
++
++                img.logo {
++                    width: 100%;
++                    max-width: 279px;
++                }
++
++                ul, ol {
++                    margin-top: 0px;
++                    margin-bottom: 0px;
++                }
++
++                .super-header {
++                    min-height: 53px;
++                    background: #004580;
++                    position: relative;
++                }
++
++                    .super-header ul,
++                    .footer ul {
++                        list-style-type: none;
++                        padding-top: 0px;
++                        -webkit-padding-start: 0px;
++                    }
++
++                        .super-header ul li,
++                        .footer ul li {
++                            display: inline;
++                            font-family: 'Open Sans', sans-serif;
++                            text-transform: uppercase;
++                            font-size: 18px;
++                            font-style: italic;
++                            margin-left: 0px;
++                            margin-right: 30px;
++                            font-weight: bold;
++                        }
++
++                .menu-holder {
++                    height: 70px;
++                    min-height: 70px;
++                    background: rgba(255, 255, 255, .85);
++                    width: 100%;
++                    position: absolute;
++                    text-wrap: none;
++                    padding: 0px;
++                }
++
++                .conditions-holder {
++                    min-height: 70px;
++                    width: 100%;
++                    position: absolute;
++                    top: 70px;
++                }
++
++                .footer ul {
++                    margin: 0px;
++                    padding: 0px;
++                }
++
++                    .footer ul li {
++                        margin: 0px;
++                        padding: 0px;
++                        margin-right: 5px;
++                        margin-left: 5px;
++                    }
++
++                .super-header ul li a {
++                    color: #fff;
++                }
++
++                    .super-header ul li a:hover {
++                        color: #f0ff00;
++                    }
++
++                .super-header .links {
++                    float: left;
++                    line-height: 53px;
++                    -webkit-padding-start: 10px;
++                }
++
++                .super-header .social {
++                    /*float: right;*/
++                    text-align: right;
++                    line-height: 48px;
++                    -webkit-padding-start: 10px;
++                }
++
++                    .super-header .social img {
++                        height: 100%;
++                        max-height: 30px;
++                    }
++
++                .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
++                    border-color: #dfe0e4;
++                }
++
++                .navbar-inverse {
++                    background-color: rgba(255, 255, 255, 0.8);
++                    border-color: #dfe0e4;
++                }
++
++                    .navbar-inverse .navbar-toggle {
++                        margin-top: 16px;
++                    }
++
++                .navbar-header {
++                    height: 69px;
++                }
++
++                ul.nav {
++                    margin-top: 15px;
++                }
++
++                    ul.nav li {
++                        font-family: 'Oswald', sans-serif;
++                    }
++
++                .navbar-nav {
++                    float: right;
++                    margin: 0;
++                }
++
++                    .navbar-nav > li > a {
++                        padding-top: 10px;
++                        padding-bottom: 10px;
++                        line-height: 20px;
++                        font-size: 14px;
++                    }
++
++                .nav > li > a {
++                    position: relative;
++                    display: block;
++                    padding: 10px 10px;
++                }
++
++                .navbar-inverse .navbar-nav > li > a,
++                .navbar-inverse .navbar-nav > li > a:hover {
++                    color: #000000;
++                }
++
++                .navbar-inverse .navbar-toggle .icon-bar {
++                    background-color: #e8852f;
++                }
++
++                .navbar {
++                    position: relative;
++                    z-index: 1000;
++                    min-height: 50px;
++                    margin-bottom: 0px;
++                    border: 1px solid transparent;
++                }
++
++                /*img.rotator {
++                width:100%;
++                min-height:277px;
++            }
++            */
++                img.rotator {
++                    width: 100%;
++                    min-height: 177px;
++                    margin-top: -1px;
++                    position: absolute;
++                    z-index: -1;
++                }
++
++                .content-area {
++                    position: absolute;
++                    width: 100%;
++                    z-index: 1000;
++                }
++
++                .conditions {
++                    font-family: Segoe UI,Frutiger,Frutiger Linotype,Dejavu Sans,Helvetica Neue,Arial,sans-serif;
++                    font-size: 18px;
++                    background-color: rgba(0, 0, 0, 0.7);
++                    padding: 15px;
++                    color: #FFF;
++                    position: absolute;
++                    top: 69px;
++                    margin-left: 5%;
++                    max-width: 200px;
++                    width: 100%;
++                }
++
++                    .conditions p {
++                        margin: 10px 0px 10px 0px;
++                    }
++
++                    .conditions .webcams {
++                        width: 100%;
++                        max-width: 170px;
++                    }
++
++                .banner {
++                    min-height: 25px;
++                    background: #004580;
++                    color: #f6ff00;
++                    font-family: 'Open Sans', sans-serif;
++                    text-transform: uppercase;
++                    font-size: 18px;
++                    font-style: italic;
++                }
++
++                    .banner div p {
++                        text-align: center;
++                        padding: 14px 0px 14px 0px;
++                    }
++
++
++                .tres span {
++                    text-transform: uppercase;
++                    font-size: 24px;
++                    line-height: 46px;
++                }
++
++                    .tres span.c1 {
++                        color: #ff6c00;
++                    }
++
++                    .tres span.c2 {
++                        color: #008aff;
++                    }
++
++                    .tres span.c3 {
++                        color: #ff004e;
++                    }
++
++
++
++                .stamp {
++                    position: absolute;
++                    left: 20px;
++                    bottom: 10px;
++                    background-color: rgba(161, 99, 58, 0.7);
++                    color: #fff;
++                    border: solid 1px #fff;
++                    font-family: 'Open Sans', sans-serif;
++                    text-transform: uppercase;
++                    font-size: 18px;
++                    font-style: italic;
++                    padding: 5px 20px 5px 5px;
++                    min-width: 160px;
++                    border-radius: 3px;
++                }
++
++                .stamp-brown {
++                    background-color: rgba(161, 99, 58, 0.7);
++                }
++
++                .stamp-blue {
++                    background-color: rgba(46, 93, 125, 0.7);
++                }
++
++                .stamp-red {
++                    background-color: rgba(124, 9, 43, 0.7);
++                }
++
++                .tres:hover > div .stamp-brown {
++                    background-color: rgba(161, 99, 58, 1);
++                }
++
++                .tres:hover > div .stamp-blue {
++                    background-color: rgba(46, 93, 125, 1);
++                }
++
++                .tres:hover > div .stamp-red {
++                    background-color: rgba(124, 9, 43, 1);
++                }
++
++                .stamp a,
++                .stamp a:hover {
++                    text-decoration: none;
++                    display: block;
++                    width: 100%;
++                    height: 100%;
++                    color: #fff;
++                }
++
++                .dos {
++                    width: 5%;
++                }
++
++                .tres {
++                    width: 30%;
++                    font-family: 'Oswald', sans-serif;
++                    position: relative;
++                }
++
++                .own-it {
++                    font-family: 'Oswald', sans-serif;
++                    font-size: 97px;
++                    text-transform: uppercase;
++                    font-weight: 400;
++                }
++
++                .footer {
++                    background: url(/Content/images/footer.jpg) no-repeat center center fixed;
++                    -webkit-background-size: cover;
++                    -moz-background-size: cover;
++                    -o-background-size: cover;
++                    background-size: cover;
++                    border-top: solid 4px #008aff;
++                }
++
++                    .footer .contact {
++                        font-size: 18px;
++                    }
++
++                        .footer .contact a {
++                            color: #ff004e;
++                        }
++
++                cycle-slideshow {
++                    position: absolute;
++                    z-index: -1;
++                }
++                /* CYCLE PAGER */
++                /* pager */
++                .cycle-pager {
++                    text-align: center;
++                    width: 100%;
++                    z-index: 500;
++                    position: absolute;
++                    bottom: 40px;
++                    overflow: hidden;
++                }
++
++                .cycle-pager span {
++                    font-family: arial;
++                    font-size: 50px;
++                    width: 24px;
++                    height: 24px;
++                    display: inline-block;
++                    color: #fff;
++                    cursor: pointer;
++                }
++
++                    .cycle-pager span.cycle-pager-active {
++                        color: orange;
++                    }
++
++                .cycle-pager > * {
++                    cursor: pointer;
++                }
++
++                /* overlay */
++                .cycle-overlay {
++                    font-family: tahoma, arial;
++                    position: absolute;
++                    bottom: 0;
++                    width: 100%;
++                    z-index: -1;
++                    background: black;
++                    color: white;
++                    padding: 15px;
++                    opacity: .5;
++                }
++
++                ul.condition-bar {
++                    /*list-style-type:none;
++                width:100%;*/
++                    padding: 0px;
++                    margin: 0px;
++                    margin-left: 20px;
++                    padding-top: 10px;
++                    font-family: 'Segoe UI', arial;
++                    font-size: 16px;
++                    font-weight: 400;
++                    display: table;
++                    width: 100%;
++                }
++
++                ul.condition-bar li {
++                    display: table-cell;
++                    margin: 0px 0px 0px 0px;
++                    padding: 0px 0px 0px 0px;
++                    color: #fff;
++                    line-height: 18px;
++                    vertical-align: middle;
++                }
++
++                .floating-container {
++                    z-index: 100000;
++                    margin-top: -19%;
++                    box-shadow: 0px 0px 3px #666;
++                    min-height: 550px;
++                    margin-bottom: 5px;
++                    background:#fff;
++                }
++                    .floating-container .col-md-12 {
++                        min-height: 550px;
++                    }
++
++                .js-slideout-toggle {
++                    cursor: pointer;
++                }
++
++                .slideout-menu {
++                    position: fixed;
++                    left: 0;
++                    top: 0;
++                    bottom: 0;
++                    right: 0;
++                    z-index: 0;
++                    width: 256px;
++                    overflow-y: auto;
++                    -webkit-overflow-scrolling: touch;
++                    display: none;
++                }
++
++                .slideout-panel {
++                    position: relative;
++                    z-index: 1;
++                }
++
++                .slideout-open,
++                .slideout-open body,
++                .slideout-open .slideout-panel {
++                    overflow: hidden;
++                }
++
++                    .slideout-open .slideout-menu {
++                        display: block;
++                    }
++
++                .underline {
++                    border-bottom: solid 1px #ddd;
++                    margin-top: 15px;
++                    margin-bottom: 5px;
++                }
++
++                .chair-bar {
++                    background: #ddd;
++                    border: solid 1px #666;
++                    color: #000;
++                    font-weight: bold;
++                    padding: 5px 5px 5px 15px;
++                }
++
++                    .chair-bar .CLOSED,
++                    .run-status .C {
++                        color: #CC0000;
++                    }
++
++                    .chair-bar .OPEN,
++                    .run-status .O {
++                        color: #000;
++                    }
++
++                    .chair-bar .SCHEDULED,
++                    .run-status .S {
++                        color: #ed8419;
++                    }
++
++                .helper {
++                    display: inline-block;
++                    height: 100%;
++                    vertical-align: middle;
++                }
++
++                @media only screen and (max-width : 1200px) {
++                    .navbar-nav > li > a {
++                        font-size: 12px;
++                    }
++
++                    .navbar {
++                        border-radius: 0px;
++                    }
++
++                    .dos {
++                        width: 5%;
++                    }
++
++                    .tres {
++                        width: 30%;
++                        font-family: 'Oswald', sans-serif;
++                        position: relative;
++                    }
++
++                    .super-header .social {
++                        text-align: right;
++                    }
++
++                    ul.condition-bar li {
++                        font-size: 14px;
++                        line-height: 16px;
++                    }
++                    .floating-container,
++                     floating-container .col-md-12 {
++                        min-height: 400px;
++                    }
++                }
++
++
++                @media only screen and (max-width : 992px) {
++                    .conditions {
++                        font-size: 14px;
++                    }
++
++                    .navbar {
++                        border-radius: 0px;
++                    }
++
++                    .own-it {
++                        font-size: 80px;
++                    }
++
++                    .super-header .social {
++                        /*float: right;*/
++                        text-align: left;
++                        line-height: 30px;
++                        padding-bottom: 10px;
++                    }
++
++                    .super-header .links {
++                        line-height: 40px;
++                    }
++
++                    ul.condition-bar li {
++                        font-size: 14px;
++                        line-height: 16px;
++                    }
++                }
++
++
++
++                @media only screen and (max-width : 768px) {
++                    .navbar-nav {
++                        margin: 0;
++                        float: left;
++                    }
++
++                        .navbar-nav > li > a {
++                            font-size: 12px;
++                        }
++
++                    .navbar {
++                        border-radius: 0px;
++                    }
++
++                    .own-it {
++                        font-size: 60px;
++                    }
++
++                    .super-header ul li {
++                        font-size: 16px;
++                    }
++
++                    .conditions {
++                        font-size: 12px;
++                    }
++
++                    .dos {
++                        width: 5%;
++                    }
++
++                    .tres {
++                        width: 100%;
++                        font-family: 'Oswald', sans-serif;
++                        position: relative;
++                    }
++
++                    ul.condition-bar li {
++                        font-size: 14px;
++                        line-height: 16px;
++                    }
++
++                    .floating-container {
++                        margin-top: -20%;
++                    }
++
++                    .super-header .social {
++                        /*float: right;*/
++                        text-align: left;
++                        line-height: 30px;
++                        padding-bottom: 10px;
++                    }
++
++                    .super-header .links {
++                        line-height: 40px;
++                    }
++                }
++
++
++                @media only screen and (max-width : 480px) {
++                    .super-header ul li {
++                        font-size: 12px;
++                        margin-left: 0px;
++                        margin-right: 8px;
++                    }
++
++                    .conditions {
++                        max-width: 150px;
++                        width: 100%;
++                    }
++
++                    .own-it {
++                        font-size: 50px;
++                    }
++
++                    ul.condition-bar {
++                        margin-left: 0px;
++                    }
++
++                        ul.condition-bar li {
++                            font-size: 12px;
++                            line-height: 16px;
++                        }
++
++                    .super-header .social {
++                        /*float: right;*/
++                        text-align: left;
++                        line-height: 30px;
++                        padding-bottom: 10px;
++                    }
++
++                    .super-header .links {
++                        line-height: 40px;
++                    }
++
++                    .floating-container {
++                        margin-top: -20%;
++                    }
++
++                }
++
++
++                @media only screen and (max-width : 320px) {
++                    .navbar-nav > li > a {
++                        font-size: 12px;
++                    }
++
++                    .super-header ul li {
++                        font-size: 12px;
++                        margin-left: 0px;
++                        margin-right: 5px;
++                    }
++
++                    .own-it {
++                        font-size: 30px;
++                    }
++
++                    .super-header .social {
++                        /*float: right;*/
++                        text-align: left;
++                    }
++
++                    .floating-container {
++                        margin-top: -5%;
++                    }
++
++                  
++                }
++                                
++                @media (min-width: 768px) and (max-width: 991px) {
++                    .navbar-collapse.collapse {
++                        display: none !important;
++                    }
++
++                        .navbar-collapse.collapse.in {
++                            display: block !important;
++                        }
++
++                    .navbar-header .collapse, .navbar-toggle {
++                        display: block !important;
++                    }
++
++                    .navbar-header {
++                        float: none;
++                    }
++
++                    .own-it {
++                        font-size: 80px;
++                    }
++                }
++        </style>
++
++        <!--[if IE]>
++
++            <style>
++                .menu-container-desktop .sub_holder {
++                    top:20px;
++                }
++            </style>
++
++        <![endif]-->
++
++    </head>
++    <body>
++		
++		<!-- Google Tag Manager (noscript) -->
++<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NT238N3"
++height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++<!-- End Google Tag Manager (noscript) -->
++		
++        <script>
++            $(document).ready(function () {
++                $("#menu").show();
++            });
++        </script>
++        <nav id="menu" class="menu menu-container-mobile" style="display:none;">
++            <div style="text-align:left;float:left;padding-top:15px;">
++                <img alt="Close Menu" src="/Content/images/x.png" style="width:48px;height:48px;" class="hidden-lg js-slideout-toggle" />
++            </div>
++            <div class="clearfix"></div>
++            <script type="text/javascript">
++     $(document).ready(function() {
++         $(".menu-container-desktop .sub_holder").hide();
++
++         $(".menu-container-desktop .main_item").mouseover(function () {
++             id = $(this).attr("Name").split("_")[1];
++             console.log(id);
++             $(".menu-container-desktop #hdlr_" + id).show();
++             console.log($("#hdlr_" + id));
++         });
++         $(".menu-container-desktop .main_item").mouseout(function () {
++             id = $(this).attr("Name").split("_")[1];
++             $(".menu-container-desktop #hdlr_" + id).hide();
++         });
++         $(".menu-container-desktop .sub_holder").mouseover(function () {
++             id = $(this).attr("Name").split("_")[1];
++             $(".menu-container-desktop #hdlr_" + id).show();
++         });
++         $(".menu-container-desktop .sub_holder").mouseout(function () {
++             id = $(this).attr("Name").split("_")[1];
++             $(".menu-container-desktop #hdlr_" + id).hide();
++         });
++     });
++</script>
++<style>
++    .menu-container-desktop .sub_holder {
++	    position:absolute;
++	    top:10px;
++	    left:-5px;
++	    padding-top:20px;
++        z-index:1000;
++        min-width:150px;
++    }
++    
++
++    .menu-container-desktop #main_menu {
++	    padding:30px 0px 0px 0px;
++	    margin:0 auto;
++	    position:relative;
++	    z-index:20;
++        font-family: 'Oswald', sans-serif;
++        line-height: 20px;
++        font-size: 14px;
++    }
++
++    .menu-container-desktop #main_menu ul { 
++	    list-style-type:none;
++	    margin:0px 0px 0px 0px;
++	    position:relative;
++        white-space: nowrap;
++    }
++    .menu-container-desktop #main_menu ul li {
++	    display:inline;
++	    color:#000;
++	    position:relative;
++        text-wrap:none;
++
++	
++    }
++    .menu-container-desktop #main_menu ul li a {
++	    color:#000;
++	    text-decoration:none;
++	    font-size:14px;
++	    padding:0px 10px 0px 10px;
++        text-wrap:none;
++        font-family: 'Oswald', sans-serif;
++    }
++    .menu-container-desktop #main_menu ul li a:hover {
++	    color:orange;
++	    text-decoration:none;
++	    font-size:14px;
++    }
++
++    .menu-container-desktop .menu_item {
++	    /*background:url(../images/gray_bg.png);*/
++	    background:rgba(255, 255, 255, .9);
++	    text-align:left;
++        padding-top:5px;
++	    /*padding:0px 20px 10px 13px;*/
++    }
++
++    .menu-container-desktop .top-spacer {
++         /*background:rgba(150, 255, 0, .9);*/
++         height:11px;
++         background:transparent;
++    }
++
++    .menu-container-desktop #main_menu ul li .sub_holder .menu_item a {
++	    display:block;
++	    padding:0px 20px 10px 13px;
++        text-wrap:none;
++        font-family: 'Oswald', sans-serif;
++    }
++    .menu-container-desktop #main_menu ul li .sub_holder .menu_item a:hover 
++    {
++	    color:orange;
++    }	
++
++    /* MOBILE */
++    .menu-container-mobile
++    {
++        background:#666;
++        box-shadow: inset 0px 0px 5px #000; 
++        padding-left:20px;
++    }
++    .menu-container-mobile .sub_holder {
++	    padding-top:10px;
++        display:block;
++    }
++    .menu-container-mobile #main_menu {
++	    padding:20px 0px 0px 0px;
++	    margin:0 auto;
++	    position:relative;
++	    z-index:20;
++        font-family: 'Oswald', sans-serif;
++        line-height: 20px;
++        font-size: 14px;
++    }
++    .menu-container-mobile #main_menu ul { 
++	    list-style-type:none;
++	    margin:0px 0px 0px 0px;
++        padding:0px 0px 0px 0px;
++	    position:relative;
++        white-space: nowrap;
++    }
++    .menu-container-mobile #main_menu ul li {
++	    color:#000;
++	    position:relative;
++        text-wrap:none;
++    }
++    .menu-container-mobile #main_menu ul li a {
++	    color:#fff;
++	    text-decoration:none;
++	    font-size:16px;
++	    padding:0px 10px 0px 10px;
++        text-wrap:none;
++        font-family: 'Oswald', sans-serif;
++    }
++    .menu-container-mobile #main_menu ul li a:hover {
++	    color:orange;
++	    text-decoration:none;
++    }
++    .menu-container-mobile .menu_item {
++	    text-align:left;
++        margin-left:20px;
++    }
++
++    .menu-container-mobile #main_menu ul li .sub_holder .menu_item a {
++	    display:block;
++	    padding:0px 20px 10px 13px;
++        text-wrap:none;
++        font-family: 'Oswald', sans-serif;
++        font-size:14px;
++    }
++    .menu-container-mobile #main_menu ul li .sub_holder .menu_item a:hover 
++    {
++	    color:orange;
++    }	
++    
++</style>
++
++<div id="main_menu">
++   
++    <ul>
++            <li>
++                <a class="main_item" href="/summer" name="mm_77" target="_self">Summer</a>
++                <div id="hdlr_77" Name="hdlr_77" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="https://www.chinapeaklanding.com/" target="_blank">Boating~Store~Boat House</a>
++                                <a id="hl_sub" href="/live-fridays" target="_self">Live Friday&#39;s</a>
++                                <a id="hl_sub" href="/mountain-biking-scenic-chair-rides" target="_self">Mountain Biking</a>
++                                <a id="hl_sub" href="https://www.skichinapeak.com/summer-lodging" target="_self">Summer Lodging</a>
++                                <a id="hl_sub" href="/makin-waves-concert-series" target="_self">Makin&#39; Waves Concert Series</a>
++                                <a id="hl_sub" href="/bike-park-safety" target="_self">Bike Park Safety</a>
++                                <a id="hl_sub" href="/scenic-rides-and-mountain-biking" target="_self">Scenic Rides</a>
++                                <a id="hl_sub" href="https://www.chinapeakweddings.com/" target="_blank">Weddings</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="/the-mountain" name="mm_13" target="_self">The Mountain</a>
++                <div id="hdlr_13" Name="hdlr_13" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/resort-apps" target="_self">Download the FREE App!</a>
++                                <a id="hl_sub" href="/events-calendar" target="_self">Events Calendar</a>
++                                <a id="hl_sub" href="/conditions" target="_self">Conditions &amp; Lift Status</a>
++                                <a id="hl_sub" href="/trail-map" target="_self">Trail Map</a>
++                                <a id="hl_sub" href="/racing" target="_self">Racing</a>
++                                <a id="hl_sub" href="/rfid-tickets" target="_self">RFID Day Pass</a>
++                                <a id="hl_sub" href="/rfid-season-passes" target="_self">RFID Season Passes</a>
++                                <a id="hl_sub" href="https://safety.skicalifornia.org/" target="_blank">Mountain Safety Guide</a>
++                                <a id="hl_sub" href="/safety" target="_self">Safety</a>
++                                <a id="hl_sub" href="/volunteer-ski-patrol" target="_self">Volunteer Ski Patrol</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="https://www.skichinapeak.com/summer-lodging" name="mm_16" target="_blank">Lodging</a>
++                <div id="hdlr_16" Name="hdlr_16" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/summer-lodging" target="_self">Summer Lodging</a>
++                                <a id="hl_sub" href="/rv-parking-summer" target="_self">RV Parking - Summer </a>
++                                <a id="hl_sub" href="/lodging-options" target="_self">Lodging Options</a>
++                                <a id="hl_sub" href="/rv-parking" target="_self">RV Parking - Winter</a>
++                                <a id="hl_sub" href="/the-inn-at-china-peak" target="_self">Winter Lodging</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="https://skichinapeak.com/season-passes" name="mm_2" target="_self">Tickets &amp; Passes</a>
++                <div id="hdlr_2" Name="hdlr_2" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/season-passes" target="_self">Season Passes</a>
++                                <a id="hl_sub" href="https://www.thecalipass.com/" target="_self">The Cali Pass</a>
++                                <a id="hl_sub" href="/lift-tickets" target="_self">Day Passes</a>
++                                <a id="hl_sub" href="/season-pass-assurance" target="_self">Season Pass Assurance</a>
++                                <a id="hl_sub" href="/affirm" target="_self">Pay With Affirm</a>
++                                <a id="hl_sub" href="/carpet-day-pass" target="_self">Carpet Day Pass</a>
++                                <a id="hl_sub" href="/important-pass-info" target="_self">Important Pass Information</a>
++                                <a id="hl_sub" href="/deals-and-discounts" target="_self">Deals and Discounts</a>
++                                <a id="hl_sub" href="/powder-alliance" target="_self">Powder Alliance 25/26</a>
++                                <a id="hl_sub" href="/group-rates" target="_self">Group Rates</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="/lessons" name="mm_156" target="_self">Lessons</a>
++                <div id="hdlr_156" Name="hdlr_156" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/first-timers" target="_self">First Timer Lessons</a>
++                                <a id="hl_sub" href="/lessons-only" target="_self">Privates/Group Lessons</a>
++                                <a id="hl_sub" href="/mini-skier" target="_self">Mini Skier</a>
++                                <a id="hl_sub" href="http://www.centralcaladaptive.org" target="_blank">Adaptive Sports</a>
++                                <a id="hl_sub" href="/ticket-upgrades" target="_self">Day Pass Upgrades</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="https://www.skichinapeak.com/rentals" name="mm_214" target="_self">Rental Equipment</a>
++                <div id="hdlr_214" Name="hdlr_214" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/rentals" target="_self">Ski &amp; Snowboard Equipment</a>
++                                <a id="hl_sub" href="/repairs" target="_self">Repairs</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="https://www.skichinapeak.com/dining" name="mm_4" target="_self">Resort Services</a>
++                <div id="hdlr_4" Name="hdlr_4" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/preferred-parking" target="_self">Preferred Parking</a>
++                                <a id="hl_sub" href="/dining" target="_self">Dining</a>
++                                <a id="hl_sub" href="/gift-cards" target="_self">Gift Cards</a>
++                                <a id="hl_sub" href="/field-trips" target="_self">Field Trips</a>
++                                <a id="hl_sub" href="/lost-and-found" target="_self">Lost and Found</a>
++                                <a id="hl_sub" href="/sport-shop" target="_self">Sport Shops</a>
++                                <a id="hl_sub" href="https://chinapeaktimes.com" target="_blank">China Peak Times</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="/contact" name="mm_7" target="_self">Contact</a>
++                <div id="hdlr_7" Name="hdlr_7" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/jobs" target="_self">Jobs</a>
++                                <a id="hl_sub" href="https://goo.gl/maps/ZoAjzHLxWD92" target="_blank">Directions</a>
++                                <a id="hl_sub" href="/privacy-policy" target="_self">Privacy Policy</a>
++                                <a id="hl_sub" href="/Sitemap" target="_self">Sitemap</a>
++                                <a id="hl_sub" href="https://www.skichinapeak.com" target="_self">Home</a>
++                                <a id="hl_sub" href="/app-terms-and-conditions" target="_self">App Terms, Conditions &amp; Privacy</a>
++                        </div>
++                </div>
++            </li>
++    </ul>
++</div>
++    
++        </nav>
++
++        <main id="panel" style="background:#FFF;">
++
++            <div class="super-header">
++                <div class="container">
++
++                    <div class="row">
++                        <ul style="z-index:200;" class="col-xs-12 col-sm-12 col-md-7 col-lg-7 links">
++                            <li><a href="/get-the-latest">The Latest</a></li>
++                           
++							<!-- <li><a href="https://www.instagram.com/skichinapeak/" target="_blank">Photos</a></li>
++							
++                            <li><a href="https://www.youtube.com/user/ChinaPeakTV" target="_blank">Videos</a></li>  -->
++							
++                            <li><a href="https://www.skichinapeak.com/webcam/" >Mountain Cams</a></li>
++                        </ul>
++                        <ul style="z-index:100;" class="col-xs-12 col-sm-12 col-md-5 col-lg-5 social">
++                            <li><a href="https://www.facebook.com/chinapeak" target="_blank"><img alt="facebook" src="/Content/images/social_01.png" /></a></li>
++                         
++							<!--  <li><a href="https://twitter.com/China_Peak" target="_blank"><img alt="twitter" src="~/Content/images/social_03.png" /></a></li>
++                            <li><a href="https://www.youtube.com/user/ChinaPeakTV" target="_blank"><img alt="youtube" src="~/Content/images/social_05.png" /></a></li> -->
++                            
++                            <li><a href="https://www.instagram.com/skichinapeak/" target="_blank"><img alt="instagram" src="/Content/images/social_09.png" /></a></li>
++                        </ul>
++                    </div>
++                </div>
++            </div>
++
++            <div class="menu-holder" style="position: absolute;z-index: 10000;">
++                <div class="container" style="height:100%;">
++                    <div class="row" style="height:100%;">
++                        <div class="col-md-3 col-xs-10" style="height:100%;">
++                            <span class="helper"></span><a href="/"><img alt="China Peak" class="logo" src="/Content/images/logo.png" /></a>
++                        </div>
++                        <div class="col-md-9 col-xs-2 menu-container-desktop" style="text-align:right;height:100%;">
++
++                            <img alt="menu button" src="/Content/images/icon_menu_orange.png" style="width:48px;height:48px;float:right;margin-top:10px;" class="hidden-lg js-slideout-toggle" />
++
++                            <div class="visible-lg">
++                                <script type="text/javascript">
++     $(document).ready(function() {
++         $(".menu-container-desktop .sub_holder").hide();
++
++         $(".menu-container-desktop .main_item").mouseover(function () {
++             id = $(this).attr("Name").split("_")[1];
++             console.log(id);
++             $(".menu-container-desktop #hdlr_" + id).show();
++             console.log($("#hdlr_" + id));
++         });
++         $(".menu-container-desktop .main_item").mouseout(function () {
++             id = $(this).attr("Name").split("_")[1];
++             $(".menu-container-desktop #hdlr_" + id).hide();
++         });
++         $(".menu-container-desktop .sub_holder").mouseover(function () {
++             id = $(this).attr("Name").split("_")[1];
++             $(".menu-container-desktop #hdlr_" + id).show();
++         });
++         $(".menu-container-desktop .sub_holder").mouseout(function () {
++             id = $(this).attr("Name").split("_")[1];
++             $(".menu-container-desktop #hdlr_" + id).hide();
++         });
++     });
++</script>
++<style>
++    .menu-container-desktop .sub_holder {
++	    position:absolute;
++	    top:10px;
++	    left:-5px;
++	    padding-top:20px;
++        z-index:1000;
++        min-width:150px;
++    }
++    
++
++    .menu-container-desktop #main_menu {
++	    padding:30px 0px 0px 0px;
++	    margin:0 auto;
++	    position:relative;
++	    z-index:20;
++        font-family: 'Oswald', sans-serif;
++        line-height: 20px;
++        font-size: 14px;
++    }
++
++    .menu-container-desktop #main_menu ul { 
++	    list-style-type:none;
++	    margin:0px 0px 0px 0px;
++	    position:relative;
++        white-space: nowrap;
++    }
++    .menu-container-desktop #main_menu ul li {
++	    display:inline;
++	    color:#000;
++	    position:relative;
++        text-wrap:none;
++
++	
++    }
++    .menu-container-desktop #main_menu ul li a {
++	    color:#000;
++	    text-decoration:none;
++	    font-size:14px;
++	    padding:0px 10px 0px 10px;
++        text-wrap:none;
++        font-family: 'Oswald', sans-serif;
++    }
++    .menu-container-desktop #main_menu ul li a:hover {
++	    color:orange;
++	    text-decoration:none;
++	    font-size:14px;
++    }
++
++    .menu-container-desktop .menu_item {
++	    /*background:url(../images/gray_bg.png);*/
++	    background:rgba(255, 255, 255, .9);
++	    text-align:left;
++        padding-top:5px;
++	    /*padding:0px 20px 10px 13px;*/
++    }
++
++    .menu-container-desktop .top-spacer {
++         /*background:rgba(150, 255, 0, .9);*/
++         height:11px;
++         background:transparent;
++    }
++
++    .menu-container-desktop #main_menu ul li .sub_holder .menu_item a {
++	    display:block;
++	    padding:0px 20px 10px 13px;
++        text-wrap:none;
++        font-family: 'Oswald', sans-serif;
++    }
++    .menu-container-desktop #main_menu ul li .sub_holder .menu_item a:hover 
++    {
++	    color:orange;
++    }	
++
++    /* MOBILE */
++    .menu-container-mobile
++    {
++        background:#666;
++        box-shadow: inset 0px 0px 5px #000; 
++        padding-left:20px;
++    }
++    .menu-container-mobile .sub_holder {
++	    padding-top:10px;
++        display:block;
++    }
++    .menu-container-mobile #main_menu {
++	    padding:20px 0px 0px 0px;
++	    margin:0 auto;
++	    position:relative;
++	    z-index:20;
++        font-family: 'Oswald', sans-serif;
++        line-height: 20px;
++        font-size: 14px;
++    }
++    .menu-container-mobile #main_menu ul { 
++	    list-style-type:none;
++	    margin:0px 0px 0px 0px;
++        padding:0px 0px 0px 0px;
++	    position:relative;
++        white-space: nowrap;
++    }
++    .menu-container-mobile #main_menu ul li {
++	    color:#000;
++	    position:relative;
++        text-wrap:none;
++    }
++    .menu-container-mobile #main_menu ul li a {
++	    color:#fff;
++	    text-decoration:none;
++	    font-size:16px;
++	    padding:0px 10px 0px 10px;
++        text-wrap:none;
++        font-family: 'Oswald', sans-serif;
++    }
++    .menu-container-mobile #main_menu ul li a:hover {
++	    color:orange;
++	    text-decoration:none;
++    }
++    .menu-container-mobile .menu_item {
++	    text-align:left;
++        margin-left:20px;
++    }
++
++    .menu-container-mobile #main_menu ul li .sub_holder .menu_item a {
++	    display:block;
++	    padding:0px 20px 10px 13px;
++        text-wrap:none;
++        font-family: 'Oswald', sans-serif;
++        font-size:14px;
++    }
++    .menu-container-mobile #main_menu ul li .sub_holder .menu_item a:hover 
++    {
++	    color:orange;
++    }	
++    
++</style>
++
++<div id="main_menu">
++   
++    <ul>
++            <li>
++                <a class="main_item" href="/summer" name="mm_77" target="_self">Summer</a>
++                <div id="hdlr_77" Name="hdlr_77" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="https://www.chinapeaklanding.com/" target="_blank">Boating~Store~Boat House</a>
++                                <a id="hl_sub" href="/live-fridays" target="_self">Live Friday&#39;s</a>
++                                <a id="hl_sub" href="/mountain-biking-scenic-chair-rides" target="_self">Mountain Biking</a>
++                                <a id="hl_sub" href="https://www.skichinapeak.com/summer-lodging" target="_self">Summer Lodging</a>
++                                <a id="hl_sub" href="/makin-waves-concert-series" target="_self">Makin&#39; Waves Concert Series</a>
++                                <a id="hl_sub" href="/bike-park-safety" target="_self">Bike Park Safety</a>
++                                <a id="hl_sub" href="/scenic-rides-and-mountain-biking" target="_self">Scenic Rides</a>
++                                <a id="hl_sub" href="https://www.chinapeakweddings.com/" target="_blank">Weddings</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="/the-mountain" name="mm_13" target="_self">The Mountain</a>
++                <div id="hdlr_13" Name="hdlr_13" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/resort-apps" target="_self">Download the FREE App!</a>
++                                <a id="hl_sub" href="/events-calendar" target="_self">Events Calendar</a>
++                                <a id="hl_sub" href="/conditions" target="_self">Conditions &amp; Lift Status</a>
++                                <a id="hl_sub" href="/trail-map" target="_self">Trail Map</a>
++                                <a id="hl_sub" href="/racing" target="_self">Racing</a>
++                                <a id="hl_sub" href="/rfid-tickets" target="_self">RFID Day Pass</a>
++                                <a id="hl_sub" href="/rfid-season-passes" target="_self">RFID Season Passes</a>
++                                <a id="hl_sub" href="https://safety.skicalifornia.org/" target="_blank">Mountain Safety Guide</a>
++                                <a id="hl_sub" href="/safety" target="_self">Safety</a>
++                                <a id="hl_sub" href="/volunteer-ski-patrol" target="_self">Volunteer Ski Patrol</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="https://www.skichinapeak.com/summer-lodging" name="mm_16" target="_blank">Lodging</a>
++                <div id="hdlr_16" Name="hdlr_16" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/summer-lodging" target="_self">Summer Lodging</a>
++                                <a id="hl_sub" href="/rv-parking-summer" target="_self">RV Parking - Summer </a>
++                                <a id="hl_sub" href="/lodging-options" target="_self">Lodging Options</a>
++                                <a id="hl_sub" href="/rv-parking" target="_self">RV Parking - Winter</a>
++                                <a id="hl_sub" href="/the-inn-at-china-peak" target="_self">Winter Lodging</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="https://skichinapeak.com/season-passes" name="mm_2" target="_self">Tickets &amp; Passes</a>
++                <div id="hdlr_2" Name="hdlr_2" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/season-passes" target="_self">Season Passes</a>
++                                <a id="hl_sub" href="https://www.thecalipass.com/" target="_self">The Cali Pass</a>
++                                <a id="hl_sub" href="/lift-tickets" target="_self">Day Passes</a>
++                                <a id="hl_sub" href="/season-pass-assurance" target="_self">Season Pass Assurance</a>
++                                <a id="hl_sub" href="/affirm" target="_self">Pay With Affirm</a>
++                                <a id="hl_sub" href="/carpet-day-pass" target="_self">Carpet Day Pass</a>
++                                <a id="hl_sub" href="/important-pass-info" target="_self">Important Pass Information</a>
++                                <a id="hl_sub" href="/deals-and-discounts" target="_self">Deals and Discounts</a>
++                                <a id="hl_sub" href="/powder-alliance" target="_self">Powder Alliance 25/26</a>
++                                <a id="hl_sub" href="/group-rates" target="_self">Group Rates</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="/lessons" name="mm_156" target="_self">Lessons</a>
++                <div id="hdlr_156" Name="hdlr_156" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/first-timers" target="_self">First Timer Lessons</a>
++                                <a id="hl_sub" href="/lessons-only" target="_self">Privates/Group Lessons</a>
++                                <a id="hl_sub" href="/mini-skier" target="_self">Mini Skier</a>
++                                <a id="hl_sub" href="http://www.centralcaladaptive.org" target="_blank">Adaptive Sports</a>
++                                <a id="hl_sub" href="/ticket-upgrades" target="_self">Day Pass Upgrades</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="https://www.skichinapeak.com/rentals" name="mm_214" target="_self">Rental Equipment</a>
++                <div id="hdlr_214" Name="hdlr_214" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/rentals" target="_self">Ski &amp; Snowboard Equipment</a>
++                                <a id="hl_sub" href="/repairs" target="_self">Repairs</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="https://www.skichinapeak.com/dining" name="mm_4" target="_self">Resort Services</a>
++                <div id="hdlr_4" Name="hdlr_4" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/preferred-parking" target="_self">Preferred Parking</a>
++                                <a id="hl_sub" href="/dining" target="_self">Dining</a>
++                                <a id="hl_sub" href="/gift-cards" target="_self">Gift Cards</a>
++                                <a id="hl_sub" href="/field-trips" target="_self">Field Trips</a>
++                                <a id="hl_sub" href="/lost-and-found" target="_self">Lost and Found</a>
++                                <a id="hl_sub" href="/sport-shop" target="_self">Sport Shops</a>
++                                <a id="hl_sub" href="https://chinapeaktimes.com" target="_blank">China Peak Times</a>
++                        </div>
++                </div>
++            </li>
++            <li>
++                <a class="main_item" href="/contact" name="mm_7" target="_self">Contact</a>
++                <div id="hdlr_7" Name="hdlr_7" class="sub_holder" style="display:none;">
++                    <div class="top-spacer"></div>
++                        <div class="menu_item">
++                                <a id="hl_sub" href="/jobs" target="_self">Jobs</a>
++                                <a id="hl_sub" href="https://goo.gl/maps/ZoAjzHLxWD92" target="_blank">Directions</a>
++                                <a id="hl_sub" href="/privacy-policy" target="_self">Privacy Policy</a>
++                                <a id="hl_sub" href="/Sitemap" target="_self">Sitemap</a>
++                                <a id="hl_sub" href="https://www.skichinapeak.com" target="_self">Home</a>
++                                <a id="hl_sub" href="/app-terms-and-conditions" target="_self">App Terms, Conditions &amp; Privacy</a>
++                        </div>
++                </div>
++            </li>
++    </ul>
++</div>
++    
++                            </div>
++
++
++                        </div>
++                    </div>
++                    <div class="row" style="top:70px;position:absolute;width:100%;margin-left:auto;margin-right:auto;left:0;right:0;">
++                        <div class="container">
++                            <div class="row">
++                                <div class="col-md-12" style="padding-left:0px;padding-right:0px;">
++                                    <div style="width:100%;min-height:70px;background:rgba(0,0,0,0.8);">
++                                        
++<div class="visible-lg visible-md">
++    <ul class="condition-bar">
++        <li>Sunny</li>
++        <li><img src="/Content/images/icons/sunny.png" style="margin-left:10px;margin-right:10px;" /></li>
++        <li>Peak&nbsp;Temp:<br /><strong>76&deg;</strong></li>
++        <li>Base&nbsp;Temp:<br /><strong>79&deg;</strong></li>
++        <li>Last&nbsp;24&nbsp;Hours:<br /><strong>0&quot;</strong></li>
++        <li>Last&nbsp;7&nbsp;Days:<br /><strong>0&quot;</strong></li>
++        <li>Season&nbsp;Total:<br /><strong>234-278&quot;</strong></li>
++        <li>CA&nbsp;HWY&nbsp;168:<br /><strong>OPEN</strong></li>
++    </ul>
++</div>
++<div class="visible-sm">
++    <ul class="condition-bar">
++        <li class="hidden-xs" style="margin-top:10px;">Sunny</li>
++        <li><img src="/Content/images/icons/sunny.png" style="margin-left:10px;margin-right:10px;" /></li>
++        <li>Peak&nbsp;Temp: <strong>76&deg;</strong><br />Base&nbsp;Temp: <strong>79&deg;</strong></li>
++        <li>Last&nbsp;24&nbsp;Hours: <strong>0&quot;</strong><br />Last&nbsp;7&nbsp;Days: <strong>0&quot;</strong></li>
++        <li>Season&nbsp;Total: <strong>234-278&quot;</strong><br />CA&nbsp;HWY&nbsp;168: <strong>OPEN</strong></li>
++    </ul>
++</div>
++<div class="visible-xs">
++    <ul class="condition-bar">
++        <li class="hidden-xs" style="margin-top:10px;">Sunny</li>
++        <li><img src="/Content/images/icons/sunny.png" style="margin-left:10px;margin-right:10px;" /></li>
++        <li>
++            Peak&nbsp;Temp: <strong>76&deg;</strong><br />
++            Base&nbsp;Temp: <strong>79&deg;</strong><br />
++            Last&nbsp;24&nbsp;Hours: <strong>0&quot;</strong>
++        </li>
++        <li>
++            Last&nbsp;7&nbsp;Days: <strong>0&quot;</strong><br />
++            Season&nbsp;Total: <strong>234-278&quot;</strong><br />
++            CA&nbsp;HWY&nbsp;168: <strong>OPEN</strong>
++        </li>
++    </ul>
++</div>
++                                    </div>
++                                </div>
++                            </div>
++                        </div>
++                    </div>
++                </div>
++            </div>
++
++            <div class="clearfix"></div>
++
++
++            
++
++
++<div style="width:100%;overflow:hidden;">
++    <img style="width: 100%; min-height: 177px; margin-top: -1px;" src="/Content/images/snow.jpg" />    
++</div>
++<div class="banner" style="height:50px;">
++    <div class="col-lg-12">
++        &nbsp;
++    </div>
++</div>
++
++<div class="clearfix"></div>
++
++
++<div class="container floating-container">
++    <div class="row" style="padding-bottom:5px;">
++        <div class="col-md-12" style="background: #fff;padding-bottom:20px;padding-top:1px;margin-bottom:5px;">
++            <h2>Conditions & Lift Status</h2>
++            <h3>&nbsp;</h3>
++
++<p><a href="https://www.skichinapeak.com/get-the-latest"><strong>CLICK HERE TO VISIT &quot;THE LATEST&quot; FOR UPDATES.</strong></a></p>
++
++<p>&nbsp;</p>
++
++
++                <div><div class="container">
++    <div class="row">
++
++        <div class="col-md-6">
++
++            <div style="float:left;">
++                <div style="font-size:18px;color:#757575;margin-bottom:12px;">Currently at China Peak:</div>
++                <div style="margin-bottom:10px;">
++                    <img src="/Content/images/icons/sunny.png" imagealign="AbsMiddle" style="margin-right:20px;" />
++                    <label style="font-size:32px;color:#757575;">Sunny</label>
++                </div>
++            </div>
++
++            <!--
++            <div style="float:right;text-align:right;margin-top:10px;width:34px;">
++                <a href="javascript:;" onclick="javascript:window.print();">
++                    <img src="~/Content/images/print.jpg" width="34" height="33" border="0" />
++                </a>
++            </div>
++            -->
++            
++
++            <div class="underline" style="clear:both;">Snow Totals:</div>
++            <div class="data">
++                Last 24 Hours:  <span style="margin-right:15px;font-weight:bold;">0&quot;</span>
++                Last 7 Days:  <span style="margin-right:15px;font-weight:bold;">0&quot;</span>
++                Season Total:  <span style="font-weight:bold;">234-278&quot;</span>
++            </div>
++
++            <div class="underline">Lift Status &amp; Rank:</div>
++            <div class="data">
++                <span style="margin-right:20px;color:#000;font-weight:bold;">O = OPEN</span>
++                <span style="margin-right:20px;color:#CC0000;font-weight:bold;">C = CLOSED</span>
++                <span style="color:#ed8419;font-weight:bold;">S = SCHEDULED</span>
++            </div>
++
++        </div>
++
++        <div class="col-md-6">
++            <div style="float:right;width:318px;height:223px;border:solid 2px #e0e0e0;">
++                <p align="center">
++                    <span style="font-size: 8pt;">This Conditions Report brought to you by:</span>
++                    <img src="/Content/images/nestle.jpg" style="margin-top:15px;" />
++                </p>
++
++            </div>
++        </div>
++
++        <div class="clearfix"></div>
++
++        <div class="col-md-12" style="margin-top:20px;">
++                <div class="row chair-bar">
++                    Chair 1: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Academy - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Academy - Middle &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Big Creek - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Jack&#39;s Run - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Jack&#39;s Run - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_dd.jpg" /></td>
++                                <td>Buckhorn - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Buckhorn - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Dynamite - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Dynamite - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Mainstream - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Razorback - Middle &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Grouse Creek - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Grouse Creek - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Rancheria - Lower &nbsp; <span class="O">O</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Rancheria - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Razorback - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Razorback - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Waterfall Bowl - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_dd.jpg" /></td>
++                                <td>Waterfall Bowl - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                </div>
++                <div class="row chair-bar">
++                    Chair 2: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Exhibition &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Kaiser &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Red Fir East &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Red Fir West &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Tamarack &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                </div>
++                <div class="row chair-bar">
++                    Chair 4: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Academy - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Easy Street/Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Easy Street/Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Peterbuilt &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Tollhouse - Middle &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Ullmanns Alley - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Ullmanns Alley - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                </div>
++                <div class="row chair-bar">
++                    Chair 5: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>China Bowl &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_dd.jpg" /></td>
++                                <td>East Bowl &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Huntington &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Dick&#39;s &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                </div>
++                <div class="row chair-bar">
++                    Chair 6: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Arroyo &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Canyon &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Tollhouse - Lower &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Cop Out - Upper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Echo &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_dd.jpg" /></td>
++                                <td>Face - Avalanche &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_diff.jpg" /></td>
++                                <td>Face - Juniper &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Parkway &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Boomer&#39;s &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Skid Row &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Sundown Ridge &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                </div>
++                <div class="row chair-bar">
++                    Chair 7: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Joanne&#39;s &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Hokey Pokey &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Lakeview &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Marmot &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Joe&#39;s &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Westridge &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                </div>
++                <div class="row chair-bar">
++                    Kids Carpet: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                </div>
++                <div class="row chair-bar">
++                    Boulder Carpet: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                </div>
++                <div class="row chair-bar">
++                    Juniper Carpet: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                </div>
++                <div class="row chair-bar">
++                    Tubing Hill Not Available This Season: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                </div>
++                <div class="row chair-bar">
++                    *: <span class="CLOSED">CLOSED</span>
++                </div>
++                <div class="row" style="padding-top:10px;padding-bottom:10px;">
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Firebowl East &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                    <div class="run-status col-lg-3 col-md-4 col-sm-6">
++                        <table>
++                            <tr>
++                                <td style="width:27px;"><img src="/Content/images/level_mod.jpg" /></td>
++                                <td>Firebowl West &nbsp; <span class="C">C</span></td>
++                            </tr>
++                        </table>
++                    </div>
++                </div>
++        </div>
++
++    </div>
++</div></div>
++                    </div>
++    </div>
++</div>
++
++
++<div class="clearfix"></div>
++
++<div class="container">
++    <div class="row" style="text-align:center;margin:0 auto;margin-top:30px;">
++                    <div class="col-sm-3 dos hidden-xs"></div>
++                <div class="col-sm-2 tres">
++
++
++
++                    <div style="width:100%;max-width:325px;text-align:center;margin:0 auto;position:relative;">
++                        <div class="stamp stamp-brown"><a href="https://www.skichinapeak.com/season-passes" target="_blank">LEARN MORE ></a></div>
++                        <span class="c1">2025/26 WINTER SEASON PASSES</span>
++                        <img src="/uploads/specials/da2605f1-2834-4e99-8682-092bd3eeddc2.jpg" style="width:100%" />
++                    </div>
++                
++                </div>
++                <div class="col-sm-2 tres">
++
++
++
++                    <div style="width:100%;max-width:325px;text-align:center;margin:0 auto;position:relative;">
++                        <div class="stamp stamp-blue"><a href="https://www.skichinapeak.com/jobs" target="_self">WE&#39;RE HIRING ></a></div>
++                        <span class="c2">WORK HERE, PLAY HERE</span>
++                        <img src="/uploads/specials/d7aae973-9a3f-4db3-8279-dc7c08966134.jpg" style="width:100%" />
++                    </div>
++                
++                </div>
++                <div class="col-sm-2 tres">
++
++
++
++                    <div style="width:100%;max-width:325px;text-align:center;margin:0 auto;position:relative;">
++                        <div class="stamp stamp-red"><a href="https://www.skichinapeak.com/the-inn-at-china-peak" target="_self">BOOK NOW ></a></div>
++                        <span class="c3">STAY AT THE PEAK</span>
++                        <img src="/uploads/specials/4c4cd214-430f-4d2a-a7cf-0279d8b2f493.jpg" style="width:100%" />
++                    </div>
++                
++                </div>
++                    <div class="col-sm-3 dos hidden-xs"></div>
++
++    </div>
++</div>
++
++
++
++<div style="width:100%;background-color:#008aff;height:4px;margin:40px 0px 40px 0px;">
++
++</div>
++
++<div class="container" style="padding-bottom:40px;background:#FFF;" >
++    <div class="row">
++        <div class="col-lg-12" style="text-align:center;">
++            <div style="margin:20px 0px 40px 0px;"><img src="/Content/images/peak-alerts.png" style="display:inline-block;width:100%;max-width:468px;" /></div>
++            <div style="margin:20px 0px 20px 0px;"><a href="/peak-alerts"><img src="/Content/images/sign-up.png" style="display:inline-block;width:100%;max-width:169px;" /></a></div>
++        </div>
++    </div>
++</div>
++
++            <div class="footer">
++                <div class="container">
++                    <div class="row">
++                        <div class="col-lg-12" style="text-align:center;padding-bottom:60px;padding-top:40px;">
++                            <ul class="social">
++                                <li><a href="https://www.facebook.com/chinapeak" target="_blank"><img alt="facebook" src="/Content/images/social_01.png" /></a></li>
++                               
++								<!--  <li><a href="https://twitter.com/China_Peak" target="_blank"><img alt="twitter" src="~/Content/images/social_03.png" /></a></li>
++                                <li><a href="https://www.youtube.com/user/ChinaPeakTV" target="_blank"><img alt="youtube" src="~/Content/images/social_05.png" /></a></li> -->
++                                
++                                <li><a href="https://www.instagram.com/skichinapeak/" target="_blank"><img alt="instagram" src="/Content/images/social_09.png" /></a></li>
++                            </ul>
++                        </div>
++                    </div>
++                    <div class="row" style="padding-bottom:100px;">
++                        <div class="col-lg-4 col-md-4 col-sm-4" style="text-align:center;">
++                   
++							<a href="https://order.toasttab.com/online/the-hungry-hut-42008-tollhouse-rd" target="_blank"><img alt="Hungry Hut" src="/Content/images/sponsor_02.png" width="175" height="144" alt="Eat Hungry!" style="margin:0 auto;display:block;"></a>
++							<br>
++							<a href="http://www.toyota.com" target="_blank"><img alt="toyota" src="/Content/images/sponsor_01.png" width="164" height="92" alt="Toyota" style="margin:0 auto;display:block;"></a>
++							
++                        </div>
++                        <div class="col-lg-4 col-md-4 col-sm-4" style="text-align:center;margin:20px 0px 20px 0px;">
++                            <a href="/"><img alt="snowflake logo" src="/Content/images/flake.png" style="width:100%;max-width:172px;" /></a>
++                        </div>
++                        <div class="col-lg-4 col-md-4 col-sm-4 contact" style="text-align:center;">
++                            <p>Resort phone: <a href="tel:5592332500">559-233-2500</a><br />Snow phone: <a href="tel:5592333330">559-233-7310</a></p>
++                            <p><a href="mailto:info@skichinapeak.com">info@skichinapeak.com</a></p>
++                            <p><address>59265 Highway 168<br />LakeShore, CA 93634</address></p>
++                            <p><a style="text-transform:uppercase;" target="_blank" href="https://goo.gl/maps/ZoAjzHLxWD92">Click Here for directions</a></p>
++                        </div>
++                    </div>
++
++                    <div class="row">
++                        <div class="col-lg-12" style="text-align:center;">
++                            <p style="color:#999;font-size:10px;">&copy; China Peak Mountain Resort | All Rights Reserved | <a href="/sitemap">Sitemap</a> | <a href="/app-terms-and-conditions">App Terms, Conditions & Privacy</a></p>
++                        </div>
++                    </div>
++                    <div class="row" style="padding-top:10px;padding-bottom:20px;">
++                        <div class="col-lg-12" style="text-align:center;">
++                            <img src="/Content/images/us.png" />
++                        </div>
++                    </div>
++                </div>
++            </div>
++        </main>
++
++        <script src="/Scripts/bootstrap.js"></script>
++<script src="/Scripts/respond.js"></script>
++
++        
++
++        <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/0.1.12/slideout.min.js"></script>
++        <script>
++
++            var slideout = new Slideout({
++                'panel': document.getElementById('panel'),
++                'menu': document.getElementById('menu'),
++                'padding': 256,
++                'tolerance': 70,
++                'touch': true,
++                'side': 'left'
++            });
++
++            $(document).ready(function () {
++
++                $(".js-slideout-toggle").click(function () {
++                    console.log("go");
++                    console.log()
++                    slideout.toggle();
++                });
++
++                $(".menu-container-mobile .sub_holder").show();
++
++            });
++
++        </script>
++        
++       
++    
++    
++
++    </body>
++</html>
++
+-- 
+2.43.0
+
