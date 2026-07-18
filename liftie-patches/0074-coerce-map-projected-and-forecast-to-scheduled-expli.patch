@@ -1,0 +1,29 @@
+From 0c5128618d8cc1c81b9dd8e5dfefb0f896331be0 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:06:14 +0000
+Subject: [PATCH 74/77] coerce: map 'projected' and 'forecast' to scheduled
+ explicitly
+
+Lutsen's status icons use title='Projected' and Lumiplan feeds use
+FORECAST; both landed on scheduled only via the unknown-status fallback
+(logged as unknown). Make the mapping intentional.
+---
+ lib/tools/coerce.js | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/tools/coerce.js b/lib/tools/coerce.js
+index 079f6df..9367920 100644
+--- a/lib/tools/coerce.js
++++ b/lib/tools/coerce.js
+@@ -65,6 +65,8 @@ const map = {
+   delay: 'scheduled',
+   delayed: 'scheduled',
+   prevision: 'scheduled',
++  projected: 'scheduled',
++  forecast: 'scheduled',
+   blue: 'scheduled',
+   p: 'scheduled',
+   2: 'scheduled',
+-- 
+2.43.0
+

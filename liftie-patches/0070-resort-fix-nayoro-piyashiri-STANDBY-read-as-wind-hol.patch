@@ -1,0 +1,109 @@
+From e696e24b85562094531ae27a73272ff3c2674f08 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:04:35 +0000
+Subject: [PATCH 70/77] resort: fix nayoro-piyashiri - STANDBY read as
+ wind-hold
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The page marks every non-operating course STANDBY (its off-season label);
+via coerce's standby->hold mapping all 13 trails showed 'hold' in July.
+Translate STANDBY to closed alongside 運休/終了.
+---
+ lib/resorts/nayoro-piyashiri/status.js  |  6 ++++--
+ test/resorts/nayoro-piyashiri-trails.js | 26 ++++++++++++-------------
+ 2 files changed, 17 insertions(+), 15 deletions(-)
+
+diff --git a/lib/resorts/nayoro-piyashiri/status.js b/lib/resorts/nayoro-piyashiri/status.js
+index dd2c617..68e19e2 100644
+--- a/lib/resorts/nayoro-piyashiri/status.js
++++ b/lib/resorts/nayoro-piyashiri/status.js
+@@ -4,8 +4,10 @@ export default function status(text = '') {
+   if (/運行中|営業中|^OPEN/i.test(t)) {
+     return 'open';
+   }
+-  if (/運休|終了|^CLOSE/i.test(t)) {
++  if (/運休|終了|^CLOSE|^STANDBY/i.test(t)) {
++    // STANDBY is the site's not-operating marker (used off-season for every
++    // course) - reading it as 'hold' made July look like a wind-hold
+     return 'closed';
+   }
+-  return t; // STANDBY etc - coerce maps standby to hold
++  return t;
+ }
+diff --git a/test/resorts/nayoro-piyashiri-trails.js b/test/resorts/nayoro-piyashiri-trails.js
+index c3cba61..069fe17 100644
+--- a/test/resorts/nayoro-piyashiri-trails.js
++++ b/test/resorts/nayoro-piyashiri-trails.js
+@@ -3,54 +3,54 @@ import trails from '../trails/index.js';
+ trails('nayoro-piyashiri', [
+   {
+     'name': '一般ゲレンデ第1',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': '一般ゲレンデ第2',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': '林間コース',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': 'ジャイアント第1',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': 'ジャイアント第2',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': 'イースタンコース',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': 'チャレンジコース',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': '壁',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': '樹氷コース',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': 'ツリーラン エリアⅠ',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': 'ツリーラン エリアⅡ',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': 'ツリーラン エリアⅢ',
+-    'status': 'hold'
++    'status': 'closed'
+   },
+   {
+     'name': 'ツリーラン フリーエリア',
+-    'status': 'hold'
++    'status': 'closed'
+   }
+ ]);
+-- 
+2.43.0
+

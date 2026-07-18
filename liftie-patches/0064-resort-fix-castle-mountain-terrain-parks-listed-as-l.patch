@@ -1,0 +1,45 @@
+From 7db98d59d243517a000ce9d497e37fa309717add Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:00:07 +0000
+Subject: [PATCH 64/77] resort: fix castle-mountain - terrain parks listed as
+ lifts
+
+The lift filter excluded trail rows by circle/square/diamond difficulty
+icons but park rows carry a terrain_parks.svg icon, so 'Meadows S/M Park'
+and 'Tumbleweed Terrain Park' were published as lifts (9 instead of 7)
+while the trails parser also correctly listed them. Extend the exclusion
+to terrain/park icons.
+---
+ lib/resorts/castle-mountain/index.js | 2 +-
+ test/resorts/castle-mountain.js      | 4 +---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/lib/resorts/castle-mountain/index.js b/lib/resorts/castle-mountain/index.js
+index 13b78bd..b13717d 100644
+--- a/lib/resorts/castle-mountain/index.js
++++ b/lib/resorts/castle-mountain/index.js
+@@ -14,7 +14,7 @@ export default {
+     const status = statusIcon?.attribs.src.match(/([A-Za-z_]+)\.svg/)?.[1];
+     const name = findText(tds[1]);
+     // trail rows share the layout but carry a difficulty icon in column 0
+-    if (!name || !status || /circle|square|diamond/i.test(typeIcon?.attribs.src ?? '')) {
++    if (!name || !status || /circle|square|diamond|terrain|park/i.test(typeIcon?.attribs.src ?? '')) {
+       return;
+     }
+     return { name, status };
+diff --git a/test/resorts/castle-mountain.js b/test/resorts/castle-mountain.js
+index a75fd56..e74642a 100644
+--- a/test/resorts/castle-mountain.js
++++ b/test/resorts/castle-mountain.js
+@@ -7,7 +7,5 @@ lifts('castle-mountain', 'html', {
+   'Sundance (Blue) Chair': 'closed',
+   'T-Rex': 'closed',
+   'Tamarack (Red) Chair': 'closed',
+-  'Stagecoach Express Chair': 'closed',
+-  'Tumbleweed Terrain Park': 'closed',
+-  'Meadows S/M Park': 'closed'
++  'Stagecoach Express Chair': 'closed'
+ });
+-- 
+2.43.0
+

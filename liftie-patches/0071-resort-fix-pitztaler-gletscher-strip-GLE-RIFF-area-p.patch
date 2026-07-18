@@ -1,0 +1,267 @@
+From 044ad4823983dd676500ebb53a3ebe8a9dc9b8fa Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 17 Jul 2026 13:04:58 +0000
+Subject: [PATCH 71/77] resort: fix pitztaler-gletscher - strip 'GLE ||' /
+ 'RIFF ||' area prefixes
+
+The site prefixes every lift and piste name with an area code separated by
+a double pipe ('GLE || Gletscherexpress'), which the app displayed
+verbatim. Strip the prefix from display names.
+---
+ lib/resorts/pitztaler-gletscher/index.js   |  5 +-
+ lib/resorts/pitztaler-gletscher/trails.js  |  2 +-
+ test/resorts/pitztaler-gletscher-trails.js | 60 +++++++++++-----------
+ test/resorts/pitztaler-gletscher.js        | 24 ++++-----
+ 4 files changed, 47 insertions(+), 44 deletions(-)
+
+diff --git a/lib/resorts/pitztaler-gletscher/index.js b/lib/resorts/pitztaler-gletscher/index.js
+index 6c3a6fb..9ad5555 100644
+--- a/lib/resorts/pitztaler-gletscher/index.js
++++ b/lib/resorts/pitztaler-gletscher/index.js
+@@ -13,6 +13,9 @@ export default {
+       return;
+     }
+     const status = dot.attribs.class.replace('tableDot', '').trim();
+-    return { name: allText(nameCell), status: status || 'open' };
++    // cells prefix names with the area code - "GLE || Gletscherexpress" -
++    // which reads badly as a display name
++    const name = allText(nameCell).replace(/^\s*(GLE|RIFF)\s*\|\|\s*/, '').trim();
++    return { name, status: status || 'open' };
+   }
+ };
+diff --git a/lib/resorts/pitztaler-gletscher/trails.js b/lib/resorts/pitztaler-gletscher/trails.js
+index 10ffec3..0885c70 100644
+--- a/lib/resorts/pitztaler-gletscher/trails.js
++++ b/lib/resorts/pitztaler-gletscher/trails.js
+@@ -21,7 +21,7 @@ export default {
+       .trim()
+       .toLowerCase();
+     return {
+-      name,
++      name: name.replace(/^\s*(GLE|RIFF)\s*\|\|\s*/, '').trim(),
+       status: dot.attribs.class.replace('tableDot', '').trim() || 'open',
+       level: classifications[classification]
+     };
+diff --git a/test/resorts/pitztaler-gletscher-trails.js b/test/resorts/pitztaler-gletscher-trails.js
+index b48d802..52f91b3 100644
+--- a/test/resorts/pitztaler-gletscher-trails.js
++++ b/test/resorts/pitztaler-gletscher-trails.js
+@@ -2,152 +2,152 @@ import trails from '../trails/index.js';
+ 
+ trails('pitztaler-gletscher', [
+   {
+-    'name': 'GLE || 20 Mittagskogel',
++    'name': '20 Mittagskogel',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'GLE || 21 WISBI Strecke',
++    'name': '21 WISBI Strecke',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || 22 Brunnenkogel',
++    'name': '22 Brunnenkogel',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'GLE || 23 Brunnenkogel Longline',
++    'name': '23 Brunnenkogel Longline',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || 24 Pitz-Live',
++    'name': '24 Pitz-Live',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || 25 Gletschersee',
++    'name': '25 Gletschersee',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'GLE || 26 Wildspitz',
++    'name': '26 Wildspitz',
+     'status': 'closed',
+     'level': 'black'
+   },
+   {
+-    'name': 'GLE || 28 Panorama',
++    'name': '28 Panorama',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || 29 Downhill',
++    'name': '29 Downhill',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || 33 Schweizer Weg',
++    'name': '33 Schweizer Weg',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || 34 Hoher Rain',
++    'name': '34 Hoher Rain',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || 35 Ibex Run',
++    'name': '35 Ibex Run',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || 36 Mittelberg',
++    'name': '36 Mittelberg',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'GLE || Family Cross',
++    'name': 'Family Cross',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'GLE || Funline',
++    'name': 'Funline',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'RIFF || 1 Rifflsee Talabfahrt',
++    'name': '1 Rifflsee Talabfahrt',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'RIFF || 1a Talstation Muttenkopf',
++    'name': '1a Talstation Muttenkopf',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'RIFF || 2 Muttenkopf',
++    'name': '2 Muttenkopf',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'RIFF || 3 Hüttenabfahrt',
++    'name': '3 Hüttenabfahrt',
+     'status': 'closed',
+     'level': 'black'
+   },
+   {
+-    'name': 'RIFF || 4 Almrosen',
++    'name': '4 Almrosen',
+     'status': 'closed',
+     'level': 'black'
+   },
+   {
+-    'name': 'RIFF || 5 Steinbock',
++    'name': '5 Steinbock',
+     'status': 'closed',
+     'level': 'black'
+   },
+   {
+-    'name': 'RIFF || 6 Sunnalm',
++    'name': '6 Sunnalm',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'RIFF || 7 Hirschtal',
++    'name': '7 Hirschtal',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'RIFF || 7a Hirschtal',
++    'name': '7a Hirschtal',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'RIFF || 7b Hirschtal',
++    'name': '7b Hirschtal',
+     'status': 'closed',
+     'level': 'green'
+   },
+   {
+-    'name': 'RIFF || 8 Seekogel',
++    'name': '8 Seekogel',
+     'status': 'closed',
+     'level': 'black'
+   },
+   {
+-    'name': 'RIFF || 9 Grubengrat',
++    'name': '9 Grubengrat',
+     'status': 'closed',
+     'level': 'black'
+   },
+   {
+-    'name': 'RIFF || 10 Grubenkopf',
++    'name': '10 Grubenkopf',
+     'status': 'closed',
+     'level': 'blue'
+   },
+   {
+-    'name': 'RIFF || 10a Plodersee',
++    'name': '10a Plodersee',
+     'status': 'closed',
+     'level': 'black'
+   },
+   {
+-    'name': 'RIFF || 11 Buckelpiste',
++    'name': '11 Buckelpiste',
+     'status': 'closed',
+     'level': 'black'
+   }
+diff --git a/test/resorts/pitztaler-gletscher.js b/test/resorts/pitztaler-gletscher.js
+index 0f0b7b4..4a75642 100644
+--- a/test/resorts/pitztaler-gletscher.js
++++ b/test/resorts/pitztaler-gletscher.js
+@@ -1,16 +1,16 @@
+ import lifts from '../lifts/index.js';
+ 
+ lifts('pitztaler-gletscher', 'html', {
+-  'GLE || Gletscherexpress': 'open',
+-  'GLE || Wildspitzbahn': 'open',
+-  'GLE || Gletscherseebahn': 'closed',
+-  'GLE || Mittelbergbahn': 'closed',
+-  'GLE || Schlepplift Brunnenkogel': 'closed',
+-  'GLE || Mittagskogel': 'closed',
+-  'RIFF || Rifflseebahn': 'open',
+-  'RIFF || Sunna Alm Bahn': 'closed',
+-  'RIFF || Grubenkopf': 'closed',
+-  'RIFF || Muttenkopf': 'closed',
+-  'RIFF || Hirschtal': 'closed',
+-  'RIFF || Dorflift Mandarfen': 'closed'
++  'Gletscherexpress': 'open',
++  'Wildspitzbahn': 'open',
++  'Gletscherseebahn': 'closed',
++  'Mittelbergbahn': 'closed',
++  'Schlepplift Brunnenkogel': 'closed',
++  'Mittagskogel': 'closed',
++  'Rifflseebahn': 'open',
++  'Sunna Alm Bahn': 'closed',
++  'Grubenkopf': 'closed',
++  'Muttenkopf': 'closed',
++  'Hirschtal': 'closed',
++  'Dorflift Mandarfen': 'closed'
+ });
+-- 
+2.43.0
+
