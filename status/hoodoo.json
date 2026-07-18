@@ -1,28 +1,27 @@
 {
-  "fetchedAt": "2026-07-12T02:46:56Z",
+  "fetchedAt": "2026-07-18T16:26:37Z",
   "href": "https://skihoodoo.com/the-mountain/mountain-lift-status/",
   "id": "hoodoo",
   "lifts": {
     "stats": {
       "closed": 1,
       "hold": 0,
-      "open": 6,
+      "open": 0,
       "percentage": {
-        "closed": 14.2,
+        "closed": 16.6,
         "hold": 0,
-        "open": 85.7,
-        "scheduled": 0
+        "open": 0,
+        "scheduled": 83.3
       },
-      "scheduled": 0
+      "scheduled": 5
     },
     "status": {
-      "BIG GREEN MACHINE": "open",
-      "EASY RIDER": "open",
-      "ED": "open",
-      "HAROLD'S MAGIC CARPET": "open",
+      "BIG GREEN MACHINE": "scheduled",
+      "EASY RIDER": "scheduled",
+      "ED": "scheduled",
+      "HAROLD'S MAGIC CARPET": "scheduled",
       "HODAG": "closed",
-      "LIFT": "open",
-      "MANZANITA": "open"
+      "MANZANITA": "scheduled"
     }
   },
   "ll": [
@@ -31,9 +30,28 @@
   ],
   "name": "Hoodoo",
   "timestamp": {
-    "lifts": 1783824202758,
-    "opening": 1783824201841,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1784391895076,
+    "opening": 1784391892237,
+    "trails": 1784391892129,
+    "weather": 1784391912564,
+    "webcams": 1784391912251
+  },
+  "weather": {
+    "conditions": "Sunny",
+    "date": "2026-07-18",
+    "icon": [
+      "basenone",
+      "icon-sun"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=44.408646&lon=-121.871513",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 74
+    },
+    "text": "Sunny. High near 74, with temperatures falling to around 72 in the afternoon. West wind 3 to 10 mph, with gusts as high as 18 mph."
   }
 }
