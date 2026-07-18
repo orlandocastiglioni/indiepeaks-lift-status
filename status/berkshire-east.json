@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-07-18T13:15:59Z",
+  "fetchedAt": "2026-07-18T17:30:59Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 2,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 50,
+        "closed": 100,
         "hold": 0,
-        "open": 50,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "open"
+      "T-Bar Express Quad": "closed"
     }
   },
   "ll": [
@@ -26,28 +26,10 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1784379659786,
-    "opening": 1784378686437,
-    "trails": 1784379656972,
-    "weather": 1783989848708,
-    "webcams": 1783989848542
-  },
-  "weather": {
-    "conditions": "Partly Cloudy",
-    "date": "2026-07-14",
-    "icon": [
-      "icon-cloud",
-      "icon-night"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 64
-    },
-    "text": "Partly cloudy, with a low around 64. Southwest wind around 5 mph."
+    "lifts": 1784394966751,
+    "opening": 1784391892236,
+    "trails": 1784394963906,
+    "weather": 0,
+    "webcams": 0
   }
 }
