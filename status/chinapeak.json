@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-07-12T02:46:56Z",
+  "fetchedAt": "2026-07-18T16:26:37Z",
   "href": "https://www.skichinapeak.com/conditions",
   "id": "chinapeak",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
@@ -16,7 +16,6 @@
       "scheduled": 0
     },
     "status": {
-      "*": "closed",
       "Boulder Carpet": "closed",
       "Chair 1": "closed",
       "Chair 2": "closed",
@@ -25,8 +24,7 @@
       "Chair 6": "closed",
       "Chair 7": "closed",
       "Juniper Carpet": "closed",
-      "Kids Carpet": "closed",
-      "Tubing Hill Not Available This Season": "closed"
+      "Kids Carpet": "closed"
     }
   },
   "ll": [
@@ -35,9 +33,28 @@
   ],
   "name": "China Peak",
   "timestamp": {
-    "lifts": 1783824202696,
-    "opening": 1783824201841,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1784391894282,
+    "opening": 1784391892237,
+    "trails": 1784391892097,
+    "weather": 1784391912689,
+    "webcams": 1784391912251
+  },
+  "weather": {
+    "conditions": "Sunny",
+    "date": "2026-07-18",
+    "icon": [
+      "basenone",
+      "icon-sun"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=37.228348&lon=-119.161705",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 74
+    },
+    "text": "Sunny, with a high near 74. West southwest wind 0 to 10 mph."
   }
 }
