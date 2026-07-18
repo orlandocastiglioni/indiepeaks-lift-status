@@ -1,4 +1,4 @@
-From 0c5128618d8cc1c81b9dd8e5dfefb0f896331be0 Mon Sep 17 00:00:00 2001
+From 8fdb634101d229790cb56d8d21207b55f7a78427 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:06:14 +0000
 Subject: [PATCH 74/77] coerce: map 'projected' and 'forecast' to scheduled
@@ -12,7 +12,7 @@ FORECAST; both landed on scheduled only via the unknown-status fallback
  1 file changed, 2 insertions(+)
 
 diff --git a/lib/tools/coerce.js b/lib/tools/coerce.js
-index 079f6df..9367920 100644
+index 079f6df8..9367920c 100644
 --- a/lib/tools/coerce.js
 +++ b/lib/tools/coerce.js
 @@ -65,6 +65,8 @@ const map = {
@@ -25,5 +25,5 @@ index 079f6df..9367920 100644
    p: 'scheduled',
    2: 'scheduled',
 -- 
-2.43.0
+2.39.5
 

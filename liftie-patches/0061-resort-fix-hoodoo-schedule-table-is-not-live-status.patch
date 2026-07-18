@@ -1,4 +1,4 @@
-From 21789fa800f489a0db290b8f23d5d898abee3a04 Mon Sep 17 00:00:00 2001
+From 592e4094637f284b58ac82dea5343e5039d2bed1 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 12:59:00 +0000
 Subject: [PATCH 61/77] resort: fix hoodoo - schedule table is not live status
@@ -16,7 +16,7 @@ hours to 'scheduled'; fixture refreshed to the current page.
  create mode 100644 test/resorts/example/hoodoo-2026.html
 
 diff --git a/lib/resorts/hoodoo/index.js b/lib/resorts/hoodoo/index.js
-index 2464a67..e1c41cd 100644
+index 2464a67d..e1c41cdf 100644
 --- a/lib/resorts/hoodoo/index.js
 +++ b/lib/resorts/hoodoo/index.js
 @@ -1,10 +1,13 @@
@@ -37,7 +37,7 @@ index 2464a67..e1c41cd 100644
  };
 diff --git a/test/resorts/example/hoodoo-2026.html b/test/resorts/example/hoodoo-2026.html
 new file mode 100644
-index 0000000..7e4fb80
+index 00000000..7e4fb80c
 --- /dev/null
 +++ b/test/resorts/example/hoodoo-2026.html
 @@ -0,0 +1,2503 @@
@@ -2545,7 +2545,7 @@ index 0000000..7e4fb80
 +<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1c945d0a8252c24',t:'MTc4NDI5MTU4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 +</html>
 diff --git a/test/resorts/hoodoo.js b/test/resorts/hoodoo.js
-index f6dc2cd..11f3b0f 100644
+index f6dc2cd3..11f3b0f4 100644
 --- a/test/resorts/hoodoo.js
 +++ b/test/resorts/hoodoo.js
 @@ -1,9 +1,10 @@
@@ -2565,5 +2565,5 @@ index f6dc2cd..11f3b0f 100644
 -});
 +}, { example: 'hoodoo-2026' });
 -- 
-2.43.0
+2.39.5
 

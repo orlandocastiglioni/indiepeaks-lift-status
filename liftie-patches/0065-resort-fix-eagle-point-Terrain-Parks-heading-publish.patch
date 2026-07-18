@@ -1,4 +1,4 @@
-From a17d4a3c47454b1a0783b46434ebfdac3ca3c281 Mon Sep 17 00:00:00 2001
+From 531a2e6b18a62bf57dd9dd7b499b3cb1558894ea Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:00:32 +0000
 Subject: [PATCH 65/77] resort: fix eagle-point - 'Terrain Parks' heading
@@ -13,7 +13,7 @@ app as a sixth lift. Skip it by name.
  2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/lib/resorts/eagle-point/index.js b/lib/resorts/eagle-point/index.js
-index 7e5254b..76fac8b 100644
+index 7e5254b5..76fac8b6 100644
 --- a/lib/resorts/eagle-point/index.js
 +++ b/lib/resorts/eagle-point/index.js
 @@ -7,6 +7,11 @@ export default {
@@ -29,7 +29,7 @@ index 7e5254b..76fac8b 100644
        return { name, status };
      }
 diff --git a/test/resorts/eagle-point.js b/test/resorts/eagle-point.js
-index 803e285..92911e4 100644
+index 803e2859..92911e4f 100644
 --- a/test/resorts/eagle-point.js
 +++ b/test/resorts/eagle-point.js
 @@ -5,6 +5,5 @@ lifts('eagle-point', 'html', {
@@ -41,5 +41,5 @@ index 803e285..92911e4 100644
 +  'Canyonside Double Chair': 'closed'
  });
 -- 
-2.43.0
+2.39.5
 

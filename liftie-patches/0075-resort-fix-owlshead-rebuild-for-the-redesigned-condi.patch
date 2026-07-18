@@ -1,4 +1,4 @@
-From ee280931af183821dd69d8a2a5b36a11daa12654 Mon Sep 17 00:00:00 2001
+From 41c530518987253c7b40b17b484820f6bdd8dfb4 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:06:58 +0000
 Subject: [PATCH 75/77] resort: fix owlshead - rebuild for the redesigned
@@ -17,7 +17,7 @@ unnumbered Snowparks / Alpine touring sections are skipped.
  create mode 100644 test/resorts/example/owlshead-2026.html
 
 diff --git a/lib/resorts/owlshead/index.js b/lib/resorts/owlshead/index.js
-index f085079..a7e729e 100644
+index f0850790..a7e729e8 100644
 --- a/lib/resorts/owlshead/index.js
 +++ b/lib/resorts/owlshead/index.js
 @@ -1,11 +1,17 @@
@@ -47,7 +47,7 @@ index f085079..a7e729e 100644
  };
 diff --git a/test/resorts/example/owlshead-2026.html b/test/resorts/example/owlshead-2026.html
 new file mode 100644
-index 0000000..7863ce3
+index 00000000..7863ce3e
 --- /dev/null
 +++ b/test/resorts/example/owlshead-2026.html
 @@ -0,0 +1,4784 @@
@@ -4837,7 +4837,7 @@ index 0000000..7863ce3
 +<!-- Page cached by LiteSpeed Cache 7.8.1 on 2026-07-17 08:10:56 -->
 \ No newline at end of file
 diff --git a/test/resorts/owlshead.js b/test/resorts/owlshead.js
-index da7fcf5..5497cae 100644
+index da7fcf56..5497cae4 100644
 --- a/test/resorts/owlshead.js
 +++ b/test/resorts/owlshead.js
 @@ -1,10 +1,10 @@
@@ -4858,5 +4858,5 @@ index da7fcf5..5497cae 100644
 +  'Magic carpet': 'closed'
 +}, { example: 'owlshead-2026' });
 -- 
-2.43.0
+2.39.5
 

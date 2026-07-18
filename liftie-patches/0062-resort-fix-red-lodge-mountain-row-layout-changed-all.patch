@@ -1,4 +1,4 @@
-From 6f2dafc1780483f55403f4ca91e8032d29a716d8 Mon Sep 17 00:00:00 2001
+From da04374d8cc84d26e23f5fa2dcbae6d4a8c0e452 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 12:59:21 +0000
 Subject: [PATCH 62/77] resort: fix red-lodge-mountain - row layout changed,
@@ -17,7 +17,7 @@ status from the status icon alt; fixture refreshed to the current page.
  create mode 100644 test/resorts/example/red-lodge-mountain-2026.html
 
 diff --git a/lib/resorts/red-lodge-mountain/index.js b/lib/resorts/red-lodge-mountain/index.js
-index bfbb880..b1d01ee 100644
+index bfbb8808..b1d01eed 100644
 --- a/lib/resorts/red-lodge-mountain/index.js
 +++ b/lib/resorts/red-lodge-mountain/index.js
 @@ -1,10 +1,15 @@
@@ -43,7 +43,7 @@ index bfbb880..b1d01ee 100644
  };
 diff --git a/test/resorts/example/red-lodge-mountain-2026.html b/test/resorts/example/red-lodge-mountain-2026.html
 new file mode 100644
-index 0000000..dd967e7
+index 00000000..dd967e72
 --- /dev/null
 +++ b/test/resorts/example/red-lodge-mountain-2026.html
 @@ -0,0 +1,680 @@
@@ -728,7 +728,7 @@ index 0000000..dd967e7
 +<script defer src="https://www.redlodgemountain.com/wp-content/cache/autoptimize/js/autoptimize_4403308e78a988742c25955f2b4eb5ad.js"></script></body>
 +</html>
 diff --git a/test/resorts/red-lodge-mountain.js b/test/resorts/red-lodge-mountain.js
-index acdb17e..bf307e9 100644
+index acdb17e1..bf307e99 100644
 --- a/test/resorts/red-lodge-mountain.js
 +++ b/test/resorts/red-lodge-mountain.js
 @@ -2,10 +2,10 @@ import lifts from '../lifts/index.js';
@@ -748,5 +748,5 @@ index acdb17e..bf307e9 100644
 +  'Palisades': 'closed'
 +}, { example: 'red-lodge-mountain-2026' });
 -- 
-2.43.0
+2.39.5
 

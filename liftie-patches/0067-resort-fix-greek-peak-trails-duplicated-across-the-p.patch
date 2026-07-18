@@ -1,4 +1,4 @@
-From 45eafe28df9bfeb4b3a75d632b126019b757e05f Mon Sep 17 00:00:00 2001
+From a6c0fd42b0f863ac36b0c5af4c062e8ddb1c883a Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:02:28 +0000
 Subject: [PATCH 67/77] resort: fix greek-peak - trails duplicated across the
@@ -13,7 +13,7 @@ from whichever table carries it. Live output verified at 72 unique.
  1 file changed, 23 insertions(+), 8 deletions(-)
 
 diff --git a/lib/resorts/greek-peak/trails.js b/lib/resorts/greek-peak/trails.js
-index 1859cd1..0cd9917 100644
+index 1859cd1b..0cd99175 100644
 --- a/lib/resorts/greek-peak/trails.js
 +++ b/lib/resorts/greek-peak/trails.js
 @@ -1,3 +1,4 @@
@@ -72,5 +72,5 @@ index 1859cd1..0cd9917 100644
 +  return [...byName.values()];
 +}
 -- 
-2.43.0
+2.39.5
 

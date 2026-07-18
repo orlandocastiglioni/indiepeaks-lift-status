@@ -1,4 +1,4 @@
-From 3897ae89bcea14fdaf160d7e481028892d65ec3b Mon Sep 17 00:00:00 2001
+From 945c19a9194c1b44c195bc783240930a761b2af4 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:07:47 +0000
 Subject: [PATCH 76/77] resort: fix mthood - conditions page replaced, read the
@@ -20,7 +20,7 @@ live winter data at season start.
  create mode 100644 test/resorts/example/mthood.json
 
 diff --git a/lib/resorts/mthood/index.js b/lib/resorts/mthood/index.js
-index 36fdef4..0aa54ff 100644
+index 36fdef45..0aa54fff 100644
 --- a/lib/resorts/mthood/index.js
 +++ b/lib/resorts/mthood/index.js
 @@ -1,7 +1,18 @@
@@ -49,7 +49,7 @@ index 36fdef4..0aa54ff 100644
 +  return liftStatus;
 +}
 diff --git a/lib/resorts/mthood/resort.json b/lib/resorts/mthood/resort.json
-index d35e93a..98bd4ee 100644
+index d35e93a5..98bd4eec 100644
 --- a/lib/resorts/mthood/resort.json
 +++ b/lib/resorts/mthood/resort.json
 @@ -2,7 +2,7 @@
@@ -78,7 +78,7 @@ index d35e93a..98bd4ee 100644
  }
 diff --git a/test/resorts/example/mthood.json b/test/resorts/example/mthood.json
 new file mode 100644
-index 0000000..495bb1e
+index 00000000..495bb1ea
 --- /dev/null
 +++ b/test/resorts/example/mthood.json
 @@ -0,0 +1,11 @@
@@ -94,7 +94,7 @@ index 0000000..495bb1e
 +  "counters": [{ "name": "Lifts", "open": 2, "pending": 1, "closed": 1 }]
 +}
 diff --git a/test/resorts/mthood.js b/test/resorts/mthood.js
-index b5af50e..b2a9002 100644
+index b5af50e3..b2a90028 100644
 --- a/test/resorts/mthood.js
 +++ b/test/resorts/mthood.js
 @@ -1,16 +1,8 @@
@@ -119,5 +119,5 @@ index b5af50e..b2a9002 100644
 +  'Vista Express': 'open'
  });
 -- 
-2.43.0
+2.39.5
 

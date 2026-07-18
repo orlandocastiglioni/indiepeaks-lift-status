@@ -1,4 +1,4 @@
-From d83bac0019c33a33d337d321e71b90322f37b6c4 Mon Sep 17 00:00:00 2001
+From c8d3c641ba99f84d60f60651d3198d905f0ac06a Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 12:59:43 +0000
 Subject: [PATCH 63/77] resort: fix chinapeak - footnote rows published as
@@ -17,7 +17,7 @@ conditionally; fixture refreshed to the current page.
  create mode 100644 test/resorts/example/chinapeak-2026.html
 
 diff --git a/lib/resorts/chinapeak/index.js b/lib/resorts/chinapeak/index.js
-index 78140b3..e45d86d 100644
+index 78140b30..e45d86dd 100644
 --- a/lib/resorts/chinapeak/index.js
 +++ b/lib/resorts/chinapeak/index.js
 @@ -3,7 +3,15 @@ export default {
@@ -38,7 +38,7 @@ index 78140b3..e45d86d 100644
      status: 1
    }
 diff --git a/test/resorts/chinapeak.js b/test/resorts/chinapeak.js
-index 297b1af..a6cacce 100644
+index 297b1af5..a6cacce0 100644
 --- a/test/resorts/chinapeak.js
 +++ b/test/resorts/chinapeak.js
 @@ -8,6 +8,6 @@ lifts('chinapeak', 'html', {
@@ -53,7 +53,7 @@ index 297b1af..a6cacce 100644
 +}, { example: 'chinapeak-2026' });
 diff --git a/test/resorts/example/chinapeak-2026.html b/test/resorts/example/chinapeak-2026.html
 new file mode 100644
-index 0000000..b4a8309
+index 00000000..b4a8309c
 --- /dev/null
 +++ b/test/resorts/example/chinapeak-2026.html
 @@ -0,0 +1,2206 @@
@@ -2264,5 +2264,5 @@ index 0000000..b4a8309
 +</html>
 +
 -- 
-2.43.0
+2.39.5
 

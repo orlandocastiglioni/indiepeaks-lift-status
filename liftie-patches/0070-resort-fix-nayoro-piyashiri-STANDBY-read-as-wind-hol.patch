@@ -1,4 +1,4 @@
-From e696e24b85562094531ae27a73272ff3c2674f08 Mon Sep 17 00:00:00 2001
+From c4eaea91a61228555d924a0edc65c6b518074d03 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:04:35 +0000
 Subject: [PATCH 70/77] resort: fix nayoro-piyashiri - STANDBY read as
@@ -16,7 +16,7 @@ Translate STANDBY to closed alongside 運休/終了.
  2 files changed, 17 insertions(+), 15 deletions(-)
 
 diff --git a/lib/resorts/nayoro-piyashiri/status.js b/lib/resorts/nayoro-piyashiri/status.js
-index dd2c617..68e19e2 100644
+index dd2c6178..68e19e2b 100644
 --- a/lib/resorts/nayoro-piyashiri/status.js
 +++ b/lib/resorts/nayoro-piyashiri/status.js
 @@ -4,8 +4,10 @@ export default function status(text = '') {
@@ -33,7 +33,7 @@ index dd2c617..68e19e2 100644
 +  return t;
  }
 diff --git a/test/resorts/nayoro-piyashiri-trails.js b/test/resorts/nayoro-piyashiri-trails.js
-index c3cba61..069fe17 100644
+index c3cba612..069fe179 100644
 --- a/test/resorts/nayoro-piyashiri-trails.js
 +++ b/test/resorts/nayoro-piyashiri-trails.js
 @@ -3,54 +3,54 @@ import trails from '../trails/index.js';
@@ -105,5 +105,5 @@ index c3cba61..069fe17 100644
    }
  ]);
 -- 
-2.43.0
+2.39.5
 

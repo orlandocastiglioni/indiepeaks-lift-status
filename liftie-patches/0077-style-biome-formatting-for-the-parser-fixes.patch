@@ -1,4 +1,4 @@
-From 33fcf195f84f89b4da1b9006f27048bdf4830793 Mon Sep 17 00:00:00 2001
+From a66e6d55aae3b6b2ca76e4fbcdd988e997729fe2 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:08:49 +0000
 Subject: [PATCH 77/77] style: biome formatting for the parser fixes
@@ -14,7 +14,7 @@ Subject: [PATCH 77/77] style: biome formatting for the parser fixes
  7 files changed, 151 insertions(+), 123 deletions(-)
 
 diff --git a/lib/resorts/big-moose/trails.js b/lib/resorts/big-moose/trails.js
-index 776efc2..97863d4 100644
+index 776efc2c..97863d4d 100644
 --- a/lib/resorts/big-moose/trails.js
 +++ b/lib/resorts/big-moose/trails.js
 @@ -32,7 +32,9 @@ export default function parse(dom) {
@@ -29,7 +29,7 @@ index 776efc2..97863d4 100644
        name = name.slice(0, suffix.index).trim();
        level = sectionLevel(suffix[1]);
 diff --git a/lib/resorts/pitztaler-gletscher/index.js b/lib/resorts/pitztaler-gletscher/index.js
-index 9ad5555..88d4abd 100644
+index 9ad55556..88d4abd0 100644
 --- a/lib/resorts/pitztaler-gletscher/index.js
 +++ b/lib/resorts/pitztaler-gletscher/index.js
 @@ -15,7 +15,9 @@ export default {
@@ -44,7 +44,7 @@ index 9ad5555..88d4abd 100644
    }
  };
 diff --git a/test/resorts/chinapeak.js b/test/resorts/chinapeak.js
-index a6cacce..dc5054f 100644
+index a6cacce0..dc5054fb 100644
 --- a/test/resorts/chinapeak.js
 +++ b/test/resorts/chinapeak.js
 @@ -1,13 +1,18 @@
@@ -78,7 +78,7 @@ index a6cacce..dc5054f 100644
 +  { example: 'chinapeak-2026' }
 +);
 diff --git a/test/resorts/hoodoo.js b/test/resorts/hoodoo.js
-index 11f3b0f..febe904 100644
+index 11f3b0f4..febe904b 100644
 --- a/test/resorts/hoodoo.js
 +++ b/test/resorts/hoodoo.js
 @@ -1,10 +1,15 @@
@@ -106,7 +106,7 @@ index 11f3b0f..febe904 100644
 +  { example: 'hoodoo-2026' }
 +);
 diff --git a/test/resorts/owlshead.js b/test/resorts/owlshead.js
-index 5497cae..589cc2c 100644
+index 5497cae4..589cc2c1 100644
 --- a/test/resorts/owlshead.js
 +++ b/test/resorts/owlshead.js
 @@ -1,10 +1,15 @@
@@ -134,7 +134,7 @@ index 5497cae..589cc2c 100644
 +  { example: 'owlshead-2026' }
 +);
 diff --git a/test/resorts/red-lodge-mountain.js b/test/resorts/red-lodge-mountain.js
-index bf307e9..c37e9fc 100644
+index bf307e99..c37e9fcd 100644
 --- a/test/resorts/red-lodge-mountain.js
 +++ b/test/resorts/red-lodge-mountain.js
 @@ -1,11 +1,16 @@
@@ -164,7 +164,7 @@ index bf307e9..c37e9fc 100644
 +  { example: 'red-lodge-mountain-2026' }
 +);
 diff --git a/test/resorts/skiwelt-trails.js b/test/resorts/skiwelt-trails.js
-index 7c115da..9d26178 100644
+index 7c115da2..9d261786 100644
 --- a/test/resorts/skiwelt-trails.js
 +++ b/test/resorts/skiwelt-trails.js
 @@ -1,87 +1,91 @@
@@ -345,5 +345,5 @@ index 7c115da..9d26178 100644
 +  { ext: 'json', example: 'skiwelt-trails' }
 +);
 -- 
-2.43.0
+2.39.5
 

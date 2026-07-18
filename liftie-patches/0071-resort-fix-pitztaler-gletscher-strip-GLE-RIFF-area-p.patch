@@ -1,4 +1,4 @@
-From 044ad4823983dd676500ebb53a3ebe8a9dc9b8fa Mon Sep 17 00:00:00 2001
+From 41b55f602a906bd7fef5b2682a25ac4fa995bbb3 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:04:58 +0000
 Subject: [PATCH 71/77] resort: fix pitztaler-gletscher - strip 'GLE ||' /
@@ -15,7 +15,7 @@ verbatim. Strip the prefix from display names.
  4 files changed, 47 insertions(+), 44 deletions(-)
 
 diff --git a/lib/resorts/pitztaler-gletscher/index.js b/lib/resorts/pitztaler-gletscher/index.js
-index 6c3a6fb..9ad5555 100644
+index 6c3a6fbd..9ad55556 100644
 --- a/lib/resorts/pitztaler-gletscher/index.js
 +++ b/lib/resorts/pitztaler-gletscher/index.js
 @@ -13,6 +13,9 @@ export default {
@@ -30,7 +30,7 @@ index 6c3a6fb..9ad5555 100644
    }
  };
 diff --git a/lib/resorts/pitztaler-gletscher/trails.js b/lib/resorts/pitztaler-gletscher/trails.js
-index 10ffec3..0885c70 100644
+index 10ffec3b..0885c704 100644
 --- a/lib/resorts/pitztaler-gletscher/trails.js
 +++ b/lib/resorts/pitztaler-gletscher/trails.js
 @@ -21,7 +21,7 @@ export default {
@@ -43,7 +43,7 @@ index 10ffec3..0885c70 100644
        level: classifications[classification]
      };
 diff --git a/test/resorts/pitztaler-gletscher-trails.js b/test/resorts/pitztaler-gletscher-trails.js
-index b48d802..52f91b3 100644
+index b48d8023..52f91b3a 100644
 --- a/test/resorts/pitztaler-gletscher-trails.js
 +++ b/test/resorts/pitztaler-gletscher-trails.js
 @@ -2,152 +2,152 @@ import trails from '../trails/index.js';
@@ -230,7 +230,7 @@ index b48d802..52f91b3 100644
      'level': 'black'
    }
 diff --git a/test/resorts/pitztaler-gletscher.js b/test/resorts/pitztaler-gletscher.js
-index 0f0b7b4..4a75642 100644
+index 0f0b7b4c..4a75642c 100644
 --- a/test/resorts/pitztaler-gletscher.js
 +++ b/test/resorts/pitztaler-gletscher.js
 @@ -1,16 +1,16 @@
@@ -263,5 +263,5 @@ index 0f0b7b4..4a75642 100644
 +  'Dorflift Mandarfen': 'closed'
  });
 -- 
-2.43.0
+2.39.5
 

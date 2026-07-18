@@ -1,4 +1,4 @@
-From 5d7997fa24d2fdefbf7edec75826a9558c5bad35 Mon Sep 17 00:00:00 2001
+From 812d04a9400d4cb47a2763ba04a79e23c3d4306a Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:01:21 +0000
 Subject: [PATCH 66/77] resort: fix big-moose - difficulty suffixes leaked into
@@ -14,7 +14,7 @@ the display name. Strip the suffix and let it override the section level.
  2 files changed, 22 insertions(+), 12 deletions(-)
 
 diff --git a/lib/resorts/big-moose/trails.js b/lib/resorts/big-moose/trails.js
-index 0fe6c14..776efc2 100644
+index 0fe6c14c..776efc2c 100644
 --- a/lib/resorts/big-moose/trails.js
 +++ b/lib/resorts/big-moose/trails.js
 @@ -4,6 +4,7 @@ import { findText } from '../../tools/domutil.js';
@@ -49,7 +49,7 @@ index 0fe6c14..776efc2 100644
    }
    return rows;
 diff --git a/test/resorts/big-moose-trails.js b/test/resorts/big-moose-trails.js
-index ed0dc75..1098757 100644
+index ed0dc755..10987575 100644
 --- a/test/resorts/big-moose-trails.js
 +++ b/test/resorts/big-moose-trails.js
 @@ -112,29 +112,29 @@ trails('big-moose', [
@@ -93,5 +93,5 @@ index ed0dc75..1098757 100644
    {
      'name': 'Terrain Park',
 -- 
-2.43.0
+2.39.5
 

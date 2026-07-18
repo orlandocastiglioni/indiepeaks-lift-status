@@ -1,4 +1,4 @@
-From 532d037f95df46c3d2d8d250e30b58c58570ec19 Mon Sep 17 00:00:00 2001
+From aaa0e3afc10662c61b76ef276b92229aaf97bac9 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:17:44 +0000
 Subject: [PATCH 59/77] test: allow lifts fixtures under alternate example
@@ -14,7 +14,7 @@ instead, leaving the old file untouched.
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/test/lifts/index.js b/test/lifts/index.js
-index c41ec9b..71500f1 100644
+index c41ec9b5..71500f1b 100644
 --- a/test/lifts/index.js
 +++ b/test/lifts/index.js
 @@ -6,7 +6,8 @@ import makeParse from '../../lib/lifts/parse.js';
@@ -37,5 +37,5 @@ index c41ec9b..71500f1 100644
  
  testResort.only = (...args) => testResort(...args, { only: true });
 -- 
-2.43.0
+2.39.5
 

@@ -1,4 +1,4 @@
-From 09b29bb6786db94ef0c0e3f283b5b6c0eae3ec90 Mon Sep 17 00:00:00 2001
+From 8062cd3a5cccbfd1edc7f14bbdc0e2fea281bc08 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:04:16 +0000
 Subject: [PATCH 69/77] resort: fix togakushi - novice level unmapped,
@@ -17,7 +17,7 @@ to the level and are dropped from display names; informative ones like
  2 files changed, 32 insertions(+), 102 deletions(-)
 
 diff --git a/lib/resorts/togakushi/trails.js b/lib/resorts/togakushi/trails.js
-index 582a80c..a35ac75 100644
+index 582a80cc..a35ac754 100644
 --- a/lib/resorts/togakushi/trails.js
 +++ b/lib/resorts/togakushi/trails.js
 @@ -1,13 +1,19 @@
@@ -47,7 +47,7 @@ index 582a80c..a35ac75 100644
 +    });
  }
 diff --git a/test/resorts/togakushi-trails.js b/test/resorts/togakushi-trails.js
-index f49c7b3..82a3f22 100644
+index f49c7b33..82a3f225 100644
 --- a/test/resorts/togakushi-trails.js
 +++ b/test/resorts/togakushi-trails.js
 @@ -1,100 +1,24 @@
@@ -172,5 +172,5 @@ index f49c7b3..82a3f22 100644
 +  { name: '中社中央バーン', status: 'closed' }
  ]);
 -- 
-2.43.0
+2.39.5
 

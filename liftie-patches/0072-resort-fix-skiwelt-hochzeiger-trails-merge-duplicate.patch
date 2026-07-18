@@ -1,4 +1,4 @@
-From 3d52683b6c2c64be5cfb8e22194065883e38ecd1 Mon Sep 17 00:00:00 2001
+From 88e327932e0732b76ca069dd0a309d448b1188c4 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:05:39 +0000
 Subject: [PATCH 72/77] resort: fix skiwelt/hochzeiger trails - merge duplicate
@@ -15,7 +15,7 @@ first level kept. Same parser shared by hochzeiger.
  3 files changed, 121 insertions(+), 520 deletions(-)
 
 diff --git a/lib/resorts/hochzeiger/trails.js b/lib/resorts/hochzeiger/trails.js
-index b99a290..b09b271 100644
+index b99a2907..b09b2714 100644
 --- a/lib/resorts/hochzeiger/trails.js
 +++ b/lib/resorts/hochzeiger/trails.js
 @@ -7,11 +7,22 @@ const levels = {
@@ -49,7 +49,7 @@ index b99a290..b09b271 100644
 +  return [...byTitle.values()];
  }
 diff --git a/lib/resorts/skiwelt/trails.js b/lib/resorts/skiwelt/trails.js
-index b99a290..b09b271 100644
+index b99a2907..b09b2714 100644
 --- a/lib/resorts/skiwelt/trails.js
 +++ b/lib/resorts/skiwelt/trails.js
 @@ -7,11 +7,22 @@ const levels = {
@@ -83,7 +83,7 @@ index b99a290..b09b271 100644
 +  return [...byTitle.values()];
  }
 diff --git a/test/resorts/skiwelt-trails.js b/test/resorts/skiwelt-trails.js
-index 11c7f23..7c115da 100644
+index 11c7f232..7c115da2 100644
 --- a/test/resorts/skiwelt-trails.js
 +++ b/test/resorts/skiwelt-trails.js
 @@ -1,508 +1,87 @@
@@ -681,5 +681,5 @@ index 11c7f23..7c115da 100644
 +  { name: 'Köglbahn', status: 'closed', level: 'blue' }
 +], { ext: 'json', example: 'skiwelt-trails' });
 -- 
-2.43.0
+2.39.5
 

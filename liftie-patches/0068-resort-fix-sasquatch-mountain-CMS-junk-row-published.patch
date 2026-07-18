@@ -1,4 +1,4 @@
-From 2aa28c45912a272e99e313904c4db7d97e53a501 Mon Sep 17 00:00:00 2001
+From 66f34b5c8b8f9e7707d056724408c4a26a99d50a Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:03:08 +0000
 Subject: [PATCH 68/77] resort: fix sasquatch-mountain - CMS junk row published
@@ -14,7 +14,7 @@ cover the case.
  2 files changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/lib/resorts/sasquatch-mountain/index.js b/lib/resorts/sasquatch-mountain/index.js
-index 5002f33..bb6a387 100644
+index 5002f337..bb6a3879 100644
 --- a/lib/resorts/sasquatch-mountain/index.js
 +++ b/lib/resorts/sasquatch-mountain/index.js
 @@ -15,7 +15,12 @@ export default {
@@ -32,7 +32,7 @@ index 5002f33..bb6a387 100644
        child: 4,
        fn: s => code2status[s]
 diff --git a/test/resorts/example/sasquatch-mountain.xml b/test/resorts/example/sasquatch-mountain.xml
-index 41d1d4b..c18009b 100644
+index 41d1d4b4..c18009b1 100644
 --- a/test/resorts/example/sasquatch-mountain.xml
 +++ b/test/resorts/example/sasquatch-mountain.xml
 @@ -294,7 +294,19 @@
@@ -57,5 +57,5 @@ index 41d1d4b..c18009b 100644
                  <LASTUPDATE>2022-01-02T04:31:18</LASTUPDATE>
                  <ELEMENT>
 -- 
-2.43.0
+2.39.5
 

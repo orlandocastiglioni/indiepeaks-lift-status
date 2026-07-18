@@ -1,4 +1,4 @@
-From 358b354efe839ebcdbd53e846bb34a761630d2f4 Mon Sep 17 00:00:00 2001
+From 57a3dd618a1a4eec4b67f5d88fa184f6c8c92491 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 12:58:15 +0000
 Subject: [PATCH 60/77] resort: fix 49-degrees-north - site moved off
@@ -12,7 +12,7 @@ chair blocks are seasonal page content - re-verify at season start.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/resorts/49-degrees-north/resort.json b/lib/resorts/49-degrees-north/resort.json
-index cf94a1d..9f4d97f 100644
+index cf94a1d4..9f4d97fb 100644
 --- a/lib/resorts/49-degrees-north/resort.json
 +++ b/lib/resorts/49-degrees-north/resort.json
 @@ -1,7 +1,7 @@
@@ -25,5 +25,5 @@ index cf94a1d..9f4d97f 100644
    },
    "tags": [
 -- 
-2.43.0
+2.39.5
 

@@ -1,4 +1,4 @@
-From 7db98d59d243517a000ce9d497e37fa309717add Mon Sep 17 00:00:00 2001
+From 7a68792463c5f422fbf52da6ba728f69c7985bba Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:00:07 +0000
 Subject: [PATCH 64/77] resort: fix castle-mountain - terrain parks listed as
@@ -15,7 +15,7 @@ to terrain/park icons.
  2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/lib/resorts/castle-mountain/index.js b/lib/resorts/castle-mountain/index.js
-index 13b78bd..b13717d 100644
+index 13b78bd0..b13717d8 100644
 --- a/lib/resorts/castle-mountain/index.js
 +++ b/lib/resorts/castle-mountain/index.js
 @@ -14,7 +14,7 @@ export default {
@@ -28,7 +28,7 @@ index 13b78bd..b13717d 100644
      }
      return { name, status };
 diff --git a/test/resorts/castle-mountain.js b/test/resorts/castle-mountain.js
-index a75fd56..e74642a 100644
+index a75fd56b..e74642aa 100644
 --- a/test/resorts/castle-mountain.js
 +++ b/test/resorts/castle-mountain.js
 @@ -7,7 +7,5 @@ lifts('castle-mountain', 'html', {
@@ -41,5 +41,5 @@ index a75fd56..e74642a 100644
 +  'Stagecoach Express Chair': 'closed'
  });
 -- 
-2.43.0
+2.39.5
 
