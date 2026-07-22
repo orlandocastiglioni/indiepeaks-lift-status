@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-07-18T16:26:37Z",
+  "fetchedAt": "2026-07-22T00:30:23Z",
   "href": "https://owlshead.com/en/ski-conditions/",
   "id": "owlshead",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Blue": "closed",
-      "Family": "closed",
-      "Lake": "closed",
-      "Magic carpet": "closed",
-      "Panorama": "closed",
-      "Summit": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.297806,
@@ -30,9 +23,9 @@
   ],
   "name": "Owl's Head",
   "timestamp": {
-    "lifts": 1784391895758,
-    "opening": 1784391892237,
-    "trails": 1784391892169,
+    "lifts": 1784679358128,
+    "opening": 1784651130048,
+    "trails": 1784679357912,
     "weather": 0,
     "webcams": 0
   }

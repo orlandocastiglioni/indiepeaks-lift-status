@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-07-18T16:26:37Z",
+  "fetchedAt": "2026-07-22T00:30:23Z",
   "href": "https://www.skicastle.ca/snowreport/",
   "id": "castle-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Buckaroo Carpet": "closed",
-      "Green Chair": "closed",
-      "Huckleberry Chair": "closed",
-      "Stagecoach Express Chair": "closed",
-      "Sundance (Blue) Chair": "closed",
-      "T-Rex": "closed",
-      "Tamarack (Red) Chair": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -114.4167,
@@ -31,9 +23,9 @@
   ],
   "name": "Castle Mountain",
   "timestamp": {
-    "lifts": 1784391895867,
-    "opening": 1784391892237,
-    "trails": 1784391895899,
+    "lifts": 1784679358047,
+    "opening": 1784676666311,
+    "trails": 1784678440608,
     "weather": 0,
     "webcams": 0
   },

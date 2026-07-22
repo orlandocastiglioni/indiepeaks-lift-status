@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-07-12T02:46:56Z",
+  "fetchedAt": "2026-07-22T00:30:23Z",
   "href": "https://jaypeakresort.com/skiing-riding/snow-report-maps/snow-report",
   "id": "jay-peak",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Aerial Tram": "closed",
-      "Bonaventure Quad": "closed",
-      "Flyer Quad": "closed",
-      "Jet Triple": "closed",
-      "Metro Quad": "closed",
-      "Stateside Carpet": "closed",
-      "Taxi Quad": "closed",
-      "Tramside Carpet": "closed",
-      "Village Double": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.501701,
@@ -33,8 +23,9 @@
   ],
   "name": "Jay Peak",
   "timestamp": {
-    "lifts": 1783824202633,
-    "opening": 1783824201841,
+    "lifts": 1784679358083,
+    "opening": 1784651130048,
+    "trails": 1784679357854,
     "weather": 0,
     "webcams": 0
   }

@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-07-18T16:26:37Z",
+  "fetchedAt": "2026-07-22T00:30:23Z",
   "href": "https://skihoodoo.com/the-mountain/mountain-lift-status/",
   "id": "hoodoo",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 16.6,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 83.3
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 5
+      "scheduled": 0
     },
-    "status": {
-      "BIG GREEN MACHINE": "scheduled",
-      "EASY RIDER": "scheduled",
-      "ED": "scheduled",
-      "HAROLD'S MAGIC CARPET": "scheduled",
-      "HODAG": "closed",
-      "MANZANITA": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -121.871513,
@@ -30,9 +23,9 @@
   ],
   "name": "Hoodoo",
   "timestamp": {
-    "lifts": 1784391895076,
-    "opening": 1784391892237,
-    "trails": 1784391892129,
+    "lifts": 1784679358082,
+    "opening": 1784651130048,
+    "trails": 1784679357851,
     "weather": 1784391912564,
     "webcams": 1784391912251
   },

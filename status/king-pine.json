@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-07-12T02:46:56Z",
+  "fetchedAt": "2026-07-22T00:30:23Z",
   "href": "http://www.kingpine.com/snow-report-conditions",
   "id": "king-pine",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
-      "open": 4,
+      "open": 0,
       "percentage": {
-        "closed": 20,
-        "hold": 0,
-        "open": 80,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Bear Rug Carpet": "open",
-      "Black Bear Triple": "open",
-      "Cubby Tow": "open",
-      "Polar Bear Triple": "open",
-      "Powder Bear Triple": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.088127,
@@ -29,8 +23,9 @@
   ],
   "name": "King Pine",
   "timestamp": {
-    "lifts": 1783824202636,
-    "opening": 1783824201841,
+    "lifts": 1784679358090,
+    "opening": 1784651130048,
+    "trails": 1784679357857,
     "weather": 0,
     "webcams": 0
   }
