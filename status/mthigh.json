@@ -1,21 +1,35 @@
 {
-  "fetchedAt": "2026-07-22T00:30:23Z",
+  "fetchedAt": "2026-07-22T00:45:32Z",
   "href": "http://www.mthigh.com/site/trails-and-conditions/conditions/alpine-grooming/@@alpine-grooming",
   "id": "mthigh",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 13,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Blue Ridge Express": "closed",
+      "Competition": "closed",
+      "Conquest": "closed",
+      "Coyote": "closed",
+      "Discovery": "closed",
+      "Easy Rider": "closed",
+      "Exhibition": "closed",
+      "Mountain High Express": "closed",
+      "Moving Carpet East": "closed",
+      "Moving Carpet West Long": "closed",
+      "Moving Carpet West Short": "closed",
+      "Roadrunner": "closed",
+      "Snowflake": "closed"
+    }
   },
   "ll": [
     -117.691544,
@@ -23,9 +37,9 @@
   ],
   "name": "Mountain High",
   "timestamp": {
-    "lifts": 1784679358119,
+    "lifts": 1784680229715,
     "opening": 1784651130048,
-    "trails": 1784679357892,
+    "trails": 1784680228633,
     "weather": 0,
     "webcams": 0
   }

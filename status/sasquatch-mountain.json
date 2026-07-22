@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-07-22T00:30:23Z",
+  "fetchedAt": "2026-07-22T00:45:32Z",
   "href": "https://sasquatchmountain.ca/lift-runs/",
   "id": "sasquatch-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A- Yeti Cruiser Quad": "closed",
+      "B- Whistlepunk Double": "closed",
+      "D- Sasquatch Triple": "closed",
+      "Littlefoot Carpet Lift": "closed"
+    }
   },
   "ll": [
     -121.93556496672508,
@@ -23,9 +28,9 @@
   ],
   "name": "Sasquatch Mountain",
   "timestamp": {
-    "lifts": 1784679358146,
+    "lifts": 1784680230902,
     "opening": 1784651130048,
-    "trails": 1784679357940,
+    "trails": 1784680228680,
     "weather": 0,
     "webcams": 0
   }

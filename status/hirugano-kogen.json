@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-07-22T00:30:23Z",
+  "fetchedAt": "2026-07-22T00:45:32Z",
   "href": "https://www.hiruganokogen.com/condition/",
   "id": "hirugano-kogen",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u7b2c1\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c2\u30da\u30a2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c3\u30da\u30a2\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     136.893,
@@ -23,9 +27,9 @@
   ],
   "name": "Hirugano Kogen",
   "timestamp": {
-    "lifts": 1784679358075,
+    "lifts": 1784680232657,
     "opening": 1784676666311,
-    "trails": 1784678442391,
+    "trails": 1784680232487,
     "weather": 0,
     "webcams": 0
   },

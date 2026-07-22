@@ -1,21 +1,39 @@
 {
-  "fetchedAt": "2026-07-22T00:30:23Z",
+  "fetchedAt": "2026-07-22T00:45:32Z",
   "href": "http://www.bigwhite.com/mountain-info/mountain-reports/lift-status",
   "id": "big-white",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 17,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Alpine T-Bar": "closed",
+      "Black Forest Express Quad": "closed",
+      "Bubble Magic Carpet": "closed",
+      "Bullet Express Quad": "closed",
+      "Cliff Chair": "closed",
+      "Falcon Double Chair": "closed",
+      "Gem Lake Express Quad": "closed",
+      "Kids Carpet": "closed",
+      "Lara\u2019s Gondola (free access)": "closed",
+      "Magic Carpet": "closed",
+      "Magic Carpet 2.0": "closed",
+      "Plaza Quad Chair": "closed",
+      "Powder Quad Chair": "closed",
+      "Ridge Rocket Express Quad": "closed",
+      "Snow Ghost Express 6 Pack": "closed",
+      "TELUS Park Chair": "closed",
+      "Tube Park Lift": "closed"
+    }
   },
   "ll": [
     -119.495399,
@@ -23,9 +41,9 @@
   ],
   "name": "Big White",
   "timestamp": {
-    "lifts": 1784679358021,
+    "lifts": 1784680232761,
     "opening": 1784651130048,
-    "trails": 1784679357773,
+    "trails": 1784680228481,
     "weather": 0,
     "webcams": 0
   }
