@@ -1,32 +1,21 @@
 {
-  "fetchedAt": "2026-07-12T02:46:56Z",
+  "fetchedAt": "2026-07-22T00:30:23Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
     "stats": {
-      "closed": 10,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Chet's Dream": "closed",
-      "Lift 2": "closed",
-      "Lift 3": "closed",
-      "Lift 4": "closed",
-      "Lift 6": "closed",
-      "Lift 7": "closed",
-      "Lift 8": "closed",
-      "Lift 9": "closed",
-      "PTARMIGAN LIFT": "closed",
-      "Rainbow Magic Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -105.89595,
@@ -34,27 +23,10 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1783824202847,
-    "opening": 1783824201841,
-    "weather": 1783824231898,
-    "webcams": 1783824231849
-  },
-  "weather": {
-    "conditions": "Mostly Clear",
-    "date": "2026-07-12",
-    "icon": [
-      "basenone",
-      "icon-moon"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=39.679993&lon=-105.89595",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 44
-    },
-    "text": "Mostly clear. Low around 44, with temperatures rising to around 46 overnight. Southeast wind 7 to 10 mph, with gusts as high as 18 mph."
+    "lifts": 1784679358094,
+    "opening": 1784651130048,
+    "trails": 1784679357864,
+    "weather": 0,
+    "webcams": 0
   }
 }

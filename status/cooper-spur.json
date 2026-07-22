@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-07-14T00:05:45Z",
+  "fetchedAt": "2026-07-22T00:30:23Z",
   "href": "https://www.cooperspur.com/conditions-report/",
   "id": "cooper-spur",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Homestead Lift": "closed",
-      "Rope Tow": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -121.6273,
@@ -26,9 +23,9 @@
   ],
   "name": "Cooper Spur",
   "timestamp": {
-    "lifts": 1783987523550,
-    "opening": 1783987519071,
-    "trails": 1783987518934,
+    "lifts": 1784679358052,
+    "opening": 1784651130048,
+    "trails": 1784679357805,
     "weather": 0,
     "webcams": 0
   }

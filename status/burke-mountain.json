@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-07-12T14:05:04Z",
+  "fetchedAt": "2026-07-22T00:30:23Z",
   "href": "https://www.skiburke.com/ski-ride/weather-conditions",
   "id": "burke-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "J-Bar": "closed",
-      "Magic Carpet": "closed",
-      "Mid-Burke Express": "closed",
-      "Sherburne Express": "closed",
-      "T-Bar": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.91745,
@@ -29,11 +23,11 @@
   ],
   "name": "Burke Mountain",
   "timestamp": {
-    "lifts": 1783865097252,
-    "opening": 1783865095673,
-    "trails": 1783865097217,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1784679358025,
+    "opening": 1784676666311,
+    "trails": 1784678439153,
+    "weather": 1784676667403,
+    "webcams": 1784679358004
   },
   "trails": {
     "list": [
@@ -328,5 +322,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Showers And Thunderstorms Likely",
+    "date": "2026-07-22",
+    "icon": [
+      "basecloud",
+      "icon-thunder"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=44.587898&lon=-71.91745",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 62
+    },
+    "text": "Showers and thunderstorms likely. Mostly cloudy, with a low around 62. South wind 2 to 8 mph, with gusts as high as 22 mph. Chance of precipitation is 70%. New rainfall amounts between a quarter and half of an inch possible."
   }
 }
