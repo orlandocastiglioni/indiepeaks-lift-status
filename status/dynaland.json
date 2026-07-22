@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-07-22T00:30:23Z",
+  "fetchedAt": "2026-07-22T00:45:32Z",
   "href": "https://www.dynaland.co.jp/condition/",
   "id": "dynaland",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u304b\u3089\u307e\u3064\u30d3\u30ae\u30ca\u30fc\u30ea\u30d5\u30c8": "closed",
+      "\u30a2\u30eb\u30d5\u30a1\u30fc\u30e9\u30a4\u30ca\u30fc": "closed",
+      "\u30ac\u30f3\u30de\u30e9\u30a4\u30ca\u30fc": "closed",
+      "\u30d9\u30fc\u30bf\u30e9\u30a4\u30ca\u30fc": "closed",
+      "\u7b2c\uff11\u30da\u30a2\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     136.8852,
@@ -23,9 +29,9 @@
   ],
   "name": "Dynaland",
   "timestamp": {
-    "lifts": 1784679358055,
+    "lifts": 1784680234120,
     "opening": 1784676666311,
-    "trails": 1784678442076,
+    "trails": 1784680233918,
     "weather": 0,
     "webcams": 0
   },
