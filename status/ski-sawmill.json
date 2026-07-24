@@ -1,26 +1,21 @@
 {
-  "fetchedAt": "2026-07-22T00:45:32Z",
+  "fetchedAt": "2026-07-24T14:45:59Z",
   "href": "https://skisawmill.com/ski-report/",
   "id": "ski-sawmill",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Lumberjack T-Bar": "closed",
-      "Paul Bunyan Double": "closed",
-      "Triple Chair Lift": "closed",
-      "White Birch T-Bar": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -77.3628,
@@ -28,9 +23,9 @@
   ],
   "name": "Ski Sawmill",
   "timestamp": {
-    "lifts": 1784680232790,
-    "opening": 1784680228741,
-    "trails": 1784680232707,
+    "lifts": 1784903479198,
+    "opening": 1784900737084,
+    "trails": 1784902571255,
     "weather": 0,
     "webcams": 0
   },
