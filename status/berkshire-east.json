@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-07-24T21:30:59Z",
+  "fetchedAt": "2026-07-25T13:45:59Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,9 +26,9 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1784927766315,
-    "opening": 1784910372405,
-    "trails": 1784927763397,
+    "lifts": 1784986272866,
+    "opening": 1784953579525,
+    "trails": 1784986270531,
     "weather": 0,
     "webcams": 0
   }
