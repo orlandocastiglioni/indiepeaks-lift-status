@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-07-22T00:45:32Z",
+  "fetchedAt": "2026-07-28T02:30:59Z",
   "href": "https://www.skiburke.com/ski-ride/weather-conditions",
   "id": "burke-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "J-Bar": "closed",
-      "Magic Carpet": "closed",
-      "Mid-Burke Express": "closed",
-      "Sherburne Express": "closed",
-      "T-Bar": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.91745,
@@ -29,11 +23,11 @@
   ],
   "name": "Burke Mountain",
   "timestamp": {
-    "lifts": 1784680231496,
-    "opening": 1784676666311,
-    "trails": 1784680231480,
-    "weather": 1784676667403,
-    "webcams": 1784680228740
+    "lifts": 1785204938118,
+    "opening": 1785204036417,
+    "trails": 1785205858000,
+    "weather": 1785202265793,
+    "webcams": 1785204937354
   },
   "trails": {
     "list": [
@@ -330,11 +324,11 @@
     }
   },
   "weather": {
-    "conditions": "Showers And Thunderstorms Likely",
-    "date": "2026-07-22",
+    "conditions": "Isolated Showers And Thunderstorms then Patchy Fog",
+    "date": "2026-07-28",
     "icon": [
-      "basecloud",
-      "icon-thunder"
+      "basenone",
+      "icon-mist"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.587898&lon=-71.91745",
@@ -343,8 +337,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 62
+      "max": 60
     },
-    "text": "Showers and thunderstorms likely. Mostly cloudy, with a low around 62. South wind 2 to 8 mph, with gusts as high as 22 mph. Chance of precipitation is 70%. New rainfall amounts between a quarter and half of an inch possible."
+    "text": "Isolated showers and thunderstorms before 8pm, then patchy fog between 4am and 5am. Partly cloudy, with a low around 60. East wind around 1 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
