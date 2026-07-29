@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-07-29T06:00:59Z",
+  "fetchedAt": "2026-07-29T06:15:59Z",
   "href": "https://www.eaglepointresort.com/mountain-conditions",
   "id": "eagle-point",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Canyonside Double Chair": "closed",
+      "Lookout Quad": "closed",
+      "Monarch Triple Chair": "closed",
+      "Skyline Double Chair": "closed",
+      "Tushar Peaks Surface Lift": "closed"
+    }
   },
   "ll": [
     -112.3839,
@@ -23,9 +29,9 @@
   ],
   "name": "Eagle Point",
   "timestamp": {
-    "lifts": 1785303958296,
+    "lifts": 1785304872665,
     "opening": 1785302168107,
-    "trails": 1785303988920,
+    "trails": 1785304872694,
     "weather": 0,
     "webcams": 0
   },
