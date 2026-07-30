@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-07-28T02:45:33Z",
+  "fetchedAt": "2026-07-30T19:45:07Z",
   "href": "https://www.skiburke.com/ski-ride/weather-conditions",
   "id": "burke-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "J-Bar": "closed",
-      "Magic Carpet": "closed",
-      "Mid-Burke Express": "closed",
-      "Sherburne Express": "closed",
-      "T-Bar": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.91745,
@@ -29,11 +23,11 @@
   ],
   "name": "Burke Mountain",
   "timestamp": {
-    "lifts": 1785205869207,
-    "opening": 1785204036417,
-    "trails": 1785205858000,
-    "weather": 1785202265793,
-    "webcams": 1785205867900
+    "lifts": 1785439866842,
+    "opening": 1785439865621,
+    "trails": 1785438943374,
+    "weather": 1785436244676,
+    "webcams": 1785439865621
   },
   "trails": {
     "list": [
@@ -330,11 +324,11 @@
     }
   },
   "weather": {
-    "conditions": "Isolated Showers And Thunderstorms then Patchy Fog",
-    "date": "2026-07-28",
+    "conditions": "Chance Rain Showers",
+    "date": "2026-07-30",
     "icon": [
-      "basenone",
-      "icon-mist"
+      "basecloud",
+      "icon-showers icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.587898&lon=-71.91745",
@@ -343,8 +337,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 60
+      "max": 71
     },
-    "text": "Isolated showers and thunderstorms before 8pm, then patchy fog between 4am and 5am. Partly cloudy, with a low around 60. East wind around 1 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "A chance of rain showers. Cloudy, with a high near 71. North wind around 5 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
