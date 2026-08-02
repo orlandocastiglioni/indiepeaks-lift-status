@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-07-12T02:46:56Z",
-  "href": "https://caberfaepeaks.com/themountain/snow-report/",
+  "fetchedAt": "2026-08-02T21:26:00Z",
+  "href": "https://caberfaepeaks.com/snow-report/",
   "id": "caberfae-peaks",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "EAST PEAK TRIPLE CHAIR": "closed",
+      "GREEN MOUNTAIN FLYING CARPET": "closed",
+      "NORTH PEAK QUAD CHAIR": "closed",
+      "SOUTH PEAK TRIPLE CHAIR": "closed",
+      "VISTA 1561\u2019 TRIPLE CHAIR": "closed"
+    }
   },
   "ll": [
     -85.719765,
@@ -23,9 +29,47 @@
   ],
   "name": "Caberfae Peaks",
   "timestamp": {
-    "lifts": 1783824203114,
-    "opening": 1783824201841,
+    "lifts": 1785705860013,
+    "opening": 1785705853605,
+    "trails": 1785705860062,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": {
+      "BACKCOUNTRY TERRAIN": "closed",
+      "BB BOULEVARD": "closed",
+      "BUBBLE GUM": "closed",
+      "BULLET": "closed",
+      "CANYON": "closed",
+      "CHARLIE": "closed",
+      "EASY STREET": "closed",
+      "FUNNEL CAKE": "closed",
+      "GG\u2019S RIDE": "closed",
+      "HOLMBERG GLADE": "closed",
+      "HOT DOG": "closed",
+      "I-75": "closed",
+      "JENKINS": "closed",
+      "LIBERTY": "closed",
+      "LIFT LINE": "closed",
+      "NORTH PEAK TRAIL": "closed",
+      "NOTCH": "closed",
+      "Number One": "closed",
+      "OLYMPIA": "closed",
+      "RW": "closed",
+      "SHELTER": "closed",
+      "SKI SHOP": "closed",
+      "SLOT": "closed",
+      "SMILING IRISHMEN": "closed",
+      "SOUTH PEAK TRAIL": "closed",
+      "STAGSHEAD BOWL": "closed",
+      "STARKEY": "closed"
+    },
+    "stats": {
+      "closed": 27,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

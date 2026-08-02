@@ -1,26 +1,27 @@
 {
-  "fetchedAt": "2026-07-22T00:45:32Z",
+  "fetchedAt": "2026-08-02T21:26:00Z",
   "href": "http://www.kingpine.com/snow-report-conditions",
   "id": "king-pine",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 6,
       "hold": 0,
-      "open": 4,
+      "open": 0,
       "percentage": {
-        "closed": 20,
+        "closed": 100,
         "hold": 0,
-        "open": 80,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Bear Rug Carpet": "open",
-      "Black Bear Triple": "open",
-      "Cubby Tow": "open",
-      "Polar Bear Triple": "open",
-      "Powder Bear Triple": "closed"
+      "Bear Rug Carpet": "closed",
+      "Black Bear": "closed",
+      "Cubby Carpet": "closed",
+      "Pine Meadows Tubing Park": "closed",
+      "Polar Bear": "closed",
+      "Powder Bear": "closed"
     }
   },
   "ll": [
@@ -29,10 +30,120 @@
   ],
   "name": "King Pine",
   "timestamp": {
-    "lifts": 1784680229546,
-    "opening": 1784651130048,
-    "trails": 1784680228599,
+    "lifts": 1785705857241,
+    "opening": 1785705853605,
+    "trails": 1785705857229,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Crooked Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "East Slope",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Knotty Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Pine Spills",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Pokey Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Scotch Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Slow Pokey Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "King Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Pine Board",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Pine Cone",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Red Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "West Slope",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "White Pine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Jack Pine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Pine Slalom",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Pine Brule",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Pitch Pine",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "East Slope",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Twisted Pine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Pokey Glades",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 20,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

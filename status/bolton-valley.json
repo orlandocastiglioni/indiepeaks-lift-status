@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-07-12T02:46:56Z",
+  "fetchedAt": "2026-08-02T21:26:00Z",
   "href": "https://www.boltonvalley.com/winter/trail-maps-snow-reports/snow-reports/",
   "id": "bolton-valley",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Mid Mountain": "closed",
+      "Mighty Mite": "closed",
+      "Snowflake": "closed",
+      "Timberline": "closed",
+      "Vista": "closed",
+      "Wilderness": "closed"
+    }
   },
   "ll": [
     -72.84948,
@@ -23,9 +30,375 @@
   ],
   "name": "Bolton Valley",
   "timestamp": {
-    "lifts": 1783824202421,
-    "opening": 1783824201840,
+    "lifts": 1785705857456,
+    "opening": 1785705853605,
+    "trails": 1785705857452,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Abenaki Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bear Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bull Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Cobrass Lane",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Deer Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Bently",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Crossover",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Fanny Hill",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Foxy",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Turnpike",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Villager",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Wilderness",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Mighty Mite",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Primer Loop",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Sherman&#039;s Pass",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Snowflake Bentley",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Spillway Exit",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Sprig O&#039; Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Spur",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Swing",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Timberline Lane",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Timberline Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Villager",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Work Road",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Alta Vista",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Beech Seal",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Cobrass",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Cobrass Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Coyote",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Deer Path",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Enchanted Forest",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Fanny Hill",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Five Corners",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Foxy",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Glades",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hard Luck Lane",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Brandywine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Tattle Tale",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Moose Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Mousehole",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Old Turnpike",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Peggy Dow&#039;s",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Showtime",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Spillway Lane",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sure Shot",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "TFR",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Twice as Nice",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Wilderness Liftline",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Wood&#039;s Hole",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Bolton Outlaw",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Brandywine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Cougar",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hard Luck",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Intro",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Schuss",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Show Off - Lower",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Show Off - Upper",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Spellbinder",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Spillway",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Crossover",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Fanny Hill",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Tattle Tale",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Vermont 200",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Vista Glades",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Adam&#039;s Solitude",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Lost Boyz",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Preacher",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "TNT",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Hide Away",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Moonlight Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Valley Road",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 71,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }
