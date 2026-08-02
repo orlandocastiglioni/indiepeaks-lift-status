@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-31T14:45:58Z",
+  "fetchedAt": "2026-08-02T21:54:05Z",
   "href": "https://www.saskadenasix.com/winter/conditions",
   "id": "saskadena-six",
   "lifts": {
@@ -26,47 +26,171 @@
   ],
   "name": "Saskadena Six",
   "timestamp": {
-    "lifts": 1785508239357,
-    "opening": 1785507367329,
-    "trails": 1785508239346,
+    "lifts": 1785707596836,
+    "opening": 1785707591636,
+    "trails": 1785707596810,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {
-      "Back Door": "closed",
-      "Back Scratcher": "closed",
-      "Bee Line": "closed",
-      "Begin-A-Glade": "closed",
-      "Bourdon's Bowl": "closed",
-      "Bunny's Boulevard": "closed",
-      "Chimney": "closed",
-      "Crystal": "closed",
-      "Double Dip": "closed",
-      "Duane's Drop": "closed",
-      "Easy Mile": "closed",
-      "Jug Handle": "closed",
-      "Lasky Lot": "closed",
-      "Mid Face": "closed",
-      "Milky Way": "closed",
-      "Pearson's Path": "closed",
-      "Perley's Peril": "closed",
-      "Pomfret Plunge": "closed",
-      "Porcupine": "closed",
-      "Road Way": "closed",
-      "Showoff": "closed",
-      "Skyline": "closed",
-      "Spring Pine Glade": "closed",
-      "Standard": "closed",
-      "The Chute": "closed",
-      "The Face": "closed",
-      "The Glade": "closed",
-      "The Gully": "closed",
-      "UPHILL - Backdoor>Gully>Summit": "closed",
-      "UPHILL - Easy Mile": "closed",
-      "UPHILL - Easy Mile Woods Route": "closed",
-      "UPHILL - Milky Way>Top of Chair 2": "closed"
-    },
+    "list": [
+      {
+        "name": "UPHILL - Backdoor>Gully>Summit",
+        "status": "closed"
+      },
+      {
+        "name": "UPHILL - Easy Mile",
+        "status": "closed"
+      },
+      {
+        "name": "UPHILL - Easy Mile Woods Route",
+        "status": "closed"
+      },
+      {
+        "name": "UPHILL - Milky Way>Top of Chair 2",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Begin-A-Glade",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Easy Mile",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Milky Way",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Pearson's Path",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Standard",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Back Door",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bee Line",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bourdon's Bowl",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bunny's Boulevard",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Chimney",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Double Dip",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Duane's Drop",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lasky Lot",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Perley's Peril",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Road Way",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Skyline",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Spring Pine Glade",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "The Chute",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "The Gully",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Crystal",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Jug Handle",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Showoff",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Face",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Back Scratcher",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Mid Face",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Pomfret Plunge",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Porcupine",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "The Glade",
+        "status": "closed"
+      }
+    ],
     "stats": {
       "closed": 32,
       "hold": 0,
