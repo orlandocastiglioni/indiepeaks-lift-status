@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-08-02T21:26:00Z",
+  "fetchedAt": "2026-08-02T23:45:37Z",
   "href": "https://www.boltonvalley.com/winter/trail-maps-snow-reports/snow-reports/",
   "id": "bolton-valley",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Mid Mountain": "closed",
-      "Mighty Mite": "closed",
-      "Snowflake": "closed",
-      "Timberline": "closed",
-      "Vista": "closed",
-      "Wilderness": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.84948,
@@ -30,11 +23,11 @@
   ],
   "name": "Bolton Valley",
   "timestamp": {
-    "lifts": 1785705857456,
-    "opening": 1785705853605,
-    "trails": 1785705857452,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1785713469665,
+    "opening": 1785711646833,
+    "trails": 1785712569602,
+    "weather": 1785707651864,
+    "webcams": 1785713466980
   },
   "trails": {
     "list": [
@@ -400,5 +393,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Slight Chance Showers And Thunderstorms",
+    "date": "2026-08-02",
+    "icon": [
+      "basecloud",
+      "icon-thunder"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=44.421673&lon=-72.84948",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 72
+    },
+    "text": "A slight chance of showers and thunderstorms. Mostly cloudy, with a high near 72. South wind around 9 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
