@@ -1,0 +1,296 @@
+From 793f925066a5e6f7715e29db4a0af12075a2d443 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:52:54 -0400
+Subject: resort: sasquatch-mountain - add trail status from the intermaps feed
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/sasquatch-mountain/resort.json    |   3 +-
+ lib/resorts/sasquatch-mountain/trails.js      |  53 +++++
+ .../example/sasquatch-mountain-trails.xml     |   1 +
+ test/resorts/sasquatch-mountain-trails.js     | 183 ++++++++++++++++++
+ 4 files changed, 239 insertions(+), 1 deletion(-)
+ create mode 100644 lib/resorts/sasquatch-mountain/trails.js
+ create mode 100644 test/resorts/example/sasquatch-mountain-trails.xml
+ create mode 100644 test/resorts/sasquatch-mountain-trails.js
+
+diff --git a/lib/resorts/sasquatch-mountain/resort.json b/lib/resorts/sasquatch-mountain/resort.json
+index 85d9a166..7a376918 100644
+--- a/lib/resorts/sasquatch-mountain/resort.json
++++ b/lib/resorts/sasquatch-mountain/resort.json
+@@ -2,7 +2,7 @@
+   "name": "Sasquatch Mountain",
+   "url": {
+     "host": "https://sasquatchmountain.ca",
+-    "pathname": "/lift-runs/"
++    "pathname": "/snow-report/"
+   },
+   "dataUrl": {
+     "host": "https://skiron.intermaps.com",
+@@ -11,6 +11,7 @@
+       "link": "http://sdds4.intermaps.com/sdds4_db_xml/default.aspx?region_id=3990"
+     }
+   },
++  "trails": true,
+   "tags": [
+     "British Columbia"
+   ],
+diff --git a/lib/resorts/sasquatch-mountain/trails.js b/lib/resorts/sasquatch-mountain/trails.js
+new file mode 100644
+index 00000000..ab7eb5fb
+--- /dev/null
++++ b/lib/resorts/sasquatch-mountain/trails.js
+@@ -0,0 +1,53 @@
++import { findText } from '../../tools/domutil.js';
++
++// see: `DecodeStatus` in https://skiron.intermaps.com/js/sdds_data.js
++// 126 -> "in Vorbereitung" (in preparation) - the run is being readied, so
++// report it as scheduled; codes the site does not know decode to
++// "keine Meldung" (no report), same as 128 -> treat unknowns as closed
++const code2status = {
++  7: 'closed',
++  94: 'closed',
++  169: 'open',
++  126: 'scheduled',
++  205: 'open',
++  412: 'open',
++  128: 'closed',
++  229: 'closed'
++};
++
++// see: `DecodeDifficulty` in the same sdds_data.js
++// 128 -> "skiroute" only appears on unfinished CMS entries here
++const code2level = {
++  320: 'easy',
++  288: 'medium',
++  326: 'difficult',
++  404: 'extreme'
++};
++
++function tagText(node, tag) {
++  const el = node.children?.find(c => c.name === tag);
++  return el && findText(el);
++}
++
++export default {
++  selector: 'ELEMENTGROUP ELEMENT',
++  // SLOPE elements carry more tags than LIFT ones (Name_p1, Name_p2 etc.),
++  // so pick children by tag name instead of index
++  parse(element) {
++    // HACK: `ELEMENTGROUP[NAME="SLOPE"]` should work instead of this
++    if (element.parent.attribs.NAME !== 'SLOPE') {
++      return;
++    }
++    const name = tagText(element, 'name');
++    // the feed carries unfinished CMS entries like
++    // "new object by hemlock_resort" - skip them
++    if (!name || /^new object/i.test(name)) {
++      return;
++    }
++    return {
++      name,
++      status: code2status[tagText(element, 'status')] ?? 'closed',
++      level: code2level[tagText(element, 'difficulty')]
++    };
++  }
++};
+diff --git a/test/resorts/example/sasquatch-mountain-trails.xml b/test/resorts/example/sasquatch-mountain-trails.xml
+new file mode 100644
+index 00000000..2ef6ef54
+--- /dev/null
++++ b/test/resorts/example/sasquatch-mountain-trails.xml
+@@ -0,0 +1 @@
++<EXPORT><LASTUPDATE>2026-08-01T22:31:23</LASTUPDATE><lastUpdateUTC>2026-08-01T20:31:23</lastUpdateUTC><DESTINATION><DEST>Sasquatch Mountain Resort</DEST><name>Sasquatch Mountain Resort</name><RESSORT NAME="Sasquatch Mountain Resort" ID="3990"><ELEMENTGROUP NAME="BASICDATA"><LASTUPDATE>2026-08-01T22:31:23</LASTUPDATE><Resort><patch><slopesLengthOpen>0</slopesLengthOpen><slopesLengthTotal>0</slopesLengthTotal><slopesTotal>38</slopesTotal><slopesOpen>0</slopesOpen><liftsOpen>0</liftsOpen><liftsTotal>5</liftsTotal><altitude><from>950</from><to>1375</to></altitude><resortStatus>420</resortStatus></patch><name>Sasquatch Mountain Resort</name><panorama>https://sdds4.intermaps.com/diverse/hemlock_touch.jpg</panorama><panorama_link>https://winter.intermaps.com/sasquatch_mountain?menu=false&amp;show=lifts,slopes</panorama_link><From></From><SkiResortOpen><From></From><To></To></SkiResortOpen><LiftsOpen><From>09:00</From><To>16:00</To></LiftsOpen><Lifts><TotalNumber><snowtube></snowtube><curling></curling><Iceskating></Iceskating><Lifts>5</Lifts><Funiculars></Funiculars><AerialTramways></AerialTramways><Cablecars></Cablecars><Chairlifts></Chairlifts><Skilifts></Skilifts></TotalNumber></Lifts><pisten_remarks/><Slopes><Time/><Number><SlopesWithArtificialSnowLength></SlopesWithArtificialSnowLength><PreparedSlopes>0</PreparedSlopes><Open><Slopes>38</Slopes><ValleyRuns></ValleyRuns></Open></Number></Slopes><TotalLength><Slopes>0</Slopes></TotalLength></Resort></ELEMENTGROUP><ELEMENTGROUP NAME="REPORT"><LASTUPDATE>2026-08-01T01:06:16</LASTUPDATE><Lifts><Number><Total>5</Total><Open><Skiroutes></Skiroutes><Lifts>0</Lifts><Cablecars>0</Cablecars><Chairlifts></Chairlifts><Skilifts></Skilifts></Open></Number></Lifts><Slopes><Length><SlopesOpen>0</SlopesOpen></Length></Slopes><Miscellaneous><DailyHint/><en_DailyHint></en_DailyHint></Miscellaneous></ELEMENTGROUP><ELEMENTGROUP NAME="WEATHERPROGNOSIS"><LASTUPDATE>2026-08-01T22:31:23</LASTUPDATE><Today><date>2026-08-01T00:00:00</date><WeatherToday><General>227</General><Morning>227</Morning><Midday>227</Midday><Evening>281</Evening></WeatherToday><TemperatureToday><General></General><Night>11</Night><Day></Day><Min>8</Min><Max>14</Max><Morning>11</Morning><Midday>12</Midday><Evening>8</Evening></TemperatureToday><SunshineHoursToday></SunshineHoursToday><RainfallRisk></RainfallRisk><WeatherRemarksToday><DETAIL d_language="de"></DETAIL><DETAIL d_language="en"></DETAIL><DETAIL d_language="fr"></DETAIL><DETAIL d_language="it"></DETAIL><detail_de></detail_de><detail_en></detail_en><detail_fr></detail_fr><detail_it></detail_it></WeatherRemarksToday></Today><Tomorrow><date>2026-08-02T00:00:00</date><WeatherTomorrow><General>281</General><Morning>281</Morning><Midday>281</Midday><Evening>131</Evening></WeatherTomorrow><TemperatureTomorrow><General></General><Night>8</Night><Day></Day><Min>8</Min><Max>13</Max><Morning>8</Morning><Midday>11</Midday><Evening>10</Evening></TemperatureTomorrow><SunshineHoursTomorrow></SunshineHoursTomorrow><RainfallRisk></RainfallRisk><WeatherRemarksTomorrow><DETAIL d_language="de"></DETAIL><DETAIL d_language="en"></DETAIL><DETAIL d_language="fr"></DETAIL><DETAIL d_language="it"></DETAIL></WeatherRemarksTomorrow></Tomorrow><DayAfterTomorrow><date>2026-08-03T00:00:00</date><WeatherDayAfterTomorrow><General></General><Morning></Morning><Midday></Midday><Evening></Evening><WindforceDescription></WindforceDescription></WeatherDayAfterTomorrow><TemperatureDayAfterTomorrow><General></General><Night></Night><Day></Day><Min>8</Min><Max>21</Max><Morning></Morning><Midday></Midday><Evening></Evening></TemperatureDayAfterTomorrow><SunshineHoursDayAfterTomorrow></SunshineHoursDayAfterTomorrow><BelowZeroBorderDayAfterTomorrow></BelowZeroBorderDayAfterTomorrow><RainfallRisk><AMDayAfterTomorrow></AMDayAfterTomorrow><PMDayAfterTomorrow></PMDayAfterTomorrow></RainfallRisk></DayAfterTomorrow><In3Days><WeatherIn3Days><date>2026-08-04T00:00:00</date><General>239</General></WeatherIn3Days><TemperatureIn3Days><General>16</General><Night>12</Night><Day>16</Day><Min>12</Min><Max>13</Max></TemperatureIn3Days><SunshineHoursIn3Days></SunshineHoursIn3Days><BelowZeroBorderIn3Days></BelowZeroBorderIn3Days><RainfallRisk><AMIn3Days></AMIn3Days><PMIn3Days></PMIn3Days></RainfallRisk></In3Days><In4Days><WeatherIn4Days><date>2026-08-05T00:00:00</date><General>239</General></WeatherIn4Days><TemperatureIn4Days><General>16</General><Night>14</Night><Day>16</Day><Min>14</Min><Max>24</Max></TemperatureIn4Days><SunshineHoursIn4Days></SunshineHoursIn4Days><BelowZeroBorderIn4Days></BelowZeroBorderIn4Days><RainfallRisk><AMIn4Days></AMIn4Days><PMIn4Days></PMIn4Days></RainfallRisk></In4Days></ELEMENTGROUP><ELEMENTGROUP NAME="WEATHERSTATION"><LASTUPDATE>2026-08-01T01:06:16</LASTUPDATE></ELEMENTGROUP><ELEMENTGROUP NAME="EXTRA"><LASTUPDATE>2026-08-01T01:06:16</LASTUPDATE></ELEMENTGROUP><ELEMENTGROUP NAME="SNOW"><LASTUPDATE>2026-08-01T01:06:15</LASTUPDATE><SnowHeight><Valley></Valley><Middle></Middle><Mountain></Mountain></SnowHeight><NewSnow><Valley></Valley><Middle></Middle><Mountain></Mountain></NewSnow><LastSnowFall><Date></Date><DateValley></DateValley><DateMountain></DateMountain></LastSnowFall><SnowCondition><General>222</General><Main>222</Main><Partial>222</Partial><Valley>222</Valley><Middle>222</Middle><Mountain>222</Mountain></SnowCondition></ELEMENTGROUP><ELEMENTGROUP NAME="LIFT"><LASTUPDATE>2026-08-01T23:40:11</LASTUPDATE><ELEMENT><ID>399036</ID><Initial></Initial><Name>A- Yeti Cruiser Quad</Name><Type>608</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>399037</ID><Initial></Initial><Name>B- Whistlepunk Double</Name><Type>606</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>399038</ID><Initial></Initial><Name>Littlefoot Carpet Lift</Name><Type>617</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>399039</ID><Initial></Initial><Name>D- Sasquatch Triple</Name><Type>607</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10102172</ID><Initial></Initial><Name>new object by hemlock_resort</Name><Type>601</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT></ELEMENTGROUP><ELEMENTGROUP NAME="SLOPE"><LASTUPDATE>2026-08-01T23:40:11</LASTUPDATE><ELEMENT><ID>39901</ID><Initial></Initial><Name_p1>1</Name_p1><Name_p2>- Ridgeline</Name_p2><Name>1- Ridgeline</Name><Type>701</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>320</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>39902</ID><Initial></Initial><Name_p1>2</Name_p1><Name_p2>- Heaven</Name_p2><Name>2- Heaven</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>39903</ID><Initial></Initial><Name_p1>3</Name_p1><Name_p2>- Surprise</Name_p2><Name>3- Surprise</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>39904</ID><Initial></Initial><Name_p1>4</Name_p1><Name_p2>- Kitchen Wall</Name_p2><Name>4- Kitchen Wall</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>404</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch></LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>39905</ID><Initial></Initial><Name_p1>5</Name_p1><Name_p2>- Christmas Trees</Name_p2><Name>5- Christmas Trees</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>39906</ID><Initial></Initial><Name_p1>6</Name_p1><Name_p2>- Timber Cruiser</Name_p2><Name>6- Timber Cruiser</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>39907</ID><Initial></Initial><Name_p1>7</Name_p1><Name_p2>- Undercut Road</Name_p2><Name>7- Undercut Road</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>320</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>39908</ID><Initial></Initial><Name_p1>8</Name_p1><Name_p2>- Ringers Run</Name_p2><Name>8- Ringer's Run</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>39909</ID><Initial></Initial><Name_p1>9</Name_p1><Name_p2>- Angel</Name_p2><Name>9- Angel</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>404</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch></LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399010</ID><Initial></Initial><Name_p1>10</Name_p1><Name_p2>- Crans Bowl</Name_p2><Name>10- Cran's Bowl</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399011</ID><Initial></Initial><Name_p1>11</Name_p1><Name_p2>- Slackline</Name_p2><Name>11- Slackline</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>320</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399012</ID><Initial></Initial><Name_p1>12</Name_p1><Name_p2>- Mainline</Name_p2><Name>12- Mainline</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399013</ID><Initial></Initial><Name_p1>13</Name_p1><Name_p2>- The Face</Name_p2><Name>13- The Face</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>404</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch></LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399014</ID><Initial></Initial><Name_p1>14</Name_p1><Name_p2>- Ridgeview</Name_p2><Name>14- Ridgeview</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch></LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399015</ID><Initial></Initial><Name_p1>15</Name_p1><Name_p2>- Petes pass</Name_p2><Name>15- Pete's pass</Name><Type>701</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399016</ID><Initial></Initial><Name_p1>16</Name_p1><Name_p2>- Petes Road</Name_p2><Name>16- Pete's Road</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399017</ID><Initial></Initial><Name_p1>17</Name_p1><Name_p2>- Happy Hooker</Name_p2><Name>17- Happy Hooker</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399018</ID><Initial></Initial><Name_p1>18</Name_p1><Name_p2>- Red Dog</Name_p2><Name>18- Red Dog</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399019</ID><Initial></Initial><Name_p1>19</Name_p1><Name_p2>- Shred Zone</Name_p2><Name>19- Shred Zone</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399020</ID><Initial></Initial><Name_p1>20</Name_p1><Name_p2>- Outrigger</Name_p2><Name>20- Outrigger</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399021</ID><Initial></Initial><Name_p1>21</Name_p1><Name_p2>- Connector</Name_p2><Name>21- Connector</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399022</ID><Initial></Initial><Name_p1>22</Name_p1><Name_p2>- By-Pass</Name_p2><Name>22- By-Pass</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399023</ID><Initial></Initial><Name_p1>23</Name_p1><Name_p2> Molly Hogan</Name_p2><Name>23 Molly Hogan</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>320</Difficulty><Active>activ</Active><Priority>0</Priority><Number>23</Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399024</ID><Initial></Initial><Name_p1>24</Name_p1><Name_p2>- Dream</Name_p2><Name>24- Dream</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>320</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399025</ID><Initial></Initial><Name_p1>25</Name_p1><Name_p2>- Chaser</Name_p2><Name>25- Chaser</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>320</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399027</ID><Initial></Initial><Name_p1>27</Name_p1><Name_p2>- J.Js</Name_p2><Name>27- J.J's</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399028</ID><Initial></Initial><Name_p1>28</Name_p1><Name_p2>- Fall Away</Name_p2><Name>28- Fall Away</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399029</ID><Initial></Initial><Name_p1>29</Name_p1><Name_p2>- Snags</Name_p2><Name>29- Snags</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399030</ID><Initial></Initial><Name_p1>30</Name_p1><Name_p2>- Roddys</Name_p2><Name>30- Roddy's</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399031</ID><Initial></Initial><Name_p1>31</Name_p1><Name_p2>- Bigfoot</Name_p2><Name>31- Bigfoot</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399032</ID><Initial></Initial><Name_p1>32</Name_p1><Name_p2>- Weaver</Name_p2><Name>32- Weaver</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399033</ID><Initial></Initial><Name_p1>33</Name_p1><Name_p2>- Abominable</Name_p2><Name>33- Abominable</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>288</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399034</ID><Initial></Initial><Name_p1>34</Name_p1><Name_p2>- East View Road</Name_p2><Name>34- East View Road</Name><Type>701</Type><Status>169</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>320</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>399035</ID><Initial></Initial><Name_p1>35</Name_p1><Name_p2>- Baby Bowl</Name_p2><Name>35- Baby Bowl</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch>0</LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>10046625</ID><Initial></Initial><Name_p1>36</Name_p1><Name_p2> - Big Dog</Name_p2><Name>36 - Big Dog</Name><Type>701</Type><Status>126</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>326</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch></LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>10102167</ID><Initial></Initial><Name_p1>0</Name_p1><Name_p2>new object by hemlock_resort</Name_p2><Name>new object by hemlock_resort</Name><Type>701</Type><Status>128</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>128</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch></LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>10102169</ID><Initial></Initial><Name_p1>0</Name_p1><Name_p2>new object by hemlock_resort</Name_p2><Name>new object by hemlock_resort</Name><Type>701</Type><Status>128</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>128</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch></LaengeDynamisch><Laenge></Laenge></ELEMENT><ELEMENT><ID>10102173</ID><Initial></Initial><Name_p1>0</Name_p1><Name_p2>new object by hemlock_resort</Name_p2><Name>new object by hemlock_resort</Name><Type>701</Type><Status>128</Status><AdditionalStatus>128</AdditionalStatus><Difficulty>128</Difficulty><Active>activ</Active><Priority>0</Priority><Number></Number><LaengeDynamisch></LaengeDynamisch><Laenge></Laenge></ELEMENT></ELEMENTGROUP><ELEMENTGROUP NAME="CROSSCOUNTRY"><LASTUPDATE>2026-08-01T01:06:16</LASTUPDATE></ELEMENTGROUP><ELEMENTGROUP NAME="WINTERHIKE"><LASTUPDATE>2026-08-01T01:06:16</LASTUPDATE></ELEMENTGROUP><ELEMENTGROUP NAME="TOBOGGAN"><LASTUPDATE>2026-08-01T01:06:16</LASTUPDATE></ELEMENTGROUP><ELEMENTGROUP NAME="FUNPARK"><LASTUPDATE>2026-08-01T01:06:16</LASTUPDATE><ELEMENT><ID>399026</ID><Initial></Initial><Name>26- Hemmy Park</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10046623</ID><Initial></Initial><Name>Whistle Park</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10046624</ID><Initial></Initial><Name>YETI Tube Park</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10102165</ID><Initial></Initial><Name>new object by hemlock_resort</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10102165</ID><Initial></Initial><Name>new object by hemlock_resort</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10102166</ID><Initial></Initial><Name>new object by hemlock_resort</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10102168</ID><Initial></Initial><Name>new object by hemlock_resort</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10102170</ID><Initial></Initial><Name>new object by hemlock_resort</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT><ELEMENT><ID>10102171</ID><Initial></Initial><Name>new object by hemlock_resort</Name><Type>712</Type><Status>94</Status><AdditionalStatus>128</AdditionalStatus><Active>activ</Active><Priority>0</Priority><Number></Number><Summer>0</Summer><Summer_bis>3</Summer_bis></ELEMENT></ELEMENTGROUP><ELEMENTGROUP NAME="RESTAURANT"><LASTUPDATE>2026-08-01T01:06:16</LASTUPDATE></ELEMENTGROUP><ELEMENTGROUP NAME="POPUPS"></ELEMENTGROUP></RESSORT></DESTINATION></EXPORT>
+\ No newline at end of file
+diff --git a/test/resorts/sasquatch-mountain-trails.js b/test/resorts/sasquatch-mountain-trails.js
+new file mode 100644
+index 00000000..9e75c5a1
+--- /dev/null
++++ b/test/resorts/sasquatch-mountain-trails.js
+@@ -0,0 +1,183 @@
++import trails from '../trails/index.js';
++
++trails(
++  'sasquatch-mountain',
++  [
++    {
++      name: '1- Ridgeline',
++      status: 'closed',
++      level: 'green'
++    },
++    {
++      name: '2- Heaven',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: '3- Surprise',
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '4- Kitchen Wall',
++      status: 'open',
++      level: 'doubleBlack'
++    },
++    {
++      name: '5- Christmas Trees',
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '6- Timber Cruiser',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '7- Undercut Road',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: "8- Ringer's Run",
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: '9- Angel',
++      status: 'scheduled',
++      level: 'doubleBlack'
++    },
++    {
++      name: "10- Cran's Bowl",
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '11- Slackline',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: '12- Mainline',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '13- The Face',
++      status: 'scheduled',
++      level: 'doubleBlack'
++    },
++    {
++      name: '14- Ridgeview',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: "15- Pete's pass",
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: "16- Pete's Road",
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '17- Happy Hooker',
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '18- Red Dog',
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '19- Shred Zone',
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '20- Outrigger',
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '21- Connector',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '22- By-Pass',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '23 Molly Hogan',
++      status: 'scheduled',
++      level: 'green'
++    },
++    {
++      name: '24- Dream',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: '25- Chaser',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: "27- J.J's",
++      status: 'scheduled',
++      level: 'blue'
++    },
++    {
++      name: '28- Fall Away',
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '29- Snags',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: "30- Roddy's",
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '31- Bigfoot',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '32- Weaver',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '33- Abominable',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: '34- East View Road',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: '35- Baby Bowl',
++      status: 'scheduled',
++      level: 'black'
++    },
++    {
++      name: '36 - Big Dog',
++      status: 'scheduled',
++      level: 'black'
++    }
++  ],
++  { example: 'sasquatch-mountain-trails', ext: 'xml' }
++);
+-- 
+2.39.5
+

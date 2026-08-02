@@ -1,8 +1,8 @@
 From 41b55f602a906bd7fef5b2682a25ac4fa995bbb3 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:04:58 +0000
-Subject: [PATCH 71/77] resort: fix pitztaler-gletscher - strip 'GLE ||' /
- 'RIFF ||' area prefixes
+Subject: resort: fix pitztaler-gletscher - strip 'GLE ||' / 'RIFF ||' area
+ prefixes
 
 The site prefixes every lift and piste name with an area code separated by
 a double pipe ('GLE || Gletscherexpress'), which the app displayed

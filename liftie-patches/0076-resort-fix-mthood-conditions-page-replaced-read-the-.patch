@@ -1,8 +1,8 @@
 From 945c19a9194c1b44c195bc783240930a761b2af4 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:07:47 +0000
-Subject: [PATCH 76/77] resort: fix mthood - conditions page replaced, read the
- POI API instead
+Subject: resort: fix mthood - conditions page replaced, read the POI API
+ instead
 
 /the-mountain/conditions now redirects to /mountain-report and #liftGrid
 is gone, so the parser has published nothing since the redesign. The page

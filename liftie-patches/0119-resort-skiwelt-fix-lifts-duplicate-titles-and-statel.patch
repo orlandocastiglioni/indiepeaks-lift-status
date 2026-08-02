@@ -1,0 +1,88 @@
+From 45adf58e935ed5b915ba9ae7544578271e7e7bd6 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:52:54 -0400
+Subject: resort: skiwelt - fix lifts - duplicate titles and stateless items
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/skiwelt/index.js | 32 ++++++++++++++++++++++++++++++--
+ test/resorts/skiwelt.js      |  5 +++--
+ 2 files changed, 33 insertions(+), 4 deletions(-)
+
+diff --git a/lib/resorts/skiwelt/index.js b/lib/resorts/skiwelt/index.js
+index d536a3bd..ecfbaf80 100644
+--- a/lib/resorts/skiwelt/index.js
++++ b/lib/resorts/skiwelt/index.js
+@@ -1,9 +1,37 @@
+ import coerce from '../../tools/coerce.js';
+ 
++const named = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
++
++// some titles arrive HTML-entity-encoded from the API itself
++// ("Ellmi&#39;s Zauberteppich II") - decode before publishing
++function decode(str) {
++  return str.replace(/&(?:#(\d+)|#x([\da-f]+)|(amp|lt|gt|quot|apos));/gi, (_, dec, hex, name) => {
++    if (dec) {
++      return String.fromCodePoint(Number(dec));
++    }
++    if (hex) {
++      return String.fromCodePoint(Number.parseInt(hex, 16));
++    }
++    return named[name.toLowerCase()];
++  });
++}
++
+ export default function parse(data = {}) {
+   const { items = [] } = data;
+-  return items.reduce((ls, { title, state }) => {
+-    ls[title] = coerce(state);
++
++  // two distinct lifts are both titled "Sonnenlift" (Brixen im Thale and
++  // Going) - suffix duplicated titles so neither drops out of the map
++  const counts = new Map();
++  for (const { title } of items) {
++    counts.set(title, (counts.get(title) ?? 0) + 1);
++  }
++
++  return items.reduce((ls, { title, state, location, number }) => {
++    let name = decode(title);
++    if (counts.get(title) > 1) {
++      name = `${name} (${location || number})`;
++    }
++    ls[name] = coerce(state);
+     return ls;
+   }, {});
+ }
+diff --git a/test/resorts/skiwelt.js b/test/resorts/skiwelt.js
+index e32cde05..c3fc442f 100644
+--- a/test/resorts/skiwelt.js
++++ b/test/resorts/skiwelt.js
+@@ -11,7 +11,7 @@ lifts('skiwelt', 'json', {
+   'Übungslift Hochbrixen': 'open',
+   'Skischullift Hochbrixen': 'open',
+   '8er- SkiWeltbahn': 'open',
+-  Sonnenlift: 'open',
++  'Sonnenlift (Brixen im Thale)': 'open',
+   'Schusterbühellift': 'open',
+   Sonnenband: 'open',
+   '10er Gondelbahn Hartkaiserbahn': 'open',
+@@ -21,7 +21,7 @@ lifts('skiwelt', 'json', {
+   Kirchbichl: 'open',
+   Schmiedalm: 'open',
+   "Ellmi's Zauberteppich I": 'open',
+-  'Ellmi&#39;s Zauberteppich II': 'open',
++  "Ellmi's Zauberteppich II": 'open',
+   Hausberg: 'open',
+   "Ellmi's 6er": 'open',
+   Kaiserexpress: 'open',
+@@ -29,6 +29,7 @@ lifts('skiwelt', 'json', {
+   Almbahn: 'open',
+   Tanzbodenbahn: 'open',
+   Astbergbahn: 'open',
++  'Sonnenlift (Going)': 'open',
+   Maxilift: 'open',
+   'Zauberteppich Astberg': 'open',
+   'Ellmi´s Zauberteppich III': 'open',
+-- 
+2.39.5
+

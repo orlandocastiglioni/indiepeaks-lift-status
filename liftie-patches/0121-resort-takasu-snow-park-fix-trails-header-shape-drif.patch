@@ -1,0 +1,768 @@
+From 6eff54b58ffffd41da1790f6a370c34ba62adab5 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:52:55 -0400
+Subject: resort: takasu-snow-park - fix trails - header-shape drift; winter
+ lift fixture
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/takasu-snow-park/trails.js     |  25 +-
+ test/resorts/example/takasu-snow-park.html | 404 ++++++++++++++++++---
+ test/resorts/takasu-snow-park-trails.js    | 128 ++++++-
+ test/resorts/takasu-snow-park.js           |   7 +-
+ 4 files changed, 510 insertions(+), 54 deletions(-)
+
+diff --git a/lib/resorts/takasu-snow-park/trails.js b/lib/resorts/takasu-snow-park/trails.js
+index 76785d2a..a6f97d3c 100644
+--- a/lib/resorts/takasu-snow-park/trails.js
++++ b/lib/resorts/takasu-snow-park/trails.js
+@@ -3,18 +3,28 @@ import { findText } from '../../tools/domutil.js';
+ import status from './status.js';
+ 
+ const sections = { 初級: 'green', 中級: 'blue', 上級: 'black' };
++// course tables are tagged with a level class; the label moved from
++// <caption> (early 2026) to an <h3> outside the table (March 2026),
++// so the class is the reliable signal
++const classes = { shokyu: 'green', chukyu: 'blue', jokyu: 'black' };
+ 
+-// course tables: [section row like 初級コース] コース名 | 滑走状況 | お知らせ;
+-// park tables use パーク名 in the header instead
++// course tables: コース名 | 滑走状況 | お知らせ with level in the table class
++// (and formerly in a caption / section-label row); park, tree-run and yukinos
++// rows each live in their own header-less one-row table (the パーク名 header
++// is a separate sibling table) with the name cell classed "course_name"
+ export default function parse(dom) {
+   const rows = [];
+   for (const table of select(dom, 'table')) {
+     const trs = select(table.children, 'tr');
+     const caption = select(table.children, 'caption')[0];
+-    let level = caption && sections[Object.keys(sections).find(k => (findText(caption) ?? '').includes(k))];
++    const tableClass = table.attribs?.class ?? '';
++    let level =
++      classes[Object.keys(classes).find(c => tableClass.includes(c))] ??
++      (caption && sections[Object.keys(sections).find(k => (findText(caption) ?? '').includes(k))]);
+     let headerIdx = -1;
+     for (const [i, tr] of trs.entries()) {
+-      const cells = select(tr.children, 'th, td').map(findText);
++      const cellNodes = select(tr.children, 'th, td');
++      const cells = cellNodes.map(findText);
+       const joined = cells.filter(Boolean).join(' ');
+       if (/コース名|パーク名/.test(joined)) {
+         headerIdx = i;
+@@ -24,6 +34,13 @@ export default function parse(dom) {
+         continue;
+       }
+       if (headerIdx < 0) {
++        if (/course_name/.test(cellNodes[0]?.attribs?.class ?? '')) {
++          // header-less park/kids data row
++          if (cells[0] && cells[1]) {
++            rows.push({ name: cells[0].trim(), status: status(cells[1]), level: 'terrainPark' });
++          }
++          continue;
++        }
+         const section = Object.keys(sections).find(k => joined.includes(k));
+         if (section) {
+           level = sections[section];
+diff --git a/test/resorts/example/takasu-snow-park.html b/test/resorts/example/takasu-snow-park.html
+index 3c567bdc..ab59233b 100644
+--- a/test/resorts/example/takasu-snow-park.html
++++ b/test/resorts/example/takasu-snow-park.html
+@@ -31,7 +31,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+ <!-- InstanceBeginEditable name="doctitle" -->
+   <title>最新ゲレンデ情報 ｜ 岐阜県・中部エリアの西日本最大級スキー場は高鷲スノーパーク</title>
+   <!-- InstanceEndEditable -->
+-<meta name="description" content="西日本最大級のビッグゲレンデ、高鷲スノーパークは4/19をもって25-26シーズンの営業を終了いたしました！今シーズンも多くのご来場をいただき誠にありがとうございました。来シーズンの更なるアップデートをご期待ください！">
++<meta name="description" content="西日本最大級のビックゲレンデ、高鷲スノーパークの営業は4/26まで！春シーズンもまだまだ雪たっぷり！多彩でエキサイティングに、縦横無尽に遊び尽くせます！">
+ 
+ 
+ <meta name="format-detection" content="telephone=no">
+@@ -386,7 +386,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+     <section class="date">
+       <div class="inner">
+         <div class="lttl">
+-          <time class="en">2026-07-06 PM1:00</time>
++          <time class="en">2026-03-16 AM7:00</time>
+           <p class="jp">Latest slope information</p>
+         </div>
+       </div>
+@@ -415,13 +415,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+       <a id="gelande_anch" name="gelande_anch" class="anchor"></a>
+       <div class="gelande-wrapper">
+         <!--<h2 class="gelande-title">ゲレンデ<br>NOW!</h2>-->
+-                <figure>
++                <!--<figure>
+           <img src="https://www.takasu.gr.jp/news/wp-content/uploads/2024/05/b2635b06e231971f32a7912b5030a662.jpg" alt="ゲレンデ状況" width="100%">
+-          <!--<img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000060cff9e8" alt="ライブカメラの画像" width="100%" class="image" />-->
++          <img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000060cff9e8" alt="ライブカメラの画像" width="100%" class="image" />-->
++          <!--<img src="../assets/img/condition/readyimg2.jpg" alt=""/>
+         </figure>-->
+           
+           
+-          <!--<iframe width="" height="auto" class="youtubecamera now" src="https://www.youtube.com/embed/2wYa2xEpdCI?si=DhZwylEXq2MVUGKn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
++          <iframe width="" height="auto" class="youtubecamera now" src="https://www.youtube.com/embed/2wYa2xEpdCI?si=DhZwylEXq2MVUGKn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+           
+           
+         <div class="weather-wrapper">
+@@ -431,17 +432,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                 <img src="/assets/img/condition/ico_info_01.png" alt="">
+               </figure>晴れ            </li>
+             <li class="condition">
+-                            <figure><img src="../assets/img/index/ico_slope.png" alt="" /></figure>滑走不可            </li>
++                            <figure><img src="../assets/img/index/ico_slope.png" alt="" /></figure>滑走可            </li>
+             <li class="snow">
+               <figure><img src="../assets/img/index/ico_snow.png" alt="" />
+                 <figcaption>中腹</figcaption>
+-              </figure><span>cm</span>
++              </figure>170<span>cm</span>
+             </li>
+             <li class="temperature">
+-              <figure><img src="../assets/img/index/ico_temp.png" alt="" /></figure><span>&#8451;</span>
++              <figure><img src="../assets/img/index/ico_temp.png" alt="" /></figure>-3<span>&#8451;</span>
+             </li>
+             <li class="quality">
+-              <figure><img src="../assets/img/index/ico_quality.png" alt="" /></figure>            </li>
++              <figure><img src="../assets/img/index/ico_quality.png" alt="" /></figure>朝のうちアイスバーン⇒ザラメ雪            </li>
+           </ul>
+           <p class="weatherpinpoint"><a href="https://weathernews.jp/s/ski/spot/35241/" target="_blank" data-label="週間天気予報" data-category="最新ゲレンデ情報" class="click-event">週間天気予報を見る</a>
+           </p>
+@@ -462,7 +463,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+           <h2 class="jp">道路状況</h2>
+         </div>
+         <div class="content_inner">
+-          <p></p>
++          <p>概ね通常路面で走行しやすいです。ただしコンディションの変化に備えて冬装備のお車でお越しください。</p>
+         </div>
+       </div>
+     </section>
+@@ -486,28 +487,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+              <!-- <figure><img class="image" src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000060cff9e8" alt="ライブカメラの画像" width="100%" /></figure>
+               <div class="taken_at blue" data-id="0000000060cff9e8" data-show-sec="0"></div>-->
+                 
+-              <!--<iframe width="" height="315" class="youtubecamera" src="https://www.youtube.com/embed/2wYa2xEpdCI?si=DhZwylEXq2MVUGKn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
+-                
+-                <figure><img class="image" src="../assets/img/condition/readyimg2.jpg" alt="ライブカメラの画像" width="" /></figure>
++                              <iframe width="" height="315" class="youtubecamera" src="https://www.youtube.com/embed/2wYa2xEpdCI?si=DhZwylEXq2MVUGKn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+             </div>
+             <div class="body">
+               <h3 class="mttl">山麓センターハウス前</h3>
+-                <figure><img class="image" src="../assets/img/condition/readyimg2.jpg" alt="ライブカメラの画像" width="" /></figure>
+-                
+-                
+-                <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000d9b8dbd9" alt="ライブカメラの画像" width="100%" class="image" /></figure>
++                <figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000d9b8dbd9" alt="ライブカメラの画像" width="100%" class="image" /></figure>
+               <div class="taken_at blue center" data-id="00000000d9b8dbd9" data-show-sec="0"></div>
+-               </div>-->
+-              </div>
++               </div>
++              
+             <div class="body">
+               <h3 class="mttl" id="parking2">駐車場料金所付近<br class="sp">
+                 ライブカメラ</h3>
+-                
+-                <figure><img class="image" src="../assets/img/condition/readyimg2.jpg" alt="ライブカメラの画像" width="" /></figure>
+-              <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000035d5e814" alt="ライブカメラの画像" width="100%" class="image" /></figure>
+-              <div class="taken_at blue" data-id="0000000035d5e814" data-show-sec="0"></div>-->
++              <figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000035d5e814" alt="ライブカメラの画像" width="100%" class="image" /></figure>
++              <div class="taken_at blue" data-id="0000000035d5e814" data-show-sec="0"></div>
+             </div>
+-          
++          </div>
+      </div>
+       </div>
+     </section>
+@@ -536,20 +530,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                 <th rowspan="5">山頂の状況</th>
+                 <td class="table_westtl">天候</td>
+                 <td class="table_wesinfo">
+-                                    <img src="/assets/img/condition/ico_info_03.png" alt="">
++                                    <img src="/assets/img/condition/ico_info_01.png" alt="">
+                 </td>
+               </tr>
+               <tr>
+                 <td>現在の積雪量</td>
+-                <td>cm</td>
++                <td>180cm</td>
+               </tr>
+               <tr>
+                 <td>気温</td>
+-                <td>&#8451;</td>
++                <td>-5&#8451;</td>
+               </tr>
+               <tr>
+                 <td>雪質</td>
+-                <td class="info"></td>
++                <td class="info">朝のうちアイスバーン⇒ザラメ雪</td>
+               </tr>
+ 
+             </tbody>
+@@ -566,15 +560,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+               </tr>
+               <tr>
+                 <td>現在の積雪量</td>
+-                <td>cm</td>
++                <td>170cm</td>
+               </tr>
+               <tr>
+                 <td>気温</td>
+-                <td>&#8451;</td>
++                <td>-3&#8451;</td>
+               </tr>
+               <tr>
+                 <td>雪質</td>
+-                <td></td>
++                <td>朝のうちアイスバーン⇒ザラメ雪</td>
+               </tr>
+             </tbody>
+           </table>
+@@ -596,7 +590,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+           <h2 class="jp">スタッフのコメント</h2>
+         </div>
+         <div class="content_inner">
+-          <p><span style="color: #0000ff;"><strong><span style="font-size: 20px;">4/19(日)を以て25-26シーズンの営業を終了いたしました！</span></strong></span><br /><span style="color: #0000ff;"><strong><span style="font-size: 20px;">今シーズンも多くのご来場を頂き誠にありがとうございました。</span></strong></span></p><p><br />当スキー場はこれから来シーズンに向けて、更なるアップデートをするべく様々な改善、対策をいたします。<br /><br />よろしければぜひ皆さまの貴重なご意見やコメントもぜひお聞かせ下さい！ <a href="https://search.google.com/local/writereview?placeid=ChIJqZz3FjmGAmARwPXH2fiG4WM">『口コミ投稿』</a><br /><br /><img class="alignnone size-medium wp-image-10332" src="https://www.takasu.gr.jp/news/wp-content/uploads/2026/05/78c99df7290401c533e06ce72b6e3ecb-340x191.jpg" alt="" width="340" height="191" /></p>
++          <p>良い天気と寒気が続いておりゲレンデコンディションはしっかりキープしております！<br />
++また、ダイヤモンドコースを中心に人工降雪機も稼働させ、ハイシーズン並みのクオリティ！<br />
++エリアによって雪質が異なり、特に朝イチはバーン固めの箇所が多いのでご注意ください。<br />
++お昼以降は少し雲が多くなり気温も上がりそうです。気候の変化も感じながら心ゆくまでお楽しみください！<br />
++<br />
++シーズン後半戦！！ゲレンデコース以外にもまだまだ各コンテンツが充実しております！<br />
++ご自身のスキルに応じて思う存分遊び尽くしてください！！<br />
++<br />
++<span style="color: #0000ff;"><strong><span style="font-size: 20px;">ゲレンデ状況は【大部分滑走可能(全体の50％以上】！！</span></strong></span><br />
++<br />
++■「レギュラーパイプ」は準備出来次第解放！13:00～は大好評の「初心者タイム」開催！！<br />
++■「MIXED UP BANKS」は飛びごたえのある3連キッカーが大人気！<br />
++　※明日3/17(火)はリメイク作業の為終日クローズいたします。<br />
++■「THE WAVE X」準備ができ次第オープン！<br />
++■ファミリースノーエリア「Yukinos(ユキノス)」営業中！大人気のチュービングコースが好評！<br />
++<br />
++<strong><span style="color: #000000;"><span style="font-size: 14px;">【ご来場のお客様へご案内】</span></span></strong><br />
++・規制箇所や滑走エリア外に立ち入らないようルール厳守でお願いします！<br />
++・場所によってはブッシュや土が出ている箇所がございますのでご注意下さい。<br />
++<br />
++<span style="color: #339966;"><strong>★ゲレンデのリアルタイム動画配信中！ 「今」のゲレンデは<a style="color: #339966;" href="https://www.takasu.gr.jp/condition/#livecamera">『コチラ』</a>！！</strong></span><br />
++<br />
++<iframe title="YouTube video player" src="https://www.youtube.com/embed/2wYa2xEpdCI?si=nbWEZrHqOC_JGG4w" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+           <!--<div class="flex-wrap col2-wrap mb-m">
+           <div class="body center">
+ 		  <h4 class="sttl">タイムラプス映像</h4>
+@@ -604,7 +620,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+            <source src="https://powdercam.jp/resources/videos/00000000fbd57607/time_lapse.mp4">
+             <p>動画を再生するには、videoタグをサポートしたブラウザが必要です。</p></div>
+           <div class="body">
+-          <p><span style="color: #0000ff;"><strong><span style="font-size: 20px;">4/19(日)を以て25-26シーズンの営業を終了いたしました！</span></strong></span><br /><span style="color: #0000ff;"><strong><span style="font-size: 20px;">今シーズンも多くのご来場を頂き誠にありがとうございました。</span></strong></span></p><p><br />当スキー場はこれから来シーズンに向けて、更なるアップデートをするべく様々な改善、対策をいたします。<br /><br />よろしければぜひ皆さまの貴重なご意見やコメントもぜひお聞かせ下さい！ <a href="https://search.google.com/local/writereview?placeid=ChIJqZz3FjmGAmARwPXH2fiG4WM">『口コミ投稿』</a><br /><br /><img class="alignnone size-medium wp-image-10332" src="https://www.takasu.gr.jp/news/wp-content/uploads/2026/05/78c99df7290401c533e06ce72b6e3ecb-340x191.jpg" alt="" width="340" height="191" /></p></div>
++          <p>良い天気と寒気が続いておりゲレンデコンディションはしっかりキープしております！<br /><br />
++また、ダイヤモンドコースを中心に人工降雪機も稼働させ、ハイシーズン並みのクオリティ！<br /><br />
++エリアによって雪質が異なり、特に朝イチはバーン固めの箇所が多いのでご注意ください。<br /><br />
++お昼以降は少し雲が多くなり気温も上がりそうです。気候の変化も感じながら心ゆくまでお楽しみください！<br /><br />
++<br /><br />
++シーズン後半戦！！ゲレンデコース以外にもまだまだ各コンテンツが充実しております！<br /><br />
++ご自身のスキルに応じて思う存分遊び尽くしてください！！<br /><br />
++<br /><br />
++<span style="color: #0000ff;"><strong><span style="font-size: 20px;">ゲレンデ状況は【大部分滑走可能(全体の50％以上】！！</span></strong></span><br /><br />
++<br /><br />
++■「レギュラーパイプ」は準備出来次第解放！13:00～は大好評の「初心者タイム」開催！！<br /><br />
++■「MIXED UP BANKS」は飛びごたえのある3連キッカーが大人気！<br /><br />
++　※明日3/17(火)はリメイク作業の為終日クローズいたします。<br /><br />
++■「THE WAVE X」準備ができ次第オープン！<br /><br />
++■ファミリースノーエリア「Yukinos(ユキノス)」営業中！大人気のチュービングコースが好評！<br /><br />
++<br /><br />
++<strong><span style="color: #000000;"><span style="font-size: 14px;">【ご来場のお客様へご案内】</span></span></strong><br /><br />
++・規制箇所や滑走エリア外に立ち入らないようルール厳守でお願いします！<br /><br />
++・場所によってはブッシュや土が出ている箇所がございますのでご注意下さい。<br /><br />
++<br /><br />
++<span style="color: #339966;"><strong>★ゲレンデのリアルタイム動画配信中！ 「今」のゲレンデは<a style="color: #339966;" href="https://www.takasu.gr.jp/condition/#livecamera">『コチラ』</a>！！</strong></span><br /><br />
++<br /><br />
++<iframe title="YouTube video player" src="https://www.youtube.com/embed/2wYa2xEpdCI?si=nbWEZrHqOC_JGG4w" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p></div>
+         </div>-->
+ 
+         </div>
+@@ -628,17 +666,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+ 
+                     <figure class="condition_map js-pinch-hint">
+ 
+-                                                                                                                                                                                                                  <script>
+-                                  lift01_status="×";
+-                                  lift02_status="×";
+-                                  lift03_status="×";
+-                                  lift04_status="×";
++                            <img src="/assets/img/condition/map/lift_01_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_02_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_03_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_04_02.png" alt="◯" class="map-lift">
++                                            <script>
++                                  lift01_status="◯";
++                                  lift02_status="◯";
++                                  lift03_status="◯";
++                                  lift04_status="◯";
+                               </script>
+             
+-                                                                                                                                                                                                                                                                                    
+-                                                                                                                                                                                                                                                                                                                                                                            
+-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+-                                                                                                                                                            <img src="https://www.takasu.gr.jp/new_parts/images/condition/map/course_name.png" alt="コース名" class="map-name">
++                            <img src="/assets/img/condition/map/course_0101_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0102_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0103_02.png" alt="◯" class="map-course">
++                                                                        <img src="/assets/img/condition/map/course_0105_01.png" alt="△" class="map-course">
++                                                        
++                            <img src="/assets/img/condition/map/course_0201_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0202_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0203_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0204_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0205_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0206_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0207_02.png" alt="◯" class="map-course">
++                                                        
++                            <img src="/assets/img/condition/map/course_0301_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0302_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0303_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0304_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0305_00.png" alt="×" class="map-course">
++                                        <img src="/assets/img/condition/map/park_01_02.png" alt="◯" class="map-park">
++                            <img src="/assets/img/condition/map/park_02_02.png" alt="◯" class="map-park">
++                                                                        <img src="/assets/img/condition/map/park_04_02.png" alt="◯" class="map-park">
++                                                                        <img src="/assets/img/condition/map/park_11_02.png" alt="◯" class="map-park">
++                            <img src="/assets/img/condition/map/park_06_00.png" alt="×" class="map-park">
++                            <img src="/assets/img/condition/map/park_07_00.png" alt="×" class="map-park">
++                            <img src="/assets/img/condition/map/park_08_00.png" alt="×" class="map-park">
++                            <img src="/assets/img/condition/map/park_12_00.png" alt="×" class="map-park">
++                                                                                                    
++                                                                        <img src="/assets/img/condition/map/kidspark_02_02.png" alt="◯" class="map-kidspark">
++                                                                    <img src="https://www.takasu.gr.jp/new_parts/images/condition/map/course_name.png" alt="コース名" class="map-name">
+             <img src="https://www.takasu.gr.jp/new_parts/images/condition/map/course_base.jpg" alt="コースマップ" class="map-base">
+           </figure>
+           <!-- //最新ゲレンデ情報マップ ここまで -->
+@@ -666,7 +733,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+               <th class="info">お知らせ</th>
+             </tr>
+ 
+-                                                                                                                                                                                                      </table>
++                                              <tr>
++                    <td>SPゴンドラ</td>
++                    <td>8:00～16:15</td>
++                    <td>◯</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <td>ダイヤモンドクワッド</td>
++                    <td>8:15～16:15</td>
++                    <td>◯</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <td>パノラマクワッド</td>
++                    <td>8:00～16:30</td>
++                    <td>◯</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <td>チャンピオンクワッド</td>
++                    <td>8:00~16:15</td>
++                    <td>◯</td>
++                    <td class="info"></td>
++                  </tr>
++                                      </table>
+             </div>
+           <p class="center">※天候や積雪の影響により、運行時間を変更させていただく場合がございます。</p>
+             
+@@ -708,10 +799,142 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+ 
+ 
+ 
+-                    
+-                    
++                                <div class="scrollimg">
++              <h3 class="course_ttl shokyu">
++                初級コース
++              </h3>
++            <table class="table_basic shokyu">
++              <tr>
++                <th class="cell1">コース名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info cell3">お知らせ</th>
++              </tr>
++                                                    <tr>
++                      <td>バンブーコース上部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>バンブーコース下部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>ビギナーズコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info">初心者や小さなお子様も安心！ 超ワイドコースをゆったり滑れます♪</td>
++                    </tr>
++                                                                                                                        <tr>
++                      <td>ダイナミックコース下部</td>
++                      <td>
++                        △                        </td>
++                      <td class="info">中腹の急斜面を降りたところ（ダイヤモンドリフト乗り場近く）から先の緩斜面のみクローズしています。</td>
++                    </tr>
++                                                                                              </table>
++            </div>
++          
++                                  <h3 class="course_ttl chukyu">
++                中級コース
++              </h3>
++            <div class="scrollimg">
++            <table class="table_basic chukyu">
++              <tr class="table_basic shokyu">
++                <th class="cell1">コース名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info cell3">お知らせ</th>
++              </tr>
++                                                    <tr>
++                      <td>ダイヤモンドコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>パノラマコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>ダイナミックコース上部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info">一部積雪が薄い箇所がございます。</td>
++                    </tr>
++                                                                      <tr>
++                      <td>ゴールドコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info">今シーズンクローズいたしました。</td>
++                    </tr>
++                                                                      <tr>
++                      <td>スーパーコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info">未圧雪にて解放。</td>
++                    </tr>
++                                                                      <tr>
++                      <td>エキスパートコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td>ダイナランドとの山頂往来</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info">毎朝8:30～解放</td>
++                    </tr>
++                                                                                              </table>
++            </div>
++          
+ 
+-                    
++                                <div class="scrollimg">
++              <h3 class="course_ttl jokyu">
++                上級コース
++              </h3>
++            <table class="table_basic jokyu">
++              <tr class="table_basic shokyu">
++                <th class="cell1">コース名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info cell3">お知らせ</th>
++              </tr>
++                                                    <tr>
++                      <td>チャンピオンコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info">今シーズンクローズいたしました</td>
++                    </tr>
++                                                                      <tr>
++                      <td>チャレンジコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info">今シーズンクローズいたしました。</td>
++                    </tr>
++                                                                      <tr>
++                      <td>エキサイティングAコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info">今シーズンクローズいたしました。</td>
++                    </tr>
++                                                                      <tr>
++                      <td>エキサイティングBコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info">今シーズンクローズいたしました。</td>
++                    </tr>
++                                                                      <tr>
++                      <td>テクニカルコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info">今シーズンクローズいたしました。</td>
++                    </tr>
++                                            </table>
++        </div>
++          
+         </div>
+       </div>
+     </section>
+@@ -726,7 +949,75 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+             <div class="scrollimg">
+ 
+           
+-          
++                      <table class="table_basic">
++              <tr>
++                <th class="cell1">パーク名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info">パーク・アイテム情報</th>
++              </tr>
++            </table>
++                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">ハイクアップパーク</td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3">■解放時間：準備出来次第～15:00
++［ハイクアップエリア］7mミサイルレール・5mボックス</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">レギュラーパイプ</td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3">【解放時間】準備出来次第～14:00
++13:00～「初心者タイム」開催！</td>
++                    </tr>
++                  </table>
++                                                                                                          <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">MIXED UP BANKS</td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3">※明日3/17(火)はリメイク作業の為終日クローズいたします。
++【解放時間】準備出来次第～15:00より順次クローズ
++［エキスパートレーン］フラットダウンレール→7mキッカー →9mキッカー or GOLGODAウォール→8mキッカーor GOLGODAレインボー
++［ビギナーレーン］GOLGODAボックス→4mキッカー→5mキッカー</td>
++                    </tr>
++                  </table>
++                                                                                                          <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">THE WAVE X (ザ ウェーブ クロス)</td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3"></td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">ツリーラン橅（BUNA）</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3">今シーズン終了いたしました。</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">ツリーラン楢（NARA）</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3">今シーズン終了いたしました。</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">ツリーラン栃（TOCHI)</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3">今シーズン終了いたしました。</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">ツリーラン桜（SAKURA)</td>
++                      <td class="cell2">×</td>
++                      <td class="info cell3">今シーズン終了いたしました。</td>
++                    </tr>
++                  </table>
++                                                                                                                              
+ 
+         </div>
+           <p class="center"><a href="https://www.instagram.com/takasu_parks/?hl=ja" target="_blank" data-label="takasu_parks instagram" data-category="最新ゲレンデ情報" class="click-event">
+@@ -749,7 +1040,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+ 
+           
+ 
+-          
++                      <table class="table_basic">
++              <tr>
++                <th class="cell1">パーク名</th>
++                <th class="cell2">滑走状況</th>
++                <th class="info">パーク・アイテム情報</th>
++              </tr>
++            </table>
++                                                                                  <table class="table_basic">
++                    <tr>
++                      <td class="course_name cell1">ファミリースノーエリア「yukinos(ユキノス)」</td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3">【営業時間】9:00～16:00
++■規模縮小に伴い入場料は800円で営業しています。
++■エリア内の遊具は無料貸し出ししております。
++■大人気のチュービングコースも解放中！</td>
++                    </tr>
++                  </table>
++                                                                                  
+           <!--
+       <p class="center"><a href="../kids/"><img src="../new_parts/images/common/bnr_kiz.jpg" alt="" /></a></p>
+         -->
+diff --git a/test/resorts/takasu-snow-park-trails.js b/test/resorts/takasu-snow-park-trails.js
+index a057e9f0..bee4284b 100644
+--- a/test/resorts/takasu-snow-park-trails.js
++++ b/test/resorts/takasu-snow-park-trails.js
+@@ -1,3 +1,129 @@
+ import trails from '../trails/index.js';
+ 
+-trails('takasu-snow-park', []);
++trails('takasu-snow-park', [
++  {
++    name: 'バンブーコース上部',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'バンブーコース下部',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'ビギナーズコース',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'ダイナミックコース下部',
++    status: 'hold',
++    level: 'green'
++  },
++  {
++    name: 'ダイヤモンドコース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'パノラマコース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'ダイナミックコース上部',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'ゴールドコース',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'スーパーコース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'エキスパートコース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'ダイナランドとの山頂往来',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'チャンピオンコース',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'チャレンジコース',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'エキサイティングAコース',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'エキサイティングBコース',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'テクニカルコース',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'ハイクアップパーク',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'レギュラーパイプ',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'MIXED UP BANKS',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'THE WAVE X (ザ ウェーブ クロス)',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'ツリーラン橅（BUNA）',
++    status: 'closed',
++    level: 'terrainPark'
++  },
++  {
++    name: 'ツリーラン楢（NARA）',
++    status: 'closed',
++    level: 'terrainPark'
++  },
++  {
++    name: 'ツリーラン栃（TOCHI)',
++    status: 'closed',
++    level: 'terrainPark'
++  },
++  {
++    name: 'ツリーラン桜（SAKURA)',
++    status: 'closed',
++    level: 'terrainPark'
++  },
++  {
++    name: 'ファミリースノーエリア「yukinos(ユキノス)」',
++    status: 'open',
++    level: 'terrainPark'
++  }
++]);
+diff --git a/test/resorts/takasu-snow-park.js b/test/resorts/takasu-snow-park.js
+index 1e3502b2..b292e1c0 100644
+--- a/test/resorts/takasu-snow-park.js
++++ b/test/resorts/takasu-snow-park.js
+@@ -1,3 +1,8 @@
+ import lifts from '../lifts/index.js';
+ 
+-lifts('takasu-snow-park', 'html', {});
++lifts('takasu-snow-park', 'html', {
++  'SPゴンドラ': 'open',
++  'ダイヤモンドクワッド': 'open',
++  'パノラマクワッド': 'open',
++  'チャンピオンクワッド': 'open'
++});
+-- 
+2.39.5
+

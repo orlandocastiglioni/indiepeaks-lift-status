@@ -1,0 +1,3757 @@
+From 1ffd37c23f3f784f4c3e5383c21bdef6fedb1d8c Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:11 -0400
+Subject: resort: 49-degrees-north - fix lifts - dead 'Chair' name filter
+ matched nothing; add trail status
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/49-degrees-north/index.js      |    7 +-
+ lib/resorts/49-degrees-north/resort.json   |    1 +
+ lib/resorts/49-degrees-north/trails.js     |   14 +
+ test/resorts/49-degrees-north-trails.js    |  357 +++
+ test/resorts/49-degrees-north.js           |   15 +-
+ test/resorts/example/49-degrees-north.html | 2870 ++++++++++++--------
+ 6 files changed, 2058 insertions(+), 1206 deletions(-)
+ create mode 100644 lib/resorts/49-degrees-north/trails.js
+ create mode 100644 test/resorts/49-degrees-north-trails.js
+
+diff --git a/lib/resorts/49-degrees-north/index.js b/lib/resorts/49-degrees-north/index.js
+index a623a1c8..68061fd3 100644
+--- a/lib/resorts/49-degrees-north/index.js
++++ b/lib/resorts/49-degrees-north/index.js
+@@ -1,9 +1,12 @@
++// report rows (lifts and trails alike) are <h4>NAME - <span>STATUS</span></h4>
++// inside <section class="mountain-stats">; lift names carry a '#N' suffix
++// (Northern Spirit #1, ...), trail names do not
+ export default {
+-  selector: 'h4',
++  selector: 'section.mountain-stats h4',
+   parse: {
+     name: {
+       child: 0,
+-      fn: n => n.startsWith('Chair') && n.slice(0, -3)
++      fn: n => /#\d/.test(n) && n.replace(/\s*-\s*$/, '').trim()
+     },
+     status: 1
+   }
+diff --git a/lib/resorts/49-degrees-north/resort.json b/lib/resorts/49-degrees-north/resort.json
+index 9f4d97fb..cb94e835 100644
+--- a/lib/resorts/49-degrees-north/resort.json
++++ b/lib/resorts/49-degrees-north/resort.json
+@@ -4,6 +4,7 @@
+     "host": "https://www.ski49n.com",
+     "pathname": "/mountain-info/trail-status"
+   },
++  "trails": true,
+   "tags": [
+     "Washington"
+   ],
+diff --git a/lib/resorts/49-degrees-north/trails.js b/lib/resorts/49-degrees-north/trails.js
+new file mode 100644
+index 00000000..f1d1329e
+--- /dev/null
++++ b/lib/resorts/49-degrees-north/trails.js
+@@ -0,0 +1,14 @@
++// trails share the lift report page - same <h4>NAME - <span>STATUS</span></h4>
++// idiom; lift rows are excluded by their '#N' suffix and non-report h4s by the
++// missing trailing dash separator; the page publishes no per-trail difficulty
++// (status vocabulary: Open, Closed, Groomed - all coerced downstream)
++export default {
++  selector: 'section.mountain-stats h4',
++  parse: {
++    name: {
++      child: 0,
++      fn: n => !/#\d/.test(n) && /-\s*$/.test(n) && n.replace(/\s*-\s*$/, '').trim()
++    },
++    status: 1
++  }
++};
+diff --git a/test/resorts/49-degrees-north-trails.js b/test/resorts/49-degrees-north-trails.js
+new file mode 100644
+index 00000000..735c2838
+--- /dev/null
++++ b/test/resorts/49-degrees-north-trails.js
+@@ -0,0 +1,357 @@
++import trails from '../trails/index.js';
++
++// same winter fixture as the lifts test - the page publishes no per-trail difficulty
++trails('49-degrees-north', [
++  {
++    name: 'Alpine Road',
++    status: 'closed'
++  },
++  {
++    name: 'Dreamline',
++    status: 'open'
++  },
++  {
++    name: 'Broadway',
++    status: 'open'
++  },
++  {
++    name: 'Bugaboo',
++    status: 'open'
++  },
++  {
++    name: 'Chilkoot Pass',
++    status: 'closed'
++  },
++  {
++    name: 'Classifier',
++    status: 'open'
++  },
++  {
++    name: 'Big Bear',
++    status: 'open'
++  },
++  {
++    name: 'Blastface',
++    status: 'open'
++  },
++  {
++    name: 'Huckleberry Ridge',
++    status: 'open'
++  },
++  {
++    name: 'Little Bear',
++    status: 'closed'
++  },
++  {
++    name: 'Moosetrack Corner',
++    status: 'closed'
++  },
++  {
++    name: 'Roller Coaster',
++    status: 'closed'
++  },
++  {
++    name: 'Sabre',
++    status: 'open'
++  },
++  {
++    name: 'Scimitar',
++    status: 'open'
++  },
++  {
++    name: 'Single Malt',
++    status: 'open'
++  },
++  {
++    name: 'Sunrise',
++    status: 'open'
++  },
++  {
++    name: 'Valhalla',
++    status: 'open'
++  },
++  {
++    name: 'Sunrise Basin Glades',
++    status: 'closed'
++  },
++  {
++    name: 'Asgard',
++    status: 'closed'
++  },
++  {
++    name: 'Left Wing',
++    status: 'closed'
++  },
++  {
++    name: 'Right Wing',
++    status: 'closed'
++  },
++  {
++    name: 'Alpine Steel',
++    status: 'open'
++  },
++  {
++    name: 'Claim Jumper',
++    status: 'open'
++  },
++  {
++    name: 'Beaver Slide',
++    status: 'open'
++  },
++  {
++    name: 'Ben-Andras Way',
++    status: 'open'
++  },
++  {
++    name: 'Bishop',
++    status: 'closed'
++  },
++  {
++    name: 'Carpet Bagger',
++    status: 'open'
++  },
++  {
++    name: 'Double Jack',
++    status: 'open'
++  },
++  {
++    name: 'Easy Slide',
++    status: 'open'
++  },
++  {
++    name: 'Fools Gold',
++    status: 'closed'
++  },
++  {
++    name: 'Gambler',
++    status: 'open'
++  },
++  {
++    name: 'Gambit',
++    status: 'closed'
++  },
++  {
++    name: 'Gold Chute',
++    status: 'open'
++  },
++  {
++    name: 'Gold Fever',
++    status: 'open'
++  },
++  {
++    name: 'Gold Pan Alley',
++    status: 'open'
++  },
++  {
++    name: 'Gunslinger',
++    status: 'closed'
++  },
++  {
++    name: 'Hans Highway',
++    status: 'closed'
++  },
++  {
++    name: 'Hobbit Forest',
++    status: 'open'
++  },
++  {
++    name: 'Hole in the Wall',
++    status: 'open'
++  },
++  {
++    name: 'Klondike',
++    status: 'open'
++  },
++  {
++    name: 'Knight',
++    status: 'closed'
++  },
++  {
++    name: 'Upper Peacemaker',
++    status: 'open'
++  },
++  {
++    name: 'Mahres Gold',
++    status: 'open'
++  },
++  {
++    name: 'Mine Shaft',
++    status: 'open'
++  },
++  {
++    name: 'Peacemaker',
++    status: 'open'
++  },
++  {
++    name: 'Lower Peacemaker',
++    status: 'open'
++  },
++  {
++    name: 'Portal',
++    status: 'closed'
++  },
++  {
++    name: 'Rook',
++    status: 'closed'
++  },
++  {
++    name: 'Silver Dollar',
++    status: 'open'
++  },
++  {
++    name: 'Single Jack',
++    status: 'open'
++  },
++  {
++    name: 'Silver Drift',
++    status: 'open'
++  },
++  {
++    name: 'Silver Jack',
++    status: 'closed'
++  },
++  {
++    name: 'Silver King',
++    status: 'open'
++  },
++  {
++    name: 'Silver Queen',
++    status: 'open'
++  },
++  {
++    name: 'Silver Ridge',
++    status: 'open'
++  },
++  {
++    name: 'Silver Spur',
++    status: 'open'
++  },
++  {
++    name: 'Tamarack',
++    status: 'closed'
++  },
++  {
++    name: 'TinStar',
++    status: 'closed'
++  },
++  {
++    name: 'Treasure Hill',
++    status: 'open'
++  },
++  {
++    name: 'Tombstone',
++    status: 'open'
++  },
++  {
++    name: 'Trolley Car',
++    status: 'closed'
++  },
++  {
++    name: 'Powder Keg',
++    status: 'closed'
++  },
++  {
++    name: 'Ursula’s Alley',
++    status: 'open'
++  },
++  {
++    name: '4800 Road',
++    status: 'open'
++  },
++  {
++    name: 'Angel Heart',
++    status: 'open'
++  },
++  {
++    name: 'Bakken',
++    status: 'closed'
++  },
++  {
++    name: 'Concentrator',
++    status: 'closed'
++  },
++  {
++    name: 'Cherub',
++    status: 'open'
++  },
++  {
++    name: 'Crusher',
++    status: 'open'
++  },
++  {
++    name: 'Green Beret',
++    status: 'open'
++  },
++  {
++    name: 'Gold Rush',
++    status: 'open'
++  },
++  {
++    name: 'Griz',
++    status: 'open'
++  },
++  {
++    name: 'Last Chance',
++    status: 'open'
++  },
++  {
++    name: 'Lost Dutchman',
++    status: 'open'
++  },
++  {
++    name: 'Lower Dutchman',
++    status: 'open'
++  },
++  {
++    name: 'New Prospector',
++    status: 'open'
++  },
++  {
++    name: 'Northeast Ridge',
++    status: 'closed'
++  },
++  {
++    name: 'Outer Dutchman',
++    status: 'closed'
++  },
++  {
++    name: 'Pipeline',
++    status: 'open'
++  },
++  {
++    name: 'Upper Concentrator',
++    status: 'closed'
++  },
++  {
++    name: 'Upper Cys Glades',
++    status: 'closed'
++  },
++  {
++    name: 'Lower Cys Glades',
++    status: 'open'
++  },
++  {
++    name: 'Quartzite Ridge',
++    status: 'open'
++  },
++  {
++    name: 'Separate Reality',
++    status: 'open'
++  },
++  {
++    name: 'Sluice Box',
++    status: 'open'
++  },
++  {
++    name: 'Stockholders',
++    status: 'closed'
++  },
++  {
++    name: 'Stope',
++    status: 'open'
++  },
++  {
++    name: 'Tailings',
++    status: 'open'
++  }
++]);
+diff --git a/test/resorts/49-degrees-north.js b/test/resorts/49-degrees-north.js
+index b17ab3fb..92ba937e 100644
+--- a/test/resorts/49-degrees-north.js
++++ b/test/resorts/49-degrees-north.js
+@@ -1,11 +1,12 @@
+ import lifts from '../lifts/index.js';
+ 
++// winter snapshot (2026-02-12) of the trail-status report page
+ lifts('49-degrees-north', 'html', {
+-  'Chair 1': 'open',
+-  'Chair 2': 'closed',
+-  'Chair 3': 'open',
+-  'Chair 4': 'open',
+-  'Chair 5': 'open',
+-  'Chair 6': 'closed',
+-  'Chair 7': 'open'
++  'Northern Spirit #1': 'open',
++  'Grub stake #2': 'closed',
++  'Payday #3': 'open',
++  'Angel Peak #6': 'closed',
++  'Silver Lode #4': 'closed',
++  'Sunrise Quad #5': 'open',
++  'Gold Fever Conveyor #7': 'open'
+ });
+diff --git a/test/resorts/example/49-degrees-north.html b/test/resorts/example/49-degrees-north.html
+index f036928c..891cc5f4 100644
+--- a/test/resorts/example/49-degrees-north.html
++++ b/test/resorts/example/49-degrees-north.html
+@@ -38,14 +38,47 @@
+     <link href="/css/bootstrap.min.css" rel="stylesheet">
+     <link href="/css/css.css" rel="stylesheet">
+     <link href="/css/override.css" rel="stylesheet">
++    <!--<link href="/css/2022.css" rel="stylesheet">-->
+ 	<script src="https://kit.fontawesome.com/3c631f92f4.js" crossorigin="anonymous"></script><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+ 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+-})(window,document,'script','dataLayer','GTM-WFC9L5H');</script></head>
++})(window,document,'script','dataLayer','GTM-WFC9L5H');</script>
++<!-- Global site tag (gtag.js) - Google Analytics -->
++<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172926824-1"></script>
++<script>
++  window.dataLayer = window.dataLayer || [];
++  function gtag(){dataLayer.push(arguments);}
++  gtag('js', new Date());
++  gtag('config', 'UA-172926824-1');
++</script>
++<meta name="com.silverpop.brandeddomains" content=www.pages03.net,shop.ski49n.com,www.ski49n.com />
++
++<script src=https://www.sc.pages03.net/lp/static/js/iMAWebCookie.js?1f28af75-18aad49861a-97fa2f49c480a6623df4106445b43c50&h=www.pages03.net type="text/javascript"></script>
++<!-- TikTok Pixel Code Start -->
++<script>
++!function (w, d, t) {
++  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
++var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
++;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
++
++
++  ttq.load('CRG667JC77U326FJDBFG');
++  ttq.page();
++}(window, document, 'ttq');
++</script>
++<!-- TikTok Pixel Code End -->
++        <script type="text/javascript">
++            ttd_dom_ready( function() {
++                if (typeof TTDUniversalPixelApi === 'function') {
++                    var universalPixelApi = new TTDUniversalPixelApi();
++                    universalPixelApi.init("fuv1gp6", ["c83dcgd"], "https://insight.adsrvr.org/track/up");
++                }
++            });
++        </script>
++</head>
+ 
+-<body>
+-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" id="navtop">
++<body> <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" id="navtop">
+     <div class="container">
+         <a class="navbar-brand" href="/"><img src="/images/logo.png" alt=""></a>
+         <div class="nav-links">
+@@ -61,13 +94,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                             <li><a href="/mountain-info/tours-mountain-hosts">Tours &amp; Mountain Hosts</a></li>
+                             <li><a href="/mountain-info/winter-sports-foundation">Winter Sports Foundation</a></li>
+                             <li><a href="/mountain-info/summer">Summer</a></li>
++                            <li><a href="/mountain-news/details/employment">Employment</a></li>
++                            <li><a href="/mountain-news/upcoming-events">Upcoming Events</a></li>
++                            <li><a href="/mountain-news">Mountain News</a></li>
++                           
+                         </ul>
+                     </li>
+                     <li>
+                         <a href="#">Tickets &amp; Passes</a> <span class="icon"><img src="/images/nav-arrow-down.svg" alt=""></span>
+                         <ul class="sub-nav">
+                             <li><a href="/tickets/day-tickets">Day Tickets</a></li>
+-                            <li><a href="/tickets/season-tickets">Season Passes</a></li>
++                            <li><a href="/tickets/season-passes">Season Passes</a></li>
+                             <li><a href="/tickets/promotions-perks">Promotions &amp; Perks</a></li>
+                             <li><a href="https://shop.ski49n.com">Online Store</a></li>
+ 
+@@ -77,8 +114,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                         <a href="#">Mountain Services</a> <span class="icon"><img src="/images/nav-arrow-down.svg" alt=""></span>
+                         <ul class="sub-nav">
+                             <li><a href="/mountain-services/rental-repair-shop">Rental &amp; Repair Shop</a></li>
+-                            <li><a href="/mountain-services/race-program">Race Program</a></li>
+-                            <li><a href="/mountain-services/ski-snowboard-school">Ski Snowboard &amp; School</a></li>
++                            <li><a href="/mountain-services/race-program">Youth Competition Program</a></li>
++                            <li><a href="/mountain-services/ski-snowboard-school">Ski &amp; Snowboard School</a></li>
+                             <li><a href="/mountain-services/nordic-center">Nordic Center</a></li>
+                             <li><a href="/mountain-services/amenities">Amenities</a></li>
+                            <!-- <li><a href="/mountain-services/child-lessons">Child Lessons</a></li>
+@@ -94,9 +131,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                         <ul class="sub-nav">
+                             <li><a href="/mountain-info/expanded-conditions">Conditions Report</a></li>
+ 							<li><a href="/mountain-info/trail-status">Grooming Report</a></li>
+-							<li><a href="/mountain-info/webcams">Webcams</a></li>
+-							<li><a href="/mountain-news/upcoming-events">Upcoming Events</a></li>
+-                            <li><a href="/mountain-news">Mountain News</a></li>
++							<li><a href="/webcams/">Webcams</a></li>                     
+                             <li><a href="/ops-calendar">Operations Calendar</a></li>
+                         </ul>
+                     </li>
+@@ -113,10 +148,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                 
+                     <span class="icon">
+                        	
+-	                        <img src="/images/weather-icons_cloudy.svg" alt="Cloudy icon">
++	                        <img src="/images/weather-icons_sunny.svg" alt="Sunny weather icon">
+ 	                        
+                     </span>
+-                	<h3>34<sup>&deg;F</sup></h3>
++                	<h3>27<sup>&deg;F</sup></h3>
+                 
+                 
+             </div>
+@@ -134,32 +169,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+         
+            <span class="icon">
+                	
+-                    <img src="/images/weather-icons_cloudy.svg" alt="Cloudy icon">
++                    <img src="/images/weather-icons_sunny.svg" alt="Sunny weather icon">
+                     
+         	</span>
+-            <h3>34<sup>&deg;F</sup></h3>
++            <h3>27<sup>&deg;F</sup></h3>
+         
+         
+     </div>
+     <div class="view-report-mob d-md-none"><span>VIEW REPORT</span> <img src="/images/white-arrow-report.svg" alt=""></div>
+     </div>
+-</section>
+-
+-  <section class="hero-banner" style="background-image: url(https://www.ski49n.com/images/uploads/banners/trail-map-banner-min.png);">
+-        <div class="image-place d-none"><img src="https://www.ski49n.com/images/uploads/banners/trail-map-banner-min.png" alt="Trail Maps &amp; Stats desktop image"></div>
+-        <div class="image-place d-md-none"><img src="https://www.ski49n.com/images/uploads/banners/trail-map-banner-min.png" alt="Trail Maps &amp; Stats mobile image"></div>
+-  
+-        <div class="caption">
+-            <div class="caption-box">
+-                <div class="copy">
+-                    <h3>Mountain Info</h3>
+-                    
+-                    
+-                    <h2>Trail Status</h2>
+-                </div>
++</section> 
++<style type="text/css">
++  .hide{
++    display: none !important;
++  }
++</style>
++ 
++<section class="hero-banner" style="background-image: url(https://www.ski49n.com/images/uploads/banners/banner-for-webpage.png);">
++    <div class="image-place d-none"><img src="https://www.ski49n.com/images/uploads/banners/banner-for-webpage.png" alt="Trail Maps &amp; Stats desktop image"></div>
++    <div class="image-place d-md-none"><img src="https://www.ski49n.com/images/uploads/banners/mobile_banner4-landscape_1.jpg" alt="Trail Maps &amp; Stats mobile image"></div>
++    
++    <div class="caption">
++        <div class="caption-box">
++            <div class="copy">
++                <h3>Mountain Info</h3>
++                 
++                <h2>Trail Status</h2>
+             </div>
++        </div>
+ 
+-           
++        
+ <div class="conditions-reports" id="conditions-reports">
+     <div class="box">
+         <h2>Conditions Report</h2>
+@@ -167,10 +206,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+             
+             <span class="icon">
+                 
+-                <img src="/images/weather-icons_cloudy.svg" alt="Cloudy icon">
++                <img src="/images/weather-icons_sunny.svg" alt="Sunny weather icon">
+                 
+             </span>
+-            <h3>34<sup>&deg;F</sup></h3>
++            <h3>27<sup>&deg;F</sup></h3>
+             
+         </div>
+     </div>
+@@ -182,1471 +221,726 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+ 	</div>
+ 	<div class="box snowfall">
+ 		<a href="/mountain-info/expanded-conditions" class="cta cta-sm"><i class="fas fa-clipboard-list"></i> VIEW FULL REPORT</a>
+-		<p>Last updated: 12/21/19 at 3:19pm</p>
++		<p>Last updated: 02/11/26 at 5:30am</p>
+ 	</div>
+ </div>
+ 
+-        </div>
+-    </section>
++    </div>
++</section>
+ 
+-        <section class="mountain-stats">
+-        <div class="container">
+-            <div class="row flex-md-column-reverse">
+-                <div class="col-12 stats-box">
+-                 <div class="copy">
+-                        Last updated: 12/21/19 at 10:12am<br /><br />
+-                      <a href="https://forecast.weather.gov/MapClick.php?lat=48.28319289548349&lon=-117.57705688476562&site=otx&smap=1&marine=0&unit=0&lg=en#.Xdw2xJNKhTY" target="_blank" class="cta">Click Here for NOAA Weather
++<section class="mountain-stats">
++    <div class="container">
++        <div class="row flex-md-column-reverse">
++            <div class="col-12 stats-box">
++                <div class="copy">
++                    Last updated: 02/11/26 at 4:09am<br /><br />
++                    <a href="https://forecast.weather.gov/MapClick.php?lat=48.28319289548349&lon=-117.57705688476562&site=otx&smap=1&marine=0&unit=0&lg=en#.Xdw2xJNKhTY" target="_blank" class="cta">Click Here for NOAA Weather
+                     </a> <a href="expanded-conditions" class="cta">View Snow Conditions</a><br /><br />
+                 </div>
+-                    <div class="row">
+-                        
+-                       
+-                       
+-                        <div class="col-md-3">
+-                            <div class="box">
+-	                        
+-                                
+-                                <h3 style="padding-bottom: 15px;">Lifts</h3>
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Chair 1 - 
+-	                                
++              </div>
++            </div>
++          </div>
++        </section>
++        <section class="mountain-trail">
++ <div class="container">
++  <div class="row">
++    <div class="col-12">
++      <div class="heading">
++        <h2>Get To Know Our Mountains: <span class="name">Chewelah Peak &amp; Angel Peak</span></h2>
++      </div>
++    </div>
++    <div class="col-md-8 col-lg-9">
++      <div class="map-area">
++        <div class="map-key-map">
++          <!-- <img src="/images/map-key-area.jpg" alt=""> -->
++          
++          <?xml version="1.0" encoding="utf-8"?>
++          <!-- Generator: Adobe Illustrator 24.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
++          <svg><!-- stripped inline trail map svg --></svg>
++
++        </div>
++        <div class="img" style="display:none;">
++                  </div>
++      </div>
++      <div class="map-content">
++        <p>Skiers and riders should be advised A green circle, blue square or Black Diamond trail at one ski area is not necessarily the same as a similarly rated trail at another ski area. Skiers and riders should work their way up, beginning with the easiest trails, no matter what their ability level may be, until they are familiar with the trails at that ski area.</p>
++        <p><strong>BOUNDARY POLICY</strong> Skiers and snowboarders wishing to go outside of marked area boundaries do so at their own risk. Areas outside of marked boundaries are not patrolled. Unmarked hazards of all types exist. Search and rescue operations may be authorized and conducted by Stevens County Sheriff's Department. You or your heirs will be financially responsible for this service.</p>
++        <p>Any person skiing or riding outside the confines of trails or runs open for skiing and snowboarding within the ski area boundary shall be responsible for any injuries or losses resulting from his or her actions.</p>
++        <p><strong>DRONE POLICY</strong> Drones or model aircraft use by guests, commercial operators or the media is prohibited without prior written approval of 49<sup>&deg;</sup> North Mountain Resort.</p>
++         <p><strong>UPHILL POLICY</strong> . Please read the entire <a href="/mountain-news/details/uphill-policy">uphill policy here.</a></p>
++      </div>
++    </div>
++    <div class="col-md-4 col-lg-3">
++      
++      <div class="map-keys">
++        <div class="head">
++          <h2>Map key</h2>
++          <div class="switch-btn">
++            Trail Conditions 
++            <label class="switch">
++              <input type="checkbox" id="toggle_conditions">
++              <span class="slider"></span>
++            </label>
++          </div>  
++        </div>
++        <div class="keys-list" id="keyslist">
++        <h1>trail-state-3</h1>
++          <ul>
++            <li class="hide-on-off hide"><span class="icon"><img src="/images/open-key.svg" alt=""></span><span class="key" id="open">Open</span></li>
++            <li class="hide-on-off hide"><span class="icon"><img src="/images/closed-key.svg" alt=""></span><span class="key" id="closed">Closed</span></li>
++            <li class="hide-on-off hide"><span class="icon"><img src="/images/groomed-key.svg" alt=""></span><span class="key" id="groomed">Groomed</span></li>
++            <li><span class="icon"><img src="/images/easiest-key.svg" alt=""></span><span class="key" id="easiest">Easiest</span></li>
++            <li><span class="icon"><img src="/images/more-difficult-key.svg" alt=""></span><span class="key" id="more_diff">More Difficult</span></li>
++            <li><span class="icon"><img src="/images/most-difficult-key.svg" alt=""></span><span class="key" id="most_diff">Most Difficult</span></li>
++            <li><span class="icon"><img src="/images/expert-only-key.svg" alt=""></span><span class="key">Experts Only. Use extreme caution</span></li>
++            <li><span class="icon"><img src="/images/glade-runs-key.svg" alt=""></span><span class="key">Glade Runs</span></li>
++           <!--  <li class="hide-keys"><span class="icon"><img src="/images/quad-chairlift-key.svg" alt=""></span><span class="key">Quad Chairlift</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/dual-chairlift-key.svg" alt=""></span><span class="key">Dual Chairlift</span></li> -->
++            <li class="hide-keys"><span class="icon"><img src="/images/midway-lift-access-key.svg" alt=""></span><span class="key">Midway Lift Access</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/usfs-backcountry-key.svg" alt=""></span><span class="key">Access points to USFS backcountry</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/ski-area-boudary-key.svg" alt=""></span><span class="key">Ski Area Boudary</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/night-lightning-key.svg" alt=""></span><span class="key">Night Lightning</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/gold-fever-conveyor-key.svg" alt=""></span><span class="key">Gold Fever Conveyor</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/freestyle-terrain-key.svg" alt=""></span><span class="key">Freestyle Terrain</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/x-c-trail-key.svg" alt=""></span><span class="key">X-C Trail</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/first-aid-key.svg" alt=""></span><span class="key">First Aid</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/restrooms-key.svg" alt=""></span><span class="key">Restrooms</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/rental-shop-key.svg" alt=""></span><span class="key">Rental Shop</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/lift-ticket-key.svg" alt=""></span><span class="key">Lift Ticket</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/food-service-key.svg" alt=""></span><span class="key">Food Service</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/lounge-key.svg" alt=""></span><span class="key">Lounge</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/lessons-key.svg" alt=""></span><span class="key">Lessons</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/childcare-key.svg" alt=""></span><span class="key">Childcare</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/parking-key.svg" alt=""></span><span class="key">Parking</span></li>
++            <li class="hide-keys"><span class="icon"><img src="/images/overnight-rv-parking-key.svg" alt=""></span><span class="key">Overnight RV Parking</span></li>      
++          </ul>
++        </div>
++        <div class="view-keys" id="viewkeys"> 
++            <span class="more">+ VIEW FULL MAP KEY</span>
++            <span class="less">- Hide FULL MAP KEY</span>
++        </div>
++        
++      </div>
++      
++    </div>
++    <div class="col-12">
++      <hr>
++    </div>
++  </div>
++</div>
++</section>
++                <section class="mountain-stats">
++    <div class="container">
++        <div class="row flex-md-column-reverse">
++            <div class="col-12 stats-box">
++                <div class="row">
++                      
++            <div class="col-md-3">
++                <div class="box">
++                     
++                    <h3 style="padding-bottom: 15px;">Lifts</h3>   
++                    <h4>Northern Spirit #1 - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Chair 2 - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Grub stake #2 - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Chair 3 - 
+-	                                
++                       
++                    <h4>Payday #3 - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Chair 4 - 
+-	                                
+-	                                <span style="color: green;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Angel Peak #6 - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Open
++	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Chair 5 - 
++                       
++                    <h4>Silver Lode #4 - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Closed
++	                                </span></h4>
++                       
++                    <h4>Sunrise Quad #5 - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Chair 6 - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Chair 7 - 
+-	                                
++                       
++                    <h4>Gold Fever Conveyor #7 - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h3 style="padding-bottom: 15px;">Sunrise Basin</h3>
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Huckleberry Ridge - 
+-	                                
+-	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
++                       
++                    <h3 style="padding-bottom: 15px;">Sunrise Basin</h3>   
++                    <h4>Alpine Road - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Groomed
++	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Big Bear - 
+-	                                
++                       
++                    <h4>Dreamline - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Alpine Road - 
+-	                                
++                       
++                    <h4>Broadway - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Broadway - 
++                       
++                    <h4>Bugaboo - 
++	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++	                                Groomed
++	                                </span></h4>
++                       
++                    <h4>Chilkoot Pass - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Bugaboo - 
+-	                                
++                       
++                    <h4>Classifier - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Chilkoot Pass - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Little Bear - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Big Bear - 
++	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Closed
++	                                Groomed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Classifier - 
+-	                                
++                       
++                    <h4>Blastface - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Sabre - 
++                       
++                    <h4>Huckleberry Ridge - 
++	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++	                                Groomed
++	                                </span></h4>
++                       
++                    <h4>Little Bear - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Single Malt - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Moosetrack Corner - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Valhalla - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Roller Coaster - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Scimitar - 
+-	                                
++                       
++                    <h4>Sabre - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Sunrise - 
+-	                                
++                       
++                    <h4>Scimitar - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Dreamline - 
+-	                                
++                       
++                    <h4>Single Malt - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Blastface - 
+-	                                
++                       
++                    <h4>Sunrise - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Roller Coaster - 
++                       
++                    <h4>Valhalla - 
++	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++	                                Open
++	                                </span></h4>
++                       
++                    <h4>Sunrise Basin Glades - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h3 style="padding-bottom: 15px;">Sunrise Basin Glades</h3>
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Left Wing - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Asgard - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Right Wing - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Left Wing - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Tatanka - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Right Wing - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                       
+                        
+-                         </div>
+-                        </div>
+-                        
+-                        <div class="col-md-3">
+-                            <div class="box">
+-	                        
+-                                
+-                                <h3 style="padding-bottom: 15px;">Central Basin</h3>
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Beaver Slide - 
+-	                                
++                </div>
++            </div>
++            
++            <div class="col-md-3">
++                <div class="box">
++                     
++                    <h3 style="padding-bottom: 15px;">Central Basin</h3>   
++                    <h4>Alpine Steel - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Bishop - 
+-	                                
++                       
++                    <h4>Claim Jumper - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Easy Slide - 
+-	                                
++                       
++                    <h4>Beaver Slide - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Fools Gold - 
+-	                                
++                       
++                    <h4>Ben-Andras Way - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Gold Chute - 
++                       
++                    <h4>Bishop - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Closed
++	                                </span></h4>
++                       
++                    <h4>Carpet Bagger - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Hans Highway - 
+-	                                
++                       
++                    <h4>Double Jack - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Knight - 
+-	                                
++                       
++                    <h4>Easy Slide - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Lower Gold Pan Alley - 
++                       
++                    <h4>Fools Gold - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Closed
++	                                </span></h4>
++                       
++                    <h4>Gambler - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Portal - 
++                       
++                    <h4>Gambit - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Closed
++	                                </span></h4>
++                       
++                    <h4>Gold Chute - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Silver Dollar - 
++                       
++                    <h4>Gold Fever - 
++	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Groomed
++	                                </span></h4>
++                       
++                    <h4>Gold Pan Alley - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Silver Ridge - 
+-	                                
+-	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Gunslinger - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Groomed
++	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Treasure Hill - 
++                       
++                    <h4>Hans Highway - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Closed
++	                                </span></h4>
++                       
++                    <h4>Hobbit Forest - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Trolley Car - 
+-	                                
++                       
++                    <h4>Hole in the Wall - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Ben-Andras Way - 
+-	                                
++                       
++                    <h4>Klondike - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Black Hawk - 
++                       
++                    <h4>Knight - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Closed
++	                                </span></h4>
++                       
++                    <h4>Upper Peacemaker - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Hobbit Forest - 
+-	                                
++                       
++                    <h4>Mahres Gold - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Hole in the Wall - 
+-	                                
++                       
++                    <h4>Mine Shaft - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Mahres Gold - 
+-	                                
++                       
++                    <h4>Peacemaker - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Rook - 
+-	                                
++                       
++                    <h4>Lower Peacemaker - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Silver Jack - 
+-	                                
+-	                                <span style="color: green;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Portal - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Open
++	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Silver King - 
+-	                                
+-	                                <span style="color: green;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Rook - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Open
++	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Single Jack - 
+-	                                
++                       
++                    <h4>Silver Dollar - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Upper Gold Pan Alley - 
+-	                                
++                       
++                    <h4>Single Jack - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Claim Jumper - 
+-	                                
++                       
++                    <h4>Silver Drift - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Klondike - 
+-	                                
+-	                                <span style="color: green;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Silver Jack - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Open
++	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Lower Peacemaker - 
+-	                                
+-	                                <span style="color: green;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Silver King - 
++	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Open
++	                                Groomed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Mine Shaft - 
+-	                                
++                       
++                    <h4>Silver Queen - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Peacemaker - 
++                       
++                    <h4>Silver Ridge - 
++	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Groomed
++	                                </span></h4>
++                       
++                    <h4>Silver Spur - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Silver Drift - 
++                       
++                    <h4>Tamarack - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                <span style="color: green;font-size: 14px;font-weight: bold;">
++	                                Closed
++	                                </span></h4>
++                       
++                    <h4>TinStar - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Open
++	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Silver Queen - 
++                       
++                    <h4>Treasure Hill - 
++	                                <span style="color: #064975;font-size: 14px;font-weight: bold;">
+ 	                                
++	                                Groomed
++	                                </span></h4>
++                       
++                    <h4>Tombstone - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Tombstone - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Trolley Car - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Ursula’s Alley - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h3 style="padding-bottom: 15px;">Central Basin Glades</h3>   
++                    <h4>Powder Keg - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Upper Peacemaker - 
+-	                                
++                       
++                    <h4>Ursula’s Alley - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h3 style="padding-bottom: 15px;">Central Basin Glades</h3>
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Boothill - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                </div>
++            </div>
++            
++            <div class="col-md-3">
++                <div class="box">
++                     
++                    <h3 style="padding-bottom: 15px;">West Basin</h3>   
++                    <h4>4800 Road - 
++	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Closed
++	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Powder Keg - 
++                       
++                    <h4>Angel Heart - 
++	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++	                                Open
++	                                </span></h4>
++                       
++                    <h4>Bakken - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Ursula’s Alley - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Concentrator - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                       
+                        
+-                         </div>
+-                        </div>
+-                        
+-                        <div class="col-md-3">
+-                            <div class="box">
+-	                        
+-                                
+-                                <h3 style="padding-bottom: 15px;">West Basin</h3>
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>4800 Road - 
+-	                                
++                    <h4>Cherub - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Double Jack - 
+-	                                
++                       
++                    <h4>Crusher - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Gold Rush - 
+-	                                
++                       
++                    <h4>Green Beret - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Lost Dutchman - 
+-	                                
++                       
++                    <h4>Gold Rush - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Lower Dutchman - 
+-	                                
++                       
++                    <h4>Griz - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>New Prospector - 
+-	                                
++                       
++                    <h4>Last Chance - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Concentrator - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Crusher - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Last Chance - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Sluice Box - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Stope - 
+-	                                
++                       
++                    <h4>Lost Dutchman - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Tailings - 
+-	                                
++                       
++                    <h4>Lower Dutchman - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Upper Concentrator - 
+-	                                
++                       
++                    <h4>New Prospector - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Outer Dutchman - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Northeast Ridge - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Northeast Ridge - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Outer Dutchman - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Quartzite Ridge - 
++                       
++                    <h4>Pipeline - 
++	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++	                                Open
++	                                </span></h4>
++                       
++                    <h4>Upper Concentrator - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Separate Reality - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Upper Cys Glades - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Angel Heart - 
+-	                                
++                       
++                    <h4>Lower Cys Glades - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Griz - 
+-	                                
++                       
++                    <h4>Quartzite Ridge - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Pipeline - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Cherub - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Wolf ’s Den - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Closed
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Wolf - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Separate Reality - 
++	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Closed
++	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Green Beret - 
+-	                                
++                       
++                    <h4>Sluice Box - 
+ 	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Bakken - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Stockholders - 
++                        <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
+ 	                                
+ 	                                Closed
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h3 style="padding-bottom: 15px;">West Basin Glades</h3>
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Upper Cys Glades - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Stope - 
++	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Closed
++	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Lower Cys Glades - 
+-	                                
+-	                                <span style="color: #BE151B;font-size: 14px;font-weight: bold;">
++                       
++                    <h4>Tailings - 
++	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+ 	                                
+-	                                Closed
++	                                Open
+ 	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
+-                           
+-                                
+-                                <h4>Stockholders - 
+-	                                
+-	                                <span style="color: green;font-size: 14px;font-weight: bold;">
+-	                                
+-	                                Open
+-	                                </span></h4>
+-                                
+-                        
+-                          
+-                                               
+-                        
+-                    
+-                        
++                     
++
+ 
+-                   
+-                    </div>
+-                    
+                 </div>
+-                
++
+             </div>
+-            <div class="row">
+-                        <div class="col-md-12 col-lg-12">
+-	                        <p><a href="https://forecast.weather.gov/MapClick.php?lat=48.28319289548349&lon=-117.57705688476562&site=otx&smap=1&marine=0&unit=0&lg=en#.Xdw2xJNKhTY" class="cta" target="_blank">Click Here for NOAA Weather</a></p>
+-                        </div>
+-                     </div>
++
+         </div>
+-    </section>
++        <div class="row">
++            <div class="col-md-12 col-lg-12">
++                <p><a href="https://forecast.weather.gov/MapClick.php?lat=48.28319289548349&lon=-117.57705688476562&site=otx&smap=1&marine=0&unit=0&lg=en#.Xdw2xJNKhTY" class="cta" target="_blank">Click Here for NOAA Weather</a></p>
++            </div>
++        </div>
++    </div>
++</section>
+ 
+-    <footer class="foot">
++     <footer class="foot">
+         <div class="container">
+             <div class="row">
+                 <div class="col-md-6 col-lg-3">
+@@ -1667,6 +961,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                             <li class="instagram"><a href="http://www.instagram.com/49degreesnorth" target="_blank"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+                             <li class="twitter"><a href="http://twitter.com/49DegreesNorth" target="_blank"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+                             <li class="youtube"><a href="https://www.youtube.com/channel/UCc0PKHlAF3HVl9XEjZN6Gkg" target="_blank"><i class="fab fa-youtube" aria-hidden="true"></i></a></li>
++                            
+                         </ul>
+                     </div>
+                 </div>
+@@ -1679,16 +974,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                 <div class="col-md-6 col-lg-3">
+                     <div class="foot-link">
+                         <h4>PARTNERS</h4>
+-                        <ul class="partner-list">
++                        <ul class="partner-list" style="display: flex;">
+                             <li>
+-                                <a href="https://www.fs.usda.gov/colville/" target="_blank"><img src="images/forest_service-logo.png" alt=""></a>
++                                <a href="https://www.fs.usda.gov/colville/" target="_blank"><img src="/images/forest_service-logo.png" alt="forest service"></a>
+                             </li>
++                           <!-- <li>
++                                <a href="https://www.snowledge.co/" target="_blank"><img src="/images/Artboard 1@72x.png" alt="snowledge"></a>
++                            </li>-->
+                         </ul>
+                     </div>
+                 </div>
+                 <div class="col">
+                     <div class="foot-copy">
+-                        <div class="copyright">&copy; Copyright 2019 49° North Mountain Resort </div>
++                        <div class="copyright">&copy; Copyright 2026 49° North Mountain Resort </div>
+                         <ul class="pri-link">
+                             <li><a href="/privacy">Privacy Statement</a></li>
+                             <li><a href="/terms">Terms Of Use</a></li>
+@@ -1718,7 +1016,7 @@ $(document).ready(function() {
+         e.preventDefault();
+     var errs = 0;
+     var email = $('#email').val();
+-    var xid = "bb9baecf151b05082af055778956e33c8646c78e";
++    var xid = "3049fd22cd3bbc3758dc79b611b2d7a0569aba5d";
+      if(!ValidateEmail(email)){
+         errs = 1;
+         alert('Please enter valid email address');
+@@ -1741,11 +1039,1189 @@ $(document).ready(function() {
+     });
+ 
+     $('#assistance').change(function(){
+-     var assit = $(this).val();
++     var assit = $(this).val(),
++     email = $(this).find(':selected').data("role");
+      $('li.selection__choice').find('strong')[0].nextSibling.textContent= assit;
++     $('#select_email').text(email);
++     $('#select_email').attr("mailto:"+email);
+     });
+ });
+ </script>
++
++
++<!-- Cookie Consent Banner (drop before </body>) -->
++<style>
++  .cc-wrap{position:fixed;left:0;right:0;bottom:0;z-index:9999;display:none}
++  .cc-bar{max-width:1100px;margin:0 auto 1rem auto;background:#111;color:#fff;border-radius:12px;padding:14px 16px;
++    box-shadow:0 10px 30px rgba(0,0,0,.35);display:flex;gap:16px;align-items:flex-start;}
++  .cc-bar *{box-sizing:border-box}
++  .cc-text{flex:1;line-height:1.45;font-size:.95rem}
++  .cc-text a{color:#a7d0ff;text-decoration:underline}
++  .cc-actions{display:flex;gap:8px;flex-wrap:wrap}
++  .cc-btn{border:none;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
++  .cc-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
++  .cc-accept{background:#22c55e;color:#08130a}
++  .cc-reject{background:#334155;color:#fff}
++  .cc-settings{background:#0ea5e9;color:#062333}
++  .cc-hidden{display:none}
++
++  /* Settings dialog */
++  .cc-dialog-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:10000}
++  .cc-dialog{width:min(600px,92vw);background:#0b1220;color:#fff;border-radius:14px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
++  .cc-dialog h3{margin:0 0 .5rem 0}
++  .cc-row{display:flex;justify-content:space-between;align-items:center;border:1px solid #243042;border-radius:10px;padding:12px;margin:10px 0}
++  .cc-row label{display:flex;flex-direction:column;font-size:.95rem}
++  .cc-row small{opacity:.85}
++  .cc-switch{display:inline-flex;gap:8px;align-items:center}
++  .cc-switch input{width:42px;height:22px;appearance:none;background:#374151;border-radius:999px;position:relative;outline:none;cursor:pointer}
++  .cc-switch input:checked{background:#22c55e}
++  .cc-switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left .18s ease}
++  .cc-switch input:checked::after{left:23px}
++  .cc-dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
++  .cc-save{background:#22c55e;color:#08130a}
++  .cc-cancel{background:#475569;color:#fff}
++
++  @media (max-width:640px){.cc-bar{border-radius:0;margin:0;background:#111}
++  }
++
++  /* Slide-up animation */
++  .cc-wrap.cc-show{display:block;animation:cc-slide .25s ease-out}
++  @keyframes cc-slide{from{transform:translateY(20px);opacity:.0}to{transform:translateY(0);opacity:1}}
++</style>
++
++<div class="cc-wrap" id="cc-wrap" role="region" aria-label="Cookie consent">
++  <div class="cc-bar" role="dialog" aria-live="polite" aria-modal="false">
++    <div class="cc-text">
++      We use essential cookies to run this site and optional cookies to improve your experience. 
++      See our <a href="/privacy" target="_blank" rel="noopener">Privacy & Cookies Policy</a>.
++    </div>
++    <div class="cc-actions">
++      <button class="cc-btn cc-reject" id="cc-reject">Reject non-essential</button>
++      <button class="cc-btn cc-settings" id="cc-open-settings">Settings</button>
++      <button class="cc-btn cc-accept" id="cc-accept">Accept all</button>
++    </div>
++  </div>
++</div>
++
++<!-- Settings dialog -->
++<div class="cc-dialog-backdrop" id="cc-backdrop" aria-hidden="true">
++  <div class="cc-dialog" role="dialog" aria-modal="true" aria-labelledby="cc-title">
++    <h3 id="cc-title">Cookie Settings</h3>
++    <p>Choose which categories you want to allow. Essential cookies are always on because the site needs them to function.</p>
++
++    <div class="cc-row" aria-disabled="true">
++      <label><strong>Essential</strong><small>Required for core functionality</small></label>
++      <div class="cc-switch"><input type="checkbox" checked disabled aria-label="Essential cookies always enabled"></div>
++    </div>
++
++    <div class="cc-row">
++      <label for="cc-analytics"><strong>Analytics</strong><small>Helps us understand site usage</small></label>
++      <div class="cc-switch"><input id="cc-analytics" type="checkbox" aria-label="Enable analytics cookies"></div>
++    </div>
++
++    <div class="cc-row">
++      <label for="cc-marketing"><strong>Marketing</strong><small>Personalization & ads</small></label>
++      <div class="cc-switch"><input id="cc-marketing" type="checkbox" aria-label="Enable marketing cookies"></div>
++    </div>
++
++    <div class="cc-dialog-actions">
++      <button class="cc-btn cc-cancel" id="cc-cancel">Cancel</button>
++      <button class="cc-btn cc-save" id="cc-save">Save choices</button>
++    </div>
++  </div>
++</div>
++
++<script>
++(function () {
++  const STORAGE_KEY = "cookieConsent_v1";
++  const wrap = document.getElementById("cc-wrap");
++  const btnAccept = document.getElementById("cc-accept");
++  const btnReject = document.getElementById("cc-reject");
++  const btnOpen = document.getElementById("cc-open-settings");
++  const backdrop = document.getElementById("cc-backdrop");
++  const btnSave = document.getElementById("cc-save");
++  const btnCancel = document.getElementById("cc-cancel");
++  const a = document.getElementById("cc-analytics");
++  const m = document.getElementById("cc-marketing");
++
++  // Show banner if no prior decision
++  const existing = safeParse(localStorage.getItem(STORAGE_KEY));
++  if (!existing) {showBar();}
++
++  // Buttons
++  btnAccept.addEventListener("click", () => {
++    saveConsent({ essential: true, analytics: true, marketing: true });
++    hideBar();
++  });
++
++  btnReject.addEventListener("click", () => {
++    saveConsent({ essential: true, analytics: false, marketing: false });
++    hideBar();
++  });
++
++  btnOpen.addEventListener("click", () => {
++    // Prefill dialog with existing or defaults
++    const c = safeParse(localStorage.getItem(STORAGE_KEY)) || { analytics: false, marketing: false };
++    a.checked = !!c.analytics;
++    m.checked = !!c.marketing;
++    openDialog();
++  });
++
++  btnSave.addEventListener("click", () => {
++    saveConsent({ essential: true, analytics: a.checked, marketing: m.checked });
++    closeDialog();
++    hideBar();
++  });
++
++  btnCancel.addEventListener("click", closeDialog);
++  backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeDialog(); });
++
++  function showBar(){wrap.classList.add("cc-show");}
++  function hideBar(){wrap.classList.remove("cc-show");}
++
++  function openDialog(){
++    backdrop.style.display="flex";
++    backdrop.setAttribute("aria-hidden","false");
++    // focus management
++    setTimeout(() => backdrop.querySelector(".cc-dialog").focus?.(), 0);
++  }
++  function closeDialog(){
++    backdrop.style.display="none";
++    backdrop.setAttribute("aria-hidden","true");
++  }
++
++  function saveConsent(obj){
++    localStorage.setItem(STORAGE_KEY, JSON.stringify({
++      ...obj,
++      timestamp: new Date().toISOString(),
++      version: 1
++    }));
++    // Example: run callbacks to load/remove scripts
++    applyConsent(obj);
++  }
++
++  function safeParse(s){ try{ return JSON.parse(s); }catch{ return null; } }
++
++  // Hook: apply consent to your scripts
++  function applyConsent(c){
++    // Example: load Google Analytics only if allowed
++    if (c.analytics) {
++      loadOnce("ga-loader", () => {
++        const g = document.createElement("script");
++        g.id = "ga-loader";
++        g.src = "https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID";
++        g.async = true;
++        document.head.appendChild(g);
++        window.dataLayer = window.dataLayer || [];
++        function gtag(){dataLayer.push(arguments);}
++        window.gtag = gtag;
++        gtag('js', new Date());
++        gtag('config', 'GA_MEASUREMENT_ID', { 'anonymize_ip': true });
++      });
++    } else {
++      // If previously loaded, you might want to disable/clear analytics cookies here
++    }
++
++    if (c.marketing) {
++      // Load your marketing pixel(s) here
++    }
++  }
++
++  function loadOnce(id, loader){
++    if (!document.getElementById(id)) loader();
++  }
++
++  // If consent already exists (e.g., user returns), apply it
++  if (existing) applyConsent(existing);
++})();
++</script>
++
++
++
+ </body>
+ 
+-</html>
+\ No newline at end of file
++</html>
++
++<script type="text/javascript">
++  var list = [];
++  var condition = [];
++  var svg_arr = [];
++
++  $('svg').find('g').each(function(){
++    if($(this).attr("name") !=undefined){
++      console.log($(this).attr("name"));
++      svg_arr.push($(this).attr("name"));
++    }
++  });
++  $('svg').find('polygon').each(function(){
++    if($(this).attr("name") !=undefined){
++      console.log($(this).attr("name"));
++      svg_arr.push($(this).attr("name"));
++    }
++  });
++    $('svg').find('path').each(function(){
++    if($(this).attr("name") !=undefined){
++      console.log($(this).attr("name"));
++      svg_arr.push($(this).attr("name"));
++    }
++  });
++
++  
++  
++  var basin_name = $.trim("Lifts");
++  
++  list.push({
++    status: "Header",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Header", "Lifts")
++
++  var basin_name = $.trim("Northern Spirit #1");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Northern Spirit #1")
++
++  var basin_name = $.trim("Grub stake #2");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Grub stake #2")
++
++  var basin_name = $.trim("Payday #3");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Payday #3")
++
++  var basin_name = $.trim("Angel Peak #6");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Angel Peak #6")
++
++  var basin_name = $.trim("Silver Lode #4");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Silver Lode #4")
++
++  var basin_name = $.trim("Sunrise Quad #5");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Sunrise Quad #5")
++
++  var basin_name = $.trim("Gold Fever Conveyor #7");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Gold Fever Conveyor #7")
++
++  var basin_name = $.trim("Sunrise Basin");
++  
++  list.push({
++    status: "Header",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Header", "Sunrise Basin")
++
++  var basin_name = $.trim("Alpine Road");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Alpine Road")
++
++  var basin_name = $.trim("Dreamline");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Dreamline")
++
++  var basin_name = $.trim("Broadway");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Broadway")
++
++  var basin_name = $.trim("Bugaboo");
++  
++  list.push({
++    status: "Groomed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Groomed", "Bugaboo")
++
++  var basin_name = $.trim("Chilkoot Pass");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Chilkoot Pass")
++
++  var basin_name = $.trim("Classifier");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Classifier")
++
++  var basin_name = $.trim("Big Bear");
++  
++  list.push({
++    status: "Groomed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Groomed", "Big Bear")
++
++  var basin_name = $.trim("Blastface");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Blastface")
++
++  var basin_name = $.trim("Huckleberry Ridge");
++  
++  list.push({
++    status: "Groomed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Groomed", "Huckleberry Ridge")
++
++  var basin_name = $.trim("Little Bear");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Little Bear")
++
++  var basin_name = $.trim("Moosetrack Corner");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Moosetrack Corner")
++
++  var basin_name = $.trim("Roller Coaster");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Roller Coaster")
++
++  var basin_name = $.trim("Sabre");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Sabre")
++
++  var basin_name = $.trim("Scimitar");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Scimitar")
++
++  var basin_name = $.trim("Single Malt");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Single Malt")
++
++  var basin_name = $.trim("Sunrise");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Sunrise")
++
++  var basin_name = $.trim("Valhalla");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Valhalla")
++
++  var basin_name = $.trim("Sunrise Basin Glades");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Sunrise Basin Glades")
++
++  var basin_name = $.trim("Asgard");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Asgard")
++
++  var basin_name = $.trim("Left Wing");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Left Wing")
++
++  var basin_name = $.trim("Right Wing");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Right Wing")
++
++  var basin_name = $.trim("Central Basin");
++  
++  list.push({
++    status: "Header",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Header", "Central Basin")
++
++  var basin_name = $.trim("Alpine Steel");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Alpine Steel")
++
++  var basin_name = $.trim("Claim Jumper");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Claim Jumper")
++
++  var basin_name = $.trim("Beaver Slide");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Beaver Slide")
++
++  var basin_name = $.trim("Ben-Andras Way");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Ben-Andras Way")
++
++  var basin_name = $.trim("Bishop");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Bishop")
++
++  var basin_name = $.trim("Carpet Bagger");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Carpet Bagger")
++
++  var basin_name = $.trim("Double Jack");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Double Jack")
++
++  var basin_name = $.trim("Easy Slide");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Easy Slide")
++
++  var basin_name = $.trim("Fools Gold");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Fools Gold")
++
++  var basin_name = $.trim("Gambler");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Gambler")
++
++  var basin_name = $.trim("Gambit");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Gambit")
++
++  var basin_name = $.trim("Gold Chute");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Gold Chute")
++
++  var basin_name = $.trim("Gold Fever");
++  
++  list.push({
++    status: "Groomed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Groomed", "Gold Fever")
++
++  var basin_name = $.trim("Gold Pan Alley");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Gold Pan Alley")
++
++  var basin_name = $.trim("Gunslinger");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Gunslinger")
++
++  var basin_name = $.trim("Hans Highway");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Hans Highway")
++
++  var basin_name = $.trim("Hobbit Forest");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Hobbit Forest")
++
++  var basin_name = $.trim("Hole in the Wall");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Hole in the Wall")
++
++  var basin_name = $.trim("Klondike");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Klondike")
++
++  var basin_name = $.trim("Knight");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Knight")
++
++  var basin_name = $.trim("Upper Peacemaker");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Upper Peacemaker")
++
++  var basin_name = $.trim("Mahres Gold");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Mahres Gold")
++
++  var basin_name = $.trim("Mine Shaft");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Mine Shaft")
++
++  var basin_name = $.trim("Peacemaker");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Peacemaker")
++
++  var basin_name = $.trim("Lower Peacemaker");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Lower Peacemaker")
++
++  var basin_name = $.trim("Portal");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Portal")
++
++  var basin_name = $.trim("Rook");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Rook")
++
++  var basin_name = $.trim("Silver Dollar");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Silver Dollar")
++
++  var basin_name = $.trim("Single Jack");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Single Jack")
++
++  var basin_name = $.trim("Silver Drift");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Silver Drift")
++
++  var basin_name = $.trim("Silver Jack");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Silver Jack")
++
++  var basin_name = $.trim("Silver King");
++  
++  list.push({
++    status: "Groomed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Groomed", "Silver King")
++
++  var basin_name = $.trim("Silver Queen");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Silver Queen")
++
++  var basin_name = $.trim("Silver Ridge");
++  
++  list.push({
++    status: "Groomed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Groomed", "Silver Ridge")
++
++  var basin_name = $.trim("Silver Spur");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Silver Spur")
++
++  var basin_name = $.trim("Tamarack");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Tamarack")
++
++  var basin_name = $.trim("TinStar");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "TinStar")
++
++  var basin_name = $.trim("Treasure Hill");
++  
++  list.push({
++    status: "Groomed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Groomed", "Treasure Hill")
++
++  var basin_name = $.trim("Tombstone");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Tombstone")
++
++  var basin_name = $.trim("Trolley Car");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Trolley Car")
++
++  var basin_name = $.trim("Central Basin Glades");
++  
++  list.push({
++    status: "Header",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Header", "Central Basin Glades")
++
++  var basin_name = $.trim("Powder Keg");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Powder Keg")
++
++  var basin_name = $.trim("Ursula’s Alley");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Ursula’s Alley")
++
++  var basin_name = $.trim("West Basin");
++  
++  list.push({
++    status: "Header",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Header", "West Basin")
++
++  var basin_name = $.trim("4800 Road");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "4800 Road")
++
++  var basin_name = $.trim("Angel Heart");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Angel Heart")
++
++  var basin_name = $.trim("Bakken");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Bakken")
++
++  var basin_name = $.trim("Concentrator");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Concentrator")
++
++  var basin_name = $.trim("Cherub");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Cherub")
++
++  var basin_name = $.trim("Crusher");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Crusher")
++
++  var basin_name = $.trim("Green Beret");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Green Beret")
++
++  var basin_name = $.trim("Gold Rush");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Gold Rush")
++
++  var basin_name = $.trim("Griz");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Griz")
++
++  var basin_name = $.trim("Last Chance");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Last Chance")
++
++  var basin_name = $.trim("Lost Dutchman");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Lost Dutchman")
++
++  var basin_name = $.trim("Lower Dutchman");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Lower Dutchman")
++
++  var basin_name = $.trim("New Prospector");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "New Prospector")
++
++  var basin_name = $.trim("Northeast Ridge");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Northeast Ridge")
++
++  var basin_name = $.trim("Outer Dutchman");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Outer Dutchman")
++
++  var basin_name = $.trim("Pipeline");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Pipeline")
++
++  var basin_name = $.trim("Upper Concentrator");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Upper Concentrator")
++
++  var basin_name = $.trim("Upper Cys Glades");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Upper Cys Glades")
++
++  var basin_name = $.trim("Lower Cys Glades");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Lower Cys Glades")
++
++  var basin_name = $.trim("Quartzite Ridge");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Quartzite Ridge")
++
++  var basin_name = $.trim("Separate Reality");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Separate Reality")
++
++  var basin_name = $.trim("Sluice Box");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Sluice Box")
++
++  var basin_name = $.trim("Stockholders");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Stockholders")
++
++  var basin_name = $.trim("Stope");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Stope")
++
++  var basin_name = $.trim("Tailings");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Tailings")
++
++  var basin_name = $.trim("Temptation");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Temptation")
++
++  var basin_name = $.trim("Wolf");
++  
++  list.push({
++    status: "Open",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Open", "Wolf")
++
++  var basin_name = $.trim("Wolf ’s Den");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Wolf ’s Den")
++
++  var basin_name = $.trim("Virtue");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "Virtue")
++
++  var basin_name = $.trim("mountain-info/");
++  
++  list.push({
++    status: "Closed",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Closed", "mountain-info/")
++
++  var basin_name = $.trim("West Basin Glades");
++  
++  list.push({
++    status: "Header",
++    basin_name: basin_name.replace(/\s/g, '')
++  });
++// insert("Header", "West Basin Glades")
++
++
++
++</script>
++<script type="text/javascript">
++
++
++  console.log(svg_arr);
++  // console.log(list);
++  // $(".hide-on-off").hide();
++ $(".st39,.st3,.st11,.st46").css({'fill-opacity':0});
++  $('#toggle_conditions').on("change", function() {
++
++    if($(this).prop('checked')){
++      console.log("change1");
++      list.forEach(function(entry) {
++          //console.log(entry['status']);
++         
++          if($.inArray(entry['basin_name'], svg_arr) !== -1 && entry['status']=="Open"){
++            console.log("is in array");
++            console.log(entry['basin_name']);
++            if(entry['basin_name'] == "Boothill" || entry['basin_name'] == "RightWing" || entry['basin_name'] == "PowderKeg"){$("g[name~='"+$.trim(entry['basin_name'])+"']").find("path").css({'fill':'yellow','fill-opacity':.35});
++            }else{$("g[name~='"+$.trim(entry['basin_name'])+"']").find("path").css({'stroke':'yellow','stroke-width':'8'});
++            }
++             if(entry['basin_name'] == "LowerCysGlades" || entry['basin_name'] == "AngelPeak"|| entry['basin_name'] == "Bonanza"){$("path[name~='"+$.trim(entry['basin_name'])+"']").css({'fill':'yellow','fill-opacity':.35});
++            $("line[name~='"+$.trim(entry['basin_name'])+"']").css({'stroke':'yellow','stroke-width':'8'});
++            }
++            // $("polygon[name~='"+$.trim(entry['basin_name'])+"']").css({'stroke':'yellow','stroke-width':'8'});
++            $("polygon[name~='"+$.trim(entry['basin_name'])+"']").css({'fill':'yellow','stroke-width':'8','fill-opacity':.35});
++            $("g[name~='"+$.trim(entry['basin_name'])+"']").find("polyline").css({'stroke':'yellow','stroke-width':'8'});
++             if(entry['basin_name'] == "LowerGoldPanAlley"){$("#Lower_cy_x27_s_glades").find("polygon").css({'fill':'yellow'});
++           }
++           if(entry['basin_name'] == "UpperGoldPanAlley"){$("#Upper_cy_x27_s_glades").find("polygon").css({'fill':'yellow'});
++           }
++            // $(".st39").css({'fill':'yellow','stroke-width':'8','fill-opacity':.35});
++            // if($("path[name~='"+$.trim(entry['basin_name'])+"']").hasClass('st39')){
++            // $(this).css({'fill':'yellow','stroke-width':'8','fill-opacity':.35});
++            //   console.log("color");
++            // }else{
++            //   console.log("no-color");
++            // }
++            // $("#Boothill_1_").css({'stroke':'yellow','stroke-width':'8'});
++            // $(".st39,.st46").css({'fill-opacity':1});
++          } else {
++            console.log(entry['basin_name']);
++            console.log("is NOT in array");
++          } 
++          if($.inArray(entry['basin_name'], svg_arr) !== -1 && entry['status']=="Closed"){
++            console.log("is in array");
++            if(entry['basin_name'] == "Boothill" || entry['basin_name'] == "RightWing" || entry['basin_name'] == "PowderKeg"){$("g[name~='"+$.trim(entry['basin_name'])+"']").find("path").css({'fill':'red','fill-opacity':.35});
++            }else{$("g[name~='"+$.trim(entry['basin_name'])+"']").find("path").css({'stroke':'red','stroke-width':'8'});
++            }
++             if(entry['basin_name'] == "LowerCysGlades" || entry['basin_name'] == "AngelPeak" || entry['basin_name'] == "Bonanza"){$("path[name~='"+$.trim(entry['basin_name'])+"']").css({'fill':'red','fill-opacity':.35});
++            $("line[name~='"+$.trim(entry['basin_name'])+"']").css({'stroke':'red','stroke-width':'8'});
++            }
++            // $("g[name~='"+$.trim(entry['basin_name'])+"']").find("path").css({'stroke':'red','stroke-width':'8'});
++            $("polygon[name~='"+$.trim(entry['basin_name'])+"']").css({'stroke':'red','stroke-width':'8'});
++            $("polygon[name~='"+$.trim(entry['basin_name'])+"']").css({'fill':'red','stroke-width':'8','fill-opacity':.35});
++            $("g[name~='"+$.trim(entry['basin_name'])+"']").find("polyline").css({'stroke':'red','stroke-width':'8'});
++             if(entry['basin_name'] == "LowerGoldPanAlley"){$("#Lower_cy_x27_s_glades").find("polygon").css({'fill':'red'});
++           }
++           if(entry['basin_name'] == "UpperGoldPanAlley"){$("#Upper_cy_x27_s_glades").find("polygon").css({'fill':'red'});
++           }
++            // $(".st39").css({'fill':'red','stroke-width':'8','fill-opacity':.35});
++            // $("#Boothill_1_").css({'stroke':'red','stroke-width':'8'});
++            // $(".st39,.st46").css({'fill-opacity':1});
++          } else {
++            console.log("is NOT in array");
++          } 
++          if($.inArray(entry['basin_name'], svg_arr) !== -1 && entry['status']=="Groomed"){
++            console.log("is in array");
++            if(entry['basin_name'] == "Boothill" || entry['basin_name'] == "RightWing" || entry['basin_name'] == "PowderKeg"){$("g[name~='"+$.trim(entry['basin_name'])+"']").find("path").css({'fill':'green','fill-opacity':.35});
++            }else{$("g[name~='"+$.trim(entry['basin_name'])+"']").find("path").css({'stroke':'green','stroke-width':'8'});
++            }
++             if(entry['basin_name'] == "LowerCysGlades" || entry['basin_name'] == "AngelPeak" || entry['basin_name'] == "Bonanza"){$("path[name~='"+$.trim(entry['basin_name'])+"']").css({'fill':'green','fill-opacity':.35});
++            $("line[name~='"+$.trim(entry['basin_name'])+"']").css({'stroke':'green','stroke-width':'8'});
++            }
++            // $("g[name~='"+$.trim(entry['basin_name'])+"']").find("path").css({'stroke':'green','stroke-width':'8'});
++            $("polygon[name~='"+$.trim(entry['basin_name'])+"']").css({'stroke':'green','stroke-width':'8'});
++            $("polygon[name~='"+$.trim(entry['basin_name'])+"']").css({'fill':'green','stroke-width':'8','fill-opacity':.35});
++            $("g[name~='"+$.trim(entry['basin_name'])+"']").find("polyline").css({'stroke':'green','stroke-width':'8'});
++            if(entry['basin_name'] == "LowerGoldPanAlley"){$("#Lower_cy_x27_s_glades").find("polygon").css({'fill':'green'});
++           }
++           if(entry['basin_name'] == "UpperGoldPanAlley"){$("#Upper_cy_x27_s_glades").find("polygon").css({'fill':'green'});
++           }
++              
++            // $(".st39").css({'fill':'green','stroke-width':'8','fill-opacity':.35});
++            // $("#Boothill_1_").css({'stroke':'green','stroke-width':'8'});
++            // $(".st39,.st46").css({'fill-opacity':1});
++          } else {
++
++            console.log("is NOT in array");
++          } 
++
++       });
++
++    }else{
++     $('svg').find('path').removeAttr('style');
++     $('svg').find('line').removeAttr('style');
++     $('svg').find('polygon').removeAttr('style');
++     $('svg').find('polyline').removeAttr('style');
++   }
++         if($(".hide-on-off").hasClass('hide')){$(".hide-on-off").removeClass("hide");}else{
++        $(".hide-on-off").addClass("hide");
++      $(".st39,.st3,.st11,.st46").css({'fill-opacity':0});
++      }
++ });
++
++
++</script>
+\ No newline at end of file
+-- 
+2.39.5
+

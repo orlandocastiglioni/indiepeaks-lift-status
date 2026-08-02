@@ -1,8 +1,7 @@
 From c8d3c641ba99f84d60f60651d3198d905f0ac06a Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 12:59:43 +0000
-Subject: [PATCH 63/77] resort: fix chinapeak - footnote rows published as
- lifts
+Subject: resort: fix chinapeak - footnote rows published as lifts
 
 The conditions page renders a '*:' footnote marker and a 'Tubing Hill Not
 Available This Season:' announcement in the same .chair-bar markup as real

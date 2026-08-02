@@ -1,0 +1,1994 @@
+From 770ff7a2282035e34d2b354ac88da6e2233094c8 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:52:54 -0400
+Subject: resort: saskadena-six - trails - read the difficulty cell
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/saskadena-six/sections.js   |   5 +-
+ test/resorts/example/saskadena-six.html | 872 +++++++++++++++---------
+ test/resorts/saskadena-six-trails.js    |  88 ++-
+ test/resorts/saskadena-six.js           |   4 +-
+ 4 files changed, 629 insertions(+), 340 deletions(-)
+
+diff --git a/lib/resorts/saskadena-six/sections.js b/lib/resorts/saskadena-six/sections.js
+index 30d3027f..14aed255 100644
+--- a/lib/resorts/saskadena-six/sections.js
++++ b/lib/resorts/saskadena-six/sections.js
+@@ -16,8 +16,11 @@ export default function sections(dom, wanted) {
+     }
+     const title = select(node.children, '.cell.title')[0];
+     const status = select(node.children, '.cell.status .field__item')[0];
++    // trail rows carry a difficulty cell (Easy/Intermediate/Advanced/Expert);
++    // lifts and the UPHILL skin-track rows have none - level stays undefined
++    const level = select(node.children, '.cell.level')[0];
+     if (title && status) {
+-      rows.push({ name: allText(title).trim(), status: findText(status) });
++      rows.push({ name: allText(title).trim(), status: findText(status), level: level && findText(level) });
+     }
+   }
+   return rows;
+diff --git a/test/resorts/example/saskadena-six.html b/test/resorts/example/saskadena-six.html
+index b284da10..ae8a1969 100644
+--- a/test/resorts/example/saskadena-six.html
++++ b/test/resorts/example/saskadena-six.html
+@@ -2,17 +2,129 @@
+ <html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
+     <head>
+ 
+-        <link rel="preload"
+-      href="https://cdn.jsdelivr.net/combine/npm/slick-carousel@1.8.1/slick/slick.min.css,npm/nanoscroller@0.8.7/bin/css/nanoscroller.css"
+-      as="style" onload="this.onload=null;this.rel='stylesheet'">
+-<link rel="preload" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.min.css" as="style"
+-      onload="this.onload=null;this.rel='stylesheet'">
++        
++<link rel="preload" href="https://cdn.jsdelivr.net/combine/npm/slick-carousel@1.8.1/slick/slick.min.css,npm/formstone@1.4.18-1/dist/css/themes/light.css,npm/formstone@1.4.18-1/dist/css/checkbox.min.css,npm/formstone@1.4.18-1/dist/css/dropdown.min.css,npm/nanoscroller@0.8.7/bin/css/nanoscroller.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
++<link rel="preload" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+ <noscript>
+-    <link rel="stylesheet"
+-          href="https://cdn.jsdelivr.net/combine/npm/slick-carousel@1.8.1/slick/slick.min.css,npm/nanoscroller@0.8.7/bin/css/nanoscroller.css">
++    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/slick-carousel@1.8.1/slick/slick.min.css,npm/formstone@1.4.18-1/dist/css/themes/light.css,npm/formstone@1.4.18-1/dist/css/checkbox.min.css,npm/formstone@1.4.18-1/dist/css/dropdown.min.css,npm/nanoscroller@0.8.7/bin/css/nanoscroller.css">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.min.css">
+ </noscript>
+ 
++<script>
++    /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
++    /* This file is meant as a standalone workflow for
++    - testing support for link[rel=preload]
++    - enabling async CSS loading in browsers that do not support rel=preload
++    - applying rel preload css once loaded, whether supported or not.
++    */
++    (function( w ){
++        "use strict";
++        // rel=preload support test
++        if( !w.loadCSS ){
++            w.loadCSS = function(){};
++        }
++        // define on the loadCSS obj
++        var rp = loadCSS.relpreload = {};
++        // rel=preload feature support test
++        // runs once and returns a function for compat purposes
++        rp.support = (function(){
++            var ret;
++            try {
++                ret = w.document.createElement( "link" ).relList.supports( "preload" );
++            } catch (e) {
++                ret = false;
++            }
++            return function(){
++                return ret;
++            };
++        })();
++
++        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
++        // then change that media back to its intended value on load
++        rp.bindMediaToggle = function( link ){
++            // remember existing media attr for ultimate state, or default to 'all'
++            var finalMedia = link.media || "all";
++
++            function enableStylesheet(){
++                // unbind listeners
++                if( link.addEventListener ){
++                    link.removeEventListener( "load", enableStylesheet );
++                } else if( link.attachEvent ){
++                    link.detachEvent( "onload", enableStylesheet );
++                }
++                link.setAttribute( "onload", null );
++                link.media = finalMedia;
++            }
++
++            // bind load handlers to enable media
++            if( link.addEventListener ){
++                link.addEventListener( "load", enableStylesheet );
++            } else if( link.attachEvent ){
++                link.attachEvent( "onload", enableStylesheet );
++            }
++
++            // Set rel and non-applicable media type to start an async request
++            // note: timeout allows this to happen async to let rendering continue in IE
++            setTimeout(function(){
++                link.rel = "stylesheet";
++                link.media = "only x";
++            });
++            // also enable media after 3 seconds,
++            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
++            setTimeout( enableStylesheet, 3000 );
++        };
++
++        // loop through link elements in DOM
++        rp.poly = function(){
++            // double check this to prevent external calls from running
++            if( rp.support() ){
++                return;
++            }
++            var links = w.document.getElementsByTagName( "link" );
++            for( var i = 0; i < links.length; i++ ){
++                var link = links[ i ];
++                // qualify links to those with rel=preload and as=style attrs
++                if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
++                    // prevent rerunning on link
++                    link.setAttribute( "data-loadcss", true );
++                    // bind listeners to toggle media back
++                    rp.bindMediaToggle( link );
++                }
++            }
++        };
++
++        // if unsupported, run the polyfill
++        if( !rp.support() ){
++            // run once at least
++            rp.poly();
++
++            // rerun poly on an interval until onload
++            var run = w.setInterval( rp.poly, 500 );
++            if( w.addEventListener ){
++                w.addEventListener( "load", function(){
++                    rp.poly();
++                    w.clearInterval( run );
++                } );
++            } else if( w.attachEvent ){
++                w.attachEvent( "onload", function(){
++                    rp.poly();
++                    w.clearInterval( run );
++                } );
++            }
++        }
++
++
++        // commonjs
++        if( typeof exports !== "undefined" ){
++            exports.loadCSS = loadCSS;
++        }
++        else {
++            w.loadCSS = loadCSS;
++        }
++    }( typeof global !== "undefined" ? global : this ) );
++
++</script>
++<script></script><!-- here to ensure a non-blocking load still occurs in IE and Edge, even if scripts follow loadCSS in head -->
+         <!-- Google Tag Manager -->
+         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+@@ -23,14 +135,14 @@
+ 
+         <meta charset="utf-8" />
+ <style>/* @see https://github.com/aFarkas/lazysizes#broken-image-symbol */.js img.lazyload:not([src]) { visibility: hidden; }/* @see https://github.com/aFarkas/lazysizes#automatically-setting-the-sizes-attribute */.js img.lazyloaded[data-sizes=auto] { display: block; width: 100%; }/* Transition effect. */.js .lazyload, .js .lazyloading { opacity: 0; }.js .lazyloaded { opacity: 1; -webkit-transition: opacity 2000ms; transition: opacity 2000ms; }</style>
+-<meta name="description" content="Saskadena Six Trails are Currently Closed to all traffic due to the ongoing snowmaking pipeline project. Please enjoy the other local biking and hiking trail networks this summer!" />
++<meta name="description" content="Wednesday, February 11th, 9amNew Snow: 4&quot; Season Total: 57&quot;Primary Surface: Packed Powder/PowderTrails: 24 Lifts: 2" />
+ <link rel="canonical" href="https://www.saskadenasix.com/winter/conditions" />
+ <meta property="og:site_name" content="Saskadena Six Ski Area" />
+ <meta property="og:url" content="https://www.saskadenasix.com/winter/conditions" />
+ <meta property="og:title" content="Conditions" />
+-<meta property="og:description" content="Saskadena Six Trails are Currently Closed to all traffic due to the ongoing snowmaking pipeline project. Please enjoy the other local biking and hiking trail networks this summer!" />
+-<meta property="og:image" content="https://www.saskadenasix.com/sites/default/files/styles/max_2600x2600/public/2026-03/S6-Drone-90th-Badge.jpg?itok=QNlc0RaL" />
+-<meta name="Generator" content="Drupal 11 (https://www.drupal.org)" />
++<meta property="og:description" content="Wednesday, February 11th, 9amNew Snow: 4&quot; Season Total: 57&quot;Primary Surface: Packed Powder/PowderTrails: 24 Lifts: 2" />
++<meta property="og:image" content="https://www.saskadenasix.com/sites/default/files/styles/max_2600x2600/public/2026-02/IMG_3844.jpeg?itok=IsfLaqWG" />
++<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+ <meta name="MobileOptimized" content="width" />
+ <meta name="HandheldFriendly" content="true" />
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3" />
+@@ -40,12 +152,12 @@
+         {
+             "@type": "SkiResort",
+             "@id": "https://www.saskadenasix.com/#organization",
++            "name": "Saskadena Six Ski Area",
+             "url": "https://www.saskadenasix.com/",
+             "sameAs": [
+                 "https://www.facebook.com/suicidesixvt",
+                 "https://www.instagram.com/suicidesixvt"
+             ],
+-            "name": "Saskadena Six Ski Area",
+             "telephone": "888 338 2745",
+             "contactPoint": {
+                 "@type": "ContactPoint",
+@@ -53,13 +165,18 @@
+                 "email": "email@woodstockinn.com",
+                 "url": "https://www.saskadenasix.com/"
+             },
++            "image": {
++                "@type": "ImageObject",
++                "url": "https://www.saskadenasix.com/sites/default/files/styles/max_2600x2600/public/2026-02/IMG_3844.jpeg?itok=IsfLaqWG"
++            },
+             "logo": {
+                 "@type": "ImageObject",
+                 "url": "https://www.saskadenasix.com/themes/custom/suicidesix/images/logo-blue.svg"
+             },
+-            "image": {
+-                "@type": "ImageObject",
+-                "url": "https://www.saskadenasix.com/sites/default/files/styles/max_2600x2600/public/2026-03/S6-Drone-90th-Badge.jpg?itok=QNlc0RaL"
++            "geo": {
++                "@type": "GeoCoordinates",
++                "latitude": "43.66510756666869",
++                "longitude": "-72.54326599999999"
+             },
+             "address": {
+                 "@type": "PostalAddress",
+@@ -68,17 +185,12 @@
+                 "addressRegion": "VT",
+                 "postalCode": "05067",
+                 "addressCountry": "USA"
+-            },
+-            "geo": {
+-                "@type": "GeoCoordinates",
+-                "latitude": "43.66510756666869",
+-                "longitude": "-72.54326599999999"
+             }
+         },
+         {
+             "@type": "WebPage",
+             "@id": "https://www.saskadenasix.com/winter/conditions/#webpage",
+-            "description": "Saskadena Six Trails are Currently Closed to all traffic due to the ongoing snowmaking pipeline project. Please enjoy the other local biking and hiking trail networks this summer!",
++            "description": "Wednesday, February 11th, 9amNew Snow: 4\u0022 Season Total: 57\u0022Primary Surface: Packed Powder/PowderTrails: 24 Lifts: 2",
+             "publisher": {
+                 "@type": "SkiResort",
+                 "@id": "https://www.saskadenasix.com/#organization"
+@@ -102,10 +214,11 @@
+ 
+         <title>Conditions | Saskadena Six Ski Area</title>
+         <script src="https://www.navistechnologies.info/JavascriptPhoneNumber/js.aspx?account=14491&jspass=dyxbyiqy8f10dhnzc2jn&dflt=8883382745"></script>
+-        <link rel="stylesheet" media="all" href="/sites/default/files/css/css_PNwP0TzimpxO0slhYg7ENd7CLieRa5oxz-hitsyptek.css?delta=0&amp;language=en&amp;theme=suicidesix&amp;include=eJxFy2sKwzAMA-ALhfhIQ03cxOA8sBtYd_p1jNJf_iRhCEFeRccGDQmp8q7LKz2MjfsKSeF-0i7Ktxu7o7DfuY98bcP4kjWofDg0zoLf18EWE-Yho4dhUqTT_4QJQzHM6pRtTWh8mrj6XJuKV87BlyTJ7PKmh8FPP7jRBucvbuFPNQ" />
+-<link rel="stylesheet" media="all" href="/sites/default/files/css/css_rC7M9trBxuulUhePlLm_fyuXdZ6dqJMVmoRoWEL02qc.css?delta=1&amp;language=en&amp;theme=suicidesix&amp;include=eJxFy2sKwzAMA-ALhfhIQ03cxOA8sBtYd_p1jNJf_iRhCEFeRccGDQmp8q7LKz2MjfsKSeF-0i7Ktxu7o7DfuY98bcP4kjWofDg0zoLf18EWE-Yho4dhUqTT_4QJQzHM6pRtTWh8mrj6XJuKV87BlyTJ7PKmh8FPP7jRBucvbuFPNQ" />
++        <link rel="stylesheet" media="all" href="/sites/default/files/css/css_z2XDPIU_yYHxAg44tkpAcIgRaKaaee8sHNByxfVUYQU.css?delta=0&amp;language=en&amp;theme=suicidesix&amp;include=eJxFy2sKwzAMA-ALheRMbqI2hrywElh3-nWMrr_8ScJRYsZeFnOIf_qKtlwsQp5h14LbFaQc4J1bT9fWDZesStE3XEVS-X5NmI8ypvbmuumhLfyOG2JymIzMkGwNKf5p_GpjbUWZkRyXRk2gvsJDx5MTNWxCfADCk0p2" />
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css_eBy2nNLY9IPXWjl3zxQC5zEIQiK3VeXC49BPJDjm4gE.css?delta=1&amp;language=en&amp;theme=suicidesix&amp;include=eJxFy2sKwzAMA-ALheRMbqI2hrywElh3-nWMrr_8ScJRYsZeFnOIf_qKtlwsQp5h14LbFaQc4J1bT9fWDZesStE3XEVS-X5NmI8ypvbmuumhLfyOG2JymIzMkGwNKf5p_GpjbUWZkRyXRk2gvsJDx5MTNWxCfADCk0p2" />
++
++        <script src="/core/assets/vendor/modernizr/modernizr.min.js?v=3.11.7"></script>
+ 
+-        
+ 
+         <link rel="apple-touch-icon" sizes="180x180" href="/themes/custom/suicidesix/images/favicon/apple-touch-icon.png">
+         <link rel="icon" type="image/png" sizes="32x32" href="/themes/custom/suicidesix/images/favicon/favicon-32x32.png">
+@@ -416,7 +529,7 @@
+                         
+                         <div class="form-item arrival">
+                                 <label for="arrivalDate">Check In</label>
+-                                <input id="arrivalDate" name="arrive" class="booking-date active" readonly="true" type="text" value="Fri 10th Jul">
++                                <input id="arrivalDate" name="arrive" class="booking-date active" readonly="true" type="text" value="Wed 11th Feb">
+                         </div>
+ 
+                         <div class="form-item departure">
+@@ -527,7 +640,7 @@
+ 
+                         <div class="field field--name-field-media-image field--type-image field--label-hidden focus-middle-center field__item">
+ 
+-                                <img loading="lazy" width="1200" height="675" data-parent-fit="cover" data-aspectratio="1.7777777777778" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Snowy mountain ski slopes under a clear blue sky." class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2026-03/S6-Drone-90th-Badge.jpg?itok=sLvkVzXT" data-srcset="/sites/default/files/styles/scale_320/public/2026-03/S6-Drone-90th-Badge.jpg?itok=O0qvVHCu 320w, /sites/default/files/styles/scale_480/public/2026-03/S6-Drone-90th-Badge.jpg?itok=_FEv_8eR 480w, /sites/default/files/styles/scale_640/public/2026-03/S6-Drone-90th-Badge.jpg?itok=I8g_VvJ5 640w, /sites/default/files/styles/scale_800/public/2026-03/S6-Drone-90th-Badge.jpg?itok=Zr196F0c 800w, /sites/default/files/styles/scale_1024/public/2026-03/S6-Drone-90th-Badge.jpg?itok=1QGaaLi0 1024w, /sites/default/files/styles/scale_1920/public/2026-03/S6-Drone-90th-Badge.jpg?itok=mczZmZTF 1200w" data-sizes="auto" />
++                                <img loading="lazy" width="4032" height="3024" data-parent-fit="cover" data-aspectratio="1.3333333333333" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Snowy landscape with overcast sky and distant mountains, trees lining the sides." class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2026-02/IMG_3844.jpeg?itok=OCdWmCuT" data-srcset="/sites/default/files/styles/scale_320/public/2026-02/IMG_3844.jpeg?itok=s1mXxRWE 320w, /sites/default/files/styles/scale_480/public/2026-02/IMG_3844.jpeg?itok=5WfnFSBy 480w, /sites/default/files/styles/scale_640/public/2026-02/IMG_3844.jpeg?itok=1B0Ha9tP 640w, /sites/default/files/styles/scale_800/public/2026-02/IMG_3844.jpeg?itok=HfRa0353 800w, /sites/default/files/styles/scale_1024/public/2026-02/IMG_3844.jpeg?itok=oqHmhUYp 1024w, /sites/default/files/styles/scale_1280/public/2026-02/IMG_3844.jpeg?itok=ph0xhfdf 1280w, /sites/default/files/styles/scale_1440/public/2026-02/IMG_3844.jpeg?itok=OCdWmCuT 1440w, /sites/default/files/styles/scale_1920/public/2026-02/IMG_3844.jpeg?itok=taBH9EnE 1920w" data-sizes="auto" />
+ 
+ 
+ 
+@@ -566,7 +679,7 @@
+ 
+                         <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+ 
+-                            <h4><strong>Saskadena Six Trails are Currently Closed to all traffic due to the ongoing snowmaking pipeline project.&nbsp;</strong></h4><p><em>Please enjoy the other local biking and hiking trail networks this summer!</em></p><p><a name="_Hlk211255736"></a></p>
++                            <p><strong>Wednesday, February 11th, 9am</strong></p><p><strong>New Snow: 4" Season Total: 57"</strong></p><p><strong>Primary Surface: Packed Powder/Powder</strong></p><p><strong>Trails: 24 Lifts: 2</strong></p><p><strong>Operating Day #42</strong></p><p>Good morning S6 skiers and riders! We received 3-4" of new snow across the hill last night and its a packed powder paradise out there this morning. It's a mix of powder and packed powder out there this morning and the majority of the groomers were done after the new snow and are skiing beautifully. Fresh turns can be found this morning on all the ungroomed terrain and we're skiing and riding on 24 trails serviced by Chair One and the conveyor lift in the learning area. Lifts turn today 9am-4pm. &nbsp;</p><p>Expansion into the Milky Way terrain park is expected tomorrow which will also open Backdoor, Standard and Spring Pine Glade bringing us to 100% open heading into the holiday week. We are now open daily through February 22nd including Monday &amp; Tuesday, February 16th &amp; 17th. This Saturday is the annual torchlight parade which starts at 6:30pm.&nbsp;</p><p>Uphill access is &nbsp;open on Easy Mile and the Easy Mile Woods Route. As a reminder, all uphill travelers will need to register with Uphill New England this season and will be required to wear an identifying armband. Downhill passholders may do so by requesting an access code from the ticket office or by email to&nbsp;<a href="mailto:s6info@woodstockinn.com">s6info@woodstockinn.com</a>. Those looking to purchase an uphill only pass may do so by&nbsp;<a href="https://www.uphillnewengland.org/product-page/saskadena-six-uphill-season-pass" target="_blank">CLICKING HERE</a>. Be sure to familiarize yourself with the uphill guidelines and routes and always use appropriate equipment. There is no foot traffic or snowshoeing permitted down the trails. &nbsp;<a href="https://www.saskadenasix.com/UPHILL" target="_blank">https://www.saskadenasix.com/UPHILL</a></p><p>&nbsp;Be sure to check out the new Perley’s Pourhouse bar menu serving lunch daily along side delicious cocktails and craft brews 11am-5pm. The Corduroy Café is open throughout the day with breakfast starting at 9am and lunch at 11am.&nbsp;</p><p><strong>Mountain Hours of Operation:</strong><br>Open Daily Through 2/22 (Open 2/16 &amp; 2/17)</p><p>Non Peak Hours: Wednesday – Sunday, 9am-4pm</p><p><em><strong>Closed Monday/Tuesday Non-Peak</strong></em><br><em>Peak dates: 2/14/26 thru 2/22/26</em><br><strong>Retail Shop Hours of Operation:</strong><br>Open All Operating Days: 9am–4pm<br><strong>Perley’s Pourhouse:</strong><br>Open All Operating Days: 11am-5pm<br><strong>Corduroy Cafe:</strong><br>Open All Operating Days: 9am-4pm&nbsp;</p><p><a name="_Hlk211255736"></a><strong>2025-26 RACE DATES:</strong></p><p><span>Thursday 2/19/26 GTS M/W SL – 9am</span></p><p><span>Sunday 3/1/26 MVC U10 – 9am</span></p><p><span>Sunday 3/8/26 Masters of the MTN&nbsp;</span></p>
+             
+ 
+             </div>
+@@ -718,26 +831,26 @@
+ <article  data-history-node-id="345" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+     
+-<div class="cell title">
+-    Chair 1 </div>
+-
++    <div class="cell title">
++        Chair 1     </div>
+ 
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -748,26 +861,26 @@
+ <article  data-history-node-id="343" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+     
+-<div class="cell title">
+-    Conveyor Lift </div>
+-
++    <div class="cell title">
++        Conveyor Lift     </div>
+ 
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -778,16 +891,19 @@
+ <article  data-history-node-id="653" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
++    
+ 
+ 
+-
++            <div class="cell level ">
++            
++        </div>
+     
+-<div class="cell title">
+-    UPHILL - Backdoor&gt;Gully&gt;Summit </div>
+-
++    <div class="cell title">
++        UPHILL - Backdoor&gt;Gully&gt;Summit     </div>
+ 
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status closed">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+@@ -797,7 +913,7 @@
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -808,26 +924,29 @@
+ <article  data-history-node-id="650" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
++    
+ 
+ 
+-
++            <div class="cell level ">
++            
++        </div>
+     
+-<div class="cell title">
+-    UPHILL - Easy Mile </div>
+-
++    <div class="cell title">
++        UPHILL - Easy Mile     </div>
+ 
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -838,26 +957,29 @@
+ <article  data-history-node-id="651" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
++    
+ 
+ 
+-
++            <div class="cell level ">
++            
++        </div>
+     
+-<div class="cell title">
+-    UPHILL - Easy Mile Woods Route </div>
++    <div class="cell title">
++        UPHILL - Easy Mile Woods Route     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -868,16 +990,19 @@
+ <article  data-history-node-id="652" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
++    
+ 
+ 
+-
++            <div class="cell level ">
++            
++        </div>
+     
+-<div class="cell title">
+-    UPHILL - Milky Way&gt;Top of Chair 2 </div>
+-
++    <div class="cell title">
++        UPHILL - Milky Way&gt;Top of Chair 2     </div>
+ 
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status closed">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+@@ -887,7 +1012,7 @@
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -898,19 +1023,19 @@
+ <article  data-history-node-id="621" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level easy">
+             Easy
+         </div>
+     
+-<div class="cell title">
+-    Begin-A-Glade </div>
+-
++    <div class="cell title">
++        Begin-A-Glade     </div>
+ 
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status closed">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+@@ -920,7 +1045,7 @@
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -931,29 +1056,32 @@
+ <article  data-history-node-id="367" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level easy">
+             Easy
+         </div>
+     
+-<div class="cell title">
+-    Easy Mile </div>
+-
++    <div class="cell title">
++        Easy Mile     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -964,19 +1092,19 @@
+ <article  data-history-node-id="392" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level easy">
+             Easy
+         </div>
+     
+-<div class="cell title">
+-    Milky Way </div>
+-
++    <div class="cell title">
++        Milky Way     </div>
+ 
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status closed">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+@@ -986,7 +1114,7 @@
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -997,29 +1125,32 @@
+ <article  data-history-node-id="370" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level easy">
+             Easy
+         </div>
+     
+-<div class="cell title">
+-    Pearson&#039;s Path </div>
++    <div class="cell title">
++        Pearson&#039;s Path     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1030,19 +1161,19 @@
+ <article  data-history-node-id="393" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level easy">
+             Easy
+         </div>
+     
+-<div class="cell title">
+-    Standard </div>
+-
++    <div class="cell title">
++        Standard     </div>
+ 
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status closed">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+@@ -1052,7 +1183,7 @@
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1063,19 +1194,19 @@
+ <article  data-history-node-id="394" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Back Door </div>
++    <div class="cell title">
++        Back Door     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status closed">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+@@ -1085,7 +1216,7 @@
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1096,29 +1227,32 @@
+ <article  data-history-node-id="395" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Bee Line </div>
++    <div class="cell title">
++        Bee Line     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed - Lower Only
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1129,29 +1263,32 @@
+ <article  data-history-node-id="383" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Bourdon&#039;s Bowl </div>
+-
++    <div class="cell title">
++        Bourdon&#039;s Bowl     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1162,29 +1299,32 @@
+ <article  data-history-node-id="360" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Bunny&#039;s Boulevard </div>
+-
++    <div class="cell title">
++        Bunny&#039;s Boulevard     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1195,29 +1335,32 @@
+ <article  data-history-node-id="396" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Chimney </div>
+-
++    <div class="cell title">
++        Chimney     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1228,29 +1371,32 @@
+ <article  data-history-node-id="397" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Double Dip </div>
+-
++    <div class="cell title">
++        Double Dip     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Lower Only
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1261,29 +1407,32 @@
+ <article  data-history-node-id="619" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Duane&#039;s Drop </div>
++    <div class="cell title">
++        Duane&#039;s Drop     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1294,29 +1443,32 @@
+ <article  data-history-node-id="398" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Lasky Lot </div>
++    <div class="cell title">
++        Lasky Lot     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1327,29 +1479,32 @@
+ <article  data-history-node-id="359" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Perley&#039;s Peril </div>
++    <div class="cell title">
++        Perley&#039;s Peril     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1360,29 +1515,32 @@
+ <article  data-history-node-id="622" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Road Way </div>
+-
++    <div class="cell title">
++        Road Way     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1393,29 +1551,32 @@
+ <article  data-history-node-id="361" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Skyline </div>
++    <div class="cell title">
++        Skyline     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1426,19 +1587,19 @@
+ <article  data-history-node-id="620" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    Spring Pine Glade </div>
++    <div class="cell title">
++        Spring Pine Glade     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++    
++    <div class="cell status closed">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+@@ -1448,7 +1609,7 @@
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1459,29 +1620,32 @@
+ <article  data-history-node-id="357" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    The Chute </div>
+-
++    <div class="cell title">
++        The Chute     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1492,29 +1656,32 @@
+ <article  data-history-node-id="384" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level intermediate">
+             Intermediate
+         </div>
+     
+-<div class="cell title">
+-    The Gully </div>
++    <div class="cell title">
++        The Gully     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1525,29 +1692,32 @@
+ <article  data-history-node-id="385" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level advanced">
+             Advanced
+         </div>
+     
+-<div class="cell title">
+-    Crystal </div>
+-
++    <div class="cell title">
++        Crystal     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1558,29 +1728,32 @@
+ <article  data-history-node-id="386" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level advanced">
+             Advanced
+         </div>
+     
+-<div class="cell title">
+-    Jug Handle </div>
+-
++    <div class="cell title">
++        Jug Handle     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1591,29 +1764,32 @@
+ <article  data-history-node-id="388" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level advanced">
+             Advanced
+         </div>
+     
+-<div class="cell title">
+-    Showoff </div>
+-
++    <div class="cell title">
++        Showoff     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1624,29 +1800,32 @@
+ <article  data-history-node-id="356" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level advanced">
+             Advanced
+         </div>
+     
+-<div class="cell title">
+-    The Face </div>
++    <div class="cell title">
++        The Face     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1657,29 +1836,32 @@
+ <article  data-history-node-id="546" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level expert">
+             Expert
+         </div>
+     
+-<div class="cell title">
+-    Back Scratcher </div>
+-
++    <div class="cell title">
++        Back Scratcher     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1690,29 +1872,32 @@
+ <article  data-history-node-id="351" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level expert">
+             Expert
+         </div>
+     
+-<div class="cell title">
+-    Mid Face </div>
++    <div class="cell title">
++        Mid Face     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Groomed
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1723,29 +1908,32 @@
+ <article  data-history-node-id="387" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level expert">
+             Expert
+         </div>
+     
+-<div class="cell title">
+-    Pomfret Plunge </div>
+-
++    <div class="cell title">
++        Pomfret Plunge     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1756,29 +1944,32 @@
+ <article  data-history-node-id="389" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level expert">
+             Expert
+         </div>
+     
+-<div class="cell title">
+-    Porcupine </div>
++    <div class="cell title">
++        Porcupine     </div>
+ 
+-
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1789,29 +1980,32 @@
+ <article  data-history-node-id="391" class="node node--type-lift-trail node--view-mode-row">
+ 
+ 
+-
++    
+ 
+ 
+             <div class="cell level expert">
+             Expert
+         </div>
+     
+-<div class="cell title">
+-    The Glade </div>
+-
++    <div class="cell title">
++        The Glade     </div>
+ 
+-<div class="cell status closed">
+-        
++        <div class="cell conditions">
++        Ungroomed - Natural Snow
++    </div>
++    
++    <div class="cell status open">
++            
+ 
+ 
+                         <div class="field field--name-field-status field--type-entity-reference field--label-hidden field__item">
+ 
+-                            Closed
++                            Open
+             
+ 
+             </div>
+             
+-</div>
++    </div>
+ 
+ 
+ </article>
+@@ -1887,10 +2081,10 @@
+     
+     
+ 
+-<article  data-history-node-id="327" class="node node--type-package node--view-mode-card iso-item term-3 term-10 term-15">
++<article  data-history-node-id="706" class="node node--type-package node--view-mode-card iso-item term-1 term-11 term-15">
+ 
+     <div class="wrapper">
+-        <a href="/shop/packages/wake-up-in-woodstock" class="image">
++        <a href="/shop/packages/cross-country-ski-excursion-package" class="image">
+             
+ 
+                             
+@@ -1905,7 +2099,7 @@
+ 
+                         <div class="field field--name-field-media-image field--type-image field--label-hidden focus-middle-center field__item">
+ 
+-                                <img loading="lazy" width="4000" height="2250" data-parent-fit="cover" data-aspectratio="1.7777777777778" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Spa Room at the Woodstock Inn &amp; Resort" class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=bz1b54iP" data-srcset="/sites/default/files/styles/scale_320/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=ATC4psBF 320w, /sites/default/files/styles/scale_480/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=ymAyYGW9 480w, /sites/default/files/styles/scale_640/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=d4WqDKYJ 640w, /sites/default/files/styles/scale_800/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=Zdna-0jh 800w, /sites/default/files/styles/scale_1024/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=1WqNpHNQ 1024w, /sites/default/files/styles/scale_1280/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=5v1Dl6Dz 1280w, /sites/default/files/styles/scale_1440/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=bz1b54iP 1440w, /sites/default/files/styles/scale_1920/public/2019-03/SPa%20370%20Bedroom%204000x2250.jpg?itok=Mb39ynQ9 1920w" data-sizes="auto" />
++                                <img loading="lazy" width="1920" height="1280" data-parent-fit="cover" data-aspectratio="1.5" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="woman cross-country skiing" class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2024-01/nordic%20skier2.jpg?itok=CUGQndKl" data-srcset="/sites/default/files/styles/scale_320/public/2024-01/nordic%20skier2.jpg?itok=BJW4Rp39 320w, /sites/default/files/styles/scale_480/public/2024-01/nordic%20skier2.jpg?itok=7fYImTFc 480w, /sites/default/files/styles/scale_640/public/2024-01/nordic%20skier2.jpg?itok=Cd4FFIy2 640w, /sites/default/files/styles/scale_800/public/2024-01/nordic%20skier2.jpg?itok=F_01YLbx 800w, /sites/default/files/styles/scale_1024/public/2024-01/nordic%20skier2.jpg?itok=qLJ4rViV 1024w, /sites/default/files/styles/scale_1280/public/2024-01/nordic%20skier2.jpg?itok=n0i-SRD0 1280w, /sites/default/files/styles/scale_1440/public/2024-01/nordic%20skier2.jpg?itok=CUGQndKl 1440w, /sites/default/files/styles/scale_1920/public/2024-01/nordic%20skier2.jpg?itok=_2saaUeS 1920w" data-sizes="auto" />
+ 
+ 
+ 
+@@ -1918,16 +2112,16 @@
+             
+             <div class="copy">
+ 
+-                <h4>Wake Up In Woodstock</h4>
++                <h4>Cross Country Ski Excursion Package</h4>
+ 
+-                                    <h6>Wake Up In Woodstock ~ This special offer is a great way to get away and relax!</h6>
++                                    <h6>Elevate Your Winter Escape with a One-of-a-Kind Nordic Experience</h6>
+                 
+                     
+ 
+ 
+                         <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+ 
+-                              Relax with a freshly-made breakfast and luxurious accommodations.
++                              Experience a custom Vermont cross-country ski getaway at the Woodstock Inn.
+ 
+ 
+             
+@@ -1966,9 +2160,9 @@
+                 
+ 
+ 
+-                        <div class="field field--name-field-media-image field--type-image field--label-hidden focus-middle-center field__item">
++                        <div class="field field--name-field-media-image field--type-image field--label-hidden field__item">
+ 
+-                                <img loading="lazy" width="7564" height="3569" data-parent-fit="cover" data-aspectratio="2.1193611655926" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="The Woodstock Inn &amp; Resort" class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=ouLXP-V-" data-srcset="/sites/default/files/styles/scale_320/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=8ECIASdO 320w, /sites/default/files/styles/scale_480/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=2LBQ04T0 480w, /sites/default/files/styles/scale_640/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=p-2Hkxxx 640w, /sites/default/files/styles/scale_800/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=cBRQoa31 800w, /sites/default/files/styles/scale_1024/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=-v0iUaiY 1024w, /sites/default/files/styles/scale_1280/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=C_QbKa_- 1280w, /sites/default/files/styles/scale_1440/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=ouLXP-V- 1440w, /sites/default/files/styles/scale_1920/public/2018-12/woodstock_inn_2016_dusk_003.jpg?itok=P1xrdqOu 1920w" data-sizes="auto" />
++                                <img loading="lazy" width="8382" height="3803" data-parent-fit="cover" data-aspectratio="2.2040494346568" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Woodstock Inn and Resort" class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=s2UdVb7r" data-srcset="/sites/default/files/styles/scale_320/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=SfC5zV1y 320w, /sites/default/files/styles/scale_480/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=R36lMeI9 480w, /sites/default/files/styles/scale_640/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=OLSuccff 640w, /sites/default/files/styles/scale_800/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=8rs9gqgX 800w, /sites/default/files/styles/scale_1024/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=NW4yKiDT 1024w, /sites/default/files/styles/scale_1280/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=a_LkGCFn 1280w, /sites/default/files/styles/scale_1440/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=s2UdVb7r 1440w, /sites/default/files/styles/scale_1920/public/2018-12/woodstock_winter_2017_001%20%281%29.jpg?itok=HpLN6sS9 1920w" data-sizes="auto" />
+ 
+ 
+ 
+@@ -1995,6 +2189,69 @@
+ 
+             
+ 
++            </div>
++            
++
++            </div>
++
++        </a>
++    </div>
++
++
++</article>
++
++</div>
++                    
++                
++                                            <div class="field__item">
++    
++    
++
++<article  data-history-node-id="328" class="node node--type-package node--view-mode-card iso-item term-1 term-3 term-11 term-15">
++
++    <div class="wrapper">
++        <a href="/shop/packages/saskadena-six-ski-package" class="image">
++            
++
++                            
++    
++
++<article class="media media--type-image media--view-mode-medium">
++
++    
++
++                
++
++
++                        <div class="field field--name-field-media-image field--type-image field--label-hidden focus-middle-center field__item">
++
++                                <img loading="lazy" width="4000" height="2667" data-parent-fit="cover" data-aspectratio="1.4998125234346" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Skier down The Face" class="lazyload" data-src="/sites/default/files/styles/scale_1440/public/2022-07/_DSC8270.jpg?itok=p-uhkg9z" data-srcset="/sites/default/files/styles/scale_320/public/2022-07/_DSC8270.jpg?itok=S_YVJqa1 320w, /sites/default/files/styles/scale_480/public/2022-07/_DSC8270.jpg?itok=xhBD84dm 480w, /sites/default/files/styles/scale_640/public/2022-07/_DSC8270.jpg?itok=KN2wfEms 640w, /sites/default/files/styles/scale_800/public/2022-07/_DSC8270.jpg?itok=CJ93fRJc 800w, /sites/default/files/styles/scale_1024/public/2022-07/_DSC8270.jpg?itok=UHR8npPG 1024w, /sites/default/files/styles/scale_1280/public/2022-07/_DSC8270.jpg?itok=DjSjbQcH 1280w, /sites/default/files/styles/scale_1440/public/2022-07/_DSC8270.jpg?itok=p-uhkg9z 1440w, /sites/default/files/styles/scale_1920/public/2022-07/_DSC8270.jpg?itok=-2E24UXA 1920w" data-sizes="auto" />
++
++
++
++            
++
++            </div>
++            
++    
++</article>
++            
++            <div class="copy">
++
++                <h4>Saskadena Six Ski Package</h4>
++
++                                    <h6>Nestled in Vermont’s Green Mountains, Saskadena Six is a historic ski destination.</h6>
++                
++                    
++
++
++                        <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
++
++                              Discover the charm of Saskadena Six, a cozy mountain escape for couples and families.
++
++
++            
++
+             </div>
+             
+ 
+@@ -2142,7 +2399,7 @@
+   
+ 
+         
+-                <ul class="menu menu--level-1">
++              <ul class="menu">
+                     <li class="menu-item">
+         <a href="/contact-us" data-drupal-link-system-path="node/321">Contact Us</a>
+               </li>
+@@ -2184,7 +2441,7 @@ Local: 802.457.6661</p>
+   
+ 
+         
+-                <ul class="menu menu--level-1">
++              <ul class="menu">
+                     <li class="menu-item">
+         <a href="https://www.facebook.com/saskadenasix" target="_blank" class="facebook">Facebook</a>
+               </li>
+@@ -2207,7 +2464,7 @@ Local: 802.457.6661</p>
+   
+ 
+         
+-                <ul class="menu menu--level-1">
++              <ul class="menu">
+                     <li class="menu-item">
+         <a href="/privacy-policy" data-drupal-link-system-path="node/60">Privacy</a>
+               </li>
+@@ -2242,11 +2499,12 @@ Local: 802.457.6661</p>
+         
+ 
+         <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/307","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"lazy":{"lazysizes":{"lazyClass":"lazyload","loadedClass":"lazyloaded","loadingClass":"lazyloading","preloadClass":"lazypreload","errorClass":"lazyerror","autosizesClass":"lazyautosizes","srcAttr":"data-src","srcsetAttr":"data-srcset","sizesAttr":"data-sizes","minSize":40,"customMedia":[],"init":true,"expFactor":1.5,"hFac":0.8,"loadMode":2,"loadHidden":true,"ricTimeout":0,"throttleDelay":124,"plugins":{"object-fit":"object-fit\/ls.object-fit","parent-fit":"parent-fit\/ls.parent-fit"}},"placeholderSrc":"data:image\/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==","preferNative":false,"minified":true,"libraryPath":"\/libraries\/lazysizes"},"field_group":{"html_element":{"mode":"default","context":"view","settings":{"classes":"","id":"","element":"h2","show_label":false,"label_element":"h3","attributes":"","effect":"none","speed":"fast"}}},"user":{"uid":0,"permissionsHash":"880344b5b1b4c3cc5a925ccd8f61682a161480db015cffcc01a792286b4ae4ef"}}</script>
+-<script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
+-<script src="/sites/default/files/js/js_eeKOxy1FRpjPjwvmmhEYxLVlxU_LYR-jiPtB5U3eamQ.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=suicidesix&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6iXnJGflFxTAuhILxinMyk7MBGhEYpA"></script>
+-<script src="https://cdn.jsdelivr.net/combine/npm/jquery.cookie@1.4.1/jquery.cookie.min.js,npm/nanoscroller@0.8.7/bin/javascripts/jquery.nanoscroller.min.js,npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
++<script src="/sites/default/files/js/js_VhjvZVh2ZsK8g3WW3krurYj-EzeSINi0VSf7k3RxHPo.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=suicidesix&amp;include=eJzLSayq1M8BEjr5RZnpmXn6iXnJGflFxTAuhILxinMyk7MBBmQT5Q"></script>
++<script src="https://cdn.jsdelivr.net/combine/npm/formstone@1.4.18-1/src/js/core.min.js,npm/jquery.cookie@1.4.1/jquery.cookie.min.js,npm/nanoscroller@0.8.7/bin/javascripts/jquery.nanoscroller.min.js,npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
+-<script src="/sites/default/files/js/js_Zt0ZjptcYpVPyeMIVEzRGVr52Thm2JG4HliMjdu9P-Q.js?scope=footer&amp;delta=4&amp;language=en&amp;theme=suicidesix&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6iXnJGflFxTAuhILxinMyk7MBGhEYpA"></script>
++<script src="/sites/default/files/js/js_FXaFwpYQeOS0xp2GFiO1_yed6Y2TZkslD_oJ9osgyXo.js?scope=footer&amp;delta=3&amp;language=en&amp;theme=suicidesix&amp;include=eJzLSayq1M8BEjr5RZnpmXn6iXnJGflFxTAuhILxinMyk7MBBmQT5Q"></script>
++<script src="https://cdn.jsdelivr.net/combine/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
++<script src="/sites/default/files/js/js_fAF9tRYTTgTO7D7QDLYVGTS2IwHvjk_tH2PNEH9jbWg.js?scope=footer&amp;delta=5&amp;language=en&amp;theme=suicidesix&amp;include=eJzLSayq1M8BEjr5RZnpmXn6iXnJGflFxTAuhILxinMyk7MBBmQT5Q"></script>
+ 
+ 
+     </body>
+diff --git a/test/resorts/saskadena-six-trails.js b/test/resorts/saskadena-six-trails.js
+index 836b3585..090e4a3d 100644
+--- a/test/resorts/saskadena-six-trails.js
++++ b/test/resorts/saskadena-six-trails.js
+@@ -7,11 +7,11 @@ trails('saskadena-six', [
+   },
+   {
+     'name': 'UPHILL - Easy Mile',
+-    'status': 'closed'
++    'status': 'open'
+   },
+   {
+     'name': 'UPHILL - Easy Mile Woods Route',
+-    'status': 'closed'
++    'status': 'open'
+   },
+   {
+     'name': 'UPHILL - Milky Way>Top of Chair 2',
+@@ -19,114 +19,142 @@ trails('saskadena-six', [
+   },
+   {
+     'name': 'Begin-A-Glade',
+-    'status': 'closed'
++    'status': 'closed',
++    'level': 'green'
+   },
+   {
+     'name': 'Easy Mile',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'green'
+   },
+   {
+     'name': 'Milky Way',
+-    'status': 'closed'
++    'status': 'closed',
++    'level': 'green'
+   },
+   {
+     'name': "Pearson's Path",
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'green'
+   },
+   {
+     'name': 'Standard',
+-    'status': 'closed'
++    'status': 'closed',
++    'level': 'green'
+   },
+   {
+     'name': 'Back Door',
+-    'status': 'closed'
++    'status': 'closed',
++    'level': 'blue'
+   },
+   {
+     'name': 'Bee Line',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': "Bourdon's Bowl",
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': "Bunny's Boulevard",
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': 'Chimney',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': 'Double Dip',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': "Duane's Drop",
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': 'Lasky Lot',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': "Perley's Peril",
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': 'Road Way',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': 'Skyline',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': 'Spring Pine Glade',
+-    'status': 'closed'
++    'status': 'closed',
++    'level': 'blue'
+   },
+   {
+     'name': 'The Chute',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': 'The Gully',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'blue'
+   },
+   {
+     'name': 'Crystal',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'black'
+   },
+   {
+     'name': 'Jug Handle',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'black'
+   },
+   {
+     'name': 'Showoff',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'black'
+   },
+   {
+     'name': 'The Face',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'black'
+   },
+   {
+     'name': 'Back Scratcher',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'doubleBlack'
+   },
+   {
+     'name': 'Mid Face',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'doubleBlack'
+   },
+   {
+     'name': 'Pomfret Plunge',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'doubleBlack'
+   },
+   {
+     'name': 'Porcupine',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'doubleBlack'
+   },
+   {
+     'name': 'The Glade',
+-    'status': 'closed'
++    'status': 'open',
++    'level': 'doubleBlack'
+   }
+ ]);
+diff --git a/test/resorts/saskadena-six.js b/test/resorts/saskadena-six.js
+index 56cec7a3..5601ef32 100644
+--- a/test/resorts/saskadena-six.js
++++ b/test/resorts/saskadena-six.js
+@@ -1,6 +1,6 @@
+ import lifts from '../lifts/index.js';
+ 
+ lifts('saskadena-six', 'html', {
+-  'Chair 1': 'closed',
+-  'Conveyor Lift': 'closed'
++  'Chair 1': 'open',
++  'Conveyor Lift': 'open'
+ });
+-- 
+2.39.5
+

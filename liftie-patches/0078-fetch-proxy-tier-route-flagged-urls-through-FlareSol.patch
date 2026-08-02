@@ -1,0 +1,313 @@
+From 07816e62aee063d78b524ae6d77dd2c98a4c698f Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sat, 1 Aug 2026 16:09:57 -0400
+Subject: fetch: proxy tier - route flagged urls through FlareSolverr / renderd
+
+Any url descriptor (url, dataUrl, api, trails) can declare via:
+'flaresolverr' to be fetched through the local headless-chrome proxy -
+executes page javascript and clears Cloudflare challenges. JSON bodies
+rendered as chrome's JSON-viewer page are unwrapped transparently.
+'renderd' (LIFTIE_RENDERD) reserved for a wait-for-selector renderer.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/env.js             |   4 ++
+ lib/lifts/request.js   |  10 ++--
+ lib/lifts/rest.js      |   8 ++-
+ lib/tools/fetchvia.js  | 118 +++++++++++++++++++++++++++++++++++++++++
+ test/tools/fetchvia.js |  88 ++++++++++++++++++++++++++++++
+ 5 files changed, 218 insertions(+), 10 deletions(-)
+ create mode 100644 lib/tools/fetchvia.js
+ create mode 100644 test/tools/fetchvia.js
+
+diff --git a/lib/env.js b/lib/env.js
+index 6b6f100f..2a3378b9 100644
+--- a/lib/env.js
++++ b/lib/env.js
+@@ -3,6 +3,8 @@ import { tmpdir } from 'node:os';
+ const {
+   CSP_REPORT_URI,
+   LIFTIE_CSP_ENFORCE,
++  LIFTIE_FLARESOLVERR = 'http://127.0.0.1:8191/v1',
++  LIFTIE_RENDERD = '',
+   LIFTIE_STATIC_HOST = '',
+   LIFTIE_USER_AGENT,
+   LOG_DIR = tmpdir(),
+@@ -19,6 +21,8 @@ const { SITE_URL } = process.env;
+ export {
+   CSP_REPORT_URI,
+   LIFTIE_CSP_ENFORCE,
++  LIFTIE_FLARESOLVERR,
++  LIFTIE_RENDERD,
+   LIFTIE_STATIC_HOST,
+   LIFTIE_USER_AGENT,
+   LOG_DIR,
+diff --git a/lib/lifts/request.js b/lib/lifts/request.js
+index 15d5f855..72fe364a 100644
+--- a/lib/lifts/request.js
++++ b/lib/lifts/request.js
+@@ -1,11 +1,11 @@
+ import { LIFTIE_USER_AGENT } from '../env.js';
++import fetchVia, { fullUrl, hasVia } from '../tools/fetchvia.js';
+ 
+-export default function request({ host, pathname, query }) {
+-  const fullUrl = new URL(pathname, host);
+-  if (query) {
+-    fullUrl.search = new URLSearchParams(query).toString();
++export default function request(url) {
++  if (hasVia(url)) {
++    return fetchVia(url);
+   }
+-  return fetch(fullUrl, {
++  return fetch(fullUrl(url), {
+     headers: {
+       'User-Agent': LIFTIE_USER_AGENT,
+       Accept: '*/*'
+diff --git a/lib/lifts/rest.js b/lib/lifts/rest.js
+index 7773ac26..9b6059d7 100644
+--- a/lib/lifts/rest.js
++++ b/lib/lifts/rest.js
+@@ -1,11 +1,8 @@
+ import { LIFTIE_USER_AGENT } from '../env.js';
++import fetchVia, { fullUrl, hasVia } from '../tools/fetchvia.js';
+ import { parseHtml } from './parser.js';
+ 
+ export default function rest(url, parse, fn) {
+-  const fullUrl = new URL(url.pathname, url.host);
+-  if (url.query) {
+-    fullUrl.search = new URLSearchParams(url.query).toString();
+-  }
+   const reqInit = {
+     headers: {
+       'User-Agent': LIFTIE_USER_AGENT,
+@@ -17,7 +14,8 @@ export default function rest(url, parse, fn) {
+     reqInit.method = 'POST';
+   }
+ 
+-  fetch(fullUrl, reqInit)
++  const doFetch = hasVia(url) ? fetchVia(url) : fetch(fullUrl(url), reqInit);
++  doFetch
+     .then(async res => {
+       if (res.status < 200 || res.status >= 300) {
+         return fn(res.status);
+diff --git a/lib/tools/fetchvia.js b/lib/tools/fetchvia.js
+new file mode 100644
+index 00000000..8eed4830
+--- /dev/null
++++ b/lib/tools/fetchvia.js
+@@ -0,0 +1,118 @@
++import Debug from 'debug';
++import { LIFTIE_FLARESOLVERR, LIFTIE_RENDERD } from '../env.js';
++
++const debug = Debug('liftie:fetchvia');
++
++/**
++ * proxy tier for sites that plain fetch cannot read:
++ * - via: 'flaresolverr' - render through the local FlareSolverr instance
++ *   (executes page javascript, clears Cloudflare challenges)
++ * - via: 'renderd' - local chromium render service, supports waitSelector
++ *   for pages that populate status rows from post-load XHR calls
++ *
++ * any url descriptor ({ host, pathname, query? }) from resort.json can opt in
++ * by adding "via"; responses come back as fetch-Response-alikes so the
++ * lifts/trails pipelines don't care how the bytes were obtained
++ */
++
++export function hasVia(url) {
++  return Boolean(url?.via);
++}
++
++export function fullUrl({ host, pathname, query }) {
++  const url = new URL(pathname, host);
++  if (query) {
++    url.search = new URLSearchParams(query).toString();
++  }
++  return url;
++}
++
++export default function fetchVia(url) {
++  switch (url.via) {
++    case 'flaresolverr':
++      return flaresolverr(url);
++    case 'renderd':
++      return renderd(url);
++    default:
++      return Promise.reject(new Error(`unknown fetch proxy: ${url.via}`));
++  }
++}
++
++async function flaresolverr(url) {
++  if (url.body) {
++    // flaresolverr only supports x-www-form-urlencoded posts; none of our
++    // sources need that - route JSON posts through renderd instead
++    throw new Error('flaresolverr proxy does not support request bodies');
++  }
++  const target = fullUrl(url);
++  debug('flaresolverr fetch %s', target);
++  const res = await fetch(LIFTIE_FLARESOLVERR, {
++    method: 'POST',
++    headers: { 'Content-Type': 'application/json' },
++    body: JSON.stringify({
++      cmd: 'request.get',
++      url: target.toString(),
++      maxTimeout: url.maxTimeout ?? 60000
++    })
++  });
++  if (!res.ok) {
++    return response(502, '');
++  }
++  const envelope = await res.json();
++  if (envelope.status !== 'ok' || !envelope.solution) {
++    debug('flaresolverr error for %s: %s', target, envelope.message);
++    return response(502, '');
++  }
++  return response(envelope.solution.status, envelope.solution.response ?? '');
++}
++
++async function renderd(url) {
++  if (!LIFTIE_RENDERD) {
++    throw new Error('LIFTIE_RENDERD is not configured');
++  }
++  const target = new URL('/render', LIFTIE_RENDERD);
++  target.searchParams.set('url', fullUrl(url).toString());
++  if (url.waitSelector) {
++    target.searchParams.set('wait', url.waitSelector);
++  }
++  if (url.maxTimeout) {
++    target.searchParams.set('timeout', url.maxTimeout);
++  }
++  debug('renderd fetch %s', target);
++  const res = await fetch(target);
++  return response(res.status, await res.text());
++}
++
++function response(status, body) {
++  return {
++    status,
++    text: async () => body,
++    json: async () => unwrapJson(body)
++  };
++}
++
++/**
++ * a JSON endpoint rendered in headless chrome comes back as the browser's
++ * JSON-viewer page - the payload lives inside a <pre> with html entities
++ * escaped; a direct JSON body passes through untouched
++ */
++export function unwrapJson(body) {
++  const text = body.trim();
++  if (text.startsWith('{') || text.startsWith('[')) {
++    return JSON.parse(text);
++  }
++  const pre = text.match(/<pre[^>]*>([\s\S]*?)<\/pre>/i);
++  if (!pre) {
++    throw new Error('response is neither JSON nor a rendered JSON page');
++  }
++  return JSON.parse(decodeEntities(pre[1]));
++}
++
++function decodeEntities(text) {
++  return text
++    .replace(/&lt;/g, '<')
++    .replace(/&gt;/g, '>')
++    .replace(/&quot;/g, '"')
++    .replace(/&#0?39;/g, "'")
++    .replace(/&amp;/g, '&');
++}
+diff --git a/test/tools/fetchvia.js b/test/tools/fetchvia.js
+new file mode 100644
+index 00000000..f8ed5afa
+--- /dev/null
++++ b/test/tools/fetchvia.js
+@@ -0,0 +1,88 @@
++import assert from 'node:assert/strict';
++import { createServer } from 'node:http';
++import { after, before, test } from 'node:test';
++
++let server;
++let fetchVia;
++let unwrapJson;
++let solution; // what the mock flaresolverr answers with
++
++before(async () => {
++  server = createServer((req, res) => {
++    let body = '';
++    req.on('data', chunk => {
++      body += chunk;
++    });
++    req.on('end', () => {
++      const { cmd, url } = JSON.parse(body);
++      assert.equal(cmd, 'request.get');
++      assert.ok(url.startsWith('https://'));
++      res.setHeader('Content-Type', 'application/json');
++      res.end(JSON.stringify(solution));
++    });
++  });
++  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
++  process.env.LIFTIE_FLARESOLVERR = `http://127.0.0.1:${server.address().port}/v1`;
++  ({ default: fetchVia, unwrapJson } = await import('../../lib/tools/fetchvia.js'));
++});
++
++after(() => server.close());
++
++const url = {
++  host: 'https://resort.example',
++  pathname: '/snow-report',
++  via: 'flaresolverr'
++};
++
++test('flaresolverr proxy returns rendered html', async () => {
++  solution = {
++    status: 'ok',
++    solution: { status: 200, response: '<ul><li class="lift">Summit Quad</li></ul>' }
++  };
++  const res = await fetchVia(url);
++  assert.equal(res.status, 200);
++  assert.match(await res.text(), /Summit Quad/);
++});
++
++test('flaresolverr proxy unwraps chrome json viewer pages', async () => {
++  solution = {
++    status: 'ok',
++    solution: {
++      status: 200,
++      response:
++        '<html><head></head><body>' +
++        '<pre style="word-wrap: break-word;">{"Lifts":[{"Name":"Peak Triple &amp; Co","Open":true}]}</pre>' +
++        '</body></html>'
++    }
++  };
++  const res = await fetchVia(url);
++  const data = await res.json();
++  assert.deepEqual(data, { Lifts: [{ Name: 'Peak Triple & Co', Open: true }] });
++});
++
++test('flaresolverr proxy passes raw json bodies through', async () => {
++  solution = {
++    status: 'ok',
++    solution: { status: 200, response: ' {"open": 3} ' }
++  };
++  const res = await fetchVia(url);
++  assert.deepEqual(await res.json(), { open: 3 });
++});
++
++test('flaresolverr failure maps to a 502 response', async () => {
++  solution = { status: 'error', message: 'challenge failed' };
++  const res = await fetchVia(url);
++  assert.equal(res.status, 502);
++});
++
++test('unknown proxy is rejected', async () => {
++  await assert.rejects(fetchVia({ ...url, via: 'nope' }), /unknown fetch proxy/);
++});
++
++test('request bodies are rejected for flaresolverr', async () => {
++  await assert.rejects(fetchVia({ ...url, body: { a: 1 } }), /does not support request bodies/);
++});
++
++test('unwrapJson rejects non-json pages', () => {
++  assert.throws(() => unwrapJson('<html><body>404</body></html>'), /neither JSON/);
++});
+-- 
+2.39.5
+

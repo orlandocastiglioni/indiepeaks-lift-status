@@ -1,8 +1,8 @@
 From 812d04a9400d4cb47a2763ba04a79e23c3d4306a Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:01:21 +0000
-Subject: [PATCH 66/77] resort: fix big-moose - difficulty suffixes leaked into
- trail names with wrong level
+Subject: resort: fix big-moose - difficulty suffixes leaked into trail names
+ with wrong level
 
 Items in the 'Upper Mountain (Advanced Backcountry Terrain)' section carry
 their real rating in the item name ('Upper Penobscot - Blue Square') but

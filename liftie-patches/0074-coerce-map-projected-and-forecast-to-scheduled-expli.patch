@@ -1,8 +1,7 @@
 From 8fdb634101d229790cb56d8d21207b55f7a78427 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:06:14 +0000
-Subject: [PATCH 74/77] coerce: map 'projected' and 'forecast' to scheduled
- explicitly
+Subject: coerce: map 'projected' and 'forecast' to scheduled explicitly
 
 Lutsen's status icons use title='Projected' and Lumiplan feeds use
 FORECAST; both landed on scheduled only via the unknown-status fallback

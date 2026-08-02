@@ -1,0 +1,270 @@
+From e78dd576a8f070b3c50f22d8dd8b43c35b5e993e Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:52:55 -0400
+Subject: resort: snow-ridge - fix trails - blank statuses closed, alt-attr
+ typo tolerated
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/snow-ridge/trails.js  |   9 +-
+ test/resorts/snow-ridge-trails.js | 178 ++++++++++++++++++------------
+ 2 files changed, 115 insertions(+), 72 deletions(-)
+
+diff --git a/lib/resorts/snow-ridge/trails.js b/lib/resorts/snow-ridge/trails.js
+index 7ce61ed3..c392a583 100644
+--- a/lib/resorts/snow-ridge/trails.js
++++ b/lib/resorts/snow-ridge/trails.js
+@@ -20,12 +20,15 @@ export default function parse(dom) {
+     const name = allText(tds[0])
+       .replace(/^\s*\d+\.\s*/, '')
+       .trim();
+-    const status = findText(tds[1]);
+-    if (name && status) {
++    // a blank status cell on this hand-posted report means the trail is not open
++    const status = (findText(tds[1]) ?? '').trim() || 'closed';
++    if (name) {
+       rows.push({
+         name,
+         status,
+-        level: icon.attribs.alt || icon.attribs.src.match(/icon-([a-z_]+)\.png/)?.[1]
++        // prefer the icon src: terrain park rows use icon-terrain_park.png
++        // but carry a hand-copied alt="black-diamond"
++        level: icon.attribs.src?.match(/icon-([a-z_]+)\.png/)?.[1] ?? icon.attribs.alt
+       });
+     }
+   }
+diff --git a/test/resorts/snow-ridge-trails.js b/test/resorts/snow-ridge-trails.js
+index 713e1d37..e640283c 100644
+--- a/test/resorts/snow-ridge-trails.js
++++ b/test/resorts/snow-ridge-trails.js
+@@ -2,118 +2,158 @@ import trails from '../trails/index.js';
+ 
+ trails('snow-ridge', [
+   {
+-    'name': 'Von Allmen',
+-    'status': 'closed',
+-    'level': 'black'
++    name: 'Sap Line Glades',
++    status: 'closed',
++    level: 'black'
+   },
+   {
+-    'name': 'Black River',
+-    'status': 'closed',
+-    'level': 'blue'
++    name: 'Von Allmen',
++    status: 'closed',
++    level: 'black'
+   },
+   {
+-    'name': 'Snow Pocket',
+-    'status': 'closed',
+-    'level': 'blue'
++    name: 'Black River',
++    status: 'closed',
++    level: 'blue'
+   },
+   {
+-    'name': 'Side Pocket',
+-    'status': 'closed',
+-    'level': 'blue'
++    name: 'Snow Pocket',
++    status: 'closed',
++    level: 'blue'
+   },
+   {
+-    'name': 'Upper Pocket Glades',
+-    'status': 'closed',
+-    'level': 'blue'
++    name: 'Side Pocket',
++    status: 'closed',
++    level: 'blue'
+   },
+   {
+-    'name': 'Rockin Robin',
+-    'status': 'closed',
+-    'level': 'black'
++    name: 'Upper Pocket Glades',
++    status: 'closed',
++    level: 'blue'
+   },
+   {
+-    'name': 'Kuersteiner',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'Lower Pocket Glades',
++    status: 'closed',
++    level: 'black'
+   },
+   {
+-    'name': 'Bunny Bowl',
+-    'status': 'open',
+-    'level': 'green'
++    name: 'Pocket Knife',
++    status: 'closed',
++    level: 'black'
+   },
+   {
+-    'name': 'Main Park:',
+-    'status': 'closed',
+-    'level': 'black'
++    name: 'Rockin Robin',
++    status: 'closed',
++    level: 'black'
+   },
+   {
+-    'name': 'South Slope',
+-    'status': 'open',
+-    'level': 'blue'
++    name: 'Kuersteiner',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Progression Park:',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'Bunny Bowl',
++    status: 'open',
++    level: 'green'
+   },
+   {
+-    'name': 'Ridge Run',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'Main Park:',
++    status: 'closed',
++    level: 'terrainPark'
+   },
+   {
+-    'name': 'The Bumps',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'South Slope',
++    status: 'open',
++    level: 'blue'
+   },
+   {
+-    'name': 'North Slope',
+-    'status': 'open',
+-    'level': 'blue'
++    name: 'Progression Park:',
++    status: 'open',
++    level: 'terrainPark'
+   },
+   {
+-    'name': 'Silversmith',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'Ridge Run',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Johannsen',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'The Bumps',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Cruikshank',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'North Slope',
++    status: 'open',
++    level: 'blue'
+   },
+   {
+-    'name': 'Silver Glades',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'Silversmith',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Challenger',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'Johannsen',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Amazing Grace',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'Cruikshank',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'One Way Out',
+-    'status': 'open',
+-    'level': 'black'
++    name: 'Silver Glades',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Little Mountain',
+-    'status': 'open',
+-    'level': 'blue'
++    name: 'Sugar Bush Glades',
++    status: 'closed',
++    level: 'black'
+   },
+   {
+-    'name': 'Little North',
+-    'status': 'open',
+-    'level': 'blue'
++    name: 'Challenger',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Lower Gulf Glades',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Amazing Grace',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'One Way Out',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Snowy Meadows',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Easy Rider',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Little Mountain',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Little Lumi Land',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Little North',
++    status: 'open',
++    level: 'blue'
+   }
+ ]);
+-- 
+2.39.5
+

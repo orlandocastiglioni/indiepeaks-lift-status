@@ -1,0 +1,28 @@
+From 23c7b3892510a2beba59040aac8816335c0de20b Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:24:12 -0400
+Subject: resort: crystal-ridge - route through flaresolverr (site now 403s
+ plain fetches)
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/crystal-ridge/resort.json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lib/resorts/crystal-ridge/resort.json b/lib/resorts/crystal-ridge/resort.json
+index 25b0ccf1..8e912c66 100644
+--- a/lib/resorts/crystal-ridge/resort.json
++++ b/lib/resorts/crystal-ridge/resort.json
+@@ -2,7 +2,8 @@
+   "name": "Crystal Ridge",
+   "url": {
+     "host": "https://crystalridge.com",
+-    "pathname": "/mountain-info/snow-report/"
++    "pathname": "/mountain-info/snow-report/",
++    "via": "flaresolverr"
+   },
+   "trails": true,
+   "tags": [
+-- 
+2.39.5
+

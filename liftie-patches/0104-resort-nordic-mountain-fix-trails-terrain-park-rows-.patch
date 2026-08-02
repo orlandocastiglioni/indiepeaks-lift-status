@@ -1,0 +1,75 @@
+From 3b4ded5e3edbed873bb09eb022d4844a088edbf6 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:12 -0400
+Subject: resort: nordic-mountain - fix trails - terrain park rows were dropped
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/nordic-mountain/trails.js  | 10 +++++++---
+ test/resorts/nordic-mountain-trails.js | 20 ++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 3 deletions(-)
+
+diff --git a/lib/resorts/nordic-mountain/trails.js b/lib/resorts/nordic-mountain/trails.js
+index db5d2683..32c4323b 100644
+--- a/lib/resorts/nordic-mountain/trails.js
++++ b/lib/resorts/nordic-mountain/trails.js
+@@ -1,19 +1,23 @@
+ import select from '../../select.js';
+ import { allText } from '../../tools/domutil.js';
+ 
++// trail rows use class "Trail ... component-row"; the four terrain parks use
++// "Terrain Park ... component-row" and carry no .f-icon.level element, so
++// tag those with an explicit terrain park level
+ export default {
+-  selector: '.Trail.component-row',
++  selector: '.Trail.component-row, .Terrain.Park.component-row',
+   parse: row => {
+     const title = select(row.children, '.cell.title')[0];
+     const status = select(row.children, '.cell.status')[0];
+-    const level = title && select(title.children, '.f-icon.level')[0];
+     if (!title || !status) {
+       return;
+     }
++    const level = select(title.children, '.f-icon.level')[0];
++    const isTerrainPark = /\bTerrain Park\b/.test(row.attribs.class ?? '');
+     return {
+       name: allText(title),
+       status: status.attribs.title ?? allText(status),
+-      level: level?.attribs.title
++      level: level?.attribs.title ?? (isTerrainPark ? 'terrain park' : undefined)
+     };
+   }
+ };
+diff --git a/test/resorts/nordic-mountain-trails.js b/test/resorts/nordic-mountain-trails.js
+index c7c2037d..47d1f406 100644
+--- a/test/resorts/nordic-mountain-trails.js
++++ b/test/resorts/nordic-mountain-trails.js
+@@ -60,5 +60,25 @@ trails('nordic-mountain', [
+     'name': "Nordy's Narrows",
+     'status': 'closed',
+     'level': 'black'
++  },
++  {
++    'name': 'Poma Pass Terrain Park (Small)',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Short Cut Terrain Park (Small)',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Thunder Terrain Park (Medium)',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Skiers Outlet Terrain Park (Large)',
++    'status': 'closed',
++    'level': 'terrainPark'
+   }
+ ]);
+-- 
+2.39.5
+

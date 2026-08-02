@@ -1,8 +1,8 @@
 From a6c0fd42b0f863ac36b0c5af4c062e8ddb1c883a Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:02:28 +0000
-Subject: [PATCH 67/77] resort: fix greek-peak - trails duplicated across the
- page's two tables
+Subject: resort: fix greek-peak - trails duplicated across the page's two
+ tables
 
 The conditions page renders two #gp-trail-table tables (a featured subset
 plus the full list); the selector matched both, publishing 7 trails twice

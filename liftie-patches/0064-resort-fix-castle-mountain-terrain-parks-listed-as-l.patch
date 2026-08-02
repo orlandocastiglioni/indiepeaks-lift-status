@@ -1,8 +1,7 @@
 From 7a68792463c5f422fbf52da6ba728f69c7985bba Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:00:07 +0000
-Subject: [PATCH 64/77] resort: fix castle-mountain - terrain parks listed as
- lifts
+Subject: resort: fix castle-mountain - terrain parks listed as lifts
 
 The lift filter excluded trail rows by circle/square/diamond difficulty
 icons but park rows carry a terrain_parks.svg icon, so 'Meadows S/M Park'

@@ -24,13 +24,13 @@ RESORTS = [
     "49-degrees-north", "berkshire-east", "big-moose", "big-white",
     "bolton-valley", "burke-mountain", "caberfae-peaks", "calabogie",
     "canaan-valley", "cannon", "castle-mountain", "cataloochee", "chinapeak",
-    "cooper-spur", "donner-ski-ranch", "dynaland",
+    "cooper-spur", "crystal-ridge", "donner-ski-ranch", "dynaland",
     "eagle-point", "echo-mountain", "glencoe", "granite-peak", "greek-peak",
     "hirugano-kogen", "hochzeiger", "hoodoo", "jay-peak", "king-pine",
     "little-switzerland", "loveland", "lutsen-mountains", "manning-park", "manning-park-xc",
     "mission-ridge", "mt-abram", "mt-la-crosse", "mthigh", "mthood",
     "nayoro-piyashiri", "nordic-mountain", "okunakayama", "owlshead",
-    "palcall-tsumagoi", "pats-peak", "pitztaler-gletscher",
+    "palcall-tsumagoi", "pats-peak", "pitztaler-gletscher", "powderhorn",
     "ragged-mountain", "red-lodge-mountain", "rikert", "saddleback", "saskadena-six",
     "sasquatch-mountain", "shawnee-mountain", "ski-sawmill", "skiwelt",
     "snow-ridge", "snowriver", "sundown-mountain", "swain",
@@ -123,12 +123,30 @@ def write_health(fetched_at, results, errors):
     return material(health) != material(previous)
 
 
+def write_index(names):
+    """status/_index.json: id -> display name for every published resort,
+    so the app can discover new resorts without shipping its own list."""
+    index_file = STATUS_DIR / "_index.json"
+    index = {"resorts": {rid: {"name": name} for rid, name in sorted(names.items())}}
+    previous = None
+    if index_file.exists():
+        try:
+            previous = json.loads(index_file.read_text())
+        except json.JSONDecodeError:
+            pass
+    if index != previous:
+        index_file.write_text(json.dumps(index, indent=2, sort_keys=True) + "\n")
+        return True
+    return False
+
+
 def main():
     STATUS_DIR.mkdir(exist_ok=True)
     fetched_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     changed = []
     results = {}
     errors = []
+    names = {}
 
     for resort_id in sorted(RESORTS):
         data = fetch(resort_id)
@@ -136,6 +154,8 @@ def main():
             errors.append(resort_id)
             continue
         results[resort_id] = counts(data)
+        if data.get("name"):
+            names[resort_id] = data["name"]
 
         out_file = STATUS_DIR / f"{resort_id}.json"
         if out_file.exists():
@@ -152,6 +172,8 @@ def main():
 
     if write_health(fetched_at, results, errors):
         changed.append("_health")
+    if write_index(names):
+        changed.append("_index")
 
     if not changed:
         log("No lift status changes; nothing to publish.")

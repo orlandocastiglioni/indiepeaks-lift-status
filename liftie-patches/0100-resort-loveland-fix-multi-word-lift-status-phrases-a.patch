@@ -1,0 +1,1527 @@
+From 220142112aa208417295b5f1a4aa5c0940f02d3a Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:12 -0400
+Subject: resort: loveland - fix multi-word lift status phrases, add trail
+ status
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/loveland/index.js      |  22 +-
+ lib/resorts/loveland/resort.json   |   1 +
+ lib/resorts/loveland/trails.js     |  37 +++
+ test/resorts/example/loveland.html | 387 +++++++++++++----------
+ test/resorts/loveland-trails.js    | 484 +++++++++++++++++++++++++++++
+ test/resorts/loveland.js           |  18 +-
+ 6 files changed, 771 insertions(+), 178 deletions(-)
+ create mode 100644 lib/resorts/loveland/trails.js
+ create mode 100644 test/resorts/loveland-trails.js
+
+diff --git a/lib/resorts/loveland/index.js b/lib/resorts/loveland/index.js
+index a9246c76..47b61a3c 100644
+--- a/lib/resorts/loveland/index.js
++++ b/lib/resorts/loveland/index.js
+@@ -1,12 +1,28 @@
+ import { findText } from '../../tools/domutil.js';
+ 
++// table captions read 'NAME - STATUS'; the status can be a multi-word phrase
++// ('CLOSED UNTIL FURTHER NOTICE') so split on the first ' - ' only and reduce
++// anything starting with OPEN/CLOSED to tokens coerce knows
+ export default {
+   selector: '.tablepress-table-name',
+   parse(node) {
+-    const [name, status] = findText(node).split('-');
++    const [, name, status] = findText(node)?.match(/^(.+?)\s+-\s+(.+)$/) ?? [];
++    if (!name) {
++      return;
++    }
+     return {
+-      name: name,
+-      status: status
++      name,
++      status: normalize(status)
+     };
+   }
+ };
++
++function normalize(status) {
++  if (/^closed\b/i.test(status)) {
++    return 'closed';
++  }
++  if (/^open\b/i.test(status)) {
++    return 'open';
++  }
++  return status;
++}
+diff --git a/lib/resorts/loveland/resort.json b/lib/resorts/loveland/resort.json
+index 63589db9..1337cabf 100644
+--- a/lib/resorts/loveland/resort.json
++++ b/lib/resorts/loveland/resort.json
+@@ -4,6 +4,7 @@
+     "host": "https://skiloveland.com",
+     "pathname": "/trail-lift-report/"
+   },
++  "trails": true,
+   "tags": [
+     "Colorado"
+   ],
+diff --git a/lib/resorts/loveland/trails.js b/lib/resorts/loveland/trails.js
+new file mode 100644
+index 00000000..1b493294
+--- /dev/null
++++ b/lib/resorts/loveland/trails.js
+@@ -0,0 +1,37 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++
++const HEADERS = ['DIFFICULTY', 'STATUS', 'NAME'];
++
++// status and difficulty cells contain no text, only icon images -
++// the icon file name (icon_open.png, icon_more_difficult.png...) is the value
++function iconToken(cell) {
++  const img = cell && select(cell.children, 'img')[0];
++  return img?.attribs.src?.match(/icon_(\w+)\.png/)?.[1];
++}
++
++// trails are split into per-lift TablePress tables on the same page as lifts;
++// table ids change, so recognize trail tables by their header row instead
++export default function parse(dom) {
++  const rows = [];
++  for (const table of select(dom, 'table.tablepress')) {
++    const headers = select(table.children, 'thead th').map(th => findText(th)?.trim());
++    if (HEADERS.some((header, i) => headers[i] !== header)) {
++      continue;
++    }
++    for (const tr of select(table.children, 'tbody tr')) {
++      const name = findText(select(tr.children, 'td.column-3')[0])?.trim();
++      if (!name) {
++        // TablePress pads short tables with fully empty rows
++        continue;
++      }
++      rows.push({
++        name,
++        status: iconToken(select(tr.children, 'td.column-2')[0]),
++        // icon_beginner, icon_more_difficult... - normalizeLevel knows these
++        level: iconToken(select(tr.children, 'td.column-1')[0])
++      });
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/example/loveland.html b/test/resorts/example/loveland.html
+index 30be7190..fa6ba9ac 100644
+--- a/test/resorts/example/loveland.html
++++ b/test/resorts/example/loveland.html
+@@ -54,7 +54,7 @@
+ 
+ 			</script>
+ 			
+-	<!-- This site is optimized with the Yoast SEO plugin v26.1.1 - https://yoast.com/wordpress/plugins/seo/ -->
++	<!-- This site is optimized with the Yoast SEO plugin v26.9 - https://yoast.com/product/yoast-seo-wordpress/ -->
+ 	<title>Ski Lift Status &amp; Trail Openings and Closings | Loveland Ski Area</title>
+ 	<meta name="description" content="Wondering about Loveland ski lift status and trail openings or closings? Find out which lifts and trails are open on your way up to ski or snowboard at Loveland." />
+ 	<link rel="canonical" href="https://skiloveland.com/trail-lift-report/" />
+@@ -73,7 +73,6 @@
+ 	<!-- / Yoast SEO plugin. -->
+ 
+ 
+-<link rel='dns-prefetch' href='//www.google.com' />
+ <link rel="alternate" type="application/rss+xml" title="Loveland Ski Area :: Colorado Ski Snowboarding Resort, Skiing Season Pass, Ski School &raquo; Feed" href="https://skiloveland.com/feed/" />
+ <link rel="alternate" type="application/rss+xml" title="Loveland Ski Area :: Colorado Ski Snowboarding Resort, Skiing Season Pass, Ski School &raquo; Comments Feed" href="https://skiloveland.com/comments/feed/" />
+ 
+@@ -128,7 +127,7 @@
+ 			</script>
+ 			<script type="text/javascript">
+ /* <![CDATA[ */
+-window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/skiloveland.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.8.2"}};
++window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/skiloveland.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.8.3"}};
+ /*! This file is auto-generated */
+ !function(s,n){var o,i,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),a=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===a[t]})}function u(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);for(var n=e.getImageData(16,16,1,1),a=0;a<n.data.length;a++)if(0!==n.data[a])return!1;return!0}function f(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\udedf")}return!1}function g(e,t,n,a){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):s.createElement("canvas"),o=r.getContext("2d",{willReadFrequently:!0}),i=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(function(e){i[e]=t(o,e,n,a)}),i}function t(e){var t=s.createElement("script");t.src=e,t.defer=!0,s.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",i=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){s.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+g.toString()+"("+[JSON.stringify(i),f.toString(),p.toString(),u.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"}),r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=function(e){c(n=e.data),r.terminate(),t(n)})}catch(e){}c(n=g(i,f,p,u))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+ /* ]]> */
+@@ -136,24 +135,24 @@ window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16
+ <link rel='stylesheet' id='avia-grid-css' href='https://skiloveland.com/wp-content/themes/skiloveland/css/grid.css?ver=5.1.1' type='text/css' media='all' />
+ <link rel='stylesheet' id='avia-base-css' href='https://skiloveland.com/wp-content/themes/skiloveland/css/base.css?ver=5.1.1' type='text/css' media='all' />
+ <link rel='stylesheet' id='avia-layout-css' href='https://skiloveland.com/wp-content/themes/skiloveland/css/layout.css?ver=5.1.1' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-blog-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/blog/blog.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-postslider-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/postslider/postslider.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-button-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/buttons/buttons.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-comments-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/comments/comments.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-contact-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/contact/contact.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-gallery-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/gallery/gallery.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-gridrow-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/grid_row/grid_row.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-heading-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/heading/heading.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-hr-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/hr/hr.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-image-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/image/image.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-slideshow-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/slideshow/slideshow.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-slideshow-contentpartner-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/contentslider/contentslider.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-promobox-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/promobox/promobox.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-slideshow-fullsize-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/slideshow_fullsize/slideshow_fullsize.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-social-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/social_share/social_share.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-tabs-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/tabs/tabs.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-toggles-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/toggles/toggles.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='avia-module-video-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/video/video.css?ver=6.8.2' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-blog-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/blog/blog.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-postslider-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/postslider/postslider.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-button-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/buttons/buttons.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-comments-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/comments/comments.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-contact-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/contact/contact.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-gallery-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/gallery/gallery.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-gridrow-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/grid_row/grid_row.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-heading-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/heading/heading.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-hr-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/hr/hr.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-image-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/image/image.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-slideshow-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/slideshow/slideshow.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-slideshow-contentpartner-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/contentslider/contentslider.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-promobox-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/promobox/promobox.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-slideshow-fullsize-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/slideshow_fullsize/slideshow_fullsize.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-social-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/social_share/social_share.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-tabs-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/tabs/tabs.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-toggles-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/toggles/toggles.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='avia-module-video-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-templatebuilder/avia-shortcodes/video/video.css?ver=6.8.3' type='text/css' media='all' />
+ <style id='wp-emoji-styles-inline-css' type='text/css'>
+ 
+ 	img.wp-smiley, img.emoji {
+@@ -168,16 +167,16 @@ window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16
+ 		padding: 0 !important;
+ 	}
+ </style>
+-<link rel='stylesheet' id='wp-block-library-css' href='https://skiloveland.com/wp-includes/css/dist/block-library/style.min.css?ver=6.8.2' type='text/css' media='all' />
++<link rel='stylesheet' id='wp-block-library-css' href='https://skiloveland.com/wp-includes/css/dist/block-library/style.min.css?ver=6.8.3' type='text/css' media='all' />
+ <style id='global-styles-inline-css' type='text/css'>
+ :root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--metallic-red: #b02b2c;--wp--preset--color--maximum-yellow-red: #edae44;--wp--preset--color--yellow-sun: #eeee22;--wp--preset--color--palm-leaf: #83a846;--wp--preset--color--aero: #7bb0e7;--wp--preset--color--old-lavender: #745f7e;--wp--preset--color--steel-teal: #5f8789;--wp--preset--color--raspberry-pink: #d65799;--wp--preset--color--medium-turquoise: #4ecac2;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 1rem;--wp--preset--font-size--medium: 1.125rem;--wp--preset--font-size--large: 1.75rem;--wp--preset--font-size--x-large: clamp(1.75rem, 3vw, 2.25rem);--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:root { --wp--style--global--content-size: 800px;--wp--style--global--wide-size: 1130px; }:where(body) { margin: 0; }.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }.wp-site-blocks > .alignright { float: right; margin-left: 2em; }.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}.is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}a:where(:not(.wp-element-button)){text-decoration: underline;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;line-height: inherit;padding: calc(0.667em + 2px) calc(1.333em + 2px);text-decoration: none;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-metallic-red-color{color: var(--wp--preset--color--metallic-red) !important;}.has-maximum-yellow-red-color{color: var(--wp--preset--color--maximum-yellow-red) !important;}.has-yellow-sun-color{color: var(--wp--preset--color--yellow-sun) !important;}.has-palm-leaf-color{color: var(--wp--preset--color--palm-leaf) !important;}.has-aero-color{color: var(--wp--preset--color--aero) !important;}.has-old-lavender-color{color: var(--wp--preset--color--old-lavender) !important;}.has-steel-teal-color{color: var(--wp--preset--color--steel-teal) !important;}.has-raspberry-pink-color{color: var(--wp--preset--color--raspberry-pink) !important;}.has-medium-turquoise-color{color: var(--wp--preset--color--medium-turquoise) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-metallic-red-background-color{background-color: var(--wp--preset--color--metallic-red) !important;}.has-maximum-yellow-red-background-color{background-color: var(--wp--preset--color--maximum-yellow-red) !important;}.has-yellow-sun-background-color{background-color: var(--wp--preset--color--yellow-sun) !important;}.has-palm-leaf-background-color{background-color: var(--wp--preset--color--palm-leaf) !important;}.has-aero-background-color{background-color: var(--wp--preset--color--aero) !important;}.has-old-lavender-background-color{background-color: var(--wp--preset--color--old-lavender) !important;}.has-steel-teal-background-color{background-color: var(--wp--preset--color--steel-teal) !important;}.has-raspberry-pink-background-color{background-color: var(--wp--preset--color--raspberry-pink) !important;}.has-medium-turquoise-background-color{background-color: var(--wp--preset--color--medium-turquoise) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-metallic-red-border-color{border-color: var(--wp--preset--color--metallic-red) !important;}.has-maximum-yellow-red-border-color{border-color: var(--wp--preset--color--maximum-yellow-red) !important;}.has-yellow-sun-border-color{border-color: var(--wp--preset--color--yellow-sun) !important;}.has-palm-leaf-border-color{border-color: var(--wp--preset--color--palm-leaf) !important;}.has-aero-border-color{border-color: var(--wp--preset--color--aero) !important;}.has-old-lavender-border-color{border-color: var(--wp--preset--color--old-lavender) !important;}.has-steel-teal-border-color{border-color: var(--wp--preset--color--steel-teal) !important;}.has-raspberry-pink-border-color{border-color: var(--wp--preset--color--raspberry-pink) !important;}.has-medium-turquoise-border-color{border-color: var(--wp--preset--color--medium-turquoise) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+ :where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+ :where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+ :root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+ </style>
+-<link rel='stylesheet' id='pt-search-css-css' href='https://skiloveland.com/wp-content/plugins/pass-tracker/css/pt-search.css?ver=6.8.2' type='text/css' media='all' />
++<link rel='stylesheet' id='pt-search-css-css' href='https://skiloveland.com/wp-content/plugins/pass-tracker/css/pt-search.css?ver=6.8.3' type='text/css' media='all' />
+ <link rel='stylesheet' id='widgetopts-styles-css' href='https://skiloveland.com/wp-content/plugins/widget-options/assets/css/widget-options.css?ver=4.0.9' type='text/css' media='all' />
+-<link rel='stylesheet' id='njt-nofi-css' href='https://skiloveland.com/wp-content/plugins/notibar/assets/frontend/css/notibar.css?ver=2.1.8' type='text/css' media='all' />
++<link rel='stylesheet' id='njt-nofi-css' href='https://skiloveland.com/wp-content/plugins/notibar/assets/frontend/css/notibar.css?ver=2.1.9' type='text/css' media='all' />
+ <link rel='stylesheet' id='avia-scs-css' href='https://skiloveland.com/wp-content/themes/skiloveland/css/shortcodes.css?ver=5.1.1' type='text/css' media='all' />
+ <link rel='stylesheet' id='avia-popup-css-css' href='https://skiloveland.com/wp-content/themes/skiloveland/js/aviapopup/magnific-popup.css?ver=5.1.1' type='text/css' media='screen' />
+ <link rel='stylesheet' id='avia-lightbox-css' href='https://skiloveland.com/wp-content/themes/skiloveland/css/avia-snippet-lightbox.css?ver=5.1.1' type='text/css' media='screen' />
+@@ -186,10 +185,10 @@ window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16
+ <link rel='stylesheet' id='avia-custom-css' href='https://skiloveland.com/wp-content/themes/skiloveland/css/custom.css?ver=5.1.1' type='text/css' media='all' />
+ <link rel='stylesheet' id='pojo-a11y-css' href='https://skiloveland.com/wp-content/plugins/pojo-accessibility/assets/css/style.min.css?ver=1.0.0' type='text/css' media='all' />
+ <link rel='stylesheet' id='tablepress-default-css' href='https://skiloveland.com/wp-content/tablepress-combined.min.css?ver=45' type='text/css' media='all' />
+-<link rel='stylesheet' id='dashicons-css' href='https://skiloveland.com/wp-includes/css/dashicons.min.css?ver=6.8.2' type='text/css' media='all' />
+-<link rel='stylesheet' id='my-calendar-lists-css' href='https://skiloveland.com/wp-content/plugins/my-calendar/css/list-presets.css?ver=3.6.15' type='text/css' media='all' />
+-<link rel='stylesheet' id='my-calendar-reset-css' href='https://skiloveland.com/wp-content/plugins/my-calendar/css/reset.css?ver=3.6.15' type='text/css' media='all' />
+-<link rel='stylesheet' id='my-calendar-style-css' href='https://skiloveland.com/wp-content/plugins/my-calendar/styles/twentyfourteen.css?ver=3.6.15-twentyfourteen-css' type='text/css' media='all' />
++<link rel='stylesheet' id='dashicons-css' href='https://skiloveland.com/wp-includes/css/dashicons.min.css?ver=6.8.3' type='text/css' media='all' />
++<link rel='stylesheet' id='my-calendar-lists-css' href='https://skiloveland.com/wp-content/plugins/my-calendar/css/list-presets.css?ver=3.7.3' type='text/css' media='all' />
++<link rel='stylesheet' id='my-calendar-reset-css' href='https://skiloveland.com/wp-content/plugins/my-calendar/css/reset.css?ver=3.7.3' type='text/css' media='all' />
++<link rel='stylesheet' id='my-calendar-style-css' href='https://skiloveland.com/wp-content/plugins/my-calendar/styles/twentyfourteen.css?ver=3.7.3-twentyfourteen-css' type='text/css' media='all' />
+ <style id='my-calendar-style-inline-css' type='text/css'>
+ 
+ /* Styles by My Calendar - Joe Dolson https://www.joedolson.com/ */
+@@ -197,39 +196,46 @@ window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16
+ .my-calendar-modal .event-title svg { background-color: #45b8bb; padding: 3px; }
+ .mc-main .mc_general .event-title, .mc-main .mc_general .event-title a { background: #45b8bb !important; color: #000000 !important; }
+ .mc-main .mc_general .event-title button { background: #45b8bb !important; color: #000000 !important; }
++.mc-main span.mc_general { color: #45b8bb; }
+ .mc-main .mc_general .event-title a:hover, .mc-main .mc_general .event-title a:focus { background: #78ebee !important;}
+ .mc-main .mc_general .event-title button:hover, .mc-main .mc_general .event-title button:focus { background: #78ebee !important;}
+ .my-calendar-modal .event-title svg { background-color: #4287c8; padding: 3px; }
+ .mc-main .mc_childrens-entertainment .event-title, .mc-main .mc_childrens-entertainment .event-title a { background: #4287c8 !important; color: #ffffff !important; }
+ .mc-main .mc_childrens-entertainment .event-title button { background: #4287c8 !important; color: #ffffff !important; }
++.mc-main span.mc_childrens-entertainment { color: #4287c8; }
+ .mc-main .mc_childrens-entertainment .event-title a:hover, .mc-main .mc_childrens-entertainment .event-title a:focus { background: #0f5495 !important;}
+ .mc-main .mc_childrens-entertainment .event-title button:hover, .mc-main .mc_childrens-entertainment .event-title button:focus { background: #0f5495 !important;}
+ .my-calendar-modal .event-title svg { background-color: #f15a2b; padding: 3px; }
+ .mc-main .mc_competitive .event-title, .mc-main .mc_competitive .event-title a { background: #f15a2b !important; color: #000000 !important; }
+ .mc-main .mc_competitive .event-title button { background: #f15a2b !important; color: #000000 !important; }
++.mc-main span.mc_competitive { color: #f15a2b; }
+ .mc-main .mc_competitive .event-title a:hover, .mc-main .mc_competitive .event-title a:focus { background: #ff8d5e !important;}
+ .mc-main .mc_competitive .event-title button:hover, .mc-main .mc_competitive .event-title button:focus { background: #ff8d5e !important;}
+ .my-calendar-modal .event-title svg { background-color: #fbae42; padding: 3px; }
+ .mc-main .mc_sales-event .event-title, .mc-main .mc_sales-event .event-title a { background: #fbae42 !important; color: #000000 !important; }
+ .mc-main .mc_sales-event .event-title button { background: #fbae42 !important; color: #000000 !important; }
++.mc-main span.mc_sales-event { color: #fbae42; }
+ .mc-main .mc_sales-event .event-title a:hover, .mc-main .mc_sales-event .event-title a:focus { background: #ffe175 !important;}
+ .mc-main .mc_sales-event .event-title button:hover, .mc-main .mc_sales-event .event-title button:focus { background: #ffe175 !important;}
+-.my-calendar-modal .event-title svg { background-color: #e93b54; padding: 3px; }
+-.mc-main .mc_live-music .event-title, .mc-main .mc_live-music .event-title a { background: #e93b54 !important; color: #ffffff !important; }
+-.mc-main .mc_live-music .event-title button { background: #e93b54 !important; color: #ffffff !important; }
+-.mc-main .mc_live-music .event-title a:hover, .mc-main .mc_live-music .event-title a:focus { background: #b60821 !important;}
+-.mc-main .mc_live-music .event-title button:hover, .mc-main .mc_live-music .event-title button:focus { background: #b60821 !important;}
++.my-calendar-modal .event-title svg { background-color: #fbae42; padding: 3px; }
++.mc-main .mc_live-music .event-title, .mc-main .mc_live-music .event-title a { background: #fbae42 !important; color: #000000 !important; }
++.mc-main .mc_live-music .event-title button { background: #fbae42 !important; color: #000000 !important; }
++.mc-main span.mc_live-music { color: #fbae42; }
++.mc-main .mc_live-music .event-title a:hover, .mc-main .mc_live-music .event-title a:focus { background: #ffe175 !important;}
++.mc-main .mc_live-music .event-title button:hover, .mc-main .mc_live-music .event-title button:focus { background: #ffe175 !important;}
+ .my-calendar-modal .event-title svg { background-color: #5d233b; padding: 3px; }
+ .mc-main .mc_demo .event-title, .mc-main .mc_demo .event-title a { background: #5d233b !important; color: #ffffff !important; }
+ .mc-main .mc_demo .event-title button { background: #5d233b !important; color: #ffffff !important; }
++.mc-main span.mc_demo { color: #5d233b; }
+ .mc-main .mc_demo .event-title a:hover, .mc-main .mc_demo .event-title a:focus { background: #2a0008 !important;}
+ .mc-main .mc_demo .event-title button:hover, .mc-main .mc_demo .event-title button:focus { background: #2a0008 !important;}
+ .my-calendar-modal .event-title svg { background-color: #007e87; padding: 3px; }
+ .mc-main .mc_interactive .event-title, .mc-main .mc_interactive .event-title a { background: #007e87 !important; color: #ffffff !important; }
+ .mc-main .mc_interactive .event-title button { background: #007e87 !important; color: #ffffff !important; }
++.mc-main span.mc_interactive { color: #007e87; }
+ .mc-main .mc_interactive .event-title a:hover, .mc-main .mc_interactive .event-title a:focus { background: #004b54 !important;}
+ .mc-main .mc_interactive .event-title button:hover, .mc-main .mc_interactive .event-title button:focus { background: #004b54 !important;}
+-.mc-main, .mc-event, .my-calendar-modal, .my-calendar-modal-overlay, .mc-event-list {--primary-dark: #313233; --primary-light: #fff; --secondary-light: #fff; --secondary-dark: #000; --highlight-dark: #666; --highlight-light: #efefef; --close-button: #b32d2e; --search-highlight-bg: #f5e6ab; --navbar-background: transparent; --nav-button-bg: #fff; --nav-button-color: #313233; --nav-button-border: #313233; --nav-input-border: #313233; --nav-input-background: #fff; --nav-input-color: #313233; --grid-cell-border: #0000001f; --grid-header-border: #313233; --grid-header-color: #313233; --grid-weekend-color: #313233; --grid-header-bg: transparent; --grid-weekend-bg: transparent; --grid-cell-background: transparent; --current-day-border: #313233; --current-day-color: #313233; --current-day-bg: transparent; --date-has-events-bg: #313233; --date-has-events-color: #f6f7f7; --calendar-heading: clamp( 1.125rem, 24px, 2.5rem ); --event-title: clamp( 1.25rem, 24px, 2.5rem ); --grid-date: 16px; --grid-date-heading: clamp( .75rem, 16px, 1.5rem ); --modal-title: 1.5rem; --navigation-controls: clamp( .75rem, 16px, 1.5rem ); --card-heading: 1.125rem; --list-date: 1.25rem; --author-card: clamp( .75rem, 14px, 1.5rem); --single-event-title: clamp( 1.25rem, 24px, 2.5rem ); --mini-time-text: clamp( .75rem, 14px 1.25rem ); --list-event-date: 1.25rem; --list-event-title: 1.2rem; --grid-max-width: 1260px; --list-preset-border-color: #000000; --list-preset-stripe-background: rgba( 0,0,0,.04 ); --list-preset-date-badge-background: #000; --list-preset-date-badge-color: #fff; --list-preset-background: transparent; --category-mc_general: #45b8bb; --category-mc_childrens-entertainment: #4287c8; --category-mc_competitive: #f15a2b; --category-mc_sales-event: #fbae42; --category-mc_live-music: #e93b54; --category-mc_demo: #5d233b; --category-mc_interactive: #007e87; }
++.mc-main, .mc-event, .my-calendar-modal, .my-calendar-modal-overlay, .mc-event-list {--primary-dark: #313233; --primary-light: #fff; --secondary-light: #fff; --secondary-dark: #000; --highlight-dark: #666; --highlight-light: #efefef; --close-button: #b32d2e; --search-highlight-bg: #f5e6ab; --main-background: transparent; --main-color: inherit; --navbar-background: transparent; --nav-button-bg: #fff; --nav-button-color: #313233; --nav-button-border: #313233; --nav-input-border: #313233; --nav-input-background: #fff; --nav-input-color: #313233; --grid-cell-border: #0000001f; --grid-header-border: #313233; --grid-header-color: #313233; --grid-weekend-color: #313233; --grid-header-bg: transparent; --grid-weekend-bg: transparent; --grid-cell-background: transparent; --current-day-border: #313233; --current-day-color: #313233; --current-day-bg: transparent; --date-has-events-bg: #313233; --date-has-events-color: #f6f7f7; --calendar-heading: clamp( 1.125rem, 24px, 2.5rem ); --event-title: clamp( 1.25rem, 24px, 2.5rem ); --grid-date: 16px; --grid-date-heading: clamp( .75rem, 16px, 1.5rem ); --modal-title: 1.5rem; --navigation-controls: clamp( .75rem, 16px, 1.5rem ); --card-heading: 1.125rem; --list-date: 1.25rem; --author-card: clamp( .75rem, 14px, 1.5rem); --single-event-title: clamp( 1.25rem, 24px, 2.5rem ); --mini-time-text: clamp( .75rem, 14px 1.25rem ); --list-event-date: 1.25rem; --list-event-title: 1.2rem; --grid-max-width: 1260px; --main-margin: 0 auto; --list-preset-border-color: #000000; --list-preset-stripe-background: rgba( 0,0,0,.04 ); --list-preset-date-badge-background: #000; --list-preset-date-badge-color: #fff; --list-preset-background: transparent; --category-mc_general: #45b8bb; --category-mc_childrens-entertainment: #4287c8; --category-mc_competitive: #f15a2b; --category-mc_sales-event: #fbae42; --category-mc_live-music: #fbae42; --category-mc_demo: #5d233b; --category-mc_interactive: #007e87; }
+ </style>
+ <link rel='stylesheet' id='avia-cookie-css-css' href='https://skiloveland.com/wp-content/themes/skiloveland/css/avia-snippet-cookieconsent.css?ver=5.1.1' type='text/css' media='screen' />
+ <link rel='stylesheet' id='avia-gravity-css' href='https://skiloveland.com/wp-content/themes/skiloveland/config-gravityforms/gravity-mod.css?ver=5.1.1' type='text/css' media='screen' />
+@@ -239,7 +245,7 @@ window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16
+ <!--<![endif]-->
+ <script type="text/javascript" src="https://skiloveland.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
+ <script type="text/javascript" src="https://skiloveland.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
+-<script type="text/javascript" src="https://skiloveland.com/wp-content/plugins/pass-tracker/js/pt-search.js?ver=6.8.2" id="pt-search-js-js"></script>
++<script type="text/javascript" src="https://skiloveland.com/wp-content/plugins/pass-tracker/js/pt-search.js?ver=6.8.3" id="pt-search-js-js"></script>
+ <link rel="https://api.w.org/" href="https://skiloveland.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://skiloveland.com/wp-json/wp/v2/pages/1092" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://skiloveland.com/xmlrpc.php?rsd" />
+ <link rel='shortlink' href='https://skiloveland.com/?p=1092' />
+ <link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://skiloveland.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fskiloveland.com%2Ftrail-lift-report%2F" />
+@@ -449,8 +455,8 @@ Installed: skiloveland
+ AviaFramework Version: 5.0
+ AviaBuilder Version: 4.8
+ aviaElementManager Version: 1.0.1
+-ML:512-PU:44-PLA:19
+-WP:6.8.2
++ML:512-PU:40-PLA:19
++WP:6.8.3
+ Compress: CSS:disabled - JS:all theme files
+ Updates: disabled
+ PLAu:19
+@@ -486,7 +492,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </thead>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+-	<td class="column-1">8:00</td><td class="column-2">0"</td><td class="column-3">0"</td><td class="column-4">327"</td>
++	<td class="column-1">8:00</td><td class="column-2">3"</td><td class="column-3">3.3"</td><td class="column-4">101"</td>
+ </tr>
+ </tbody>
+ </table>
+@@ -510,7 +516,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ 	<li role="menuitem" id="menu-item-644" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children avia_mega_menu_columns_4 three units "><span class='mega_menu_title heading-color av-special-font'>AMENITIES</span>
+ 	<ul class="sub-menu">
+ 		<li role="menuitem" id="menu-item-866" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/the-mountain/mountain-dining/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">MOUNTAIN DINING</span></a></li>
+-		<li role="menuitem" id="menu-item-646" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/sport-shop/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">SPORT SHOP</span></a></li>
++		<li role="menuitem" id="menu-item-646" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children"><a href="https://skiloveland.com/sport-shop/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">SPORT SHOP</span></a>
++		<ul class="sub-menu">
++			<li role="menuitem" id="menu-item-26208" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/demo-center/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">DEMO CENTER</span></a></li>
++		</ul>
++</li>
+ 		<li role="menuitem" id="menu-item-660" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/the-mountain/child-care/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">CHILD CARE</span></a></li>
+ 		<li role="menuitem" id="menu-item-661" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/the-mountain/cabin-rental/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">ON-MOUNTAIN CABINS</span></a></li>
+ 		<li role="menuitem" id="menu-item-743" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/events/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">EVENTS</span></a></li>
+@@ -539,40 +549,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ 
+ </div>
+ </li>
+-<li role="menuitem" id="menu-item-9344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-mega-parent  menu-item-top-level menu-item-top-level-2"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">TICKETS &#038; PASSES</span><span class="avia-menu-fx"><span class="avia-arrow-wrap"><span class="avia-arrow"></span></span></span></a>
+-<div class='avia_mega_div avia_mega5 twelve units'>
++<li role="menuitem" id="menu-item-9344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-top-level menu-item-top-level-2"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">TICKETS &#038; PASSES</span><span class="avia-menu-fx"><span class="avia-arrow-wrap"><span class="avia-arrow"></span></span></span></a>
++
+ 
+ <ul class="sub-menu">
+-	<li role="menuitem" id="menu-item-14706" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children avia_mega_menu_columns_5 three units  avia_mega_menu_columns_first"><span class='mega_menu_title heading-color av-special-font'>LIFT TICKETS</span>
++	<li role="menuitem" id="menu-item-14706" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">LIFT TICKETS</span></a>
+ 	<ul class="sub-menu">
+ 		<li role="menuitem" id="menu-item-764" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/tickets-passes/lift-tickets/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text"><img src="https://skiloveland.com/wp-content/uploads/2024/08/icon_nav_lift-tickets.jpg" width="200" height="108"/></span></a></li>
+ 	</ul>
+ </li>
+-	<li role="menuitem" id="menu-item-14707" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children avia_mega_menu_columns_5 three units "><span class='mega_menu_title heading-color av-special-font'>SEASON PASSES</span>
++	<li role="menuitem" id="menu-item-14707" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">SEASON PASSES</span></a>
+ 	<ul class="sub-menu">
+ 		<li role="menuitem" id="menu-item-675" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/tickets-passes/season-passes/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text"><img src="https://skiloveland.com/wp-content/uploads/2025/08/icon_nav_season-pass.jpg" width="200" height="108"/></span></a></li>
+ 	</ul>
+ </li>
+-	<li role="menuitem" id="menu-item-14708" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children avia_mega_menu_columns_5 three units "><span class='mega_menu_title heading-color av-special-font'>4 PACKS</span>
++	<li role="menuitem" id="menu-item-14708" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">3-CLASS PASS</span></a>
+ 	<ul class="sub-menu">
+-		<li role="menuitem" id="menu-item-765" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="https://skiloveland.com/4-pak/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text"><img src="https://skiloveland.com/wp-content/uploads/2024/08/icon_nav_4pak.jpg" width="200" height="108" alt="Private Ski Lessons"/></span></a></li>
++		<li role="menuitem" id="menu-item-765" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="https://skiloveland.com/rentals-lessons/3-class-pass/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text"><img src="https://skiloveland.com/wp-content/uploads/2024/08/icon_nav_3classPass.jpg" width="200" height="108" alt="Private Ski Lessons"/></span></a></li>
+ 	</ul>
+ </li>
+-	<li role="menuitem" id="menu-item-13799" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children avia_mega_menu_columns_5 three units "><span class='mega_menu_title heading-color av-special-font'>LOVELAND PASS CARD</span>
++	<li role="menuitem" id="menu-item-13799" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">LOVELAND PASS CARD</span></a>
+ 	<ul class="sub-menu">
+ 		<li role="menuitem" id="menu-item-13800" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="https://skiloveland.com/loveland-pass/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text"><div><img src="https://skiloveland.com/wp-content/uploads/2024/08/icon_nav_Loveland-pass-card.jpg" width="200" height="108"/></div></span></a></li>
+ 	</ul>
+ </li>
+-	<li role="menuitem" id="menu-item-24244" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children avia_mega_menu_columns_5 three units avia_mega_menu_columns_last"><span class='mega_menu_title heading-color av-special-font'>GIFT CARD</span>
++	<li role="menuitem" id="menu-item-24244" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">GIFT CARD</span></a>
+ 	<ul class="sub-menu">
+ 		<li role="menuitem" id="menu-item-24245" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="https://skiloveland.com/gift-card-page/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text"><div><img src="https://skiloveland.com/wp-content/uploads/2025/09/Heading-18.png" width="200" height="108"/></div></span></a></li>
+ 	</ul>
+ </li>
+ </ul>
+-
+-</div>
+ </li>
+-<li role="menuitem" id="menu-item-22" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-top-level menu-item-top-level-3"><a href="https://skiloveland.com/rentals-lessons/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">RENTALS &#038; LESSONS</span><span class="avia-menu-fx"><span class="avia-arrow-wrap"><span class="avia-arrow"></span></span></span></a>
++<li role="menuitem" id="menu-item-22" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-top-level menu-item-top-level-3"><a href="https://skiloveland.com/skiandrideschool/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">RENTALS &#038; LESSONS</span><span class="avia-menu-fx"><span class="avia-arrow-wrap"><span class="avia-arrow"></span></span></span></a>
+ 
+ 
+ <ul class="sub-menu">
+@@ -594,20 +602,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </li>
+ 	<li role="menuitem" id="menu-item-679" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">SPECIAL PROGRAMS</span></a>
+ 	<ul class="sub-menu">
+-		<li role="menuitem" id="menu-item-709" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/rentals-lessons/3-class-pass/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">3-CLASS PASS</span></a></li>
+-		<li role="menuitem" id="menu-item-23952" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/rentals-lessons/loveland-explorers/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">LOVELAND EXPLORERS</span></a></li>
++		<li role="menuitem" id="menu-item-709" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/3-class-pass/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">3-CLASS PASS</span></a></li>
++		<li role="menuitem" id="menu-item-23952" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/loveland-explorers/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">LOVELAND EXPLORERS</span></a></li>
+ 		<li role="menuitem" id="menu-item-24320" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/loveland-discoverers/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">LOVELAND DISCOVERERS</span></a></li>
+-		<li role="menuitem" id="menu-item-20433" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/rentals-lessons/winterwigglers/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">WINTER WIGGLERS</span></a></li>
++		<li role="menuitem" id="menu-item-20433" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/winterwigglers/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">WINTER WIGGLERS</span></a></li>
+ 		<li role="menuitem" id="menu-item-719" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/specialprograms/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">LADIES OF LOVELAND</span></a></li>
+-		<li role="menuitem" id="menu-item-716" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/rentals-lessons/family-private/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">FAMILY PRIVATE</span></a></li>
++		<li role="menuitem" id="menu-item-716" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/family-private/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">FAMILY PRIVATE</span></a></li>
+ 	</ul>
+ </li>
+ 	<li role="menuitem" id="menu-item-14709" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">RENTALS</span></a>
+ 	<ul class="sub-menu">
+-		<li role="menuitem" id="menu-item-720" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/rentals-lessons/rental-shop/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">RENTAL SHOP</span></a></li>
+-		<li role="menuitem" id="menu-item-722" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/rentals-lessons/demo-center/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">DEMO CENTER</span></a></li>
++		<li role="menuitem" id="menu-item-720" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/rental-shop/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">RENTAL SHOP</span></a></li>
++		<li role="menuitem" id="menu-item-722" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/demo-center/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">DEMO CENTER</span></a></li>
+ 		<li role="menuitem" id="menu-item-723" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/sport-shop/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">SPORT SHOP</span></a></li>
+-		<li role="menuitem" id="menu-item-724" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/rentals-lessons/repair-shops/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">REPAIR SHOP</span></a></li>
++		<li role="menuitem" id="menu-item-724" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/repair-shops/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">REPAIR SHOP</span></a></li>
+ 	</ul>
+ </li>
+ </ul>
+@@ -616,6 +624,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ 
+ 
+ <ul class="sub-menu">
++	<li role="menuitem" id="menu-item-26031" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/plan-your-trip/founding-loveland-loyalists/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">Dedicated Loveland Loyalty</span></a></li>
+ 	<li role="menuitem" id="menu-item-681" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">GET HERE</span></a>
+ 	<ul class="sub-menu">
+ 		<li role="menuitem" id="menu-item-730" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/the-mountain/hours-of-operation/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">HOURS &#038; DIRECTIONS</span></a></li>
+@@ -636,7 +645,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ 	<li role="menuitem" id="menu-item-683" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children"><a href="#" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">AMENITIES</span></a>
+ 	<ul class="sub-menu">
+ 		<li role="menuitem" id="menu-item-872" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/the-mountain/mountain-dining/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">MOUNTAIN DINING</span></a></li>
+-		<li role="menuitem" id="menu-item-740" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/sport-shop/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">SPORT SHOP</span></a></li>
++		<li role="menuitem" id="menu-item-740" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children"><a href="https://skiloveland.com/sport-shop/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">SPORT SHOP</span></a>
++		<ul class="sub-menu">
++			<li role="menuitem" id="menu-item-26209" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/skiandrideschool/demo-center/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">DEMO CENTER</span></a></li>
++		</ul>
++</li>
+ 		<li role="menuitem" id="menu-item-741" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/the-mountain/child-care/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">CHILD CARE</span></a></li>
+ 		<li role="menuitem" id="menu-item-729" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="https://skiloveland.com/the-mountain/cabin-rental/" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">ON-MOUNTAIN CABINS</span></a></li>
+ 		<li role="menuitem" id="menu-item-2411" class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/events" itemprop="url" tabindex="0"><span class="avia-bullet"></span><span class="avia-menu-text">EVENTS</span></a></li>
+@@ -702,7 +715,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </table>
+ <hr />
+ <p style="text-align: center;"><strong>Trail &amp; Lift Report is not updated for daily closures/holds due to weather/mechanical issues.</strong></p>
+-<h2 id="tablepress-3-name" class="tablepress-table-name tablepress-table-name-id-3">Rainbow Magic Carpet - CLOSED</h2>
++<h2 id="tablepress-3-name" class="tablepress-table-name tablepress-table-name-id-3">Rainbow Magic Carpet - OPEN</h2>
+ 
+ <table id="tablepress-3" class="tablepress tablepress-id-3" aria-labelledby="tablepress-3-name">
+ <thead>
+@@ -712,12 +725,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </thead>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+-</td><td class="column-3">All Smiles</td><td class="column-4"></td><td class="column-5">Valley</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
++</td><td class="column-3">All Smiles</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Valley</td>
+ </tr>
+ <tr class="row-3 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+-</td><td class="column-3">Take Off</td><td class="column-4"></td><td class="column-5">Valley</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
++</td><td class="column-3">Take Off</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Valley</td>
+ </tr>
+ <tr class="row-4 even">
+ 	<td class="column-1"></td><td class="column-2"></td><td class="column-3"></td><td class="column-4"></td><td class="column-5"></td>
+@@ -725,7 +738,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </tbody>
+ </table>
+ <!-- #tablepress-3 from cache -->
+-<p><h2 id="tablepress-5-name" class="tablepress-table-name tablepress-table-name-id-5">Chet's Dream - CLOSED</h2>
++<p><h2 id="tablepress-5-name" class="tablepress-table-name tablepress-table-name-id-5">Chet's Dream - OPEN</h2>
+ 
+ <table id="tablepress-5" class="tablepress tablepress-id-5" aria-labelledby="tablepress-5-name">
+ <thead>
+@@ -735,46 +748,46 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </thead>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Catwalk</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Catwalk</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-3 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Mambo</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Mambo</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-4 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Home Run </td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Home Run </td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-5 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Lower Richards Run</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Lower Richards Run</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-6 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Spillway</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Spillway</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-7 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tempest</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tempest</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-8 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Upper Richards Run</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Upper Richards Run</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-9 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Waterfall</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Waterfall</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-10 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Nix Nox</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Nix Nox</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-11 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Excelleration</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Excelleration</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-12 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Cat's Meow</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Cat's Meow</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-13 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tiger's Tail</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tiger's Tail</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-14 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Busy Gully</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Busy Gully</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-15 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Holy Cat </td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Holy Cat </td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-16 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Cat Walk Trees</td><td class="column-4"></td><td class="column-5">Basin</td>
+@@ -783,7 +796,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Avalanche Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-18 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Zoom</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Zoom</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-19 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Rainbow</td><td class="column-4"></td><td class="column-5">Basin</td>
+@@ -794,7 +807,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </tbody>
+ </table>
+ <!-- #tablepress-5 from cache --><br />
+-<h2 id="tablepress-6-name" class="tablepress-table-name tablepress-table-name-id-6">Lift 2 - CLOSED</h2>
++<h2 id="tablepress-6-name" class="tablepress-table-name tablepress-table-name-id-6">Lift 2 - CLOSED UNTIL FURTHER NOTICE</h2>
+ 
+ <table id="tablepress-6" class="tablepress tablepress-id-6" aria-labelledby="tablepress-6-name">
+ <thead>
+@@ -805,16 +818,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tango Road</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tango Road</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-3 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Turtle Creek	</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Turtle Creek	</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ </tbody>
+ </table>
+ <!-- #tablepress-6 from cache --><br />
+-<h2 id="tablepress-15-name" class="tablepress-table-name tablepress-table-name-id-15">PTARMIGAN LIFT - CLOSED</h2>
++<h2 id="tablepress-15-name" class="tablepress-table-name tablepress-table-name-id-15">PTARMIGAN LIFT - OPEN</h2>
+ 
+ <table id="tablepress-15" class="tablepress tablepress-id-15" aria-labelledby="tablepress-15-name">
+ <thead>
+@@ -825,47 +838,47 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Fire Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Fire Bowl</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-3 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">So. Turtle Creek</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">So. Turtle Creek</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-4 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">No. Turtle Creek</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">No. Turtle Creek</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-5 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Drifter</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Drifter</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-6 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Fire Cut</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Fire Cut</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-7 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Bennett's Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Bennett's Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-8 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Poma Line</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Poma Line</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-9 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">South Chute # 1</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">South Chute # 1</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-10 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">South Chute # 2</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">South Chute # 2</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-11 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">South Chutes</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">South Chutes</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-12 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tomahawk</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tomahawk</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-13 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Our Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Our Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ </tbody>
+ </table>
+ <!-- #tablepress-15 from cache --><br />
+-<h2 id="tablepress-7-name" class="tablepress-table-name tablepress-table-name-id-7">Lift 3 - CLOSED</h2>
++<h2 id="tablepress-7-name" class="tablepress-table-name tablepress-table-name-id-7">Lift 3 - OPEN</h2>
+ 
+ <table id="tablepress-7" class="tablepress tablepress-id-7" aria-labelledby="tablepress-7-name">
+ <thead>
+@@ -875,29 +888,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </thead>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+-</td><td class="column-3">Switchback</td><td class="column-4"></td><td class="column-5">Valley</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
++</td><td class="column-3">Switchback</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Valley</td>
+ </tr>
+ <tr class="row-3 odd">
+-	<td class="column-1"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+-</td><td class="column-3">Boomerang</td><td class="column-4"></td><td class="column-5">Valley</td>
++	<td class="column-1"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Boomerang</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Valley</td>
+ </tr>
+ <tr class="row-4 even">
+-	<td class="column-1"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+-</td><td class="column-3">Zig Zag</td><td class="column-4"></td><td class="column-5">Valley</td>
++	<td class="column-1"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
++</td><td class="column-3">Zig Zag</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Valley</td>
+ </tr>
+ <tr class="row-5 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+ </td><td class="column-3">Twist</td><td class="column-4"></td><td class="column-5">Valley</td>
+ </tr>
+ <tr class="row-6 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+-</td><td class="column-3">Double Dip</td><td class="column-4"></td><td class="column-5">Valley</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Double Dip</td><td class="column-4"></td><td class="column-5">Valley</td>
+ </tr>
+ </tbody>
+ </table>
+ <!-- #tablepress-7 from cache --><br />
+-<h2 id="tablepress-8-name" class="tablepress-table-name tablepress-table-name-id-8">Lift 4 - CLOSED</h2>
++<h2 id="tablepress-8-name" class="tablepress-table-name tablepress-table-name-id-8">Lift 4 - OPEN</h2>
+ 
+ <table id="tablepress-8" class="tablepress tablepress-id-8" aria-labelledby="tablepress-8-name">
+ <thead>
+@@ -908,21 +919,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Creek Trail</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Creek Trail</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-3 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Lower Creek Trail</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Lower Creek Trail</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-4 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Fail Safe Catwalk</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Fail Safe Catwalk</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-5 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Perfect Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Perfect Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-6 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Scrub</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Scrub</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-7 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Apollo</td><td class="column-4"></td><td class="column-5">Basin</td>
+@@ -937,28 +948,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Sunburst Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-11 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">North Chutes # 1</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">North Chutes # 1</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-12 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">North Chutes # 2</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">North Chutes # 2</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-13 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">North Chute</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">North Chute</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-14 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Fail Safe Trees</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Fail Safe Trees</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-15 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Sunburst Chutes</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Sunburst Chutes</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-16 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Splashdown</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Splashdown</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-17 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3"># 4 Headwall</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3"># 4 Headwall</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-18 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">West Ropes</td><td class="column-4"></td><td class="column-5">Basin</td>
+@@ -966,7 +977,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </tbody>
+ </table>
+ <!-- #tablepress-8 from cache --><br />
+-<h2 id="tablepress-10-name" class="tablepress-table-name tablepress-table-name-id-10">Lift 6 - CLOSED</h2>
++<h2 id="tablepress-10-name" class="tablepress-table-name tablepress-table-name-id-10">Lift 6 - OPEN</h2>
+ 
+ <table id="tablepress-10" class="tablepress tablepress-id-10" aria-labelledby="tablepress-10-name">
+ <thead>
+@@ -977,45 +988,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Deuces Wild</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Deuces Wild</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-3 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Forest Meadow</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Forest Meadow</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-4 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Roulette</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Roulette</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-5 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Keno</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Keno</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-6 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Blackjack</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Blackjack</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-7 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">So. Blackjack</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">So. Blackjack</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-8 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_terrainpark.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_terrainpark.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Royal Flush</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_terrainpark.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_terrainpark.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Royal Flush</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-9 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Dealers Choice</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Dealers Choice</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-10 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_terrainpark.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_terrainpark.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Straight Flush</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_terrainpark.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_terrainpark.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Straight Flush</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-11 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">No. Blackjack</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">No. Blackjack</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ </tbody>
+ </table>
+ <!-- #tablepress-10 from cache --><br />
+-<h2 id="tablepress-11-name" class="tablepress-table-name tablepress-table-name-id-11">Lift 7 - CLOSED</h2>
++<h2 id="tablepress-11-name" class="tablepress-table-name tablepress-table-name-id-11">Lift 7 - OPEN</h2>
+ 
+ <table id="tablepress-11" class="tablepress tablepress-id-11" aria-labelledby="tablepress-11-name">
+ <thead>
+@@ -1026,13 +1037,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+-</td><td class="column-3">Take Off</td><td class="column-4"></td><td class="column-5">Valley</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Take Off</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Valley</td>
+ </tr>
+ <tr class="row-3 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_beginner.png" alt="icon_beginner" width="50" height="30" class="alignnone size-full wp-image-1103" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /><br />
+-</td><td class="column-3">All Smiles</td><td class="column-4"></td><td class="column-5">Valley</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">All Smiles</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Valley</td>
+ </tr>
+ <tr class="row-4 even">
+ 	<td class="column-1"></td><td class="column-2"></td><td class="column-3"></td><td class="column-4"></td><td class="column-5"></td>
+@@ -1040,7 +1049,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </tbody>
+ </table>
+ <!-- #tablepress-11 from cache --><br />
+-<h2 id="tablepress-12-name" class="tablepress-table-name tablepress-table-name-id-12">Lift 8 -CLOSED</h2>
++<h2 id="tablepress-12-name" class="tablepress-table-name tablepress-table-name-id-12">Lift 8 - OPEN</h2>
+ 
+ <table id="tablepress-12" class="tablepress tablepress-id-12" aria-labelledby="tablepress-12-name">
+ <thead>
+@@ -1051,33 +1060,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ <tbody class="row-hover">
+ <tr class="row-2 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Zip Trail</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Zip Trail</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-3 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Zippity Split</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Zippity Split</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-4 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Chet's Run</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Chet's Run</td><td class="column-4"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/grooming.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-5 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tickler Gulch</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Tickler Gulch</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-6 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Zip Basin Street</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Zip Basin Street</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-7 odd">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a><br />
+-</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Awesome</td><td class="column-4"></td><td class="column-5">Basin</td>
++</td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Awesome</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-8 even">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Hook'em Horns</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Hook'em Horns</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-9 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">In The Mood</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">In The Mood</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-10 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">The Plunge</td><td class="column-4"></td><td class="column-5">Basin</td>
+@@ -1091,7 +1100,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ </tbody>
+ </table>
+ <!-- #tablepress-12 from cache --><br />
+-<h2 id="tablepress-13-name" class="tablepress-table-name tablepress-table-name-id-13">Lift 9 -CLOSED</h2>
++<h2 id="tablepress-13-name" class="tablepress-table-name tablepress-table-name-id-13">Lift 9 - OPEN</h2>
+ 
+ <table id="tablepress-13" class="tablepress tablepress-id-13" aria-labelledby="tablepress-13-name">
+ <thead>
+@@ -1122,7 +1131,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_more_difficult.png" alt="icon_more_difficult" width="50" height="30" class="alignnone size-full wp-image-1104" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Rookie Road</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-9 odd">
+-	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Patrol Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
++	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_expert.png" alt="icon_expert" width="50" height="30" class="alignnone size-full wp-image-1106" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_open.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Patrol Bowl</td><td class="column-4"></td><td class="column-5">Basin</td>
+ </tr>
+ <tr class="row-10 even">
+ 	<td class="column-1"><a href="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads/2015/03/icon_most_difficult.png" alt="icon_most_difficult" width="50" height="30" class="alignnone size-full wp-image-1105" /></a></td><td class="column-2"><img loading="lazy" decoding="async" src="https://skiloveland.com/wp-content/uploads//2015/03/icon_closed.png" alt="" width="50" height="30" class="aligncenter size-full wp-image-1101" /></td><td class="column-3">Challenger</td><td class="column-4"></td><td class="column-5">Basin</td>
+@@ -1366,46 +1375,97 @@ var avia_framework_globals = avia_framework_globals || {};
+ </script>
+  
+        <style>
++        /* CLS Optimization Styles */
++        .njt-nofi-container-content {
++          opacity: 0;
++          visibility: hidden;
++          transition: opacity 0.3s ease-in-out;
++        }
++        
++        .njt-nofi-container-content.njt-nofi-visible {
++          opacity: 1;
++          visibility: visible;
++        }
++        
++        /* Reserve space for notification bar */
++        body.njt-nofi-reserve-space {
++          padding-top: 60px;
++        }
++        
++        /* Smooth transition for notification bar */
++        .njt-nofi-notification-bar {
++          transform: translateY(-100%);
++          transition: transform 0.3s ease-in-out;
++        }
++        
++        .njt-nofi-container-content.njt-nofi-visible .njt-nofi-notification-bar {
++          transform: translateY(0);
++        }
++        
++        /* Existing styles */
+         .njt-nofi-notification-bar .njt-nofi-hide-button {
+           display: none;
+         }
+         .njt-nofi-notification-bar .njt-nofi-content {
+           font-size : 15px;
+         }
+-        /* body{
+-          padding-top: 49px;
+-        } */
+       </style>
+-    <div class="njt-nofi-container-content">
++    <div class="njt-nofi-container-content" role="status" aria-live="polite" aria-atomic="true">
+ <div class="njt-nofi-container" >
+-  <div class="njt-nofi-notification-bar njt-nofi-bgcolor-notification" style="background:#FBAE42">
++  <div class="njt-nofi-notification-bar njt-nofi-bgcolor-notification" 
++       role="status" 
++       aria-live="polite"
++       aria-atomic="true"
++       style="background:#FBAE42">
+     <div class="njt-nofi-content njt-nofi-text-color njt-nofi-align-content njt-nofi-content-deskop " style="width:1200px">
+-      <div class="njt-nofi-text njt-nofi-padding-text">25/26 SEASON PASSES FOR SALE</div>
+-      <div class="njt-nofi-button njt-nofi-padding-text " style="">
+-          <a   href="https://skiloveland.com/season-passes/?keyword=" class="njt-nofi-button-text njt-nofi-padding-text" style="background:#c51162;border-radius:3px;font-weight:400">Buy Now!</a>
++      <div class="njt-nofi-text njt-nofi-padding-text">Lift Tickets For as Low as $75 Through February! <button class="avia-button avia-size-small avia-color-aqua" style="font-size: 14px" data-accesso-keyword="lifttickets">Buy Now</button></div>
++      <div class="njt-nofi-button njt-nofi-padding-text " style="display: none">
++          <a   
++             href="https://skiloveland.com/lift-tickets/" 
++             class="njt-nofi-button-text njt-nofi-padding-text" 
++             aria-label="BUY NOW"
++             style="">
++            BUY NOW          </a>
+       </div> 
+     </div>
+ 
+     <div class="njt-nofi-content njt-nofi-text-color njt-nofi-align-content njt-display-none njt-nofi-content-mobile " style="width:1200px">
+       <div class="njt-nofi-text njt-nofi-padding-text">This is default text for notification bar</div>
+       <div class="njt-nofi-button njt-nofi-padding-text " style="">
+-          <a target='_blank'  href="" class="njt-nofi-button-text njt-nofi-padding-text" style="background:#c51162;border-radius:3px;font-weight:400">Learn more</a>
++          <a target='_blank' rel='noopener noreferrer'  
++             href="" 
++             class="njt-nofi-button-text njt-nofi-padding-text" 
++             aria-label="Learn more"
++             style="background:#c51162;border-radius:3px;font-weight:400">
++            Learn more          </a>
+       </div>
+     </div>
+ 
+-    <div class="njt-nofi-toggle-button njt-nofi-hide njt-nofi-text-color njt-nofi-hide-admin-custom" style="cursor: pointer;">
++    <div class="njt-nofi-toggle-button njt-nofi-hide njt-nofi-text-color njt-nofi-hide-admin-custom" 
++     role="button" 
++     tabindex="0" 
++     aria-label="Toggle notification bar"
++     style="cursor: pointer;">
+       <span class="njt-nofi-close-icon-container">
+         <svg class="njt-nofi-close-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 386.667 386.667" style="enable-background:new 0 0 512 512" xml:space="preserve"><g><path xmlns="http://www.w3.org/2000/svg" d="m386.667 45.564-45.564-45.564-147.77 147.769-147.769-147.769-45.564 45.564 147.769 147.769-147.769 147.77 45.564 45.564 147.769-147.769 147.769 147.769 45.564-45.564-147.768-147.77z" fill="#ffffff" data-original="#000000" style="" class=""/></g></svg>
+       </span>
+     </div>
+-    <div class="njt-nofi-close-button njt-nofi-hide njt-nofi-text-color njt-nofi-hide-admin-custom" style="cursor: pointer;">
++    <div class="njt-nofi-close-button njt-nofi-hide njt-nofi-text-color njt-nofi-hide-admin-custom" 
++     role="button" 
++     tabindex="0" 
++     aria-label="Close notification bar"
++     style="cursor: pointer;">
+       <span class="njt-nofi-close-icon-container">
+         <svg class="njt-nofi-close-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 386.667 386.667" style="enable-background:new 0 0 512 512" xml:space="preserve"><g><path xmlns="http://www.w3.org/2000/svg" d="m386.667 45.564-45.564-45.564-147.77 147.769-147.769-147.769-45.564 45.564 147.769 147.769-147.769 147.77 45.564 45.564 147.769-147.769 147.769 147.769 45.564-45.564-147.768-147.77z" fill="#ffffff" data-original="#000000" style="" class=""/></g></svg>
+       </span>
+     </div>  
+   </div>
+   <div>
+-    <div class="njt-nofi-display-toggle njt-nofi-text-color njt-nofi-bgcolor-notification" style="background:#FBAE42; cursor: pointer;">
++    <div class="njt-nofi-display-toggle njt-nofi-text-color njt-nofi-bgcolor-notification" 
++     role="button" 
++     tabindex="0" 
++     aria-label="Show notification bar"
++     style="background:#FBAE42; cursor: pointer;">
+       <span class="njt-nofi-close-icon-container">
+         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 386.667 386.667" style="enable-background:new 0 0 512 512" xml:space="preserve" class="njt-nofi-display-toggle-icon"><g><path xmlns="http://www.w3.org/2000/svg" d="m386.667 45.564-45.564-45.564-147.77 147.769-147.769-147.769-45.564 45.564 147.769 147.769-147.769 147.77 45.564 45.564 147.769-147.769 147.769 147.769 45.564-45.564-147.768-147.77z" fill="#ffffff" data-original="#000000" style="" class=""/></g></svg>
+       </span>
+@@ -1418,22 +1478,16 @@ var avia_framework_globals = avia_framework_globals || {};
+       <input type="hidden" id="njt_nofi_checkDisplayReview" name="njt_nofi_checkDisplayReview" value='{"is_home":false,"is_page":true,"is_single":false,"id_page":1092}'>
+     <script type="text/javascript" id="njt-nofi-js-extra">
+ /* <![CDATA[ */
+-var njt_wp_data = {"admin_ajax":"https:\/\/skiloveland.com\/wp-admin\/admin-ajax.php","nonce":"3e44fa63a8","isPositionFix":"1","hideCloseButton":"no_button","isDisplayButton":"1","presetColor":"1","alignContent":"center","textColorNotification":"#000000","textButtonColor":"#ffffff","wp_is_mobile":"","is_customize_preview":"","wp_get_theme":"Enfold","open_after_day":{"value":1,"is_new_update":false}};
++var njt_wp_data = {"admin_ajax":"https:\/\/skiloveland.com\/wp-admin\/admin-ajax.php","nonce":"3e442b407d","isPositionFix":"1","hideCloseButton":"no_button","isDisplayButton":"0","presetColor":"1","alignContent":"center","textColorNotification":"#000000","textButtonColor":"#ffffff","wp_is_mobile":"","is_customize_preview":"","wp_get_theme":"Enfold","open_after_day":{"value":1,"is_new_update":false},"cls_optimization":{"enabled":true,"delay_ms":100,"reserve_space":true,"smooth_transition":true}};
+ /* ]]> */
+ </script>
+-<script type="text/javascript" src="https://skiloveland.com/wp-content/plugins/notibar/assets/frontend/js/notibar.js?ver=2.1.8" id="njt-nofi-js"></script>
++<script type="text/javascript" src="https://skiloveland.com/wp-content/plugins/notibar/assets/frontend/js/notibar.js?ver=2.1.9" id="njt-nofi-js"></script>
+ <script type="text/javascript" id="pojo-a11y-js-extra">
+ /* <![CDATA[ */
+ var PojoA11yOptions = {"focusable":"","remove_link_target":"","add_role_links":"","enable_save":"","save_expiration":""};
+ /* ]]> */
+ </script>
+ <script type="text/javascript" src="https://skiloveland.com/wp-content/plugins/pojo-accessibility/assets/js/app.min.js?ver=1.0.0" id="pojo-a11y-js"></script>
+-<script type="text/javascript" id="gforms_recaptcha_recaptcha-js-extra">
+-/* <![CDATA[ */
+-var gforms_recaptcha_recaptcha_strings = {"site_key":"6LcydeUnAAAAAN5O-qCOhj0hVS8VkaQ9IiQyjfqB","ajaxurl":"https:\/\/skiloveland.com\/wp-admin\/admin-ajax.php","nonce":"fb8014205a"};
+-/* ]]> */
+-</script>
+-<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=6LcydeUnAAAAAN5O-qCOhj0hVS8VkaQ9IiQyjfqB&amp;ver=1.1.1" id="gforms_recaptcha_recaptcha-js"></script>
+ <script type="text/javascript" id="avia-cookie-js-js-extra">
+ /* <![CDATA[ */
+ var AviaPrivacyCookieConsent = {"?":"Usage unknown","aviaCookieConsent":"Use and storage of Cookies has been accepted - restrictions set in other cookies","aviaPrivacyRefuseCookiesHideBar":"Hide cookie message bar on following page loads and refuse cookies if not allowed - aviaPrivacyEssentialCookiesEnabled must be set","aviaPrivacyEssentialCookiesEnabled":"Allow storage of site essential cookies and other cookies and use of features if not opt out","aviaPrivacyVideoEmbedsDisabled":"Do not allow video embeds","aviaPrivacyGoogleTrackingDisabled":"needed to remove cookie _gat_ (Stores information needed by Google Analytics)","aviaPrivacyGoogleWebfontsDisabled":"Do not allow Google Webfonts","aviaPrivacyGoogleMapsDisabled":"Do not allow Google Maps","aviaPrivacyGoogleReCaptchaDisabled":"Do not allow Google reCaptcha","aviaPrivacyMustOptInSetting":"Settings are for users that must opt in for cookies and services","PHPSESSID":"Operating site internal cookie - Keeps track of your session","XDEBUG_SESSION":"Operating site internal cookie - PHP Debugger session cookie","wp-settings*":"Operating site internal cookie","wordpress*":"Operating site internal cookie","tk_ai*":"Shop internal cookie","woocommerce*":"Shop internal cookie","wp_woocommerce*":"Shop internal cookie","wp-wpml*":"Needed to manage different languages","_fbp":"Facebook Cookie","aviaPrivacyCustomCookie_fbpDisabled":"needed to remove cookie _fbp (Facebook Cookie)","_ga":"Stores information needed by Google Analytics","_gid":"Stores information needed by Google Analytics","_gat_*":"Stores information needed by Google Analytics"};
+@@ -1452,10 +1506,11 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+ <script type="text/javascript" src="https://skiloveland.com/wp-includes/js/dist/a11y.min.js?ver=3156534cc54473497e14" id="wp-a11y-js"></script>
+ <script type="text/javascript" id="mc.mcjs-js-extra">
+ /* <![CDATA[ */
+-var my_calendar = {"grid":"true","list":"","mini":"true","ajax":"true","links":"false","newWindow":"New tab","subscribe":"Subscribe","export":"Export","action":"mcjs_action","security":"666ea52c3c","ajaxurl":"https:\/\/skiloveland.com\/wp-admin\/admin-ajax.php"};
++var my_calendar = {"grid":"true","list":"","mini":"true","ajax":"true","links":"false","newWindow":"New tab","subscribe":"Subscribe","export":"Export","action":"mcjs_action","security":"cbf9424bba","ajaxurl":"https:\/\/skiloveland.com\/wp-admin\/admin-ajax.php"};
+ /* ]]> */
+ </script>
+-<script type="text/javascript" src="https://skiloveland.com/wp-content/plugins/my-calendar/js/mcjs.min.js?ver=3.6.15" id="mc.mcjs-js"></script>
++<script type="text/javascript" src="https://skiloveland.com/wp-content/plugins/my-calendar/js/mcjs.min.js?ver=3.7.3" id="mc.mcjs-js"></script>
++<script type="text/javascript" src="https://skiloveland.com/wp-content/plugins/my-calendar/js/legacy-disclosure.js?ver=3.7.3" id="mc.legacy-js"></script>
+ <script type="text/javascript" id="avia-footer-scripts-js-extra">
+ /* <![CDATA[ */
+ var AviaPrivacyCookieConsent = {"?":"Usage unknown","aviaCookieConsent":"Use and storage of Cookies has been accepted - restrictions set in other cookies","aviaPrivacyRefuseCookiesHideBar":"Hide cookie message bar on following page loads and refuse cookies if not allowed - aviaPrivacyEssentialCookiesEnabled must be set","aviaPrivacyEssentialCookiesEnabled":"Allow storage of site essential cookies and other cookies and use of features if not opt out","aviaPrivacyVideoEmbedsDisabled":"Do not allow video embeds","aviaPrivacyGoogleTrackingDisabled":"needed to remove cookie _gat_ (Stores information needed by Google Analytics)","aviaPrivacyGoogleWebfontsDisabled":"Do not allow Google Webfonts","aviaPrivacyGoogleMapsDisabled":"Do not allow Google Maps","aviaPrivacyGoogleReCaptchaDisabled":"Do not allow Google reCaptcha","aviaPrivacyMustOptInSetting":"Settings are for users that must opt in for cookies and services","PHPSESSID":"Operating site internal cookie - Keeps track of your session","XDEBUG_SESSION":"Operating site internal cookie - PHP Debugger session cookie","wp-settings*":"Operating site internal cookie","wordpress*":"Operating site internal cookie","tk_ai*":"Shop internal cookie","woocommerce*":"Shop internal cookie","wp_woocommerce*":"Shop internal cookie","wp-wpml*":"Needed to manage different languages","_fbp":"Facebook Cookie","aviaPrivacyCustomCookie_fbpDisabled":"needed to remove cookie _fbp (Facebook Cookie)","_ga":"Stores information needed by Google Analytics","_gid":"Stores information needed by Google Analytics","_gat_*":"Stores information needed by Google Analytics"};
+diff --git a/test/resorts/loveland-trails.js b/test/resorts/loveland-trails.js
+new file mode 100644
+index 00000000..8e54bb18
+--- /dev/null
++++ b/test/resorts/loveland-trails.js
+@@ -0,0 +1,484 @@
++import trails from '../trails/index.js';
++
++trails('loveland', [
++  {
++    name: 'All Smiles',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Take Off',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Catwalk',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Mambo',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Home Run',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Lower Richards Run',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Spillway',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Tempest',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Upper Richards Run',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Waterfall',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Nix Nox',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Excelleration',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Cat's Meow",
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: "Tiger's Tail",
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Busy Gully',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Holy Cat',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Cat Walk Trees',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Avalanche Bowl',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Zoom',
++    status: 'open',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Rainbow',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Over The Rainbow',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Tango Road',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Turtle Creek',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Fire Bowl',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'So. Turtle Creek',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'No. Turtle Creek',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Drifter',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Fire Cut',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Bennett's Bowl",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Poma Line',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'South Chute # 1',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'South Chute # 2',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'South Chutes',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Tomahawk',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Our Bowl',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Switchback',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Boomerang',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Zig Zag',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Twist',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Double Dip',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Creek Trail',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Lower Creek Trail',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Fail Safe Catwalk',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Perfect Bowl',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Scrub',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Apollo',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Telestar',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Mercury',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Sunburst Bowl',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'North Chutes # 1',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'North Chutes # 2',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'North Chute',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Fail Safe Trees',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Sunburst Chutes',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Splashdown',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: '# 4 Headwall',
++    status: 'open',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'West Ropes',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Deuces Wild',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Forest Meadow',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Roulette',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Keno',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Blackjack',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'So. Blackjack',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Royal Flush',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'Dealers Choice',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Straight Flush',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'No. Blackjack',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Take Off',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'All Smiles',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Zip Trail',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Zippity Split',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Chet's Run",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Tickler Gulch',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Zip Basin Street',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Awesome',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Hook'em Horns",
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'In The Mood',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'The Plunge',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'The Face',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'East Ropes',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Primer Bowl',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Castle Rock',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Jelly Roll',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Super Bowl',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Wild Child Chutes',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Porcupine Saddle',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Rookie Road',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Patrol Bowl',
++    status: 'open',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Challenger',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'North Star Bowl',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Super Nova',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Velvet Hammer',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Tickler',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Field of Dreams',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Rock Chutes',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Marmot',
++    status: 'closed',
++    level: 'doubleBlack'
++  }
++]);
+diff --git a/test/resorts/loveland.js b/test/resorts/loveland.js
+index 775b1003..ea946d0b 100644
+--- a/test/resorts/loveland.js
++++ b/test/resorts/loveland.js
+@@ -1,14 +1,14 @@
+ import lifts from '../lifts/index.js';
+ 
+ lifts('loveland', 'html', {
+-  'Rainbow Magic Carpet': 'closed',
+-  "Chet's Dream": 'closed',
++  'Rainbow Magic Carpet': 'open',
++  "Chet's Dream": 'open',
+   'Lift 2': 'closed',
+-  'PTARMIGAN LIFT': 'closed',
+-  'Lift 3': 'closed',
+-  'Lift 4': 'closed',
+-  'Lift 6': 'closed',
+-  'Lift 7': 'closed',
+-  'Lift 8': 'closed',
+-  'Lift 9': 'closed'
++  'PTARMIGAN LIFT': 'open',
++  'Lift 3': 'open',
++  'Lift 4': 'open',
++  'Lift 6': 'open',
++  'Lift 7': 'open',
++  'Lift 8': 'open',
++  'Lift 9': 'open'
+ });
+-- 
+2.39.5
+

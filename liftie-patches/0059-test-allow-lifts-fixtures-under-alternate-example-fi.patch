@@ -1,8 +1,7 @@
 From aaa0e3afc10662c61b76ef276b92229aaf97bac9 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:17:44 +0000
-Subject: [PATCH 59/77] test: allow lifts fixtures under alternate example
- filenames
+Subject: test: allow lifts fixtures under alternate example filenames
 
 Same opts.example escape hatch the trails harness has. Needed so fixture
 refreshes can ship as new files: several upstream example pages contain

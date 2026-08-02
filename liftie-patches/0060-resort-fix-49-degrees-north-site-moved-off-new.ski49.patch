@@ -1,8 +1,7 @@
 From 57a3dd618a1a4eec4b67f5d88fa184f6c8c92491 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 12:58:15 +0000
-Subject: [PATCH 60/77] resort: fix 49-degrees-north - site moved off
- new.ski49n.com
+Subject: resort: fix 49-degrees-north - site moved off new.ski49n.com
 
 new.ski49n.com no longer resolves, so the fetch has failed silently since
 the migration; the same trail-status page lives on www.ski49n.com. The h4

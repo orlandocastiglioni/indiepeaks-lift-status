@@ -1,0 +1,880 @@
+From de313f574140894a23004c688e4b47a0d6a26fc8 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:12 -0400
+Subject: resort: little-switzerland - fix trails - terrain park rows were
+ dropped
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/little-switzerland/trails.js     |   6 +-
+ test/resorts/example/little-switzerland.html | 288 +++++++++++--------
+ test/resorts/little-switzerland-trails.js    | 111 +++----
+ test/resorts/little-switzerland.js           |  18 +-
+ 4 files changed, 241 insertions(+), 182 deletions(-)
+
+diff --git a/lib/resorts/little-switzerland/trails.js b/lib/resorts/little-switzerland/trails.js
+index db5d2683..eae126be 100644
+--- a/lib/resorts/little-switzerland/trails.js
++++ b/lib/resorts/little-switzerland/trails.js
+@@ -2,7 +2,8 @@ import select from '../../select.js';
+ import { allText } from '../../tools/domutil.js';
+ 
+ export default {
+-  selector: '.Trail.component-row',
++  // terrain parks are published as separate rows with class "Terrain Park ... component-row"
++  selector: '.Trail.component-row, .Terrain.Park.component-row',
+   parse: row => {
+     const title = select(row.children, '.cell.title')[0];
+     const status = select(row.children, '.cell.status')[0];
+@@ -13,7 +14,8 @@ export default {
+     return {
+       name: allText(title),
+       status: status.attribs.title ?? allText(status),
+-      level: level?.attribs.title
++      // park rows carry no level icon - the row class is the only marker
++      level: level?.attribs.title ?? (/\bTerrain\b/.test(row.attribs.class) ? 'terrainPark' : undefined)
+     };
+   }
+ };
+diff --git a/test/resorts/example/little-switzerland.html b/test/resorts/example/little-switzerland.html
+index f8970cc2..ae35acab 100644
+--- a/test/resorts/example/little-switzerland.html
++++ b/test/resorts/example/little-switzerland.html
+@@ -176,8 +176,8 @@
+                 "https://www.facebook.com/LittleSwitzerland",
+                 "https://www.youtube.com/channel/UCYw-bH0W-u9eOdCXqGnYDmg"
+             ],
+-            "url": "https://www.littleswitz.com/",
+             "name": "Little Switzerland",
++            "url": "https://www.littleswitz.com/",
+             "telephone": "262 297 9621",
+             "contactPoint": {
+                 "@type": "ContactPoint",
+@@ -185,13 +185,13 @@
+                 "email": "info@littleswitz.com",
+                 "url": "https://www.littleswitz.com/"
+             },
+-            "logo": {
++            "image": {
+                 "@type": "ImageObject",
+-                "url": "https://www.littleswitz.com//themes/custom/switz/logo.svg"
++                "url": "https://www.littleswitz.com/sites/default/files/styles/max_2600x2600/public/styles/max_2600x2600/public/2026-02/New%20Background%20Instagram%20Post.png?itok=C3JP0e8N"
+             },
+-            "image": {
++            "logo": {
+                 "@type": "ImageObject",
+-                "url": "https://www.littleswitz.com/sites/default/files/styles/max_2600x2600/public/styles/max_2600x2600/public/2026-07/Ridge%20Graphic%201800x1080%20%289%29.png?itok=1mEscOuW"
++                "url": "https://www.littleswitz.com//themes/custom/switz/logo.svg"
+             },
+             "address": {
+                 "@type": "PostalAddress",
+@@ -227,13 +227,12 @@
+ <link rel="icon" href="/core/misc/favicon.ico" type="image/vnd.microsoft.icon" />
+ 
+         <title>Snow Report | Little Switzerland</title>
+-        <link rel="stylesheet" media="all" href="/sites/default/files/css/css_k8dIcP2dReavaORiVOT30MlQkQhj_hYM9qkf5ORrkFQ.css?delta=0&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFJ00pzQAJEpSAUPv6VduqntguiR1blgPJQXqEzCtk48FHfOau0d3QFqRufAbV3RVUhYB6ceINjWdB57lUJqSmliWFRMsSuYtO1Zy0JQpzQ-FODU4kWFna1Pezg_CYako8_oUPXD2Ub0liKZDTgeYju8-62OWtIBAEalS3Sa-Q7X2xnWpfz98jbkZHaod7T6O7NixuBcUXEGucOQ" />
+-<link rel="stylesheet" media="all" href="/sites/default/files/css/css_fZQYQovNpxQjFOmO_Gbelzuqx6FtK5U5CpInxJ9Ki5s.css?delta=1&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFJ00pzQAJEpSAUPv6VduqntguiR1blgPJQXqEzCtk48FHfOau0d3QFqRufAbV3RVUhYB6ceINjWdB57lUJqSmliWFRMsSuYtO1Zy0JQpzQ-FODU4kWFna1Pezg_CYako8_oUPXD2Ub0liKZDTgeYju8-62OWtIBAEalS3Sa-Q7X2xnWpfz98jbkZHaod7T6O7NixuBcUXEGucOQ" />
++        <link rel="stylesheet" media="all" href="/sites/default/files/css/css_IFxYA6CMcbXBSbiqiLBMmMhGLerSNgoaZZE6VDfFoeQ.css?delta=0&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFN6U0AyRIUAJC7etXret2YrskdmxZjgcf8ZG7Ruc_0BakbnwG1d0VVIWAenPiDY1nQee5VCakppYlhUTLErmLTtWctCUKc0PhTg1OJFhZ2tT3s4PwmGpKPP6FD1w9lHdJYimQ04Hmkt21bnZ7KwgEgRrVbdIrZPu92E61r-fvETejI7XDvabRXRsWt4LiE66pl3o" />
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css_rxUSVYYiNOPmv92G0uEQsjbLUP_T7J9LNxLsbjYz3_I.css?delta=1&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFN6U0AyRIUAJC7etXret2YrskdmxZjgcf8ZG7Ruc_0BakbnwG1d0VVIWAenPiDY1nQee5VCakppYlhUTLErmLTtWctCUKc0PhTg1OJFhZ2tT3s4PwmGpKPP6FD1w9lHdJYimQ04Hmkt21bnZ7KwgEgRrVbdIrZPu92E61r-fvETejI7XDvabRXRsWt4LiE66pl3o" />
+ <link rel="stylesheet" media="all" href="https://unpkg.com/plyr@3.7.8/dist/plyr.css" />
+-<link rel="stylesheet" media="all" href="/sites/default/files/css/css_UdgmU33YT1Yf7Zp_2s_b-1xy1VVubL4epNPlPFunmDY.css?delta=3&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFJ00pzQAJEpSAUPv6VduqntguiR1blgPJQXqEzCtk48FHfOau0d3QFqRufAbV3RVUhYB6ceINjWdB57lUJqSmliWFRMsSuYtO1Zy0JQpzQ-FODU4kWFna1Pezg_CYako8_oUPXD2Ub0liKZDTgeYju8-62OWtIBAEalS3Sa-Q7X2xnWpfz98jbkZHaod7T6O7NixuBcUXEGucOQ" />
+-
+-            <script src="https://app.termly.io/resource-blocker/96a1e676-6c68-45cc-a76c-848925eca76d?autoBlock=on" async></script>
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css_UdgmU33YT1Yf7Zp_2s_b-1xy1VVubL4epNPlPFunmDY.css?delta=3&amp;language=en&amp;theme=switz&amp;include=eJyFT0EOwyAM-xCFN6U0AyRIUAJC7etXret2YrskdmxZjgcf8ZG7Ruc_0BakbnwG1d0VVIWAenPiDY1nQee5VCakppYlhUTLErmLTtWctCUKc0PhTg1OJFhZ2tT3s4PwmGpKPP6FD1w9lHdJYimQ04Hmkt21bnZ7KwgEgRrVbdIrZPu92E61r-fvETejI7XDvabRXRsWt4LiE66pl3o" />
+ 
++            
+ 
+                 <link rel="preconnect" href="https://fonts.googleapis.com">
+                 <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+@@ -257,7 +256,7 @@
+ 
+ </head>
+ 
+-<body class="season--summer path-node page-node-type-page">
++<body class="season--winter path-node page-node-type-page">
+ 
+     <!-- Google Tag Manager (noscript) -->
+     <noscript>
+@@ -369,7 +368,7 @@
+                                     <div class="transition-visibility visibility-hidden opacity-0 f-heading submenu">
+         <ul class="reset menu">
+                                                         <li class="menu-item">
+-                                            <a href="/mountain-info/hours" class="d-flex ai-center" data-drupal-link-system-path="node/235">Hours</a>
++                                            <a href="/mountain-info/little-switz-hours" class="d-flex ai-center" data-drupal-link-system-path="node/235">Hours</a>
+                                     </li>
+                                             <li class="menu-item">
+                                             <a href="/mountain-info/little-switz-trail-map" class="d-flex ai-center" data-drupal-link-system-path="node/3">Trail Map</a>
+@@ -387,10 +386,7 @@
+                                             <a href="/mountain-info/blog" class="d-flex ai-center" data-drupal-link-system-path="node/291">Blog</a>
+                                     </li>
+                                             <li class="menu-item">
+-                                            <a href="/mountain-info/events-calendar-0" class="d-flex ai-center" data-drupal-link-system-path="node/7">Events Calendar</a>
+-                                    </li>
+-                                            <li class="menu-item">
+-                                            <a href="/mountain-info/blog/two-new-independent-quad-chairlifts-to-replace-1-2" class="d-flex ai-center" data-drupal-link-system-path="node/323">New Lift Updates</a>
++                                            <a href="/mountain-info/little-switz-events-calendar" class="d-flex ai-center" data-drupal-link-system-path="node/7">Events Calendar</a>
+                                     </li>
+                                             <li class="menu-item">
+                                             <a href="/mountain-info/little-switz-safety-responsibility" class="d-flex ai-center" data-drupal-link-system-path="node/233">Safety &amp; Responsibility</a>
+@@ -479,9 +475,6 @@
+                                             <li class="menu-item">
+                                             <a href="/contact/faqs-1" class="d-flex ai-center" data-drupal-link-system-path="node/8">FAQ&#039;s</a>
+                                     </li>
+-                                            <li class="menu-item">
+-                                            <a href="/contact/press-room" class="d-flex ai-center" data-drupal-link-system-path="node/324">Press Room</a>
+-                                    </li>
+                     </ul>
+             </div>
+             
+@@ -547,7 +540,7 @@
+                         >
+ 
+             
+-                                    <p>Roaring 20s Jazz Night is This Friday!</p>
++                                    <p>Comfortable Temps and Clear Skies - Open 10am -9:30pm!</p>
+ 
+                 
+             
+@@ -558,7 +551,7 @@
+ 
+ 
+                             <p class="m-b-0 button-wrap">
+-                    <a href="/mountain-info/events-calendar-0"
++                    <a href="https://shop.littleswitz.com/lifttickets"
+                        target="" class="button-arrow">
+                         BUY TICKETS NOW
+                     </a>
+@@ -627,6 +620,31 @@
+ 
+     <div class="container  component-mountain-report">
+ 
++            <div class="fade-in row inner-grid daily-summary">
++            <div class="content-container">
++                <h2>Daily Summary</h2>
++                <div class="flex max-w-full flex-col grow">
++<div class="min-h-8 text-message relative flex w-full flex-col items-end gap-2 text-start break-words whitespace-normal [.text-message+&amp;]:mt-1">
++<div class="flex w-full flex-col gap-1 empty:hidden first:pt-[1px]">
++<div class="markdown prose dark:prose-invert w-full wrap-break-word dark markdown-new-styling">
++<p>It’s one of those beautiful mid-winter days at Switz—sunny skies, comfortable temps, and soft, forgiving snow that feels great under your skis or board. Perfect conditions for families, beginners, and anyone looking to cruise a few relaxed laps without the heavy winter chill. Grab your crew, soak up the sunshine, and enjoy a classic feel-good day on the hill.</p>
++</div>
++</div>
++</div>
++</div>
++<div class="z-0 flex min-h-[46px] justify-start">&nbsp;</div>
++<div class="mt-3 w-full empty:hidden">
++<div class="text-center">
++<div>
++<div class="inline-flex border border-gray-100 dark:border-gray-700 rounded-xl">
++<div class="text-token-text-secondary flex items-center justify-center gap-4 px-4 py-2.5 text-sm whitespace-nowrap">&nbsp;</div>
++</div>
++</div>
++</div>
++</div>
++
++            </div>
++        </div>
+     
+     <div class="fade-in row m-b-row inner-grid mountain-info">
+ 
+@@ -636,16 +654,16 @@
+             <div class="content-container">
+                 <h2 class="h3">Mountain Info</h2>
+                                     <div class="border-top border-bottom border-grey d-flex ai-center item">
+-                        <div class="h2 m-0 value t-c-status-closed">
+-                            Closed
++                        <div class="h2 m-0 value t-c-status-open">
++                            Open
+                         </div>
+                         <div class="label">
+-                            
++                            Open 10am - 9:30pm
+                         </div>
+                     </div>
+                                     <div class=" border-bottom border-grey d-flex ai-center item">
+                         <div class="h2 m-0 value ">
+-                            0/9
++                            9/9
+                         </div>
+                         <div class="label">
+                             Lifts are open today
+@@ -653,7 +671,7 @@
+                     </div>
+                                     <div class=" border-bottom border-grey d-flex ai-center item">
+                         <div class="h2 m-0 value ">
+-                            0/19
++                            19/19
+                         </div>
+                         <div class="label">
+                             Ski trails are open today
+@@ -696,7 +714,7 @@
+                     </div>
+                                     <div class="item">
+                         <h3 class="h4">Snow Last 7 Days</h3>
+-                        <div class="value h1">1"</div>
++                        <div class="value h1">2"</div>
+                     </div>
+                                     <div class="item">
+                         <h3 class="h4">Season Snowfall</h3>
+@@ -707,7 +725,7 @@
+             <p class="d-flex jc-flex-end">
+                 <span class="f-icon icon-gradient tag">
+                     <strong>Updated:</strong>
+-                     March 1 - 8:28pm
++                     February 14 - 8:32am
+                 </span>
+             </p>
+ 
+@@ -751,9 +769,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -782,9 +800,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -813,9 +831,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -844,9 +862,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -875,9 +893,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -906,9 +924,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -937,9 +955,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -968,9 +986,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -999,9 +1017,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1030,9 +1048,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1061,9 +1079,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1092,9 +1110,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1123,9 +1141,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1154,9 +1172,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1185,9 +1203,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1216,9 +1234,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1247,9 +1265,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1278,9 +1296,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1309,9 +1327,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1340,9 +1358,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1371,9 +1389,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1402,9 +1420,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1433,9 +1451,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1464,9 +1482,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1495,9 +1513,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1519,9 +1537,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1543,9 +1561,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1567,9 +1585,9 @@
+     </div>
+ 
+     
+-    <div class="cell status h3 m-0 t-c-status-closed"
+-         title="Closed">
+-        Closed
++    <div class="cell status h3 m-0 t-c-status-open"
++         title="Open">
++        Open
+     </div>
+ 
+ </div>
+@@ -1617,7 +1635,7 @@
+                     <h3>Beginner Area</h3>
+ 
+                     <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
+-                        <img src="https://wms.apt9stream.com/littleswitz/beginner-cam_output/dvr_thumbnail.jpg?timestamp=1783623568"
++                        <img src="https://wms.apt9stream.com/littleswitz/beginner-cam_output/dvr_thumbnail.jpg?timestamp=1771170502"
+                              alt="Webcam: Beginner Area" />
+                     </button>
+ 
+@@ -1634,7 +1652,7 @@
+                     <h3>Happy Trail Park</h3>
+ 
+                     <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
+-                        <img src="https://wms.apt9stream.com/littleswitz/happy-trail_output/dvr_thumbnail.jpg?timestamp=1783623568"
++                        <img src="https://wms.apt9stream.com/littleswitz/happy-trail_output/dvr_thumbnail.jpg?timestamp=1771170502"
+                              alt="Webcam: Happy Trail Park" />
+                     </button>
+ 
+@@ -1651,7 +1669,7 @@
+                     <h3>Back Cam</h3>
+ 
+                     <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
+-                        <img src="https://wms.apt9stream.com/littleswitz/back-cam_output/dvr_thumbnail.jpg?timestamp=1783623568"
++                        <img src="https://wms.apt9stream.com/littleswitz/back-cam_output/dvr_thumbnail.jpg?timestamp=1771170502"
+                              alt="Webcam: Back Cam" />
+                     </button>
+ 
+@@ -1668,7 +1686,7 @@
+                     <h3>Tower Cam</h3>
+ 
+                     <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
+-                        <img src="https://wms.apt9stream.com/littleswitz/tower-cam_output/dvr_thumbnail.jpg?timestamp=1783623568"
++                        <img src="https://wms.apt9stream.com/littleswitz/tower-cam_output/dvr_thumbnail.jpg?timestamp=1771170502"
+                              alt="Webcam: Tower Cam" />
+                     </button>
+ 
+@@ -1685,7 +1703,7 @@
+                     <h3>Southern Comfort</h3>
+ 
+                     <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
+-                        <img src="https://wms.apt9stream.com/littleswitz/southern-cam_out/dvr_thumbnail.jpg?timestamp=1783623568"
++                        <img src="https://wms.apt9stream.com/littleswitz/southern-cam_out/dvr_thumbnail.jpg?timestamp=1771170502"
+                              alt="Webcam: Southern Comfort" />
+                     </button>
+ 
+@@ -1702,7 +1720,7 @@
+                     <h3>41 Park</h3>
+ 
+                     <button class="d-block reset-button w-100 f-icon outline-offset video-poster-frame">
+-                        <img src="https://wms.apt9stream.com/littleswitz/41-park-cam_outpu/dvr_thumbnail.jpg?timestamp=1783623568"
++                        <img src="https://wms.apt9stream.com/littleswitz/41-park-cam_outpu/dvr_thumbnail.jpg?timestamp=1771170502"
+                              alt="Webcam: 41 Park" />
+                     </button>
+ 
+@@ -1802,10 +1820,34 @@
+ 
+                                                 <li class="d-flex">
+                     <div class="day">
+-                        Monday-Sunday
++                        Monday-Thursday
++                    </div>
++                    <div class="t-t-uppercase value">
++                        4pm-9:30pm
++                    </div>
++                </li>
++                                                            <li class="d-flex">
++                    <div class="day">
++                        Friday
++                    </div>
++                    <div class="t-t-uppercase value">
++                        10am-9:30pm
++                    </div>
++                </li>
++                                                            <li class="d-flex">
++                    <div class="day">
++                        Saturday
++                    </div>
++                    <div class="t-t-uppercase value">
++                        9am-9:30pm
++                    </div>
++                </li>
++                                                            <li class="d-flex">
++                    <div class="day">
++                        Sunday
+                     </div>
+                     <div class="t-t-uppercase value">
+-                        Closed for the season
++                        9am-8:30pm
+                     </div>
+                 </li>
+                     
+@@ -1941,14 +1983,14 @@
+ 
+ <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/5","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"lazy":{"lazysizes":{"lazyClass":"lazyload","loadedClass":"lazyloaded","loadingClass":"lazyloading","preloadClass":"lazypreload","errorClass":"lazyerror","autosizesClass":"lazyautosizes","srcAttr":"data-src","srcsetAttr":"data-srcset","sizesAttr":"data-sizes","minSize":40,"customMedia":[],"init":true,"expFactor":1.5,"hFac":0.8,"loadMode":2,"loadHidden":true,"ricTimeout":0,"throttleDelay":125,"plugins":{"object-fit":"object-fit\/ls.object-fit","parent-fit":"parent-fit\/ls.parent-fit"}},"placeholderSrc":"data:image\/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==","preferNative":false,"minified":true,"libraryPath":"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/lazysizes\/5.3.2"},"user":{"uid":0,"permissionsHash":"c8f0cb91bca7f84fe42e29ba50533fe7b7a78fbf16f320bd29fdd9ee6c541667"}}</script>
+ <script src="/core/assets/vendor/jquery/jquery.min.js?v=4.0.0"></script>
+-<script src="/sites/default/files/js/js_yN4l1hWVo-66HFBHhyLvqQFwl195QDLaSgeuO9Egajo.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=switz&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8cXlmSVVMDEIBeOVpyYlJ-YWAwDY_huc"></script>
++<script src="/sites/default/files/js/js_r03mpIMo2PilHrFuEINhctF2X5db2Cy27YMr-Cbu7vw.js?scope=footer&amp;delta=1&amp;language=en&amp;theme=switz&amp;include=eJzLSayq1M8BEjr5RZnpmXn6EArGK09NSk7MLQYAInkO4A"></script>
+ <script src="https://cdn.jsdelivr.net/npm/jquery-inview@1.1.2/jquery.inview.min.js"></script>
+-<script src="/sites/default/files/js/js_C2y2D8BjRfkBg9YpWdHhy-T2CG1OVgQaRrVUIYLR_3Y.js?scope=footer&amp;delta=3&amp;language=en&amp;theme=switz&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8cXlmSVVMDEIBeOVpyYlJ-YWAwDY_huc"></script>
++<script src="/sites/default/files/js/js_C2y2D8BjRfkBg9YpWdHhy-T2CG1OVgQaRrVUIYLR_3Y.js?scope=footer&amp;delta=3&amp;language=en&amp;theme=switz&amp;include=eJzLSayq1M8BEjr5RZnpmXn6EArGK09NSk7MLQYAInkO4A"></script>
+ <script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/hls-video-element@1.0/+esm" type="module"></script>
+ <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es6,Array.prototype.includes,CustomEvent,Object.entries,Object.values,URL"></script>
+ <script src="https://unpkg.com/plyr@3"></script>
+-<script src="/sites/default/files/js/js_IoAD7F8niDzuD5AGktzl-wgF7rTNto7xnLSW8Tj6bxM.js?scope=footer&amp;delta=8&amp;language=en&amp;theme=switz&amp;include=eJxLzNRPzIxPz8lPSszRyUmsqtQHETr5RZnpmXn6yfn52Zmp8cXlmSVVMDEIBeOVpyYlJ-YWAwDY_huc"></script>
++<script src="/sites/default/files/js/js_IoAD7F8niDzuD5AGktzl-wgF7rTNto7xnLSW8Tj6bxM.js?scope=footer&amp;delta=8&amp;language=en&amp;theme=switz&amp;include=eJzLSayq1M8BEjr5RZnpmXn6EArGK09NSk7MLQYAInkO4A"></script>
+ 
+ 
+ </body>
+diff --git a/test/resorts/little-switzerland-trails.js b/test/resorts/little-switzerland-trails.js
+index dd8e39e8..3e937245 100644
+--- a/test/resorts/little-switzerland-trails.js
++++ b/test/resorts/little-switzerland-trails.js
+@@ -2,83 +2,98 @@ import trails from '../trails/index.js';
+ 
+ trails('little-switzerland', [
+   {
+-    'name': 'Beginner Area',
+-    'status': 'closed',
+-    'level': 'green'
++    name: 'Beginner Area',
++    status: 'open',
++    level: 'green'
+   },
+   {
+-    'name': 'Bomber Bowl',
+-    'status': 'closed',
+-    'level': 'green'
++    name: 'Bomber Bowl',
++    status: 'open',
++    level: 'green'
+   },
+   {
+-    'name': 'Easy Cheesy',
+-    'status': 'closed',
+-    'level': 'green'
++    name: 'Easy Cheesy',
++    status: 'open',
++    level: 'green'
+   },
+   {
+-    'name': "Grandpa's Run",
+-    'status': 'closed',
+-    'level': 'green'
++    name: "Grandpa's Run",
++    status: 'open',
++    level: 'green'
+   },
+   {
+-    'name': 'Sno Bowl',
+-    'status': 'closed',
+-    'level': 'green'
++    name: 'Sno Bowl',
++    status: 'open',
++    level: 'green'
+   },
+   {
+-    'name': 'Turnpike',
+-    'status': 'closed',
+-    'level': 'green'
++    name: 'Turnpike',
++    status: 'open',
++    level: 'green'
+   },
+   {
+-    'name': 'Death Valley',
+-    'status': 'closed',
+-    'level': 'blue'
++    name: 'Death Valley',
++    status: 'open',
++    level: 'blue'
+   },
+   {
+-    'name': "Jane's Deal",
+-    'status': 'closed',
+-    'level': 'blue'
++    name: "Jane's Deal",
++    status: 'open',
++    level: 'blue'
+   },
+   {
+-    'name': 'Matterhorn',
+-    'status': 'closed',
+-    'level': 'blue'
++    name: 'Matterhorn',
++    status: 'open',
++    level: 'blue'
+   },
+   {
+-    'name': 'Southern Comfort',
+-    'status': 'closed',
+-    'level': 'blue'
++    name: 'Southern Comfort',
++    status: 'open',
++    level: 'blue'
+   },
+   {
+-    'name': 'Wineskin',
+-    'status': 'closed',
+-    'level': 'blue'
++    name: 'Wineskin',
++    status: 'open',
++    level: 'blue'
+   },
+   {
+-    'name': 'Big Deal',
+-    'status': 'closed',
+-    'level': 'black'
++    name: 'Big Deal',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Holy Switz!',
+-    'status': 'closed',
+-    'level': 'black'
++    name: 'Holy Switz!',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Schuss',
+-    'status': 'closed',
+-    'level': 'black'
++    name: 'Schuss',
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': "Shorty's",
+-    'status': 'closed',
+-    'level': 'black'
++    name: "Shorty's",
++    status: 'open',
++    level: 'black'
+   },
+   {
+-    'name': 'Slingshot',
+-    'status': 'closed',
+-    'level': 'black'
++    name: 'Slingshot',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Happy Little Park (Small)',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'Expedition Supply Park (Medium)',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: '41 Park (Large)',
++    status: 'open',
++    level: 'terrainPark'
+   }
+ ]);
+diff --git a/test/resorts/little-switzerland.js b/test/resorts/little-switzerland.js
+index 8013f576..c099715f 100644
+--- a/test/resorts/little-switzerland.js
++++ b/test/resorts/little-switzerland.js
+@@ -1,13 +1,13 @@
+ import lifts from '../lifts/index.js';
+ 
+ lifts('little-switzerland', 'html', {
+-  'Beginner Conveyor 2': 'closed',
+-  'Beginner Conveyor Lift': 'closed',
+-  'Big Deal Rope Tow': 'closed',
+-  'Double Chairlift 1': 'closed',
+-  'Double Chairlift 2': 'closed',
+-  'Double Chairlift 3': 'closed',
+-  'Double Chairlift 4': 'closed',
+-  'Happy Rope Tow': 'closed',
+-  'Park Rope Tow': 'closed'
++  'Beginner Conveyor 2': 'open',
++  'Beginner Conveyor Lift': 'open',
++  'Big Deal Rope Tow': 'open',
++  'Double Chairlift 1': 'open',
++  'Double Chairlift 2': 'open',
++  'Double Chairlift 3': 'open',
++  'Double Chairlift 4': 'open',
++  'Happy Rope Tow': 'open',
++  'Park Rope Tow': 'open'
+ });
+-- 
+2.39.5
+

@@ -1,7 +1,7 @@
 From 592e4094637f284b58ac82dea5343e5039d2bed1 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 12:59:00 +0000
-Subject: [PATCH 61/77] resort: fix hoodoo - schedule table is not live status
+Subject: resort: fix hoodoo - schedule table is not live status
 
 #tablepress-10 lists LIFT | HOURS (the page footnote says it is the plan,
 not status). The old parser called any non-CLOSED cell 'open', reporting

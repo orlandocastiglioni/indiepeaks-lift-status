@@ -1,0 +1,273 @@
+From bf8613d1ec2b55f15ccf6c356047889feffe0df4 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:12 -0400
+Subject: resort: hoodoo - add trail status
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/hoodoo/resort.json |   1 +
+ lib/resorts/hoodoo/trails.js   |  14 +++
+ test/resorts/hoodoo-trails.js  | 218 +++++++++++++++++++++++++++++++++
+ 3 files changed, 233 insertions(+)
+ create mode 100644 lib/resorts/hoodoo/trails.js
+ create mode 100644 test/resorts/hoodoo-trails.js
+
+diff --git a/lib/resorts/hoodoo/resort.json b/lib/resorts/hoodoo/resort.json
+index 2f5a240c..28a1a185 100644
+--- a/lib/resorts/hoodoo/resort.json
++++ b/lib/resorts/hoodoo/resort.json
+@@ -4,6 +4,7 @@
+     "host": "https://skihoodoo.com",
+     "pathname": "/the-mountain/mountain-lift-status/"
+   },
++  "trails": true,
+   "tags": [
+     "Oregon"
+   ],
+diff --git a/lib/resorts/hoodoo/trails.js b/lib/resorts/hoodoo/trails.js
+new file mode 100644
+index 00000000..1715a1fe
+--- /dev/null
++++ b/lib/resorts/hoodoo/trails.js
+@@ -0,0 +1,14 @@
++// trail table lives on the same TablePress page as the lifts; cells are
++// Trail | Difficulty | Status | Groomed | Night Ski - the difficulty cell is
++// an icon <img> followed by a text node (EASIER / MORE DIFFICULT / DIFFICULT /
++// MOST DIFFICULT - all known to normalizeLevel), hence the 1/1 child path;
++// status is plain OPEN / CLOSED text; groomed and night ski are icon-only
++// columns that don't fit liftie's trail shape
++export default {
++  selector: '#tablepress-3 tbody tr',
++  parse: {
++    name: 0,
++    level: '1/1',
++    status: 2
++  }
++};
+diff --git a/test/resorts/hoodoo-trails.js b/test/resorts/hoodoo-trails.js
+new file mode 100644
+index 00000000..6e319a5e
+--- /dev/null
++++ b/test/resorts/hoodoo-trails.js
+@@ -0,0 +1,218 @@
++import trails from '../trails/index.js';
++
++trails(
++  'hoodoo',
++  [
++    {
++      name: 'OVER EASY, LOWER (Below top of Manzanita)',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'HESITATION',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'THREE CREEKS',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'BLUE VALLEY',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: "FRANK'S FLIGHT",
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'BIG DIPPER, LOWER (TOP OF THE WALL to BLUE VALLEY)',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'HEADWALL',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'TOP OF THE WALL',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'POWDER VALLEY 1',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'POWDER VALLEY 2',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'POWDER VALLEY 3',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'POWDER VALLEY ROAD',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'HOME RUN',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'RV ROW',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'OVER EASY, UPPER (Hoodoo Summit to RED ROAD)',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'IMPOSSIBLE DREAM, UPPER (Hoodoo Summit to OVER EASY)',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'MAMBO',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'DIVE',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'GRANDSTAND',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'FACE',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'OVER EASY, MIDDLE (RED ROAD to top of Manzanita)',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'BIG DIPPER, UPPER (RED ROAD to TOP OF THE WALL)',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'SCHUSS CHUTE',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'RED ROAD',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'MIDWAY FLATS',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: "CHUCK'S BACKSIDE",
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'CRATER',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: "ART'S ALLEY",
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'GRIPPER',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: "ANGEL'S FLIGHT",
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: "DOOBA'S DESCENT",
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'SLALOM COURSE',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'RED VALLEY',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'MIDWAY VALLEY',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'CATCHLINE',
++      status: 'closed',
++      level: 'blue'
++    },
++    {
++      name: 'TINY TREAT',
++      status: 'closed',
++      level: 'blue'
++    },
++    {
++      name: 'LEAP OF FAITH',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: "HODAG'S HORN",
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: "DANTE'S VISION",
++      status: 'closed',
++      level: 'blue'
++    },
++    {
++      name: 'IMPOSSIBLE DREAM, LOWER (below OVER EASY)',
++      status: 'closed',
++      level: 'blue'
++    },
++    {
++      name: 'RABBIT RUN',
++      status: 'closed',
++      level: 'blue'
++    },
++    {
++      name: "HODAG'S TAIL",
++      status: 'closed',
++      level: 'green'
++    }
++  ],
++  { example: 'hoodoo-2026' }
++);
+-- 
+2.39.5
+

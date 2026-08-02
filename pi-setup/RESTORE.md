@@ -72,6 +72,38 @@ cp ~/lift-status-data/pi-setup/liftie-publish.py ~/lift-status-data/pi-setup/lif
 chmod +x ~/liftie-publish.py ~/liftie-watchdog.py
 ```
 
+## 4b. Render tier (JavaScript / Cloudflare sites)
+
+Some resorts declare `"via": "flaresolverr"` or `"via": "renderd"` on their
+URLs in `resort.json` — those fetches go through a headless-chromium tier
+instead of plain HTTP:
+
+- **FlareSolverr** (Cloudflare challenges + basic JS): runs as a Docker
+  container on port 8191. On the old Pi it is part of the arr-stack compose;
+  standalone:
+
+  ```sh
+  docker run -d --name flaresolverr --restart unless-stopped \
+    -p 127.0.0.1:8191:8191 ghcr.io/flaresolverr/flaresolverr:latest
+  ```
+
+  Liftie reads `LIFTIE_FLARESOLVERR` (default `http://127.0.0.1:8191/v1`).
+
+- **renderd** (pages that fill lift/trail rows from post-load XHR — supports
+  `waitSelector`): a small puppeteer-core service driving the system
+  chromium, port 3002, localhost only.
+
+  ```sh
+  sudo apt-get install -y chromium
+  mkdir ~/renderd && cd ~/renderd
+  cp ~/lift-status-data/pi-setup/renderd-server.js server.js
+  cp ~/lift-status-data/pi-setup/renderd-package.json package.json
+  npm install --no-fund --no-audit
+  ```
+
+  Liftie reads `LIFTIE_RENDERD` (set to `http://127.0.0.1:3002` in
+  liftie.service; leave unset to disable the renderd path).
+
 ## 5. systemd units
 
 ```sh
@@ -79,7 +111,8 @@ sudo cp ~/lift-status-data/pi-setup/liftie.service \
         ~/lift-status-data/pi-setup/liftie-publish.service \
         ~/lift-status-data/pi-setup/liftie-publish.timer \
         ~/lift-status-data/pi-setup/liftie-watchdog.service \
-        ~/lift-status-data/pi-setup/liftie-watchdog.timer /etc/systemd/system/
+        ~/lift-status-data/pi-setup/liftie-watchdog.timer \
+        ~/lift-status-data/pi-setup/renderd.service /etc/systemd/system/
 ```
 
 Edit `/etc/systemd/system/liftie-watchdog.service` and replace
@@ -89,7 +122,7 @@ new random private string and subscribe your phone to it at ntfy.sh).
 
 ```sh
 sudo systemctl daemon-reload
-sudo systemctl enable --now liftie.service liftie-publish.timer liftie-watchdog.timer
+sudo systemctl enable --now renderd.service liftie.service liftie-publish.timer liftie-watchdog.timer
 ```
 
 Note: `liftie.service` binds 127.0.0.1:3001 (3000 is taken by the homepage

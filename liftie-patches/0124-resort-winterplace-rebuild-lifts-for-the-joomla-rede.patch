@@ -1,0 +1,2276 @@
+From 1c4642c28872a70973697f3bbe891016a324d506 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:52:55 -0400
+Subject: resort: winterplace - rebuild lifts for the joomla redesign, add
+ trail status
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/winterplace/index.js      |   10 +-
+ lib/resorts/winterplace/resort.json   |    5 +-
+ lib/resorts/winterplace/trails.js     |   26 +
+ test/resorts/example/winterplace.html | 1996 +++++++++++++++++--------
+ test/resorts/winterplace-trails.js    |  144 ++
+ test/resorts/winterplace.js           |    6 +-
+ 6 files changed, 1591 insertions(+), 596 deletions(-)
+ create mode 100644 lib/resorts/winterplace/trails.js
+ create mode 100644 test/resorts/winterplace-trails.js
+
+diff --git a/lib/resorts/winterplace/index.js b/lib/resorts/winterplace/index.js
+index 5eae9d33..7eb94f57 100644
+--- a/lib/resorts/winterplace/index.js
++++ b/lib/resorts/winterplace/index.js
+@@ -1,10 +1,14 @@
++// snow report tables all share class snowtable1 - lift rows are the ones
++// whose first cell starts with "Lift #" (that also skips trail rows and the
++// thead difficulty cells)
+ export default {
+-  selector: '.row:nth-child(n + 7) td:nth-child(2n + 1)',
++  selector: 'table.snowtable1 tbody tr',
+   parse: {
+     name: {
+       child: 0,
+-      fn: name => name.startsWith('Lift') && name.slice(5)
++      // "Lift #1 Double Chairlift" -> "#1 Double Chairlift"
++      fn: name => /^Lift #/.test(name) && name.slice(5)
+     },
+-    status: '+/0'
++    status: 1
+   }
+ };
+diff --git a/lib/resorts/winterplace/resort.json b/lib/resorts/winterplace/resort.json
+index 8243bb67..f2628113 100644
+--- a/lib/resorts/winterplace/resort.json
++++ b/lib/resorts/winterplace/resort.json
+@@ -1,9 +1,10 @@
+ {
+   "name": "Winterplace",
+   "url": {
+-    "host": "http://www.winterplace.com",
+-    "pathname": "/snow-report"
++    "host": "https://winterplace.com",
++    "pathname": "/real-time-snow-report-mountain-conditions-winterplace"
+   },
++  "trails": true,
+   "tags": [
+     "West Virginia"
+   ],
+diff --git a/lib/resorts/winterplace/trails.js b/lib/resorts/winterplace/trails.js
+new file mode 100644
+index 00000000..6204a69e
+--- /dev/null
++++ b/lib/resorts/winterplace/trails.js
+@@ -0,0 +1,26 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++
++// difficulty labels shown in each trail table's thead - normalizeLevel knows
++// them all; the set also filters out the lift table and the single-row
++// Snowtubing Park table, which carry no thead label
++const sections = new Set(['EASIEST', 'MORE DIFFICULT', 'MOST DIFFICULT', 'TERRAIN PARKS']);
++
++// trails live on the same snow report page as the lifts, one
++// table.snowtable1 per difficulty, rows are <tr><td>Name</td><td>Open|Closed</td></tr>
++export default function parse(dom) {
++  const rows = [];
++  for (const table of select(dom, 'table.snowtable1')) {
++    const level = findText(select(table, 'thead strong')[0])?.trim();
++    if (!level || !sections.has(level.toUpperCase())) {
++      continue;
++    }
++    for (const tr of select(table, 'tbody tr')) {
++      const [name, status] = select(tr, 'td').map(findText);
++      if (name && status) {
++        rows.push({ name, status, level });
++      }
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/example/winterplace.html b/test/resorts/example/winterplace.html
+index 01a8cc8d..fbb50b62 100644
+--- a/test/resorts/example/winterplace.html
++++ b/test/resorts/example/winterplace.html
+@@ -1,603 +1,1423 @@
+-<!DOCTYPE html>
+-<html lang="en">
+-  <head>
+-    <meta charset="utf-8">
+-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+-    <meta name="viewport" content="width=device-width, initial-scale=1">
+-    <title>Winterplace Ski Resort</title>
+-
+-    <!-- Bootstrap -->
+-    <link href="http://www.winterplace.com/css/bootstrap.min.css" rel="stylesheet">
+-    <link href="http://www.winterplace.com/font-awesome/css/font-awesome.css" rel="stylesheet">
+-    <link href="http://www.winterplace.com/css/bootstrap-theme.min.css" rel="stylesheet">
+-    <link href="http://www.winterplace.com/css/slippry.css" rel="stylesheet">
+-    <link href="http://www.winterplace.com/css/content.css" rel="stylesheet">
+-        
+-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+-    <!--[if lt IE 9]>
+-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+-    <![endif]-->
+-  </head>
+-  <body>
+-  <script>
+-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+-
+-  ga('create', 'UA-6703896-8', 'auto');
+-  ga('send', 'pageview');
+-
+-</script>  	<div class="bgHead"></div><!-- end bgHead-->
+-  	<div class="container">
+-	  	<header class="main">
+-		  	<div class="logo"><a href="http://www.winterplace.com/" title="Home: Winterplace Ski Resort">Winterplace Ski Resort</a></div>
+-		  	<div class="mainNav"><nav id="primaryNav" role="navigation">
+-<a href="#primaryNav" title="Show navigation">Show Menu</a>
+-<a href="#" title="Hide navigation">Hide Menu</a>
+-<ul>
+-<li><a href="http://www.winterplace.com/the-mountain" title="The Mountain"><span>The</span><span>Mountain</span></a>
+-<ul>
+-<li><a href="http://www.winterplace.com/mountain-facts" title="Mountain Facts">Mountain Facts</a></li>
+-<li><a href="http://www.winterplace.com/mountain-safety" title="Mountain Safety">Mountain Safety</a></li>
+-<li><a href="http://winterplace.com/gallery" title="Photo Gallery">Photo Gallery</a></li>
+-<li><a href="http://www.winterplace.com/video-gallery" title="Video Gallery">Video Gallery</a></li>
+-<li><a href="http://winterplace.com/snow-report" title="Snow Report">Snow Report</a></li>
+-<li><a href="http://www.winterplace.com/terrain-park" title="Terrain Park">Terrain Park</a></li>
+-<li><a href="http://www.winterplace.com/trail-map" title="Trail Map">Trail Map</a></li>
+-<li><a href="http://www.winterplace.com/dining-and-entertainment" title="Dining and Entertainment">Dining and Entertainment</a></li>
+-<li><a href="http://www.winterplace.com/summer-activities" title="Summer Activities">Summer Activities</a></li>
+-</ul>
+-</li>
+-<li><a href="http://www.winterplace.com/trip-planning" title="Trip Planning"><span>Trip</span><span>Planning</span></a>
+-<ul>
+-<li><a href="http://www.winterplace.com/lift-tickets-rentals" title="Lift Tickets & Rentals">Lift Tickets & Rentals</a></li>
+-<li><a href="http://www.winterplace.com/hours-of-operation" title="Hours of Operation">Hours of Operation</a></li>
+-<li><a href="http://www.winterplace.com/take-a-lesson" title="Take A Lesson">Take A Lesson</a></li>
+-<li><a href="http://www.winterplace.com/skiride-group-rates" title="Ski/Ride Group Rates">Ski/Ride Group Rates</a></li>
+-<li><a href="http://www.winterplace.com/snow-tubing-hours-rates" title="Snow Tubing Hours & Rates">Snow Tubing Hours & Rates</a></li>
+-<li><a href="http://www.winterplace.com/season-passes" title="Season Passes">Season Passes</a></li>
+-<li><a href="http://www.winterplace.com/gift-ideas" title="Gift Ideas">Gift Ideas</a></li>
+-<li><a href="http://www.winterplace.com/lodging" title="Lodging">Lodging</a></li>
+-<li><a href="http://www.winterplace.com/getting-here" title="Getting Here">Getting Here</a></li>
+-<li><a href="http://www.winterplace.com/ski-free-deals" title="Ski Free & Deals">Ski Free & Deals</a></li>
+-<li><a href="http://www.winterplace.com/logo-gear" title="Logo Gear">Logo Gear</a></li>
+-<li><a href="http://www.winterplace.com/summer-activities" title="Summer Activities">Summer Activities</a></li>
+-</ul>
+-</li>
+-<li><a href="http://www.winterplace.com/bring-a-group" title="Bring A Group"><span>Bring</span><span>A Group</span></a>
+-<ul>
+-<li><a href="http://www.winterplace.com/skiride-group-rates" title="Ski/Ride Group Rates">Ski/Ride Group Rates</a></li>
+-<li><a href="http://www.winterplace.com/snow-tubing-group-rates" title="Snow Tubing Group Rates">Snow Tubing Group Rates</a></li>
+-<li><a href="http://www.winterplace.com/group-cool-deals" title="Group Cool Deals">Group Cool Deals</a></li>
+-<li><a href="http://www.winterplace.com/scouts-on-skis" title="Scouts on Skis!">Scouts on Skis!</a></li>
+-<li><a href="http://www.winterplace.com/group-lodging" title="Group Lodging">Group Lodging</a></li>
+-<li><a href="http://www.winterplace.com/getting-here" title="Getting Here">Getting Here</a></li>
+-</ul>
+-</li>
+-<li><a href="http://www.winterplace.com/snow-tubing" title="Snow Tubing"><span>Snow</span><span>Tubing</span></a>
+-<ul>
+-<li><a href="http://www.winterplace.com/snow-tubing-hours-rates" title="Snow Tubing Hours & Rates">Snow Tubing Hours & Rates</a></li>
+-<li><a href="http://www.winterplace.com/snow-tubing-group-rates" title="Snow Tubing Group Rates">Snow Tubing Group Rates</a></li>
+-<li><a href="http://www.winterplace.com/getting-here" title="Getting Here">Getting Here</a></li>
+-</ul>
+-</li>
+-<li><a href="http://www.winterplace.com/news-info" title="News & Info"><span>News</span><span>& Info</span></a>
+-<ul>
+-<li><a href="http://winterplace.com/in-the-news" title="In The News">In The News</a></li>
+-<li><a href="http://winterplace.com/events" title="Event Calendar">Event Calendar</a></li>
+-<li><a href="http://www.winterplace.com/email-sign-up" title="Email Sign Up">Email Sign Up</a></li>
+-<li><a href="http://winterplace.com/online-survey" title="Online Survey">Online Survey</a></li>
+-<li><a href="http://www.winterplace.com/winterplace-app" title="Winterplace App">Winterplace App</a></li>
+-<li><a href="http://www.winterplace.com/employment" title="Employment">Employment</a></li>
+-<li><a href="http://www.winterplace.com/media-center" title="Media Center">Media Center</a></li>
+-</ul>
+-</li>
+-<li><a href="http://www.winterplace.com/learn-to-ski-board" title="Learn To Ski & Board"><span>Learn</span><span>To Ski</span></a>
+-<ul>
+-<li><a href="http://www.winterplace.com/tips-for-you" title="Tips For You">Tips For You</a></li>
+-<li><a href="http://www.winterplace.com/where-to-go" title="Where To Go">Where To Go</a></li>
+-<li><a href="http://www.winterplace.com/beginner-terrain" title="Beginner Terrain">Beginner Terrain</a></li>
+-<li><a href="http://www.winterplace.com/take-a-lesson" title="Take A Lesson">Take A Lesson</a></li>
+-<li><a href="http://www.winterplace.com/skiwee-program" title="SkiWee Program">SkiWee Program</a></li>
+-<li><a href="http://www.winterplace.com/day-care" title="Day Care">Day Care</a></li>
+-<li><a href="http://www.winterplace.com/ski-tips-for-kids" title="Ski Tips For Kids">Ski Tips For Kids</a></li>
+-<li><a href="http://www.winterplace.com/responsibility-code" title="Responsibility Code">Responsibility Code</a></li>
+-</ul>
++<!doctype html>
++<html lang="en-gb" dir="ltr">
++	<head>
++	<!-- Optimised with Easy Frontend SEO Pro version 5.1.2.1-PRO - https://kubik-rubik.de/efseo-easy-frontend-seo -->
++      <link rel="preconnect" href="https://fonts.googleapis.com">
++      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++       <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" />
++       <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" />
++       <link rel="icon" href="/images/favicon-96x96.png" sizes="96x96" />
++       <link rel="icon" href="/images/android-chrome-192x192.png" sizes="192x192" />
++       <link rel="icon" href="/images/android-chrome-512x512.png" sizes="512x512" />
++       <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
++       <script type="text/javascript"> function bCheck(){ var bPa = "(googlebot\/|Googlebot-Mobile|Lighthouse|moto g power|Moto g power|pingdom|109.0.0.0|119.0.0.0|GTmetrix|Googlebot-Image|Google favicon|Mediapartners-Google|bingbot|slurp|java|wget|curl|Commons-HttpClient|Python-urllib|libwww|httpunit|nutch|phpcrawl|msnbot|jyxobot|FAST-WebCrawler|FAST Enterprise Crawler|biglotron|teoma|convera|seekbot|gigablast|exabot|ngbot|ia_archiver|GingerCrawler|webmon |httrack|webcrawler|grub.org|UsineNouvelleCrawler|antibot|netresearchserver|speedy|fluffy|bibnum.bnf|findlink|msrbot|panscient|yacybot|AISearchBot|IOI|ips-agent|tagoobot|MJ12bot|dotbot|woriobot|yanga|buzzbot|mlbot|yandexbot|purebot|Linguee Bot|Voyager|CyberPatrol|voilabot|baiduspider|citeseerxbot|spbot|twengabot|postrank|turnitinbot|scribdbot|page2rss|sitebot|linkdex|Adidxbot|blekkobot|ezooms|dotbot|Mail.RU_Bot|discobot|heritrix|findthatfile|europarchive.org|NerdByNature.Bot|sistrix crawler|ahrefsbot|Aboundex|domaincrawler|wbsearchbot|summify|ccbot|edisterbot|seznambot|ec2linkfinder|gslfbot|aihitbot|intelium_bot|facebookexternalhit|yeti|RetrevoPageAnalyzer|lb-spider|sogou|lssbot|careerbot|wotbox|wocbot|ichiro|DuckDuckBot|lssrocketcrawler|drupact|webcompanycrawler|acoonbot|openindexspider|gnam gnam spider|web-archive-net.com.bot|backlinkcrawler|coccoc|integromedb|content crawler spider|toplistbot|seokicks-robot|it2media-domain-crawler|ip-web-crawler.com|siteexplorer.info|elisabot|proximic|changedetection|blexbot|arabot|WeSEE:Search|niki-bot|CrystalSemanticsBot|rogerbot|360Spider|psbot|InterfaxScanBot|Lipperhey SEO Service|CC Metadata Scaper|g00g1e.net|GrapeshotCrawler|urlappendbot|brainobot|fr-crawler|binlar|SimpleCrawler|Livelapbot|Twitterbot|cXensebot|smtbot|bnf.fr_bot|A6-Indexer|ADmantX|Facebot|Twitterbot|OrangeBot|memorybot|AdvBot|MegaIndex|SemanticScholarBot|ltx71|nerdybot|xovibot|BUbiNG|Qwantify|archive.org_bot|Applebot|TweetmemeBot|crawler4j|findxbot|SemrushBot|yoozBot|lipperhey|y!j-asr|Domain Re-Animator Bot|AddThis|bot|PTST)"; var re = new RegExp(bPa, "i"); var userAgent = navigator.userAgent; if (re.test(userAgent)) { return true; }else{ return false; } } </script>
++       <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet"> -->
++		
++		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
++		<meta charset="utf-8">
++	<meta name="author" content="Jacob Hodara">
++	<meta name="robots" content="index, follow">
++	<meta name="twitter:title" content="Snow Report">
++	<meta name="twitter:description" content="Winterplace Ski Resort | Voted #1 place to learn to ski and snowboard in the South East!">
++	<meta property="og:title" content="Snow Report">
++	<meta property="og:description" content="Winterplace Ski Resort | Voted #1 place to learn to ski and snowboard in the South East!">
++	<meta name="description" content="Winterplace Ski Resort | Voted #1 place to learn to ski and snowboard in the South East!">
++	<meta name="generator" content="Joomla! - Open Source Content Management">
++	<title>Snow Report</title>
++	<link href="/images/site-icon.png" rel="icon" type="image/vnd.microsoft.icon">
++	<link href="https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace" rel="canonical">
++<link href="/media/vendor/joomla-custom-elements/css/joomla-alert.min.css?0.4.1" rel="stylesheet">
++	<link href="/media/plg_system_jcepro/site/css/content.min.css?86aa0286b6232c4a5b58f892ce080277" rel="stylesheet">
++	<link href="/media/com_rstbox/css/vendor/animate.min.css?cd31d0" rel="stylesheet">
++	<link href="/media/com_rstbox/css/engagebox.css?cd31d0" rel="stylesheet">
++	<link href="/templates/shaper_helixultimate/css/bootstrap.min.css" rel="stylesheet">
++	<link href="/plugins/system/helixultimate/assets/css/system-j4.min.css" rel="stylesheet">
++	<link href="/media/system/css/joomla-fontawesome.min.css?cd31d0" rel="stylesheet">
++	<link href="/templates/shaper_helixultimate/css/template.css" rel="stylesheet">
++	<link href="/templates/shaper_helixultimate/css/presets/preset2.css" rel="stylesheet">
++	<link href="/templates/shaper_helixultimate/css/custom.css" rel="stylesheet">
++	<link href="/templates/shaper_helixultimate/css/customp.css" rel="stylesheet">
++	<link href="/templates/shaper_helixultimate/css/custom-media-query.css" rel="stylesheet">
++	<link href="/components/com_sppagebuilder/assets/css/dynamic-content.css?5c4d30aeb4e6059223dc156f675a1315" rel="stylesheet">
++	<link href="/components/com_sppagebuilder/assets/css/sppagebuilder.css?5c4d30aeb4e6059223dc156f675a1315" rel="stylesheet">
++	<link href="/modules/mod_accordeonmenuck/themes/default/css.php?cssid=accordeonck128" rel="stylesheet">
++	<link href="/plugins/system/djaccessibility/module/assets/css/accessibility.css?1.15" rel="stylesheet">
++	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
++	<link href="/components/com_sppagebuilder/assets/css/color-switcher.css?5c4d30aeb4e6059223dc156f675a1315" rel="stylesheet">
++	<style>.cloaked_email span:before { content: attr(data-ep-a); } .cloaked_email span:after { content: attr(data-ep-b); } img.cloaked_email { display: inline-block !important; vertical-align: middle; border: 0; }</style>
++	<style>.eb-1 .eb-dialog{--eb-max-width:100%;--eb-height:auto;--eb-padding:8px;--eb-border-radius:0;--eb-background-color:rgba(242, 242, 242, 1);--eb-text-color:rgba(0, 0, 0, 1);--eb-dialog-shadow:var(--eb-shadow-1);text-align:center;--eb-border-style:none;--eb-border-color:#5db75d;--eb-border-width:0px;--eb-overlay-enabled:0;--eb-bg-image-enabled:0;--eb-background-image:none;}.eb-1.eb-inst{--eb-margin:0;justify-content:center;align-items:flex-start;}.eb-1 .eb-close{--eb-close-button-inside:block;--eb-close-button-outside:none;--eb-close-button-icon:block;--eb-close-button-image:none;--eb-close-button-font-size:22px;--eb-close-button-color:rgba(20, 2, 2, 0.5);--eb-close-button-hover-color:rgba(10, 1, 1, 0.69);}.eb-1 .eb-dialog .eb-container{justify-content:center;min-height:100%;display:flex;flex-direction:column;}@media screen and (max-width: 1024px){.eb-1 .eb-dialog{--eb-height:auto;--eb-bg-image-enabled:inherit;--eb-background-image:none;}}@media screen and (max-width: 575px){.eb-1 .eb-dialog{--eb-height:auto;--eb-bg-image-enabled:inherit;--eb-background-image:none;}}</style>
++	<style>.eb-1 {
++                --animation_duration: 400ms;
++
++            }
++        </style>
++	<style>.ebStickyBar .eb {
++    font-size: 15px;
++}
++
++.ebStickyBar .eb-close {
++    margin-top: -15px;
++    right: 8px;
++    top: 50%;
++}
++.ebStickyBar .eb-close span {
++    border: solid 2px rgba(255,255,255,.3);
++    border-radius: 100%;
++    width: 27px;
++    height: 27px;
++    display: flex;
++    justify-content: center;
++    font-family: Arial;
++}
++.ebStickyBar .eb-close:hover span {
++    border-color: rgba(255,255,255,1);
++}
++.eb a {
++    color: #000;
++}
++.eb-1 .eb-dialog {
++    padding: 8px 24px;
++}
++
++@media (max-width:767px){
++  .ebStickyBar .eb {
++    font-size: 12px;
++    line-height: 15px;
++}
++}</style>
++	<style>.sp-megamenu-parent > li > a, .sp-megamenu-parent > li > span, .sp-megamenu-parent .sp-dropdown li.sp-menu-item > a{font-family: 'Arial', sans-serif;text-decoration: none;}
++</style>
++	<style>.menu.nav-pills > li > a, .menu.nav-pills > li > span, .menu.nav-pills .sp-dropdown li.sp-menu-item > a{font-family: 'Arial', sans-serif;text-decoration: none;}
++</style>
++	<style>.logo-image {height:36px;}.logo-image-phone {height:36px;}</style>
++	<style>@media(max-width: 992px) {.logo-image {height: 36px;}.logo-image-phone {height: 36px;}}</style>
++	<style>@media(max-width: 576px) {.logo-image {height: 36px;}.logo-image-phone {height: 36px;}}</style>
++	<style>#sp-bottom{ background-image:url("/images/footer-bg-img.jpg");background-repeat:no-repeat;background-size:cover;background-position:50% 0; }</style>
++	<style>@media(min-width: 1400px) {.sppb-row-container { max-width: 1320px; }}</style>
++	<style>
++#accordeonck128 { padding:0;margin:0; } 
++#accordeonck128 li.accordeonck { list-style: none;overflow: hidden; }
++#accordeonck128 ul[class^="content"] { margin:0;padding:0; }
++#accordeonck128 li.accordeonck > span { position: relative; display: block; }
++#accordeonck128 li.accordeonck.parent > span { padding-right: 30px;}
++#accordeonck128 li.parent > span span.toggler_icon { top: 0;position: absolute; cursor: pointer; display: block; height: 100%; z-index: 10;right:0; background: url(/modules/mod_accordeonmenuck/assets/plus.png) center center no-repeat !important;width: 30px;}
++#accordeonck128 li.parent.open > span span.toggler_icon { right:0; background: url(/modules/mod_accordeonmenuck/assets/minus.png) center center no-repeat !important;}
++#accordeonck128 li.accordeonck.level2 > span { padding-right: 20px;}
++#accordeonck128 li.level2 li.accordeonck > span { padding-right: 20px;}
++#accordeonck128 a.accordeonck { display: block;text-decoration: none; color: #636363;font-size: 12px;}
++#accordeonck128 a.accordeonck:hover { text-decoration: none; color: #000000;}
++#accordeonck128 li.parent > span a { display: block;outline: none; }
++#accordeonck128 li.parent.open > span a {  }
++#accordeonck128 a.accordeonck > .badge { margin: 0 0 0 5px; }
++#accordeonck128 li.level2.parent.open > span span.toggler_icon { background: url(/) center center no-repeat !important;}
++#accordeonck128 li.level3.parent.open > span span.toggler_icon { background: url(/) center center no-repeat !important;}
++#accordeonck128 li.level1 > span { -moz-border-radius: 5px 5px 5px 5px;-webkit-border-radius: 5px 5px 5px 5px;border-radius: 5px 5px 5px 5px; } 
++#accordeonck128 li.level1 > span a { padding-top: 8px;padding-right: 6px;padding-bottom: 8px;padding-left: 6px;color: #636363;font-size: 12px; } 
++#accordeonck128 li.level1 > span span.accordeonckdesc { font-size: 10px; } 
++#accordeonck128 li.level1:hover > span { background: rgba(0,0,0,0.03);background-color: rgba(0,0,0,0.03); } 
++#accordeonck128 li.level1:hover > span a { color: #000000; } 
++#accordeonck128 li.level1.active > span { background: rgba(0,0,0,0.03);background-color: rgba(0,0,0,0.03); } 
++#accordeonck128 li.level1.active > span a { color: #000000; } 
++#accordeonck128 li.level2 > span {  } 
++#accordeonck128 li.level2 > span a { padding-top: 5px;padding-bottom: 5px;padding-left: 15px;color: #636363; } 
++#accordeonck128 li.level2:hover > span {  } 
++#accordeonck128 li.level2:hover > span a { color: #000000; } 
++#accordeonck128 li.level2.active > span {  } 
++#accordeonck128 li.level2.active > span a { color: #000000; } 
++#accordeonck128 li.level2 li.accordeonck > span {  } 
++#accordeonck128 li.level2 li.accordeonck > span a { padding-top: 5px;padding-bottom: 5px;padding-left: 25px;color: #636363; } 
++#accordeonck128 li.level2 li.accordeonck:hover > span {  } 
++#accordeonck128 li.level2 li.accordeonck:hover > span a { color: #000000; } 
++#accordeonck128 li.level2 li.accordeonck.active > span {  } 
++#accordeonck128 li.level2 li.accordeonck.active > span a { color: #000000; } #accordeonck128 ul[class^="content"] {
++	display: none;
++}
++
++#accordeonck128 .toggler_icon {
++	top: 0;
++}</style>
++	<style>.djacc { font-family: Roboto, sans-serif; }</style>
++	<style>.djacc--sticky.djacc-popup { margin: 20px 40px; }</style>
++	<style>:root {--sppb-topbar-bg-color: #333333; --sppb-topbar-text-color: #AAAAAA; --sppb-header-bg-color: #FFFFFF; --sppb-logo-text-color: #ec430f; --sppb-menu-text-color: #252525; --sppb-menu-text-hover-color: #ec430f; --sppb-menu-text-active-color: #ec430f; --sppb-menu-dropdown-bg-color: #FFFFFF; --sppb-menu-dropdown-text-color: #252525; --sppb-menu-dropdown-text-hover-color: #ec430f; --sppb-menu-dropdown-text-active-color: #ec430f; --sppb-text-color: #252525; --sppb-bg-color: #FFFFFF; --sppb-link-color: #ec430f; --sppb-link-hover-color: #044CD0; --sppb-footer-bg-color: #171717; --sppb-footer-text-color: #FFFFFF; --sppb-footer-link-color: #A2A2A2; --sppb-footer-link-hover-color: #FFFFFF}</style>
++<script type="application/json" class="joomla-script-options new">{"data":{"breakpoints":{"tablet":991,"mobile":480},"header":{"stickyOffset":"100"}},"joomla.jtext":{"ERROR":"Error","MESSAGE":"Message","NOTICE":"Notice","WARNING":"Warning","JCLOSE":"Close","JOK":"OK","JOPEN":"Open"},"system.paths":{"root":"","rootFull":"https:\/\/winterplace.com\/","base":"","baseFull":"https:\/\/winterplace.com\/"},"csrf.token":"5f85965d508ab3f9ca640c92f6459c33","plg_system_schedulerunner":{"interval":300}}</script>
++	<script src="/media/system/js/core.min.js?c6fdb65970a5fd5e85a6a32605d48843"></script>
++	<script src="/media/vendor/jquery/js/jquery.min.js?3.7.1"></script>
++	<script src="/media/legacy/js/jquery-noconflict.min.js?c6fdb65970a5fd5e85a6a32605d48843"></script>
++	<script src="/media/vendor/bootstrap/js/alert.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/button.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/carousel.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/collapse.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/dropdown.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/modal.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/offcanvas.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/popover.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/scrollspy.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/tab.min.js?5.3.8" type="module"></script>
++	<script src="/media/vendor/bootstrap/js/toast.min.js?5.3.8" type="module"></script>
++	<script src="/media/system/js/showon.min.js?c6fdb65970a5fd5e85a6a32605d48843" type="module"></script>
++	<script src="/media/system/js/messages.min.js?c6fdb65970a5fd5e85a6a32605d48843" type="module"></script>
++	<script src="/media/plg_system_schedulerunner/js/run-schedule.min.js?c6fdb65970a5fd5e85a6a32605d48843" type="module"></script>
++	<script src="/media/com_rstbox/js/engagebox.js?cd31d0"></script>
++	<script src="/media/com_rstbox/js/pageslide_mode.js?cd31d0"></script>
++	<script src="/templates/shaper_helixultimate/js/main.js"></script>
++	<script src="https://www.google.com/recaptcha/api.js?render=6LetPccqAAAAAADPzRnfdmiMFq-qAj_2pRMrzd12"></script>
++	<script src="/components/com_sppagebuilder/assets/js/dynamic-content.js?5c4d30aeb4e6059223dc156f675a1315"></script>
++	<script src="/components/com_sppagebuilder/assets/js/jquery.parallax.js?5c4d30aeb4e6059223dc156f675a1315"></script>
++	<script src="/components/com_sppagebuilder/assets/js/sppagebuilder.js?5c4d30aeb4e6059223dc156f675a1315" defer></script>
++	<script src="/media/com_accordeonmenuck/assets/accordeonmenuck.js"></script>
++	<script src="/media/com_accordeonmenuck/assets/jquery.easing.1.3.js"></script>
++	<script src="/plugins/system/djaccessibility/module/assets/js/accessibility.min.js?1.15"></script>
++	<script src="/components/com_sppagebuilder/assets/js/color-switcher.js?5c4d30aeb4e6059223dc156f675a1315"></script>
++	<script>window.RegularLabs=window.RegularLabs||{};window.RegularLabs.EmailProtector=window.RegularLabs.EmailProtector||{unCloak:function(e,g){document.querySelectorAll("."+e).forEach(function(a){var f="",c="";a.className=a.className.replace(" "+e,"");a.querySelectorAll("span").forEach(function(d){for(name in d.dataset)0===name.indexOf("epA")&&(f+=d.dataset[name]),0===name.indexOf("epB")&&(c=d.dataset[name]+c)});if(c){var b=a.nextElementSibling;b&&"script"===b.tagName.toLowerCase()&&b.parentNode.removeChild(b);b=f+c;g?(a.parentNode.href="mailto:"+b,a.parentNode.removeChild(a)):a.innerHTML=b}})}};</script>
++	<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://winterplace.com/#/schema/Organization/base","name":"Winterplace Ski Resort","url":"https://winterplace.com/"},{"@type":"WebSite","@id":"https://winterplace.com/#/schema/WebSite/base","url":"https://winterplace.com/","name":"Winterplace Ski Resort","publisher":{"@id":"https://winterplace.com/#/schema/Organization/base"}},{"@type":"WebPage","@id":"https://winterplace.com/#/schema/WebPage/base","url":"https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace","name":"Snow Report","description":"Winterplace Ski Resort | Voted #1 place to learn to ski and snowboard in the South East!","isPartOf":{"@id":"https://winterplace.com/#/schema/WebSite/base"},"about":{"@id":"https://winterplace.com/#/schema/Organization/base"},"inLanguage":"en-GB"},{"@type":"Article","@id":"https://winterplace.com/#/schema/com_content/article/3","name":"Snow Report","headline":"Snow Report","inLanguage":"en-GB","isPartOf":{"@id":"https://winterplace.com/#/schema/WebPage/base"}}]}</script>
++	<script>template="shaper_helixultimate";</script>
++	<script>if (typeof window.grecaptcha !== 'undefined') { grecaptcha.ready(function() { grecaptcha.execute("6LetPccqAAAAAADPzRnfdmiMFq-qAj_2pRMrzd12", {action:'homepage'});}); }</script>
++	<script>
++				document.addEventListener("DOMContentLoaded", () =>{
++					window.htmlAddContent = window?.htmlAddContent || "";
++					if (window.htmlAddContent) {
++        				document.body.insertAdjacentHTML("beforeend", window.htmlAddContent);
++					}
++				});
++			</script>
++	<script>jQuery(document).ready(function(jQuery){new Accordeonmenuck('#accordeonck128', {fadetransition : false,eventtype : 'click',transition : 'linear',menuID : 'accordeonck128',defaultopenedid : '',activeeffect : '',showcounter : '',showactive : '',closeothers : '1',duree : 500});}); </script>
++	<script>new DJAccessibility( {"cms":"joomla","yootheme":false,"position":"custom","mobile_position":"sticky","layout":"popup","mobile_layout":"popup","align_position_popup":"bottom right","align_position_toolbar":"top center","align_mobile_position":"bottom right","breakpoint":"767","direction":"bottom right","space":true,"version":false,"speech_pitch":"1","speech_rate":"1","speech_volume":"1","ajax_url":"?option=com_ajax&plugin=Djaccessibility&format=raw"} )</script>
++	<script>(function () {
++	try {
++		var SPPB_TIME_ZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;
++
++		if (!SPPB_TIME_ZONE){
++			return;
++		}
++
++		document.cookie =
++			'sppb_user_timezone=' + encodeURIComponent(SPPB_TIME_ZONE) +
++			'; path=/' +
++			'; max-age=43200'; // 12 hours
++	} catch (e) {}
++})();</script>
++	<script>
++			const initColorMode = () => {
++				const colorVariableData = [];
++				const sppbColorVariablePrefix = "--sppb";
++				let activeColorMode = localStorage.getItem("sppbActiveColorMode") || "";
++				activeColorMode = "";
++				const modes = [];
++
++				if(!modes?.includes(activeColorMode)) {
++					activeColorMode = "";
++					localStorage.setItem("sppbActiveColorMode", activeColorMode);
++				}
++
++				document?.body?.setAttribute("data-sppb-color-mode", activeColorMode);
++
++				if (!localStorage.getItem("sppbActiveColorMode")) {
++					localStorage.setItem("sppbActiveColorMode", activeColorMode);
++				}
++
++				if (window.sppbColorVariables) {
++					const colorVariables = typeof(window.sppbColorVariables) === "string" ? JSON.parse(window.sppbColorVariables) : window.sppbColorVariables;
++
++					for (const colorVariable of colorVariables) {
++						const { path, value } = colorVariable;
++						const variable = String(path[0]).trim().toLowerCase().replaceAll(" ", "-");
++						const mode = path[1];
++						const variableName = `${sppbColorVariablePrefix}-${variable}`;
++
++						if (activeColorMode === mode) {
++							colorVariableData.push(`${variableName}: ${value}`);
++						}
++					}
++
++					document.documentElement.style.cssText += colorVariableData.join(";");
++				}
++			};
++
++			window.sppbColorVariables = [];
++			
++			initColorMode();
++
++			document.addEventListener("DOMContentLoaded", initColorMode);
++		</script>
++<!-- Google tag (gtag.js) -->
++<script async src="https://www.googletagmanager.com/gtag/js?id=G-6F5K4XDLVR"></script>
++<script>
++  window.dataLayer = window.dataLayer || [];
++  function gtag(){dataLayer.push(arguments);}
++  gtag('js', new Date());
++
++  gtag('config', 'G-6F5K4XDLVR');
++</script>
++
++<script>
++
++jQuery(function(){
++
++	jQuery("#signuppush").on('click',(e)=>{
++
++	e.preventDefault() ;
++	let data = {first_name: "" , last_name:"" , email : jQuery("#signuppush_email").val()};
++	let url = jQuery(e.target.form).attr("action");
++	jQuery.ajax({ url :url, method:'POST',data:data }).done((data) => { jQuery(".toast-body").html(data) ; jQuery(".toast").show()    }); 
++	})
++
++})
++</script>
++			</head>
++	<body class="site helix-ultimate hu com_content com-content view-article layout-default task-none itemid-148 en-gb ltr sticky-header layout-fluid offcanvas-init offcanvs-position-right  title-bg-right"><section class="djacc djacc-container djacc-popup djacc--hidden djacc--light djacc--bottom-right">
++			<button class="djacc__openbtn djacc__openbtn--default" aria-label="Open accessibility tools" title="Open accessibility tools">
++			<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
++				<path d="M1480.443,27.01l-3.891-7.51-3.89,7.51a1,1,0,0,1-.89.54,1.073,1.073,0,0,1-.46-.11,1,1,0,0,1-.43-1.35l4.67-9V10.21l-8.81-2.34a1,1,0,1,1,.51-1.93l9.3,2.47,9.3-2.47a1,1,0,0,1,.509,1.93l-8.81,2.34V17.09l4.66,9a1,1,0,1,1-1.769.92ZM1473.583,3a3,3,0,1,1,3,3A3,3,0,0,1,1473.583,3Zm2,0a1,1,0,1,0,1-1A1,1,0,0,0,1475.583,3Z" transform="translate(-1453 10.217)" fill="#fff"/>
++			</svg>
++		</button>
++		<div class="djacc__panel">
++		<div class="djacc__header">
++			<p class="djacc__title">Accessibility Tools</p>
++			<button class="djacc__reset" aria-label="Reset" title="Reset">
++				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
++					<path d="M9,18a.75.75,0,0,1,0-1.5,7.5,7.5,0,1,0,0-15A7.531,7.531,0,0,0,2.507,5.25H3.75a.75.75,0,0,1,0,1.5h-3A.75.75,0,0,1,0,6V3A.75.75,0,0,1,1.5,3V4.019A9.089,9.089,0,0,1,2.636,2.636,9,9,0,0,1,15.364,15.365,8.94,8.94,0,0,1,9,18Z" fill="#fff"/>
++				</svg>
++			</button>
++			<button class="djacc__close" aria-label="Close accessibility tools" title="Close accessibility tools">
++				<svg xmlns="http://www.w3.org/2000/svg" width="14.828" height="14.828" viewBox="0 0 14.828 14.828">
++					<g transform="translate(-1842.883 -1004.883)">
++						<line x2="12" y2="12" transform="translate(1844.297 1006.297)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++						<line x1="12" y2="12" transform="translate(1844.297 1006.297)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++					</g>
++				</svg>
++			</button>
++		</div>
++		<ul class="djacc__list">
++			<li class="djacc__item djacc__item--contrast">
++				<button class="djacc__btn djacc__btn--invert-colors" title="Invert colors">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<g fill="none" stroke="#fff" stroke-width="2">
++							<circle cx="12" cy="12" r="12" stroke="none"/>
++							<circle cx="12" cy="12" r="11" fill="none"/>
++						</g>
++						<path d="M0,12A12,12,0,0,1,12,0V24A12,12,0,0,1,0,12Z" fill="#fff"/>
++					</svg>
++					<span class="djacc_btn-label">Invert colors</span>
++				</button>
++			</li>
++			<li class="djacc__item djacc__item--contrast">
++				<button class="djacc__btn djacc__btn--monochrome" title="Monochrome">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<g fill="none" stroke="#fff" stroke-width="2">
++							<circle cx="12" cy="12" r="12" stroke="none"/>
++							<circle cx="12" cy="12" r="11" fill="none"/>
++						</g>
++						<line y2="21" transform="translate(12 1.5)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++						<path d="M5.853,7.267a12.041,12.041,0,0,1,1.625-1.2l6.3,6.3v2.829Z" transform="translate(-0.778 -4.278)" fill="#fff"/>
++						<path d="M3.2,6.333A12.006,12.006,0,0,1,4.314,4.622l9.464,9.464v2.829Z" transform="translate(-0.778)" fill="#fff"/>
++						<path d="M1.823,10.959a11.953,11.953,0,0,1,.45-2.378l11.506,11.5v2.829Z" transform="translate(-0.778)" fill="#fff"/>
++					</svg>
++					<span class="djacc_btn-label">Monochrome</span>
++				</button>
++			</li>
++			<li class="djacc__item djacc__item--contrast">
++				<button class="djacc__btn djacc__btn--dark-contrast" title="Dark contrast">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<path d="M12,27A12,12,0,0,1,9.638,3.232a10,10,0,0,0,14.13,14.13A12,12,0,0,1,12,27Z" transform="translate(0 -3.232)" fill="#fff"/>
++					</svg>
++					<span class="djacc_btn-label">Dark contrast</span>
++				</button>
++			</li>
++			<li class="djacc__item djacc__item--contrast">
++				<button class="djacc__btn djacc__btn--light-contrast" title="Light contrast">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32">
++						<g transform="translate(7 7)" fill="none" stroke="#fff" stroke-width="2">
++							<circle cx="9" cy="9" r="9" stroke="none"/>
++							<circle cx="9" cy="9" r="8" fill="none"/>
++						</g>
++						<rect width="2" height="5" rx="1" transform="translate(15)" fill="#fff"/>
++						<rect width="2" height="5" rx="1" transform="translate(26.607 3.979) rotate(45)" fill="#fff"/>
++						<rect width="2" height="5" rx="1" transform="translate(32 15) rotate(90)" fill="#fff"/>
++						<rect width="2" height="5" rx="1" transform="translate(28.021 26.607) rotate(135)" fill="#fff"/>
++						<rect width="2" height="5" rx="1" transform="translate(15 27)" fill="#fff"/>
++						<rect width="2" height="5" rx="1" transform="translate(7.515 23.071) rotate(45)" fill="#fff"/>
++						<rect width="2" height="5" rx="1" transform="translate(5 15) rotate(90)" fill="#fff"/>
++						<rect width="2" height="5" rx="1" transform="translate(8.929 7.515) rotate(135)" fill="#fff"/>
++					</svg>
++					<span class="djacc_btn-label">Light contrast</span>
++				</button>
++			</li>
++			
++			<li class="djacc__item djacc__item--contrast">
++				<button class="djacc__btn djacc__btn--low-saturation" title="Low saturation">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<g fill="none" stroke="#fff" stroke-width="2">
++							<circle cx="12" cy="12" r="12" stroke="none"/>
++							<circle cx="12" cy="12" r="11" fill="none"/>
++						</g>
++						<path d="M0,12A12,12,0,0,1,6,1.6V22.394A12,12,0,0,1,0,12Z" transform="translate(0 24) rotate(-90)" fill="#fff"/>
++					</svg>
++					<span class="djacc_btn-label">Low saturation</span>
++				</button>
++			</li>
++			<li class="djacc__item djacc__item--contrast">
++				<button class="djacc__btn djacc__btn--high-saturation" title="High saturation">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<g fill="none" stroke="#fff" stroke-width="2">
++							<circle cx="12" cy="12" r="12" stroke="none"/>
++							<circle cx="12" cy="12" r="11" fill="none"/>
++						</g>
++						<path d="M0,12A12.006,12.006,0,0,1,17,1.088V22.911A12.006,12.006,0,0,1,0,12Z" transform="translate(0 24) rotate(-90)" fill="#fff"/>
++					</svg>
++					<span class="djacc_btn-label">High saturation</span>
++				</button>
++			</li>
++			<li class="djacc__item">
++				<button class="djacc__btn djacc__btn--highlight-links" title="Highlight links">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<rect width="24" height="24" fill="none"/>
++						<path d="M3.535,21.92a5.005,5.005,0,0,1,0-7.071L6.364,12.02a1,1,0,0,1,1.415,1.413L4.95,16.263a3,3,0,0,0,4.243,4.243l2.828-2.828h0a1,1,0,1,1,1.414,1.415L10.607,21.92a5,5,0,0,1-7.072,0Zm2.829-2.828a1,1,0,0,1,0-1.415L17.678,6.364a1,1,0,1,1,1.415,1.414L7.779,19.092a1,1,0,0,1-1.415,0Zm11.314-5.657a1,1,0,0,1,0-1.413l2.829-2.829A3,3,0,1,0,16.263,4.95L13.436,7.777h0a1,1,0,0,1-1.414-1.414l2.828-2.829a5,5,0,1,1,7.071,7.071l-2.828,2.828a1,1,0,0,1-1.415,0Z" transform="translate(-0.728 -0.728)" fill="#fff"/>
++					</svg>
++					<span class="djacc_btn-label">Highlight links</span>
++				</button>
++			</li>
++			<li class="djacc__item">
++				<button class="djacc__btn djacc__btn--highlight-titles" title="Highlight headings">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<rect width="2" height="14" rx="1" transform="translate(5 5)" fill="#fff"/>
++						<rect width="2" height="14" rx="1" transform="translate(10 5)" fill="#fff"/>
++						<rect width="2" height="14" rx="1" transform="translate(17 5)" fill="#fff"/>
++						<rect width="2" height="7" rx="1" transform="translate(12 11) rotate(90)" fill="#fff"/>
++						<rect width="2" height="5" rx="1" transform="translate(19 5) rotate(90)" fill="#fff"/>
++						<g fill="none" stroke="#fff" stroke-width="2">
++							<rect width="24" height="24" rx="4" stroke="none"/>
++							<rect x="1" y="1" width="22" height="22" rx="3" fill="none"/>
++						</g>
++					</svg>
++					<span class="djacc_btn-label">Highlight headings</span>
++				</button>
++			</li>
++			<li class="djacc__item">
++				<button class="djacc__btn djacc__btn--screen-reader" title="Screen reader">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<g fill="none" stroke="#fff" stroke-width="2">
++							<circle cx="12" cy="12" r="12" stroke="none"/>
++							<circle cx="12" cy="12" r="11" fill="none"/>
++						</g>
++						<path d="M2907.964,170h1.91l1.369-2.584,2.951,8.363,2.5-11.585L2919,170h2.132" transform="translate(-2902.548 -158)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
++					</svg>
++					<span class="djacc_btn-label">Screen reader</span>
++				</button>
++			</li>
++			<li class="djacc__item">
++				<button class="djacc__btn djacc__btn--read-mode" title="Read mode" data-label="Disable Read mode">
++					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
++						<g fill="none" stroke="#fff" stroke-width="2">
++							<rect width="24" height="24" rx="4" stroke="none"/>
++							<rect x="1" y="1" width="22" height="22" rx="3" fill="none"/>
++						</g>
++						<rect width="14" height="2" rx="1" transform="translate(5 7)" fill="#fff"/>
++						<rect width="14" height="2" rx="1" transform="translate(5 11)" fill="#fff"/>
++						<rect width="7" height="2" rx="1" transform="translate(5 15)" fill="#fff"/>
++					</svg>
++					<span class="djacc_btn-label">Read mode</span>
++				</button>
++			</li>
++			<li class="djacc__item djacc__item--full">
++				<span class="djacc__arrows djacc__arrows--zoom">
++					<span class="djacc__label">Content scaling</span>
++					<span class="djacc__bar"></span>
++					<span class="djacc__size">100<span class="djacc__percent">%</span></span>
++					<button class="djacc__dec" aria-label="Decrease content size" title="Decrease content size">
++						<svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2">
++							<g transform="translate(1 1)">
++								<line x1="8" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++							</g>
++						</svg>
++					</button>
++					<button class="djacc__inc" aria-label="Increase content size" title="Increase content size">
++						<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10">
++							<g transform="translate(1 1)">
++								<line y2="8" transform="translate(4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++								<line x1="8" transform="translate(0 4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++							</g>
++						</svg>
++					</button>
++				</span>
++			</li>
++			<li class="djacc__item djacc__item--full">
++				<span class="djacc__arrows djacc__arrows--font-size">
++					<span class="djacc__label">Font size</span>
++					<span class="djacc__bar"></span>
++					<span class="djacc__size">100<span class="djacc__percent">%</span></span>
++					<button class="djacc__dec" aria-label="Decrease font size" title="Decrease font size">
++						<svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2">
++							<g transform="translate(1 1)">
++								<line x1="8" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++							</g>
++						</svg>
++					</button>
++					<button class="djacc__inc" aria-label="Increase font size" title="Increase font size">
++						<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10">
++							<g transform="translate(1 1)">
++								<line y2="8" transform="translate(4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++								<line x1="8" transform="translate(0 4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++							</g>
++						</svg>
++					</button>
++				</span>
++			</li>
++			<li class="djacc__item djacc__item--full">
++				<span class="djacc__arrows djacc__arrows--line-height">
++					<span class="djacc__label">Line height</span>
++					<span class="djacc__bar"></span>
++					<span class="djacc__size">100<span class="djacc__percent">%</span></span>
++					<button class="djacc__dec" aria-label="Decrease line height" title="Decrease line height">
++						<svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2">
++							<g transform="translate(1 1)">
++								<line x1="8" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++							</g>
++						</svg>
++					</button>
++					<button class="djacc__inc" aria-label="Increase line height" title="Increase line height">
++						<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10">
++							<g transform="translate(1 1)">
++								<line y2="8" transform="translate(4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++								<line x1="8" transform="translate(0 4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++							</g>
++						</svg>
++					</button>
++				</span>
++			</li>
++			<li class="djacc__item djacc__item--full">
++				<span class="djacc__arrows djacc__arrows--letter-spacing">
++					<span class="djacc__label">Letter spacing</span>
++					<span class="djacc__bar"></span>
++					<span class="djacc__size">100<span class="djacc__percent">%</span></span>
++					<button class="djacc__dec" aria-label="Decrease letter space" title="Decrease letter space">
++						<svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2">
++							<g transform="translate(1 1)">
++								<line x1="8" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++							</g>
++						</svg>
++					</button>
++					<button class="djacc__inc" aria-label="Increase letter space" title="Increase letter space">
++						<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10">
++							<g transform="translate(1 1)">
++								<line y2="8" transform="translate(4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++								<line x1="8" transform="translate(0 4)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
++							</g>
++						</svg>
++					</button>
++				</span>
++			</li>
++					</ul>
++				<div class="djacc__footer">
++			<a href="https://dj-extensions.com" class="djacc__footer-logo" aria-label="DJ-Extensions.com logo">
++				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.92 9.19"><path d="m6.84 1.2c-.12-.18-1.88-1.2-2.08-1.2s-1.96 1.02-2.08 1.2-.14 2.18 0 2.41 1.84 1.2 2.08 1.2 1.96-1 2.08-1.2.14-2.2 0-2.41zm-.69 2.02c-.42.33-.89.6-1.39.8-.5-.2-.97-.47-1.39-.8-.09-.53-.09-1.07 0-1.61.43-.32.9-.59 1.39-.8.49.21.96.48 1.39.8.09.53.09 1.07 0 1.59z" fill="#f39236"/><path d="m4.26 5.58c-.12-.18-1.88-1.2-2.08-1.2s-1.96 1.02-2.08 1.2-.14 2.17 0 2.41c.13.23 1.84 1.2 2.08 1.2s1.96-1 2.08-1.2.14-2.21 0-2.41zm-.69 2.02c-.42.33-.89.6-1.39.8-.5-.2-.97-.47-1.39-.8-.09-.53-.09-1.08 0-1.61.43-.32.9-.59 1.39-.8.49.21.96.48 1.39.8.09.53.09 1.07 0 1.59z" fill="#1dabe1"/><path d="m9.43 5.58c-.13-.18-1.88-1.2-2.09-1.2s-1.96 1.02-2.08 1.2-.13 2.18 0 2.41 1.84 1.2 2.08 1.2 1.97-1 2.09-1.2.14-2.21 0-2.41zm-.69 2.02c-.42.33-.89.61-1.39.8-.5-.2-.97-.47-1.39-.8-.09-.53-.09-1.08 0-1.61.43-.32.9-.59 1.39-.8.49.21.96.48 1.39.8.09.53.09 1.07 0 1.59z" fill="#89c059"/><path d="m12.97 6.39c-.21 0-.41-.05-.58-.17-.16-.11-.29-.27-.38-.45-.09-.2-.14-.42-.13-.65 0-.22.04-.44.13-.65.08-.18.21-.34.38-.45s.38-.17.58-.17.4.05.57.17c.16.11.28.27.35.45.08.21.12.43.12.65s-.04.44-.12.65c-.07.18-.2.34-.35.45-.17.12-.37.17-.58.17zm.07-.42c.13 0 .26-.03.37-.11.1-.08.17-.18.21-.3.05-.14.07-.29.07-.44s-.02-.3-.07-.44c-.04-.12-.11-.22-.21-.3-.11-.07-.23-.11-.36-.11-.14 0-.27.03-.38.11-.1.08-.18.18-.22.3-.05.14-.07.28-.07.43s.02.29.07.43c.04.12.12.23.22.3.11.08.24.12.37.11zm.65.35v-1.73h-.06v-1.47h.47v3.2zm.68 1.07v-.44h.12c.1 0 .2-.02.27-.09.06-.08.09-.17.09-.27v-2.67h.47v2.86c.01.17-.05.33-.16.45-.13.11-.29.17-.46.16h-.32zm.48-3.86v-.45h.47v.45zm2.17 2.86c-.22 0-.44-.05-.63-.16-.18-.1-.32-.26-.42-.44-.1-.2-.16-.43-.15-.65 0-.24.04-.47.15-.68.09-.19.23-.34.41-.45.19-.11.4-.16.62-.16s.44.05.63.17c.17.12.31.29.38.48.09.24.12.49.1.74h-.46v-.17c.01-.22-.04-.43-.16-.62-.12-.14-.29-.21-.47-.2-.2-.01-.39.07-.52.22-.13.19-.19.41-.18.64-.01.22.05.43.18.61.13.15.31.23.51.22.13 0 .26-.03.38-.1.11-.07.19-.17.25-.28l.45.15c-.09.21-.23.38-.42.5s-.41.18-.63.18zm-.86-1.14v-.36h1.71v.36zm2.09 1.07.9-1.21-.88-1.19h.55l.6.82.59-.82h.55l-.88 1.19.9 1.21h-.55l-.61-.85-.62.85zm4.07 0c-.15.03-.3.04-.44.04-.13 0-.27-.03-.39-.08-.11-.05-.2-.14-.26-.25-.05-.09-.08-.2-.08-.3s0-.22 0-.35v-2.13h.47v2.1.25c0 .06.02.12.05.18.05.09.15.15.25.16.14.01.27 0 .41-.02v.39zm-1.64-2.03v-.37h1.64v.37zm3.1 2.09c-.22 0-.44-.05-.63-.16-.18-.1-.32-.26-.42-.44-.1-.2-.16-.43-.15-.65 0-.24.04-.47.15-.68.09-.19.23-.34.41-.45.19-.11.4-.16.62-.16s.44.05.62.17.31.29.39.48c.09.24.13.49.1.74h-.47v-.17c.01-.22-.04-.43-.16-.62-.12-.14-.29-.21-.47-.2-.2-.01-.39.07-.52.22-.13.19-.19.41-.18.64-.01.22.05.43.18.61.13.15.31.23.51.22.13 0 .26-.03.38-.1.11-.07.19-.17.25-.28l.46.15c-.09.21-.23.38-.42.5s-.41.18-.63.18zm-.86-1.14v-.36h1.71v.36zm4.06 1.07v-1.18c0-.1 0-.19-.02-.29-.01-.1-.04-.19-.09-.28-.04-.08-.11-.15-.18-.21-.09-.06-.2-.08-.31-.08-.08 0-.16.01-.24.04-.07.03-.14.07-.19.13-.06.07-.11.15-.13.24-.03.12-.05.24-.05.36l-.29-.11c0-.2.04-.4.12-.58.08-.16.2-.3.35-.39.17-.1.36-.15.55-.14.14 0 .29.02.42.08.11.05.2.12.28.21.07.08.12.18.16.28s.06.2.08.3c.01.09.02.17.02.26v1.33h-.47zm-1.69 0v-2.39h.42v.69h.05v1.71h-.47zm3.66.07c-.25.01-.5-.06-.71-.19-.18-.13-.3-.32-.34-.54l.48-.07c.03.12.1.23.21.29.12.08.26.11.4.11.12 0 .24-.02.34-.09.08-.06.13-.15.12-.24 0-.05-.01-.1-.04-.15-.05-.05-.11-.09-.18-.11-.09-.03-.23-.08-.42-.13-.17-.04-.33-.1-.49-.17-.1-.05-.19-.12-.26-.21-.05-.09-.08-.19-.08-.3 0-.14.04-.27.12-.38s.2-.2.33-.25c.16-.06.32-.09.49-.09s.33.03.49.09c.14.05.26.14.35.25s.14.24.16.37l-.48.09c-.01-.11-.07-.21-.16-.27-.11-.07-.23-.11-.36-.11-.12-.01-.24.01-.34.07-.08.04-.13.13-.13.22 0 .05.02.1.05.13.06.05.12.09.19.11.1.03.24.08.43.12.17.04.33.1.48.17.1.05.19.13.25.22.05.1.08.21.08.32 0 .22-.09.43-.26.56-.21.15-.46.22-.72.2zm1.51-2.86v-.45h.47v.45zm0 2.8v-2.4h.47v2.4zm2.17.07c-.22 0-.44-.05-.62-.16s-.32-.26-.41-.45c-.1-.21-.15-.43-.14-.66 0-.23.05-.46.15-.66.09-.18.23-.34.41-.44.19-.11.4-.16.62-.16s.44.05.63.16c.18.11.32.26.41.45.1.2.15.43.14.66 0 .23-.04.46-.14.66-.09.19-.23.34-.41.45-.19.11-.4.17-.62.16zm0-.44c.2.01.39-.07.51-.23.12-.18.18-.39.17-.6.01-.21-.05-.43-.17-.6-.12-.15-.32-.24-.51-.22-.14 0-.27.03-.38.11-.1.07-.18.17-.22.29-.05.14-.08.28-.07.43-.01.22.05.43.17.6.12.15.31.24.51.23zm3.35.37v-1.18c0-.1 0-.19-.02-.29-.01-.1-.04-.19-.09-.28-.04-.08-.11-.15-.18-.21-.09-.06-.2-.08-.31-.08-.08 0-.16.01-.24.04-.07.03-.14.07-.19.13-.06.07-.11.15-.13.24-.03.12-.05.24-.05.36l-.29-.11c0-.2.04-.4.12-.58.08-.16.2-.3.35-.39.17-.1.36-.15.55-.14.14 0 .29.02.42.08.11.05.2.12.28.21.07.08.12.18.16.28s.06.2.08.3c.01.09.02.17.02.26v1.33h-.47zm-1.69 0v-2.4h.42v.69h.05v1.71zm3.66.07c-.25.01-.5-.06-.71-.19-.18-.13-.3-.32-.34-.54l.48-.07c.03.12.1.23.21.29.12.08.26.11.4.11.12 0 .24-.02.34-.09.08-.06.13-.15.12-.24 0-.05-.01-.1-.04-.15-.05-.05-.11-.09-.18-.11-.09-.03-.23-.08-.42-.13-.17-.04-.33-.1-.49-.17-.1-.05-.19-.12-.26-.21-.05-.09-.08-.19-.08-.3 0-.14.04-.27.12-.38s.2-.2.33-.25c.16-.06.32-.09.49-.09s.33.03.49.09c.14.05.26.14.35.25s.14.24.16.37l-.48.09c-.01-.11-.07-.21-.16-.27-.11-.07-.23-.11-.36-.11-.12-.01-.24.01-.34.07-.08.04-.13.13-.13.22 0 .05.02.1.05.13.06.05.12.09.19.11.1.03.24.08.43.12.17.04.33.1.48.17.1.05.19.13.25.22.05.1.08.21.08.32 0 .22-.09.43-.26.56-.21.15-.46.22-.71.2z" class="djname" /></svg>
++			</a>
++			<div class="djacc__footer-links">
++				<a class="djacc__footer-link" href="https://dj-extensions.com/yootheme/dj-accessibility">Web Accessibility plugin</a> by DJ-Extensions.com
++			</div>
++		</div>
++			</div>
++</section>
++     <!--   <p style="vertical-align: middle;display: inline-block;text-align: center;width: 100%;margin: 0px;padding: 6px;"><b>2024-2025 OPENING DAY SATURDAY, DEC. 14TH! </b>Snowtubing Park opens Dec. 21st!</p> -->
++		
++		
++		<div class="body-wrapper">
++			<div class="body-innerwrapper">
++				
++	<div class="sticky-header-placeholder"></div>
++<header id="sp-header" class="header-with-modal-menu classic-layout">
++	<div class="container">
++		<div class="container-inner">
++			<div class="row align-items-center justify-content-between">
++				<!-- Logo -->
++				<div id="sp-logo" class="has-border col-auto">
++					<div class="sp-column">
++													
++							<div class="logo"><a href="/">
++				<img class='logo-image '
++					srcset='https://winterplace.com/images/site-logo.png 1x'
++					src='https://winterplace.com/images/site-logo.png'
++					height='36px'
++					alt='Winterplace Ski Resort'
++				/>
++				</a></div>											</div>
++				</div>
++				
++				<!-- Menu Right position -->
++				<div id="logo-right" class="col-auto d-flex align-items-center">
++                  <div class="sp-module "><div class="sp-module-content">
++<div id="mod-custom111" class="mod-custom custom">
++    <ul class="sp-contact-info">
++<ul class="sp-contact-info">
++<ul class="sp-contact-info"><!--<li class="sp-contact-phone"><a href="tel:1-800-607-SNOW"><span class="fas fa-phone" aria-hidden="true"></span></a></li>-->
++<li class="sp-contact-email"><a href="/contact-us" rel="noopener"><span class="far fa-envelope" aria-hidden="true"></span></a></li>
++<li class="sp-contact-cam"><a href="/mountain/resort-center-cam" rel="noopener"><img src="/images/cam-icon-black.png" alt="" /></a></li>
++<li id="dropdownMenuButton" class="sp-contact-cloud dropdown-toggle" aria-expanded="false">
++<div class="snow dropdown weather-report"><span id="dropdownMenuButton" class="btn dropdown-toggle" style="font-size: 14pt;" aria-expanded="false"> <img src="/images/cloud-icon.png" alt="" /> </span>
++<ul class="snow dropdown-menu" aria-labelledby="dropdownMenuButton">
++<div id="mod-custom135" class="mod-custom custom">
++    </div>
++
++
++<div class="rows">
++
++    <div class="report-row">
++        <p class="snowbase">
++        <span class="snow-value">
++                No            </span>
++            
++            Snowmaking
++        </p>
++        <p class="snowmaking">
++        <span class="snow-value">
++                0            </span> 
++
++            Snow Base
++            
++        </p>
++        <p class="trailsoption">
++            <span class="snow-value">
++                0 of 28            </span>
++            Open Trails 
++        </p>
++    </div>
++    <div class="report-link">
++        <a href="/mountain/snow-report">SNOW REPORT ></a>
++    </div>
++    <style>
++      
++
++.snow.dropdown:hover .snow.dropdown-menu {
++      display: block;
++      margin-top: 0; 
++    }
++
++      </style></ul>
++</div>
+ </li>
+-<li><a href="http://www.winterplace.com/live-cams" title="Live Cams"><span>Live</span><span>Cams</span></a>
+-<ul>
+-<li><a href="http://www.winterplace.com/mountainhouse-cam" title="Mountainhouse Cam">Mountainhouse Cam</a></li>
+-<li><a href="http://www.winterplace.com/top-of-mountain-cam" title="Top Of Mountain Cam">Top Of Mountain Cam</a></li>
++<li class="sp-contact-cart"><a href="https://shop.winterplace.com/" target="_blank" rel="noopener"><img src="/images/cart-icon.png" alt="" /></a></li>
++<li class="sp-contact-buy"><a href="https://shop.winterplace.com/" target="_blank" rel="noopener">BUY NOW &gt;</a></li>
+ </ul>
+-</li>
+ </ul>
+-</nav>
+-									</div>
+-			<div id="sb-search" class="sb-search"><form action="http://www.winterplace.com/search/" id="cse-search-box4">
+-	<input type="hidden" name="cx" value="006580566717450251806:7wzrebxxu78" />
+-	<input type="hidden" name="ie" value="UTF-8" />
+-	<input class="sb-search-input" placeholder="Enter your search term..." type="text" value="" name="q" id="search">
+-	<input class="sb-search-submit" type="submit" name="sa" value="Search" id="submit">
+-	<span class="sb-icon-search"></span>
+-</form></div>
+-	  	</header>
+-	  	<div class="dpShadow"><section id="demo1">
+-<article><div class="image-content"><img src="http://www.winterplace.com/img/bannerDefault.jpg"></div></article>
+-</section>
+-</div>
+-	  	<div class="content">	<div class="row">
+-		<div class="col-lg-12"><h1 class="pghdr">Snow Report</h1></div>
+-	</div>
+-		<div class="row">
+-		<div class="col-lg-12">
+-			<p>Wednesday, Nov 25, 2015, 10:01 am</p>
+-			<h3>Current Conditions</h3>
+-		</div>
+-		<div class="col-lg-3">
+-			<p><strong>New Natural Snow:</strong> 0&quot;</p>
+-			<p><strong>Snow Base:</strong> 0&quot; - 0&quot;</p>
+-			<p><strong>Snowmaking:</strong> No</p>
+-		</div>
+-		<div class="col-lg-3">
+-			<p><strong>Trails Open:</strong> 0 of 27</p>
+-			<p><strong>Lifts Open:</strong> 0 of 9</p>
+-		</div>
+-		<div class="col-lg-3"></div>
+-		<div class="col-lg-3"></div>
+-		<div class="col-lg-12"><hr></div>
+-	</div>
+-	<div class="row">
+-		<div class="col-lg-12">
+-			<h3>Weather Conditions</h3>
+-		</div>
+-		<div class="col-lg-3">
+-			<p><strong>Current Temperature:</strong> 40&deg; F.</p>
+-			<p><strong>Temperature Hi:</strong> 51&deg; F.</p>
+-			<p><strong>Temperature Lo:</strong> 36&deg; F.</p>
+-		</div>
+-		<div class="col-lg-3"></div>
+-		<div class="col-lg-3"></div>
+-		<div class="col-lg-3"></div>
+-		<div class="col-lg-12">
+-			<p><strong>Forecast: </strong>Snowmakers will continue to keep their eyes on the weather and make snow at every opportunity!!<br />
+-    <br />
+-We look forward to seeing you on the slopes this ski season!</p>
+-		</div>
+-		<div class="col-lg-12"><hr></div>
+-	</div>
+-	<div class="row">
+-		<div class="col-lg-12">
+-			<h3>Surface Conditions</h3>
+-		</div>
+-		<div class="col-lg-12">
+-			<p></p>
+-		</div>
+-		<div class="col-lg-12"><hr></div>
+-	</div>
+-	<div class="row">
+-		<div class="col-lg-12">
+-			<h3>Comments</h3>
+-		</div>
+-		<div class="col-lg-12">
+-			<p><h3>Winter is coming.....&nbsp; Purchase your tickets Online and&nbsp;SAVE up to 50%!</h3><br />
+-<h3>Anticipated opening date is December 12, 2015 - based on weather.&nbsp;</h3><br />
+-<h3>Check back often for the&nbsp;most current information.</h3><br />
+-<p>&nbsp;</p><br />
+-<p>&nbsp;</p><br />
+-<p>&nbsp;</p></p>
+-		</div>
+-		<div class="col-lg-12"><hr></div>
+-	</div>
+-	<div class="row">
+-		<div class="col-lg-12">
+-				<h3>Trail Status</h3>
+-		</div>
+-		<div class="col-lg-12 table-responsive">
+-			<table class="table table-striped">
+-			<thead>
+-			    <tr>
+-			        <td colspan="2"><img src="http://www.winterplace.com/img/easiest.gif" border="0" width="24px" height="18px" align="absmiddle" alt="Easiest"> <strong>EASIEST</strong></td>
+-			        <td colspan="2"><img src="http://www.winterplace.com/img/most.gif" border="0" width="24px" height="18px" align="absmiddle" alt="Most Difficult"> <strong>MOST DIFFICULT</strong></td>
+-			    </tr>
+-			    <tr>
+-			        <td width="30%">Almost Heaven</td>
+-			        <td width="20%">Closed</td>
+-			        <td width="31%">Drop Off</td>
+-			        <td width="19%">Closed</td>
+-			    </tr>
+-		    </thead>
+-			<tbody>
+-			    <tr>
+-			        <td>Buttermilk</td>
+-			        <td>Closed</td>
+-			        <td>Nose Dive</td>
+-			        <td>Closed</td>
+-			    </tr>
+-			    <tr>
+-			        <td>Country Roads</td>
+-			        <td>Closed</td>
+-			        <td>Plunge</td>
+-			        <td>Closed</td>
+-			    </tr>
+-			    <tr>
+-			        <td>Easy Street</td>
+-			        <td>Closed</td>
+-			        <td>Turkey Chute</td>
+-			        <td>Closed</td>
+-			    </tr>
+-			    <tr>
+-			        <td>Glades</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Highland Run</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Milkshake</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>No Problem</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Over Easy</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Panorama</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Ridge Runner</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Wanderer</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-		    </tbody>
+-	    </table>
+-	    <table class="table table-striped">
+-			<thead> 
+-			    <tr>
+-			        <td colspan="2"><img src="http://www.winterplace.com/img/more.gif" border="0" width="24px" height="18px" align="absmiddle" alt="More Difficult"> <strong>MORE DIFFICULT</strong></td>
+-			        <td colspan="2"><img src="http://www.winterplace.com/img/terrain.gif" border="0" width="21px" height="21px" align="absmiddle" alt="Terrain Park"> <strong>TERRAIN PARK</strong></td>
+-			    </tr>
+-			</thead>
+-			<tbody>
+-			    <tr>
+-			        <td width="30%">Cascade</td>
+-			        <td width="20%">Closed </td>
+-			        <td width="31%">Hickory Terrain Park</td>
+-			        <td width="19%">Closed</td>
+-			    </tr>
+-			    <tr>
+-			        <td>Compromise</td>
+-			        <td>Closed</td>
+-			        <td>Panorama Terrain Park</td>
+-			        <td>Closed</td>
+-			    </tr>
+-			    <tr>
+-			        <td>Last Chance</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Last Run</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"><h3 class="trail">SNOWTUBING</h3></td>
+-			    </tr>
+-			    <tr>
+-			       <td>Look at Me!</td>
+-			        <td>Closed</td>
+-			         <td>Snowtubing Park</td>
+-			        <td>Closed</td>
+-			    </tr>
+-			    <tr>
+-			        <td>Meadows</td>
+-			        <td>Closed</td>
+-			        <td>Kiddie Snowtubing Park</td>
+-			        <td>Closed</td>
+-			    </tr>
+-			    <tr>
+-			        <td>Rendezvous</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Rendezvous Too</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Snow Bowl</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Snowfield</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    <tr>
+-			        <td>Wood's Run</td>
+-			        <td>Closed</td>
+-			        <td colspan="2"></td>
+-			    </tr>
+-			    </tbody>
+-			</table>
+-		</div>
+-	</div>
+-	<div class="row">
+-		<div class="col-lg-12"><h3>Lift Status</h3>
+-		</div>
+-		<div class="col-lg-12 table-responsive">
+-			<table class="table table-striped">
+-				<tbody>
+-				    <tr>
+-				        <td width="30%">Lift #1 Double Chairlift</td>
+-				        <td width="20%">Closed</td>
+-				        <td width="31%">Lift #8 Quad Chairlift</td>
+-				        <td width="19%">Closed </td>
+-				    </tr>
+-				    <tr>
+-				        <td>Lift #2 Triple Chairlift</td>
+-				        <td>Closed</td>
+-				        <td>Lift #9 Quad Chairlift</td>
+-				        <td>Closed</td>
+-				    </tr>
+-				    <tr>
+-				        <td>Lift #3 Triple Chairlift</td>
+-				        <td>Closed</td>
+-				        <td>Lift #10 Tubing Carpet Lift</td>
+-				        <td>Closed</td>
+-				    </tr>
+-				    <tr>
+-				        <td>Lift #4 Triple Chairlift</td>
+-				        <td>Closed</td>
+-				        <td>Lift #11 Tubing Carpet Lift</td>
+-				        <td>Closed</td>
+-				    </tr>
+-				    <tr>
+-				        <td>Lift #5 Double Chairlift</td>
+-				        <td>Closed</td>
+-				        <td></td>
+-				        <td></td>
+-				    </tr>
+-				    <tr>
+-				        <td>Lift #6 Carpet Lift</td>
+-				        <td>Closed</td>
+-				        <td></td>
+-				        <td></td>
+-				    </tr>
+-				    <tr>
+-				        <td>Lift #7 Carpet Lift</td>
+-				        <td>Closed</td>
+-				        <td></td>
+-				        <td></td>
+-				    </tr>
+-			    </tbody>
+-			</table>
++</ul></div>
++</div></div>
++					
++					<!-- Related Modules -->
++					<div class="d-none d-lg-flex align-items-center header-modules">
++						
++											</div>
++					
++					
++					
++					<!-- if offcanvas position right -->
++											<a id="offcanvas-toggler"  aria-label="Menu" title="Menu"  class="mega_offcanvas ms-3 offcanvas-toggler-secondary offcanvas-toggler-right d-flex align-items-center" href="#"><div class="burger-icon"><span></span><span></span><span></span></div></a>
++							
++
++					<!-- Modal menu toggler -->
++					<a id="modal-menu-toggler" aria-label="Menu" title="Menu" class="ms-3" href="#">
++						<div class="burger-icon">
++							<span></span>
++							<span></span>
++							<span></span>
++						</div>
++					</a>
++
++					<!-- Modal menu -->
++					<div id="modal-menu" class="modal-menu has-bg">
++						<div class="modal-menu-inner">
++							<div class="container align-items-stretch">
++								<nav class="sp-megamenu-wrapper d-flex" role="navigation"><ul class="sp-megamenu-parent menu-animation-fade-up d-none d-lg-block"><li class="sp-menu-item sp-has-child active"><span  class=" sp-menu-heading"  >Mountain</span><div class="sp-dropdown sp-dropdown-main sp-menu-right" style="width: 240px;"><div class="sp-dropdown-inner"><ul class="sp-dropdown-items"><li class="sp-menu-item"><a   href="/mountain/hours-of-operation"  >Hours of Operation</a></li><li class="sp-menu-item"><a   href="/mountain/mountain-facts"  >Mountain Facts</a></li><li class="sp-menu-item current-item active"><a aria-current="page"  href="/real-time-snow-report-mountain-conditions-winterplace"  >Snow Report</a></li><li class="sp-menu-item"><a   href="/mountain/trail-map"  >Trail Map</a></li><li class="sp-menu-item"><a   href="/mountain/terrain-parks"  >Terrain Parks</a></li><li class="sp-menu-item"><a   href="/mountain/be-safe-on-the-mountain"  >Be Safe On The Mountain</a></li><li class="sp-menu-item"><a   href="/mountain/mountainhouse-cam"  >Mountain House Cam</a></li><li class="sp-menu-item"><a   href="/mountain/resort-center-cam"  >Resort Center Cam</a></li></ul></div></div></li><li class="sp-menu-item sp-has-child"><span  class=" sp-menu-heading"  >Tickets / Passes</span><div class="sp-dropdown sp-dropdown-main sp-menu-right" style="width: 240px;"><div class="sp-dropdown-inner"><ul class="sp-dropdown-items"><li class="sp-menu-item"><a   href="/tickets-passes/lift-tickets"  >Lift Tickets</a></li><li class="sp-menu-item"><a   href="/tickets-passes/rentals"  >Rentals</a></li><li class="sp-menu-item"><a   href="/tickets-passes/season-passes"  >Season Passes</a></li><li class="sp-menu-item"><a   href="/tickets-passes/club-program"  >4 Week Program</a></li><li class="sp-menu-item"><a   href="/tickets-passes/deals"  >Deals</a></li><li class="sp-menu-item"><a   href="/tickets-passes/gift-cards"  >Gift Cards</a></li></ul></div></div></li><li class="sp-menu-item sp-has-child"><span  class=" sp-menu-heading"  >Snowtubing</span><div class="sp-dropdown sp-dropdown-main sp-menu-right" style="width: 240px;"><div class="sp-dropdown-inner"><ul class="sp-dropdown-items"><li class="sp-menu-item"><a   href="/snowtubing/snowtubing-tickets"  >Snowtubing Tickets</a></li><li class="sp-menu-item"><a   href="/snowtubing/hours-of-operation"  >Tubing Hours of Operation</a></li><li class="sp-menu-item"><a   href="/snowtubing/snowtubing-group-rates"  >Snowtubing Group Rates</a></li></ul></div></div></li><li class="sp-menu-item sp-has-child"><span  class=" sp-menu-heading"  >Learn to</span><div class="sp-dropdown sp-dropdown-main sp-menu-right" style="width: 240px;"><div class="sp-dropdown-inner"><ul class="sp-dropdown-items"><li class="sp-menu-item"><a   href="/learn-to/first-timers-guide"  >First Timer's Guide</a></li><li class="sp-menu-item"><a   href="/learn-to/take-a-lesson"  >Take A Lesson</a></li><li class="sp-menu-item"><a   href="/learn-to/skiwee-snow-explorers"  >SkiWee &amp; Snow Explorers</a></li><li class="sp-menu-item"><a   href="/learn-to/learning-area"  >Learning Area</a></li><li class="sp-menu-item"><a   href="/learn-to/development-race-team"  >Developmental Racing</a></li></ul></div></div></li><li class="sp-menu-item sp-has-child"><span  class=" sp-menu-heading"  >Planning</span><div class="sp-dropdown sp-dropdown-main sp-menu-right" style="width: 240px;"><div class="sp-dropdown-inner"><ul class="sp-dropdown-items"><li class="sp-menu-item"><a   href="/planning/calendar"  >Calendar of Events</a></li><li class="sp-menu-item"><a   href="/getting-here"  >Getting Here</a></li><li class="sp-menu-item"><a   href="/planning/lodging"  >Lodging</a></li><li class="sp-menu-item"><a   href="/planning/summer-event-rental"  >Summer Event Rental</a></li></ul></div></div></li><li class="sp-menu-item sp-has-child"><span  class=" sp-menu-heading"  >Groups</span><div class="sp-dropdown sp-dropdown-main sp-menu-right" style="width: 240px;"><div class="sp-dropdown-inner"><ul class="sp-dropdown-items"><li class="sp-menu-item"><a   href="/groups/ski-board-group-rates"  >Ski/Board Group Rates</a></li><li class="sp-menu-item"><a   href="/snowtubing/snowtubing-group-rates"  >Snowtubing Group Rates</a></li><li class="sp-menu-item"><a   href="/groups/forms-information"  >Forms &amp; Information</a></li><li class="sp-menu-item"><a   href="/groups/scouts"  >Scouts</a></li></ul></div></div></li><li class="sp-menu-item sp-has-child"><span  class=" sp-menu-heading"  >Info</span><div class="sp-dropdown sp-dropdown-main sp-menu-right" style="width: 240px;"><div class="sp-dropdown-inner"><ul class="sp-dropdown-items"><li class="sp-menu-item"><a   href="/info/faqs"  >FAQs</a></li><li class="sp-menu-item"><a   href="/info/dining-and-entertainment"  >Dining and Entertainment</a></li><li class="sp-menu-item"><a   href="/info/email-sign-up"  >Email Sign Up</a></li><li class="sp-menu-item"><a   href="/info/media-centers"  >Media Center</a></li><li class="sp-menu-item"><a   href="/info/employment"  >Employment</a></li></ul></div></div></li></ul><a id="offcanvas-toggler" aria-label="Menu" class="offcanvas-toggler-right" href="#"><div class="burger-icon" aria-hidden="true"><span></span><span></span><span></span></div></a></nav>								<div>
++									
++																	</div>
++							</div>
++						</div>
++					</div>
++				</div>
++			</div>
+ 		</div>
+ 	</div>
+-	<div class="row">
+-		<div class="col-lg-12">
+-			<p class="alert">&quot;CAUTION - you are entering a winter environment. Conditions change rapidly, please be aware of wet and slick surfaces.&quot;</p>
+-		</div>
++</header>				
++<section id="sp-section-1" >
++
++				
++	
++<div class="row">
++	<div id="sp-title" class="col-lg-12 "><div class="sp-column "><div class="sp-page-title"style="background-image: url(/images/Winterplace2024-77_copy.jpg#joomlaImage://local-images/Winterplace2024-77_copy.jpg);"><div class="container"><h1 class="sp-page-title-heading">Snow Report</h1></div></div></div></div></div>
++				
++	</section>
++
++<section id="sp-main-body" >
++
++										<div class="container">
++					<div class="container-inner">
++						
++	
++<div class="row">
++	
++<div id="sp-component" class="col-lg-12 ">
++	<div class="sp-column ">
++		<div id="system-message-container" aria-live="polite">
+ 	</div>
+ 
+-  		</div><!-- end content -->
+-  	</div><!-- end wrapper-->
+-  	<div class="footer">
+-	  	<footer role="main Footer">
+-			<div class="row">
+-				<div class="col-lg-8">
+-					<h3>One Call Does It All <a href="tel: 1-800-607-7669" title="Winterplace Phone Number">1-800-607-SNOW (7669)</a></h3>
++
++					<div class="sp-module-content-top clearfix">
++				<div class="sp-module "><div class="sp-module-content">
++<div id="mod-custom133" class="mod-custom custom">
++    </div>
++
++
++<h3 class="sp-module-title">Snow Report</h3>
++
++<div class="row current-cond">
++    <div class="col-12">
++        <p class="time">Sunday, Mar 08, 2026, 08:30 am</p>
++
++        <h3>Current Conditions</h3>
++    </div>
++    <div class="col-3">
++        <p class="newnatural">New Natural Snow:</strong> 0"</p>
++        <p class="snowbase">Snow Base:</strong> 0</p>
++        <p class="snowmaking">Snowmaking:</strong> No</p>
++
++    </div>
++    <div class="col-3">
++        <p class="trailsoption">Trails Open:</strong> 0 of 28</p>
++        <p class="liftopen">Lifts Open:</strong> 0 of 11</p>
++    </div>
++    </div>
++    <div class="row">
++    <div class="col-12">
++        <h3>Weather Conditions</h3>
++        <div class="col-3">
++            <p class="currenttemp">Current Temperature::</strong> 0&deg; F</p>
++            <p class="templow">Temperature Hi:</strong> 0&deg; F</p>
++            <p class="temphigh">Temperature Lo:</strong> 0 &deg; F</p>
++        </div>
++    </div>
++
++</div>
++
++<div class="row">
++    <div class="col-12">
++        <h3>Comments</h3>
++        <p class="temphigh">Comments:</strong> <p>Closed for the Season! Thank you to all our 2025/2026 Guests!!&nbsp;</p></p>
++
++    </div>
++</div>
++
++<div class="trail-status">
++        <h3>Trail Status</h3>
++        <div class="row">
++            <div class="col-6">
++                
++    <table class="table table-striped snowtable1">
++                    <thead>
++                <tr>
++                    <td colspan="2" class="difficulty-level" style="display:flex;">
++                        <img src="https://www.winterplace.com/img/easiest.gif" border="0"  alt="EASIEST">                        <strong>EASIEST</strong>
++                    </td>
++                    <td></td>
++                </tr>
++            </thead>
++                <tbody>
++                    <tr>
++            <td>Buttermilk</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Country Roads</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Compromise</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Easy Street</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Glades</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Last Chance</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Last Run</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Meadows</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>No Problem</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Over Easy</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Panorama</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Snowfield</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Wanderer</td>
++            <td>Closed</td>
++        </tr>
++            </tbody>
++    </table>
++
++            </div>
++            <div class="col-6">
++                
++    <table class="table table-striped snowtable1">
++                    <thead>
++                <tr>
++                    <td colspan="2" class="difficulty-level" style="display:flex;">
++                        <img src="https://www.winterplace.com/img/most.gif" border="0" width="24px" height="24px" align="absmiddle" alt="most">                        <strong>MOST DIFFICULT</strong>
++                    </td>
++                    <td></td>
++                </tr>
++            </thead>
++                <tbody>
++                    <tr>
++            <td>Plunge</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Nose Dive</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Turkey Chute</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Snow Bowl</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Drop Off</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Rendezvous</td>
++            <td>Closed</td>
++        </tr>
++            </tbody>
++    </table>
++
++            </div>
++        </div>
++    
++</div>
++<div class="trail-status">
++    <div class="row">
++        <div class="col-6">
++            
++    <table class="table table-striped snowtable1">
++                    <thead>
++                <tr>
++                    <td colspan="2" class="difficulty-level" style="display:flex;">
++                        <img src="https://www.winterplace.com/img/more.gif" border="0" width="24px" height="24px" align="absmiddle" alt="more">                        <strong>MORE DIFFICULT</strong>
++                    </td>
++                    <td></td>
++                </tr>
++            </thead>
++                <tbody>
++                    <tr>
++            <td>Cascade</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Hickory</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Look at Me!</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Milkshake</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Rendezvous Too</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Ridge Runner</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Wood's Run</td>
++            <td>Closed</td>
++        </tr>
++            </tbody>
++    </table>
++
++        </div>
++        <div class="col-6">
++            
++    <table class="table table-striped snowtable1">
++                    <thead>
++                <tr>
++                    <td colspan="2" class="difficulty-level" style="display:flex;">
++                        <img src="https://www.winterplace.com/img/terrain.gif" border="0" width="24px" height="24px" align="absmiddle" alt="more">                        <strong>TERRAIN PARKS</strong>
++                    </td>
++                    <td></td>
++                </tr>
++            </thead>
++                <tbody>
++                    <tr>
++            <td>Heaven Holler</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Fire Tower</td>
++            <td>Closed</td>
++        </tr>
++            </tbody>
++    </table>
++
++        </div>
++    </div>
++</div>
++
++<div class="trail-status">
++        <h3 class="snowtub">Snowtubing</h3>
++    
++    <table class="table table-striped snowtable1">
++                <tbody>
++                    <tr>
++            <td>Snowtubing Park</td>
++            <td>Closed</td>
++        </tr>
++            </tbody>
++    </table>
++
++</div>
++<div class="trail-status">
++        <h3>Lift Status</h3>
++    
++    <table class="table table-striped snowtable1">
++                    <thead>
++                <tr>
++                    <td colspan="2" class="difficulty-level" style="display:flex;">
++                                                <strong> </strong>
++                    </td>
++                    <td></td>
++                </tr>
++            </thead>
++                <tbody>
++                    <tr>
++            <td>Lift #1 Double Chairlift</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #2 Triple Chairlift</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #3 Triple Chairlift</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #4 Triple Chairlift</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #5 Double Chairlift</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #6 Carpet Lift</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #8 Quad Chairlift</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #9 Quad Chairlift</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #12 Ski-Wee Carpet</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #11 Tubing Carpet</td>
++            <td>Closed</td>
++        </tr>
++            <tr>
++            <td>Lift #10 Tubing Carpet</td>
++            <td>Closed</td>
++        </tr>
++            </tbody>
++    </table>
++
++</div>
++
++<div>
++        <p class="text-danger">"CAUTION - you are entering a winter environment. Conditions change rapidly, please be aware of wet and slick surfaces."</p>
++        <p>Though we take every precaution when doing daily maintenance to lifts and conveyors to keep spillage to a minimum, there will be occasions in which grease or light debris will drop from the lifts. Please know this is a risk that is inherent to the sport and Winterplace is not responsible for stains or grease on garments or ski or snowboard equipment.</p>
++</div>
++
++<p class="row"><a class="pdfDownload h4 semi-condensed uppercase" href="https://winterplace.com/snowpdf.php" target="_blank" rel="noopener"><strong>Download PDF</strong></a></p>
++
++    <style>.trail-status .snowtub {
++    border-bottom: 3px solid #C20005;
++    /* background: linear-gradient(#FFF 0 0) padding-box, linear-gradient(to right, #C20005, #A419F8) border-box; */
++}</style>
++
++</div></div>
++			</div>
++		
++		<div class="article-details  title-bg-right" itemscope itemtype="https://schema.org/Article">
++	<meta itemprop="inLanguage" content="en-GB">
++			<div class="page-header">
++			<h1>Real-Time Snow Report</h1>
++		</div>
++			
++	
++					
++		
++		
++		<div class="article-can-edit d-flex flex-wrap justify-content-between">
+ 				</div>
+-				<div class="col-lg-4">
+-					<h3>Email Sign Up <a href="http://www.winterplace.com/email-sign-up" title="Join Now"><span class="fa fa-chevron-right fa-fw"></span> Join Now</a></h3>
++			
++		
++			
++		
++		
++	
++	<div itemprop="articleBody">
++		 	</div>
++
++	
++	
++	
++			
++		
++	
++
++	
+ 				</div>
++
+ 			</div>
+-			<div class="row">
+-				<div class="col-lg-2">
+-<h3>
+-The Mountain</h3>
+-
+-<ul>
+-<li><a href="mountain-safety">Mountain Safety</a></li>
+-<li><a href="http://winterplace.com/gallery">Photo Gallery</a></li>
+-<li><a href="http://winterplace.com/video-gallery">Video Gallery</a></li>
+-<li><a href="http://winterplace.com/snow-report">Snow Report</a></li>
+-<li><a href="terrain-park">Terrain Park</a></li>
+-<li><a href="trail-map">Trail Map</a></li>
+-<li><a href="snow-tubing-hours-rates">Snow Tubing Hours & Rates</a></li>
+-<li><a href="dining-and-entertainment">Dining and Entertainment</a></li>
+-<li><a href="summer-activities">Summer Activities</a></li>
+-</ul>
+-</div>
+-<div class="col-lg-2">
+-<h3>
+-Trip Planning</h3>
+-
+-<ul>
+-<li><a href="lift-tickets-rentals">Lift Tickets & Rentals</a></li>
+-<li><a href="hours-of-operation">Hours of Operation</a></li>
+-<li><a href="take-a-lesson">Take A Lesson</a></li>
+-<li><a href="group-rates">Group Rates</a></li>
+-<li><a href="snow-tubing-hours-rates">Snow Tubing Hours & Rates</a></li>
+-<li><a href="season-passes">Season Passes</a></li>
+-<li><a href="gift-ideas">Gift Ideas</a></li>
+-<li><a href="getting-here">Getting Here</a></li>
+-<li><a href="lodging">Lodging</a></li>
+-<li><a href="ski-free-deals">Ski Free & Deals</a></li>
+-<li><a href="logo-gear">Logo Gear</a></li>
+-<li><a href="summer-activities">Summer Activities</a></li>
+-</ul>
+-</div>
+-<div class="col-lg-2">
+-<h3>
+-Bring A Group</h3>
+-
+-<ul>
+-<li><a href="skiride-group-rates">Ski/Ride Group Rates</a></li>
+-<li><a href="snow-tubing-group-rates">Snow Tubing Group Rates</a></li>
+-<li><a href="group-deals">Group Deals</a></li>
+-<li><a href="scouts-on-skis">Scouts on Skis!</a></li>
+-<li><a href="lodging">Lodging</a></li>
+-<li><a href="getting-here">Getting Here</a></li>
+-</ul>
+-</div>
+-<div class="col-lg-2">
+-<h3>
+-Snow Tubing</h3>
+-
+-<ul>
+-<li><a href="snow-tubing-hours-rates">Snow Tubing Hours & Rates</a></li>
+-<li><a href="snow-tubing-group-rates">Snow Tubing Group Rates</a></li>
+-<li><a href="getting-here">Getting Here</a></li>
+-</ul>
+-</div>
+-<div class="col-lg-2">
+-<h3>
+-News & Info</h3>
+-
+-<ul>
+-<li><a href="http://winterplace.com/in-the-news">In The News</a></li>
+-<li><a href="http://winterplace.com/events">Event Calendar</a></li>
+-<li><a href="email-sign-up">Email Sign Up</a></li>
+-<li><a href="http://winterplace.com/online-survey">Online Survey</a></li>
+-<li><a href="winterplace-app">Winterplace App</a></li>
+-<li><a href="employment">Employment</a></li>
+-<li><a href="media-center">Media Center</a></li>
+-</ul>
+-</div>
+-<div class="col-lg-2">
+-<h3>
+-Learn to Ski & Board</h3>
+-
+-<ul>
+-<li><a href="tips-for-you">Tips For You</a></li>
+-<li><a href="where-to-go">Where To Go</a></li>
+-<li><a href="beginner-terrain">Beginner Terrain</a></li>
+-<li><a href="take-a-lesson">Take A Lesson</a></li>
+-<li><a href="skiwee-program">SkiWee Program</a></li>
+-<li><a href="day-care">Day Care</a></li>
+-<li><a href="ski-tips-for-kids">Ski Tips For Kids</a></li>
+-<li><a href="responsibility-code">Responsibility Code</a></li>
+-</ul>
+-</div>
+-												</div>
+-			<div class="row">
+-				<div class="col-lg-8">
+-					<p>Location: Five Minutes Off I-77 at Exit 28 | Ghent / Flat Top, West Virginia</p>
+-					<p>Winterplace Ski Resort, 100 Old Flat Top Mt. Rd., Ghent, WV 25843 | Mailing Address: P.O. Box 1, Flat Top, WV 25841</p>
++</div>
++</div>
++											</div>
+ 				</div>
+-				<div class="col-lg-4">
+-					<div>
+-						<a href="http://www.facebook.com/winterplaceskiresort" title="Facebook: Winterplace" target="_blank"><span class="fa fa-facebook"></span></a>
+-						<a href="https://twitter.com/winterplacewv" title="Twitter: Winterplace" target="_blank"><span class="fa fa-twitter"></span></a>
+-						<a href="https://plus.google.com/117778137389954954835/posts" title="Google+: Winterplace" target="_blank"><span class="fa fa-google-plus"></span></a>
+-						<a href="http://www.youtube.com/winterplaceskiresort" title="YouTube: Winterplace" target="_blank"><span class="fa fa-youtube"></span></a>
+-						<a href="http://pinterest.com/winterplace/" title="Pinterest: Winterplace" target="_blank"><span class="fa fa-pinterest"></span></a>
+-						<a href="http://instagram.com/winterplacewv" title="Instagram: Winterplace" target="_blank"><span class="fa fa-instagram"></span></a>
+-						<a href="http://wvtourism.com/" title="West Virginia Tourism" target="_blank">West Virginia Tourism</a>
+-					</div>
+-					<ul>
+-<li><a href="http://www.winterplace.com/privacy-policy">Privacy Policy</a></li>
+-<li><a href="http://winterplace.com/contact-us">Contact Us</a></li>
+-<li><a href="http://www.winterplace.com/donation-request">Donation Request</a></li>
+-<li><a href="http://www.epopstudio.com">Site</a></li>
+-</ul>
+-													</div>
++						
++	</section>
++
++<section id="sp-bottom" >
++
++						<div class="container">
++				<div class="container-inner">
++			
++	
++<div class="row">
++	<div id="sp-bottom1" class="col-sm-col-sm-6 col-lg-5 "><div class="sp-column "><div class="sp-module contact-phone"><div class="sp-module-content">
++<div id="mod-custom127" class="mod-custom custom">
++    <p><a href="tel:1-800-607-SNOW">1-800-607-SNOW</a></p></div>
++</div></div><div class="sp-module  email-signup"><h3 class="sp-module-title">Email Signup</h3><div class="sp-module-content">
++<div id="mod-custom126" class="mod-custom custom">
++    <p>Be the first to know about news, events and SNOW!</p>
++<form action="signup.php" method="post">
++<p><input name="email" type="email" id="signuppush_email" class="input-email" placeholder="ENTER EMAIL" /> <input name="first_name" type="hidden" value="" /> <input name="last_name" type="hidden" value="" /></p>
++<p><input type="submit" value="Sign Up" id="signuppush" class="input-submit sppb-btn-primary sppb-btn-outline sppb-btn" /></p>
++</form>
++<div class="toast">
++<div class="toast-header"><button type="button" class="btn-close" data-bs-dismiss="toast"></button></div>
++<div class="toast-body">&nbsp;</div>
++</div></div>
++</div></div><div class="sp-module "><div class="sp-module-content">
++<div id="mod-custom112" class="mod-custom custom">
++    <h3 class="sp-module-title">Location</h3>
++<p>Five Minutes Off I-77 at Exit 28 <br />Ghent/Flat Top, West Virginia</p>
++<p>Winterplace Ski Resort, 100 Old Flat Top Mt. Rd., Ghent, WV 25843&nbsp;<br />Mailing Address: P.O. Box 1, Flat Top, WV 25841</p></div>
++</div></div></div></div><div id="sp-bottom2" class="col-sm-col-sm-6 col-lg-4 "><div class="sp-column "><div class="sp-module  footer-nav"><div class="sp-module-content"><div class="accordeonck-wrap " data-id="accordeonck128">
++<ul class="menu" id="accordeonck128">
++<li id="item-144" class="accordeonck headingck item144 active first parent parent level1 " data-level="1" ><span class="accordeonck_outer toggler toggler_1"><a class="accordeonck isactive " href="javascript:void(0);" >Mountain<span class="accordeonckdesc"></span></a><span class="toggler_icon" tabIndex="0" role="button" aria-label="ACCORDEONMENUCK_TOGGLER_LABEL"></span></span><ul class="content_1 accordeonck" style=""><li id="item-186" class="accordeonck item186 first level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/mountain/hours-of-operation" >Hours of Operation<span class="accordeonckdesc"></span></a></span></li><li id="item-147" class="accordeonck item147 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/mountain/mountain-facts" >Mountain Facts<span class="accordeonckdesc"></span></a></span></li><li id="item-148" class="accordeonck item148 current active level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck isactive " href="/real-time-snow-report-mountain-conditions-winterplace" >Snow Report<span class="accordeonckdesc"></span></a></span></li><li id="item-149" class="accordeonck item149 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/mountain/trail-map" >Trail Map<span class="accordeonckdesc"></span></a></span></li><li id="item-150" class="accordeonck item150 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/mountain/terrain-parks" >Terrain Parks<span class="accordeonckdesc"></span></a></span></li><li id="item-151" class="accordeonck item151 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/mountain/be-safe-on-the-mountain" >Be Safe On The Mountain<span class="accordeonckdesc"></span></a></span></li><li id="item-154" class="accordeonck item154 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/mountain/mountainhouse-cam" >Mountain House Cam<span class="accordeonckdesc"></span></a></span></li><li id="item-153" class="accordeonck item153 last level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/mountain/resort-center-cam" >Resort Center Cam<span class="accordeonckdesc"></span></a></span></li></ul></li><li id="item-145" class="accordeonck headingck item145 parent parent level1 " data-level="1" ><span class="accordeonck_outer toggler toggler_1"><a class="accordeonck " href="javascript:void(0);" >Tickets / Passes<span class="accordeonckdesc"></span></a><span class="toggler_icon" tabIndex="0" role="button" aria-label="ACCORDEONMENUCK_TOGGLER_LABEL"></span></span><ul class="content_1 accordeonck" style="display:none;"><li id="item-160" class="accordeonck item160 first level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/tickets-passes/lift-tickets" >Lift Tickets<span class="accordeonckdesc"></span></a></span></li><li id="item-161" class="accordeonck item161 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/tickets-passes/rentals" >Rentals<span class="accordeonckdesc"></span></a></span></li><li id="item-162" class="accordeonck item162 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/tickets-passes/season-passes" >Season Passes<span class="accordeonckdesc"></span></a></span></li><li id="item-163" class="accordeonck item163 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/tickets-passes/club-program" >4 Week Program<span class="accordeonckdesc"></span></a></span></li><li id="item-165" class="accordeonck item165 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/tickets-passes/deals" >Deals<span class="accordeonckdesc"></span></a></span></li><li id="item-164" class="accordeonck item164 last level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/tickets-passes/gift-cards" >Gift Cards<span class="accordeonckdesc"></span></a></span></li></ul></li><li id="item-146" class="accordeonck headingck item146 parent parent level1 " data-level="1" ><span class="accordeonck_outer toggler toggler_1"><a class="accordeonck " href="javascript:void(0);" >Snowtubing<span class="accordeonckdesc"></span></a><span class="toggler_icon" tabIndex="0" role="button" aria-label="ACCORDEONMENUCK_TOGGLER_LABEL"></span></span><ul class="content_1 accordeonck" style="display:none;"><li id="item-175" class="accordeonck item175 first level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/snowtubing/snowtubing-tickets" >Snowtubing Tickets<span class="accordeonckdesc"></span></a></span></li><li id="item-176" class="accordeonck item176 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/snowtubing/hours-of-operation" >Tubing Hours of Operation<span class="accordeonckdesc"></span></a></span></li><li id="item-177" class="accordeonck item177 last level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/snowtubing/snowtubing-group-rates" >Snowtubing Group Rates<span class="accordeonckdesc"></span></a></span></li></ul></li><li id="item-179" class="accordeonck headingck item179 parent parent level1 " data-level="1" ><span class="accordeonck_outer toggler toggler_1"><a class="accordeonck " href="javascript:void(0);" >Learn to<span class="accordeonckdesc"></span></a><span class="toggler_icon" tabIndex="0" role="button" aria-label="ACCORDEONMENUCK_TOGGLER_LABEL"></span></span><ul class="content_1 accordeonck" style="display:none;"><li id="item-181" class="accordeonck item181 first level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/learn-to/first-timers-guide" >First Timer's Guide<span class="accordeonckdesc"></span></a></span></li><li id="item-182" class="accordeonck item182 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/learn-to/take-a-lesson" >Take A Lesson<span class="accordeonckdesc"></span></a></span></li><li id="item-183" class="accordeonck item183 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/learn-to/skiwee-snow-explorers" >SkiWee &amp; Snow Explorers<span class="accordeonckdesc"></span></a></span></li><li id="item-184" class="accordeonck item184 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/learn-to/learning-area" >Learning Area<span class="accordeonckdesc"></span></a></span></li><li id="item-185" class="accordeonck item185 last level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/learn-to/development-race-team" >Developmental Racing<span class="accordeonckdesc"></span></a></span></li></ul></li><li id="item-180" class="accordeonck headingck item180 parent parent level1 " data-level="1" ><span class="accordeonck_outer toggler toggler_1"><a class="accordeonck " href="javascript:void(0);" >Planning<span class="accordeonckdesc"></span></a><span class="toggler_icon" tabIndex="0" role="button" aria-label="ACCORDEONMENUCK_TOGGLER_LABEL"></span></span><ul class="content_1 accordeonck" style="display:none;"><li id="item-272" class="accordeonck item272 first level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/planning/calendar" >Calendar of Events<span class="accordeonckdesc"></span></a></span></li><li id="item-188" class="accordeonck item188 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/getting-here" >Getting Here<span class="accordeonckdesc"></span></a></span></li><li id="item-189" class="accordeonck item189 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/planning/lodging" >Lodging<span class="accordeonckdesc"></span></a></span></li><li id="item-190" class="accordeonck item190 last level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/planning/summer-event-rental" >Summer Event Rental<span class="accordeonckdesc"></span></a></span></li></ul></li><li id="item-191" class="accordeonck headingck item191 parent parent level1 " data-level="1" ><span class="accordeonck_outer toggler toggler_1"><a class="accordeonck " href="javascript:void(0);" >Groups<span class="accordeonckdesc"></span></a><span class="toggler_icon" tabIndex="0" role="button" aria-label="ACCORDEONMENUCK_TOGGLER_LABEL"></span></span><ul class="content_1 accordeonck" style="display:none;"><li id="item-192" class="accordeonck item192 first level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/groups/ski-board-group-rates" >Ski/Board Group Rates<span class="accordeonckdesc"></span></a></span></li><li id="item-193" class="accordeonck item193 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/snowtubing/snowtubing-group-rates" >Snowtubing Group Rates<span class="accordeonckdesc"></span></a></span></li><li id="item-195" class="accordeonck item195 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/groups/forms-information" >Forms &amp; Information<span class="accordeonckdesc"></span></a></span></li><li id="item-196" class="accordeonck item196 last level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/groups/scouts" >Scouts<span class="accordeonckdesc"></span></a></span></li></ul></li><li id="item-206" class="accordeonck headingck item206 parent parent level1 " data-level="1" ><span class="accordeonck_outer toggler toggler_1"><a class="accordeonck " href="javascript:void(0);" >Info<span class="accordeonckdesc"></span></a><span class="toggler_icon" tabIndex="0" role="button" aria-label="ACCORDEONMENUCK_TOGGLER_LABEL"></span></span><ul class="content_1 accordeonck" style="display:none;"><li id="item-209" class="accordeonck item209 first first level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/info/faqs" >FAQs<span class="accordeonckdesc"></span></a></span></li><li id="item-212" class="accordeonck item212 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/info/dining-and-entertainment" >Dining and Entertainment<span class="accordeonckdesc"></span></a></span></li><li id="item-214" class="accordeonck item214 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/info/email-sign-up" >Email Sign Up<span class="accordeonckdesc"></span></a></span></li><li id="item-213" class="accordeonck item213 level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/info/media-centers" >Media Center<span class="accordeonckdesc"></span></a></span></li><li id="item-207" class="accordeonck item207 last level2 " data-level="2" ><span class="accordeonck_outer "><a class="accordeonck " href="/info/employment" >Employment<span class="accordeonckdesc"></span></a></span></li></ul></li></ul></div>
++</div></div><div class="sp-module "><div class="sp-module-content">
++<div id="mod-custom142" class="mod-custom custom">
++    <p><img src="/images/IndyPass_ProudPartner.png" alt="IndyPass ProudPartner" width="250" height="auto" /></p></div>
++</div></div></div></div><div id="sp-bottom3" class="col-lg-3 "><div class="sp-column "><div class="sp-module  quick-menu-links"><h3 class="sp-module-title">Quicklinks</h3><div class="sp-module-content"><ul class="menu">
++<li class="item-131"><a href="/contact-us" >CONTACT</a></li><li class="item-133"><a href="/donation-request" >DONATION  REQUEST</a></li><li class="item-134"><a href="/waivers" >Waivers</a></li><li class="item-137"><a href="/lost-and-found" >Lost Item</a></li><li class="item-141"><a href="/getting-here" >Directions</a></li><li class="item-138"><a href="/privacy-policy" >Privacy Policy</a></li><li class="item-139"><a href="/terms-conditions" >Terms &amp; Conditions</a></li><li class="item-268"><a href="/mountain/be-safe-on-the-mountain" >Mountain Safety</a></li><li class="item-140"><a href="/info/employment" >Employment</a></li></ul>
++</div></div></div></div></div>
++							</div>
++			</div>
++			
++	</section>
++
++<footer id="sp-footer" >
++
++						<div class="container">
++				<div class="container-inner">
++			
++	
++<div class="row">
++	<div id="sp-footer1" class="col-lg-4 "><div class="sp-column "><div class="sp-module winter-footer"><div class="sp-module-content">
++<div id="mod-custom115" class="mod-custom custom">
++    <div><a href="/"><img src="/images/winter-white-logo.png" alt="winter white logo" width="204" height="71" /></a></div></div>
++</div></div></div></div><div id="sp-footer2" class="col-lg-4 "><div class="sp-column "><div class="sp-module "><div class="sp-module-content"><div class="mod-sppagebuilder  sp-page-builder" data-module_id="116">
++	<div class="page-content">
++		<section id="section-id-600b9b97-d8cc-4f35-bcb6-2fc14cfa12a3" class="sppb-section" ><div class="sppb-row-container"><div class="sppb-row"><div class="sppb-row-column  " id="column-wrap-id-601963d9-9ad6-4dde-9886-11b1265c1a06"><div id="column-id-601963d9-9ad6-4dde-9886-11b1265c1a06" class="sppb-column " ><div class="sppb-column-addons"><div id="sppb-addon-wrapper-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6" class="sppb-addon-wrapper  addon-root-icons-group"><div id="sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6" class="clearfix  "     ><div class="sppb-addon sppb-addon-icons-group  icons-group-title-postion-top"><ul class="sppb-icons-group-list"><li id="icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61" class=""><a href="https://www.facebook.com/winterplaceskiresort" aria-label="FB" target="_blank"><i class="fab fa-facebook-square " aria-hidden="true" title="FB"></i><span class="sppb-form-label-visually-hidden">FB</span></a></li><li id="icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62" class=""><a href="https://www.tiktok.com/@skiwinterplace" aria-label="Twitter" target="_blank"><i class="fab fa-tiktok " aria-hidden="true" title="Twitter"></i><span class="sppb-form-label-visually-hidden">Twitter</span></a></li><li id="icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63" class=""><a href="https://www.instagram.com/skiwinterplace/?igshid=YmMyMTA2M2Y%3D" aria-label="Instagram" target="_blank"><i class="fab fa-instagram " aria-hidden="true" title="Instagram"></i><span class="sppb-form-label-visually-hidden">Instagram</span></a></li><li id="icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64" class=""><a href="https://www.youtube.com/winterplaceskiresort" aria-label="YT" target="_blank"><i class="fab fa-youtube " aria-hidden="true" title="YT"></i><span class="sppb-form-label-visually-hidden">YT</span></a></li></ul></div><style type="text/css">#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6{
++box-shadow: 0 0 0 0 #FFFFFF;
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6{
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6{}}#sppb-addon-wrapper-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6{
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-addon-title{
++}</style><style type="text/css">#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{
++margin: 15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{
++margin: -15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{
++font-size: 34px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{
++height: 45px;
++padding-top: 10px;
++padding-right: 10px;
++padding-bottom: 10px;
++padding-left: 10px;
++width: 45px;
++color: rgba(255, 255, 255, 0.8);
++border-style: none;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 .sppb-icons-label-text{
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61{
++display: inline-block;
++font-size: 34px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 .sppb-icons-label-text{
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 .sppb-icons-label-text{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 .sppb-icons-label-text{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 .sppb-icons-label-text{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 .sppb-icons-label-text{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a:hover{
++color: #FFFFFF;
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{
++margin: 15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c61 a{}}
++#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{
++margin: 15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{
++margin: -15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{
++font-size: 34px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{
++height: 45px;
++padding-top: 10px;
++padding-right: 10px;
++padding-bottom: 10px;
++padding-left: 10px;
++width: 45px;
++color: rgba(255, 255, 255, 0.8);
++border-style: none;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 .sppb-icons-label-text{
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62{
++display: inline-block;
++font-size: 34px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 .sppb-icons-label-text{
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 .sppb-icons-label-text{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 .sppb-icons-label-text{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 .sppb-icons-label-text{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 .sppb-icons-label-text{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a:hover{
++color: #FFFFFF;
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{
++margin: 15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c62 a{}}
++#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{
++margin: 15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{
++margin: -15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{
++font-size: 34px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{
++height: 45px;
++padding-top: 10px;
++padding-right: 10px;
++padding-bottom: 10px;
++padding-left: 10px;
++width: 45px;
++color: rgba(255, 255, 255, 0.8);
++border-style: none;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 .sppb-icons-label-text{
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63{
++display: inline-block;
++font-size: 34px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 .sppb-icons-label-text{
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 .sppb-icons-label-text{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 .sppb-icons-label-text{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 .sppb-icons-label-text{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 .sppb-icons-label-text{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a:hover{
++color: #FFFFFF;
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{
++margin: 15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c63 a{}}
++#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{
++margin: 15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{
++margin: -15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{
++font-size: 34px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{
++height: 45px;
++padding-top: 10px;
++padding-right: 10px;
++padding-bottom: 10px;
++padding-left: 10px;
++width: 45px;
++color: rgba(255, 255, 255, 0.8);
++border-style: none;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 .sppb-icons-label-text{
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64{
++display: inline-block;
++font-size: 34px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 .sppb-icons-label-text{
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 .sppb-icons-label-text{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 .sppb-icons-label-text{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 .sppb-icons-label-text{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 .sppb-icons-label-text{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a:hover{
++color: #FFFFFF;
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{
++margin: 15px;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list li#icon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c64 a{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-addon-icons-group{
++text-align: center;
++}
++@media (max-width: 1199.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-addon-icons-group{}}
++@media (max-width: 991.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-addon-icons-group{}}
++@media (max-width: 767.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-addon-icons-group{}}
++@media (max-width: 575.98px) {#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-addon-icons-group{}}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-addon-title{
++}#sppb-addon-beafc9d5-6331-4f8a-af8e-8cdbdc5617c6 .sppb-icons-group-list{ transform-origin: 50% 50%; }</style></div></div></div></div></div></div></div></section><style type="text/css">.sp-page-builder .page-content #section-id-2d3d558b-b55f-4600-9aa3-8a98ac7a9859{box-shadow:0 0 0 0 #FFFFFF;}.sp-page-builder .page-content #section-id-2d3d558b-b55f-4600-9aa3-8a98ac7a9859{padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;}#column-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{box-shadow:0 0 0 0 #FFFFFF;}#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}@media (max-width:1199.98px) {#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}}@media (max-width:991.98px) {#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}}@media (max-width:767.98px) {#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}}@media (max-width:575.98px) {#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}}#column-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{box-shadow:0 0 0 0 #FFFFFF;}#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}@media (max-width:1199.98px) {#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}}@media (max-width:991.98px) {#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}}@media (max-width:767.98px) {#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}}@media (max-width:575.98px) {#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}}.sp-page-builder .page-content #section-id-600b9b97-d8cc-4f35-bcb6-2fc14cfa12a3{box-shadow:0 0 0 0 #FFFFFF;}.sp-page-builder .page-content #section-id-600b9b97-d8cc-4f35-bcb6-2fc14cfa12a3{padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;}#column-id-601963d9-9ad6-4dde-9886-11b1265c1a06{box-shadow:0 0 0 0 #FFFFFF;}#column-wrap-id-601963d9-9ad6-4dde-9886-11b1265c1a06{max-width:100%;flex-basis:100%;}@media (max-width:1199.98px) {#column-wrap-id-601963d9-9ad6-4dde-9886-11b1265c1a06{max-width:100%;flex-basis:100%;}}@media (max-width:991.98px) {#column-wrap-id-601963d9-9ad6-4dde-9886-11b1265c1a06{max-width:100%;flex-basis:100%;}}@media (max-width:767.98px) {#column-wrap-id-601963d9-9ad6-4dde-9886-11b1265c1a06{max-width:100%;flex-basis:100%;}}@media (max-width:575.98px) {#column-wrap-id-601963d9-9ad6-4dde-9886-11b1265c1a06{max-width:100%;flex-basis:100%;}}</style>	</div>
++</div></div></div></div></div><div id="sp-footer3" class="col-lg-4 "><div class="sp-column "><div class="sp-module "><div class="sp-module-content"><div class="mod-sppagebuilder  sp-page-builder" data-module_id="129">
++	<div class="page-content">
++		<div id="section-id-2d3d558b-b55f-4600-9aa3-8a98ac7a9859" class="sppb-section footer3-sec sppb-section-content-center" ><div class="sppb-container-inner"><div class="sppb-row sppb-align-center"><div class="sppb-row-column sppp-column-vertical-align  sppb-hidden-xl sppb-hidden-lg " id="column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe"><div id="column-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe" class="sppb-column   sppb-align-items-center" ><div class="sppb-column-addons"><div id="sppb-addon-wrapper-293591ca-fdb3-4ea6-bab7-2a4e36838c30" class="sppb-addon-wrapper  addon-root-module"><div id="sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30" class="clearfix  "     ><div class="sppb-addon sppb-addon-module "><div class="sppb-addon-content">
++<div id="mod-custom115" class="mod-custom custom">
++    <div><a href="/"><img src="/images/winter-white-logo.png" alt="winter white logo" width="204" height="71" /></a></div></div>
++</div></div><style type="text/css">#sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30{
++box-shadow: 0 0 0 0 #FFFFFF;
++}#sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30{
++}
++@media (max-width: 1199.98px) {#sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30{}}
++@media (max-width: 991.98px) {#sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30{}}
++@media (max-width: 767.98px) {#sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30{}}
++@media (max-width: 575.98px) {#sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30{}}#sppb-addon-wrapper-293591ca-fdb3-4ea6-bab7-2a4e36838c30{
++}#sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30 .sppb-addon-title{
++}</style><style type="text/css">#sppb-addon-293591ca-fdb3-4ea6-bab7-2a4e36838c30{ transform-origin: 50% 50%; }</style></div></div></div></div></div><div class="sppb-row-column sppp-column-vertical-align  " id="column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105"><div id="column-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105" class="sppb-column   sppb-align-items-center" ><div class="sppb-column-addons"><div id="sppb-addon-wrapper-85266cfb-199e-4e80-bf25-62ab6c5f2b28" class="sppb-addon-wrapper  addon-root-module"><div id="sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28" class="clearfix  "     ><div class="sppb-addon sppb-addon-module accessibility-sec"><div class="sppb-addon-content"><div id="djacc" class="accessibility"></div></div></div><style type="text/css">#sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28{
++box-shadow: 0 0 0 0 #FFFFFF;
++}#sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28{
++}
++@media (max-width: 1199.98px) {#sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28{}}
++@media (max-width: 991.98px) {#sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28{}}
++@media (max-width: 767.98px) {#sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28{}}
++@media (max-width: 575.98px) {#sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28{}}#sppb-addon-wrapper-85266cfb-199e-4e80-bf25-62ab6c5f2b28{
++}#sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28 .sppb-addon-title{
++}</style><style type="text/css">#sppb-addon-85266cfb-199e-4e80-bf25-62ab6c5f2b28{ transform-origin: 50% 50%; }</style></div></div></div></div></div></div></div></div><style type="text/css">.sp-page-builder .page-content #section-id-2d3d558b-b55f-4600-9aa3-8a98ac7a9859{box-shadow:0 0 0 0 #FFFFFF;}.sp-page-builder .page-content #section-id-2d3d558b-b55f-4600-9aa3-8a98ac7a9859{padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px;}#column-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{box-shadow:0 0 0 0 #FFFFFF;}#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}@media (max-width:1199.98px) {#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}}@media (max-width:991.98px) {#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}}@media (max-width:767.98px) {#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}}@media (max-width:575.98px) {#column-wrap-id-c648a0f2-994f-4ce8-bb8b-b65bcbd198fe{max-width:58.333333%;flex-basis:58.333333%;}}#column-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{box-shadow:0 0 0 0 #FFFFFF;}#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}@media (max-width:1199.98px) {#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}}@media (max-width:991.98px) {#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}}@media (max-width:767.98px) {#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}}@media (max-width:575.98px) {#column-wrap-id-60c04bf1-82dd-40e3-b01b-1a430cbc7105{max-width:41.666667%;flex-basis:41.666667%;}}</style>	</div>
++</div></div></div></div></div></div>
++							</div>
++			</div>
++			
++	</footer>
+ 			</div>
+-	  	</footer>
+-  	</div>
+-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+-    <script src="http://www.winterplace.com/js/bootstrap.min.js"></script>
+-	<script src="http://www.winterplace.com/js/classie.js"></script>
+-	<script src="http://www.winterplace.com/js/uisearch.js"></script>
+-	<script src="http://www.winterplace.com/js/slippry.min.js"></script>
+-	<script src="http://www.winterplace.com/js/doubletaptogo.min.js"></script>    
+-    	<script src="http://www.winterplace.com/js/main.js"></script>
+-		<!-- Add Roll Remarketing -->
+-	<script type="text/javascript">
+-		adroll_adv_id = "3K6DMCWCXVC5BPXQA65PZF";
+-		adroll_pix_id = "TP4233FXD5EGDNSXWLXRJU";
+-		(function () {
+-			var oldonload = window.onload;
+-			window.onload = function(){
+-			__adroll_loaded=true;
+-			var scr = document.createElement("script");
+-			var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+-			scr.setAttribute('async', 'true');
+-			scr.type = "text/javascript";
+-			scr.src = host + "/j/roundtrip.js";
+-			((document.getElementsByTagName('head') || [null])[0] ||
+-			document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+-			if(oldonload){oldonload()}};
+-		}());
+-	</script>
+-<!-- Google Code for Remarketing Tag -->
+-	<!--
+-		------------------------------------------------
+-	Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. See more information and instructions on how to setup the tag on: http://google.com/ads/remarketingsetup
+-	-------------------------------------------------
+-	-->
+-	<script type="text/javascript">
+-		/* <![CDATA[ */
+-		var google_conversion_id = 963266318;
+-		var google_custom_params = window.google_tag_params;
+-		var google_remarketing_only = true;
+-		/* ]]> */
+-	</script>
+-	<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+-	<noscript>
+-		<div style="display:inline;">
+-			<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/963266318/?value=0&amp;guid=ON&amp;script=0"/>
+ 		</div>
+-	</noscript>	
++
++		<!-- Off Canvas Menu -->
++		<div class="offcanvas-overlay"></div>
++		<!-- Rendering the offcanvas style -->
++		<!-- If canvas style selected then render the style -->
++		<!-- otherwise (for old templates) attach the offcanvas module position -->
++					<div class="offcanvas-menu">
++	<div class="d-flex align-items-center p-3 pt-4">
++				<a href="#" class="close-offcanvas" aria-label="Close Off-canvas">
++			<div class="burger-icon">
++				<span></span>
++				<span></span>
++				<span></span>
++			</div>
++		</a>
++	</div>
+ 	
+-	<script>
+-	dataLayer = [{
+-		?totalCost?: %%replace_with_value%%
+-	}];
+-	</script>
+-	<!-- Google Tag Manager -->
+-	<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K79HJ6"
+-	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+-	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+-	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+-	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+-	'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+-	})(window,document,'script','dataLayer','GTM-K79HJ6');</script>
+-	<!-- End Google Tag Manager -->	<script>
+-	dataLayer = [{
+-		?totalCost?: %%replace_with_value%%
+-	}];
+-	</script>
+-	<!-- Google Tag Manager -->
+-	<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K79HJ6"
+-	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+-	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+-	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+-	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+-	'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+-	})(window,document,'script','dataLayer','GTM-K79HJ6');</script>
+-	<!-- End Google Tag Manager -->  
+-	</body>
++	<div class="offcanvas-inner">
++		<div class="d-flex header-modules mb-3">
++			
++					</div>
++		
++					<div class="sp-module "><div class="sp-module-content"><ul class="menu nav-pills">
++<li class="item-144 active menu-deeper menu-parent"><span class="nav-header ">Mountain<span class="menu-toggler"></span></span>
++<ul class="menu-child"><li class="item-186"><a href="/mountain/hours-of-operation" >Hours of Operation</a></li><li class="item-147"><a href="/mountain/mountain-facts" >Mountain Facts</a></li><li class="item-148 current active"><a href="/real-time-snow-report-mountain-conditions-winterplace" >Snow Report</a></li><li class="item-149"><a href="/mountain/trail-map" >Trail Map</a></li><li class="item-150"><a href="/mountain/terrain-parks" >Terrain Parks</a></li><li class="item-151"><a href="/mountain/be-safe-on-the-mountain" >Be Safe On The Mountain</a></li><li class="item-154"><a href="/mountain/mountainhouse-cam" >Mountain House Cam</a></li><li class="item-153"><a href="/mountain/resort-center-cam" >Resort Center Cam</a></li></ul></li><li class="item-145 menu-deeper menu-parent"><span class="nav-header ">Tickets / Passes<span class="menu-toggler"></span></span>
++<ul class="menu-child"><li class="item-160"><a href="/tickets-passes/lift-tickets" >Lift Tickets</a></li><li class="item-161"><a href="/tickets-passes/rentals" >Rentals</a></li><li class="item-162"><a href="/tickets-passes/season-passes" >Season Passes</a></li><li class="item-163"><a href="/tickets-passes/club-program" >4 Week Program</a></li><li class="item-165"><a href="/tickets-passes/deals" >Deals</a></li><li class="item-164"><a href="/tickets-passes/gift-cards" >Gift Cards</a></li></ul></li><li class="item-146 menu-deeper menu-parent"><span class="nav-header ">Snowtubing<span class="menu-toggler"></span></span>
++<ul class="menu-child"><li class="item-175"><a href="/snowtubing/snowtubing-tickets" >Snowtubing Tickets</a></li><li class="item-176"><a href="/snowtubing/hours-of-operation" >Tubing Hours of Operation</a></li><li class="item-177"><a href="/snowtubing/snowtubing-group-rates" >Snowtubing Group Rates</a></li></ul></li><li class="item-179 menu-deeper menu-parent"><span class="nav-header ">Learn to<span class="menu-toggler"></span></span>
++<ul class="menu-child"><li class="item-181"><a href="/learn-to/first-timers-guide" >First Timer's Guide</a></li><li class="item-182"><a href="/learn-to/take-a-lesson" >Take A Lesson</a></li><li class="item-183"><a href="/learn-to/skiwee-snow-explorers" >SkiWee &amp; Snow Explorers</a></li><li class="item-184"><a href="/learn-to/learning-area" >Learning Area</a></li><li class="item-185"><a href="/learn-to/development-race-team" >Developmental Racing</a></li></ul></li><li class="item-180 menu-deeper menu-parent"><span class="nav-header ">Planning<span class="menu-toggler"></span></span>
++<ul class="menu-child"><li class="item-272"><a href="/planning/calendar" >Calendar of Events</a></li><li class="item-188"><a href="/getting-here" >Getting Here</a></li><li class="item-189"><a href="/planning/lodging" >Lodging</a></li><li class="item-190"><a href="/planning/summer-event-rental" >Summer Event Rental</a></li></ul></li><li class="item-191 menu-deeper menu-parent"><span class="nav-header ">Groups<span class="menu-toggler"></span></span>
++<ul class="menu-child"><li class="item-192"><a href="/groups/ski-board-group-rates" >Ski/Board Group Rates</a></li><li class="item-193"><a href="/snowtubing/snowtubing-group-rates" >Snowtubing Group Rates</a></li><li class="item-195"><a href="/groups/forms-information" >Forms &amp; Information</a></li><li class="item-196"><a href="/groups/scouts" >Scouts</a></li></ul></li><li class="item-206 menu-deeper menu-parent"><span class="nav-header ">Info<span class="menu-toggler"></span></span>
++<ul class="menu-child"><li class="item-209"><a href="/info/faqs" >FAQs</a></li><li class="item-212"><a href="/info/dining-and-entertainment" >Dining and Entertainment</a></li><li class="item-214"><a href="/info/email-sign-up" >Email Sign Up</a></li><li class="item-213"><a href="/info/media-centers" >Media Center</a></li><li class="item-207"><a href="/info/employment" >Employment</a></li></ul></li></ul>
++</div></div>		
++		
++		
++		
++					
++				
++		<!-- custom module position -->
++		
++	</div>
++</div>				
++
++		
++		
++
++		<!-- Go to top -->
++					<a href="#" class="sp-scroll-up" aria-label="Scroll Up"><span class="fas fa-angle-up" aria-hidden="true"></span></a>
++				
++
++    <script type="text/javascript">
++    if(!bCheck())
++    {
++      var cssId = 'myCss';
++      if (!document.getElementById(cssId))
++      {
++          var head  = document.getElementsByTagName('head')[0];
++          var link  = document.createElement('link');
++          link.id   = cssId;
++          link.rel  = 'stylesheet';
++          //link.type = 'text/css';
++          link.href = 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap';
++          link.media = 'all';
++          head.appendChild(link);
++      }
++    }
++    </script>
++	<div data-id="1" 
++	class="eb-inst eb-hide eb-custom eb-1 ebStickyBar"
++	data-options='{"trigger":"onPageLoad","trigger_selector":"","delay":0,"early_trigger":false,"scroll_depth":"percentage","scroll_depth_value":80,"firing_frequency":1,"reverse_scroll_close":false,"threshold":0,"close_out_viewport":false,"exit_timer":1000,"idle_time":10000,"close_on_esc":false,"animation_open":"fadeIn","animation_close":"fadeOut","animation_duration":400,"disable_page_scroll":false,"test_mode":false,"debug":false,"ga_tracking":false,"ga_tracking_id":0,"ga_tracking_event_category":"EngageBox","ga_tracking_event_label":"Box #1 - Engage Box","auto_focus":false}'
++	data-type='pageslide'
++		>
++
++	<button type="button" data-ebox-cmd="close" class="eb-close placement-outside" aria-label="Close">
++	<img alt="close popup button" />
++	<span aria-hidden="true">&times;</span>
++</button>
++	<div class="eb-dialog " role="dialog" aria-modal="true" id="dialog1" aria-label="dialog1">
++		
++		<button type="button" data-ebox-cmd="close" class="eb-close placement-inside" aria-label="Close">
++	<img alt="close popup button" />
++	<span aria-hidden="true">&times;</span>
++</button>	
++		<div class="eb-container">
++						<div class="eb-content">
++				<p style="text-align: center;">The resort is officially closed for the 2025/2026 season.<br />Our unlimited access 2026/2027 passes are on sale now.&nbsp;<br /><br />Thank you for another wonderful season. Is it December yet?&nbsp;</p>			</div>
++		</div>
++	</div>	
++</div>
++</body>
+ </html>
+\ No newline at end of file
+diff --git a/test/resorts/winterplace-trails.js b/test/resorts/winterplace-trails.js
+new file mode 100644
+index 00000000..bba3508d
+--- /dev/null
++++ b/test/resorts/winterplace-trails.js
+@@ -0,0 +1,144 @@
++import trails from '../trails/index.js';
++
++trails('winterplace', [
++  {
++    name: 'Buttermilk',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Country Roads',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Compromise',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Easy Street',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Glades',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Last Chance',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Last Run',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Meadows',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'No Problem',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Over Easy',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Panorama',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Snowfield',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Wanderer',
++    status: 'closed',
++    level: 'green'
++  },
++  {
++    name: 'Plunge',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Nose Dive',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Turkey Chute',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Snow Bowl',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Drop Off',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Rendezvous',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Cascade',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Hickory',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Look at Me!',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Milkshake',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Rendezvous Too',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Ridge Runner',
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: "Wood's Run",
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Heaven Holler',
++    status: 'closed',
++    level: 'terrainPark'
++  },
++  {
++    name: 'Fire Tower',
++    status: 'closed',
++    level: 'terrainPark'
++  }
++]);
+diff --git a/test/resorts/winterplace.js b/test/resorts/winterplace.js
+index 462cda16..e9581fcc 100644
+--- a/test/resorts/winterplace.js
++++ b/test/resorts/winterplace.js
+@@ -7,9 +7,9 @@ lifts('winterplace', 'html', {
+   '#4 Triple Chairlift': 'closed',
+   '#5 Double Chairlift': 'closed',
+   '#6 Carpet Lift': 'closed',
+-  '#7 Carpet Lift': 'closed',
+   '#8 Quad Chairlift': 'closed',
+   '#9 Quad Chairlift': 'closed',
+-  '#10 Tubing Carpet Lift': 'closed',
+-  '#11 Tubing Carpet Lift': 'closed'
++  '#12 Ski-Wee Carpet': 'closed',
++  '#11 Tubing Carpet': 'closed',
++  '#10 Tubing Carpet': 'closed'
+ });
+-- 
+2.39.5
+

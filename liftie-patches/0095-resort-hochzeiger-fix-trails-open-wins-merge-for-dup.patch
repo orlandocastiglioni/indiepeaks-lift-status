@@ -1,0 +1,36 @@
+From 59d5c3cfcd76b81adbd1993ec3532ab9e96b4040 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:12 -0400
+Subject: resort: hochzeiger - fix trails - open-wins merge for duplicated
+ pistes
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/hochzeiger/trails.js | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/lib/resorts/hochzeiger/trails.js b/lib/resorts/hochzeiger/trails.js
+index b09b2714..d37d9ecf 100644
+--- a/lib/resorts/hochzeiger/trails.js
++++ b/lib/resorts/hochzeiger/trails.js
+@@ -1,3 +1,5 @@
++import coerce from '../../tools/coerce.js';
++
+ const levels = {
+   'easy-piste': 'green',
+   'medium-piste': 'blue',
+@@ -18,8 +20,9 @@ export default function parse(data = {}) {
+     if (!prev) {
+       byTitle.set(title, { name: title, status: state, level: levels[facilityTypeIdentifier] });
+     } else {
+-      if (state === 'open') {
+-        prev.status = 'open';
++      // Micado emits 'opened', not 'open'
++      if (coerce(state) === 'open') {
++        prev.status = state;
+       }
+       prev.level ??= levels[facilityTypeIdentifier];
+     }
+-- 
+2.39.5
+

@@ -1,8 +1,7 @@
 From 41c530518987253c7b40b17b484820f6bdd8dfb4 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:06:58 +0000
-Subject: [PATCH 75/77] resort: fix owlshead - rebuild for the redesigned
- conditions page
+Subject: resort: fix owlshead - rebuild for the redesigned conditions page
 
 The old .legende_* markup is gone (absent from the 2026-01-21 winter
 snapshot too, so the parser produced nothing all last season). The page

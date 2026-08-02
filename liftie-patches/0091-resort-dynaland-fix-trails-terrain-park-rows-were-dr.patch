@@ -1,0 +1,883 @@
+From c15f2cdbd871d07a0708b072cd15689f84fb9a4c Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:12 -0400
+Subject: resort: dynaland - fix trails - terrain-park rows were dropped
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/dynaland/status.js     |   3 +-
+ lib/resorts/dynaland/trails.js     |  15 ++
+ test/resorts/dynaland-trails.js    |  66 ++++--
+ test/resorts/dynaland.js           |  10 +-
+ test/resorts/example/dynaland.html | 324 +++++++++++++++--------------
+ 5 files changed, 237 insertions(+), 181 deletions(-)
+
+diff --git a/lib/resorts/dynaland/status.js b/lib/resorts/dynaland/status.js
+index 5559df28..6afdc806 100644
+--- a/lib/resorts/dynaland/status.js
++++ b/lib/resorts/dynaland/status.js
+@@ -4,7 +4,8 @@ export default function status(text = '') {
+   if (/^[○◯〇]/.test(t) || /運行中|営業中/.test(t)) {
+     return 'open';
+   }
+-  if (/^[△▲]/.test(t)) {
++  if (/^[△▲]/.test(t) || /要確認/.test(t)) {
++    // 要確認 = "check with staff" - conditionally open tree run areas
+     return 'hold';
+   }
+   if (/^[×✕✖-]/.test(t) || /運休|終了/.test(t)) {
+diff --git a/lib/resorts/dynaland/trails.js b/lib/resorts/dynaland/trails.js
+index 76785d2a..a655adc9 100644
+--- a/lib/resorts/dynaland/trails.js
++++ b/lib/resorts/dynaland/trails.js
+@@ -35,5 +35,20 @@ export default function parse(dom) {
+       }
+     }
+   }
++  // section#park keeps its パーク名 header in a table of its own, followed by
++  // header-less single-row tables (name | glyph | comment) that the loop above
++  // never collects; モーグルコース doubles as a blue course, so skip names we
++  // already have. section#kids (sledding, indoor play, food court) is
++  // intentionally excluded.
++  const seen = new Set(rows.map(r => r.name));
++  for (const tr of select(dom, 'section#park table tr')) {
++    const cells = select(tr.children, 'td').map(findText);
++    const name = cells[0]?.trim();
++    if (!name || !cells[1] || seen.has(name)) {
++      continue;
++    }
++    seen.add(name);
++    rows.push({ name, status: status(cells[1]), level: 'terrainPark' });
++  }
+   return rows;
+ }
+diff --git a/test/resorts/dynaland-trails.js b/test/resorts/dynaland-trails.js
+index 9f6522f8..e338c543 100644
+--- a/test/resorts/dynaland-trails.js
++++ b/test/resorts/dynaland-trails.js
+@@ -3,72 +3,72 @@ import trails from '../trails/index.js';
+ trails('dynaland', [
+   {
+     'name': 'パラダイスAコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': '乙女コース（上部）',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': '乙女コース（下部）',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': '第1ゲレンデ',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': 'から松ゲレンデ',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': '第6ゲレンデ',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': '神中Aコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': 'ラビットコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': 'β‐α連絡コース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'green'
+   },
+   {
+     'name': 'ダウンヒルコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'blue'
+   },
+   {
+     'name': 'パラダイスツリーラン',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'blue'
+   },
+   {
+     'name': 'モーグルコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'blue'
+   },
+   {
+     'name': 'スカイラインBコース（上部）',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'blue'
+   },
+   {
+     'name': 'スカイラインBコース（下部）',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'blue'
+   },
+   {
+@@ -78,47 +78,67 @@ trails('dynaland', [
+   },
+   {
+     'name': 'クマダナコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'blue'
+   },
+   {
+     'name': '神中Bコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'black'
+   },
+   {
+     'name': '神中回転バーン',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'black'
+   },
+   {
+     'name': 'チャレンジBコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'black'
+   },
+   {
+     'name': 'チャレンジCコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'black'
+   },
+   {
+     'name': 'スカイラインAコース',
+-    'status': 'closed',
++    'status': 'open',
+     'level': 'black'
+   },
+   {
+     'name': 'チャレンジツリーランエリア',
+-    'status': 'closed',
++    'status': 'hold',
+     'level': 'black'
+   },
+   {
+     'name': 'ウマノセツリーランエリア',
+-    'status': 'closed',
++    'status': 'hold',
+     'level': 'black'
+   },
+   {
+     'name': '乙女ツリーランエリア',
+-    'status': 'closed',
++    'status': 'hold',
+     'level': 'black'
++  },
++  {
++    'name': 'ステップアップパーク',
++    'status': 'open',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'Re:テレインパーク',
++    'status': 'open',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'サーフライドパーク',
++    'status': 'closed',
++    'level': 'terrainPark'
++  },
++  {
++    'name': 'ナイトパーク',
++    'status': 'open',
++    'level': 'terrainPark'
+   }
+ ]);
+diff --git a/test/resorts/dynaland.js b/test/resorts/dynaland.js
+index 4b8e7ef8..b5aaf581 100644
+--- a/test/resorts/dynaland.js
++++ b/test/resorts/dynaland.js
+@@ -1,9 +1,9 @@
+ import lifts from '../lifts/index.js';
+ 
+ lifts('dynaland', 'html', {
+-  '第１ペアリフト': 'closed',
+-  'アルファーライナー': 'closed',
+-  'ベータライナー': 'closed',
+-  'ガンマライナー': 'closed',
+-  'からまつビギナーリフト': 'closed'
++  '第１ペアリフト': 'open',
++  'アルファーライナー': 'open',
++  'ベータライナー': 'open',
++  'ガンマライナー': 'open',
++  'からまつビギナーリフト': 'open'
+ });
+diff --git a/test/resorts/example/dynaland.html b/test/resorts/example/dynaland.html
+index 2ce53104..4694fa56 100644
+--- a/test/resorts/example/dynaland.html
++++ b/test/resorts/example/dynaland.html
+@@ -4,15 +4,6 @@
+ <meta charset="utf-8">
+     
+     
+-    <!-- Google Tag Manager -->
+-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+-})(window,document,'script','dataLayer','GTM-TSQ5P2G9');</script>
+-<!-- End Google Tag Manager -->
+-    
+-    
+ <!-- Google Tag Manager -->
+ <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+@@ -55,7 +46,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+   <link rel="canonical" href="https://www.dynaland.co.jp/condition/" />
+       <link rel="stylesheet" href="../assets/css/zoom.css">
+   <!-- InstanceEndEditable -->
+-    
++<!-- Google tag (gtag.js) -->
++<script async src="https://www.googletagmanager.com/gtag/js?id=G-T7ZDZ8CDPN"></script>
++<script>
++  window.dataLayer = window.dataLayer || [];
++  function gtag(){dataLayer.push(arguments);}
++  gtag('js', new Date());
++
++  gtag('config', 'G-T7ZDZ8CDPN');
++  gtag('config', 'UA-46095100-1');
++</script>
++
+ <script src="https://d.shutto-translation.com/trans.js?id=1328"></script>
+     
+     
+@@ -178,38 +179,37 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+ </head>
+ 
+ <body>
+-   
+-    
+-    
+-    <!-- Google Tag Manager (noscript) -->
+-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TSQ5P2G9"
+-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+-<!-- End Google Tag Manager (noscript) -->
++	
+ 	
+ 	<!-- Google Tag Manager (noscript) -->
+ <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T5QSW6XL"
+ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ <!-- End Google Tag Manager (noscript) -->
++	
++	
++	
++	
++
++
+     
+-	<!-- Google Tag Manager (noscript) -->
+-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NVTJ2RB"
++<!-- Google Tag Manager (noscript) -->
++<noscript>
++<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NVTJ2RB"
+ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+-</noscript><!-- End Google Tag Manager (noscript) -->
++</noscript>
++<!-- End Google Tag Manager (noscript) -->
+ 	
+-    
+-    
+ <header class="header">
+   <h1 class="logo"><a href="../"><img src="../assets/img/common/logo.png" alt="ダイナランド"/></a></h1>
+   <nav class="header-nav">
+     <div class="header-nav-sub">
+       <ul>
+         <li><a href="../faq/">FAQ</a></li>
+-        <li><a href="https://asobito-resort.com/login" target="_blank">会員ログイン</a></li>
+-        <li><a href="https://asobito-resort.com/register" target="_blank">新規会員登録</a></li>
++        <li><a href="https://chubu-snow.com/member/login.php" target="_blank">会員ログイン</a></li>
++        <li><a href="https://chubu-snow.com/register/" target="_blank">新規会員登録</a></li>
+         <li><a href="https://www.takasumountains.com/">TAKASU MOUNTAINS</a></li>
+       </ul>
+     </div>
+-      
+     <div class="header-nav-sns">
+       <ul>
+         <li><a href="https://www.facebook.com/dynaland/" target="_blank"><img src="../assets/img/common/ico_fb_c.png" width="80" height="80" alt="Facebook"/></a></li>
+@@ -342,8 +342,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+     <div class="sp-nav-sub">
+       <ul>
+         <li><a href="../faq/">FAQ</a></li>
+-        <li><a href="https://asobito-resort.com/login" target="_blank">会員ログイン</a></li>
+-        <li><a href="https://asobito-resort.com/register" target="_blank">新規会員登録</a></li>
++        <li><a href="https://chubu-snow.com/member/login.php" target="_blank">会員ログイン</a></li>
++        <li><a href="https://chubu-snow.com/register/" target="_blank">新規会員登録</a></li>
+         <li><a href="https://www.takasumountains.com/">TAKASU MOUNTAINS</a></li>
+         <li><a href="../company/">会社概要</a></li>
+         <li><a href="../contact/">お問い合わせ</a></li>
+@@ -389,7 +389,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+     <section class="date">
+       <div class="inner">
+         <div class="lttl">
+-          <time class="en">2026-07-11 AM10:00</time>
++          <time class="en">2026-02-02 PM12:00</time>
+           <p class="jp">Latest slope information</p>
+         </div>
+       </div>
+@@ -418,12 +418,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+       <div class="gelande-wrapper">
+         <h2 class="gelande-title">ゲレンデ<br>
+           NOW!</h2>
+-                <!--<figure><img src="https://www.dynaland.co.jp/news/wp-content/uploads/2026/07/S__79421449-1280x1108.jpg" alt="ゲレンデ状況" width="100%">
++                <!--<figure><img src="" alt="ゲレンデ状況" width="100%">
+           <img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000005c3ad7a" alt="ライブカメラの画像" width="100%" class="image" />
+         </figure>-->
+-         <!-- <iframe width="" height="auto" class="youtubecamera now" src="https://www.youtube.com/embed/83j2_5aXrEU?si=T6ziEzenG_FE4R3W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
+-          <!-- <figure><img src="../assets/img/condition/youtube.jpg" alt="ライブカメラの画像" width="" class="image" /></figure>-->
+-          <figure><img src="https://www.dynaland.co.jp/news/wp-content/uploads/2026/07/S__79421449-1280x1108.jpg" alt="" /></figure>
++          <iframe width="" height="auto" class="youtubecamera now" src="https://www.youtube.com/embed/83j2_5aXrEU?si=T6ziEzenG_FE4R3W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+         <div class="weather-wrapper">
+           <ul>
+             <li class="weather">
+@@ -431,15 +429,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                 <img src="/assets/img/condition/ico_info_01.png" alt="">
+               </figure>晴れ            </li>
+             <li class="condition">
+-                            <figure><img src="../assets/img/index/ico_slope.png" alt="" /></figure>滑走不可            </li>
++                            <figure><img src="../assets/img/index/ico_slope.png" alt="" /></figure>全面滑走可            </li>
+             <li class="snow">
+-              <figure><img src="../assets/img/index/ico_snow.png" alt="" /></figure>0<span>cm</span>
++              <figure><img src="../assets/img/index/ico_snow.png" alt="" /></figure>190<span>cm</span>
+             </li>
+             <li class="temperature">
+-              <figure><img src="../assets/img/index/ico_temp.png" alt="" /></figure>23<span>&#8451;</span>
++              <figure><img src="../assets/img/index/ico_temp.png" alt="" /></figure>-5<span>&#8451;</span>
+             </li>
+             <li class="quality">
+-              <figure><img src="../assets/img/index/ico_quality.png" alt="" /></figure><span>
++              <figure><img src="../assets/img/index/ico_quality.png" alt="" /></figure>新雪バーン<span>
+             </li>
+           </ul>
+           <p class="weatherpinpoint"><a href="https://weathernews.jp/s/ski/spot/35203/" target="_blank">週間天気予報を見る</a>
+@@ -459,7 +457,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+           <h2 class="jp">道路状況</h2>
+         </div>
+         <div class="content_inner">
+-          <p>-</p>
++          <p>周辺道路には積雪があり大変滑りやすくなっています。全車スタッドレスタイヤ着用でお願いします。２輪駆動車は早めのチェーンの装着をおススメいたします。</p>
+         </div>
+       </div>
+     </section>
+@@ -482,22 +480,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+             <div class="body">
+               <h4 class="sttl center">山麓ライブカメラ</h4>
+               <div style="position: relative">
+-                  <!--<iframe width="" height="315" class="youtubecamera" src="https://www.youtube.com/embed/83j2_5aXrEU?si=T6ziEzenG_FE4R3W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+-<div class="taken_at blue center" data-id="0000000005c3ad7a" data-show-sec="0"></div>-->
+-                <figure><img src="../assets/img/condition/youtube.jpg" alt="ライブカメラの画像" width="1330" class="image" /></figure>
+-                
++                  <iframe width="" height="315" class="youtubecamera" src="https://www.youtube.com/embed/83j2_5aXrEU?si=T6ziEzenG_FE4R3W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
++                <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=0000000005c3ad7a" alt="ライブカメラの画像" width="100%" class="image" /></figure>
++                <div class="taken_at blue center" data-id="0000000005c3ad7a" data-show-sec="0"></div>-->
+               </div>
+             </div>
+ 
+             <div class="body">
+               <h4 class="sttl center">山頂ライブカメラ</h4>
+               <div style="position: relative">
+-                <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000b49a902c&force=WaU9xDcru3a3cWAm" alt="ライブカメラの画像" width="100%" class="image" />
+-                </figure>
+-<div class="taken_at blue center" data-id="00000000b49a902c" data-show-sec="0"></div>-->
+-                  <figure><img src="../assets/img/condition/youtube.jpg" alt="ライブカメラの画像" width="1330" class="image" />
++                <figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=00000000b49a902c&force=WaU9xDcru3a3cWAm" alt="ライブカメラの画像" width="100%" class="image" />
+                 </figure>
+-                
++                <div class="taken_at blue center" data-id="00000000b49a902c" data-show-sec="0"></div>
+               </div>
+             </div>
+           </div>
+@@ -510,9 +504,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+         <div class="flex-wrap col2-wrap mgb80">
+           <div class="body">
+             <h4 class="sttl center">ライブカメラ</h4>
+-              <figure><img src="../assets/img/condition/youtube.jpg" alt="ライブカメラの画像" width="1330" class="image" /></figure>
+-            <!--<figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=000000009c60d3cf" alt="ライブカメラの画像" width="100%" class="image" /></figure>
+-            <div class="taken_at blue center" data-id="000000009c60d3cf" data-show-sec="0"></div>-->
++            <figure><img src="https://lnbgtscw.user.webaccel.jp/app/show.php?serial_number=000000009c60d3cf" alt="ライブカメラの画像" width="100%" class="image" /></figure>
++            <div class="taken_at blue center" data-id="000000009c60d3cf" data-show-sec="0"></div>
+           </div>
+           <div class="body">
+             <h4 class="sttl center">駐車場マップ</h4>
+@@ -531,7 +524,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+           <h2 class="jp">スタッフのコメント</h2>
+         </div>
+         <div class="content_inner">
+-          <p>&nbsp;</p><h2><span style="color: #339966;">■ キャンプ場『Dynaland CAMP BASE』</span></h2><p><strong>Dynaland CAMP BASE 営業中！</strong></p><p>サイトエリアは遮蔽物が少ないため、風が強く吹くことがございます。<br />テントの設営時などは十分にご注意くださいませ。<br />タープを設営し、日陰をつくることをお勧めします。※ハイシーズンは1000円/1タープ</p><p>朝晩は気温が下がります。調節可能なお召し物でお越し下さい。</p><p>&nbsp;</p><hr /><p>&nbsp;</p><h2><span style="color: #ff6600;">■ イベント情報</span></h2><h3>・ステッカープレゼント</h3><p>キャンプ場をご利用いただいた方で、<strong><a href="https://www.nap-camp.com/identity/users/posts/campsite_reviews/new?campsite_id=14853">「なっぷ」の口コミ</a></strong>を投稿いただいた方にキャンプ場オリジナルステッカーをプレゼント！<br />キャンプ中の思い出をぜひ教えてくださいませ！</p><p>&nbsp;</p><h2><span style="color: #00ff00;">■ 遊具エリア情報</span></h2><p><strong>・ロングブランコ</strong></p><p>リフトの柱を利用したながーいブランコ！<br />お子様から大人の方まで、高原のスイングをお楽しみください！</p><p><strong>・ミニジップライン</strong></p><p>ターザン気分が味わえるミニサイズのジップライン！<br />2レーン並んで 3・2・1 GO！<br />※ 体重制限がございます。遊具周辺に設置された注意看板をご確認ください。</p><p><strong>・そりコースター</strong></p><p>特製レールの上をソリでスライド！<br />山肌を駆ける風になれ！</p><p>&nbsp;</p><h2><span style="color: #de95b8;">■ 予約情報</span></h2><p>【夏季秋季営業期間】</p><p>7月4日（土）～ 10月17日（土）</p><p>&nbsp;</p><p><strong>★ ご予約はこちらのロゴをタップ（外部サイトが開きます）！</strong></p><p><a href="https://www.nap-camp.com/gifu/14853"><img class=" wp-image-8723 alignnone" src="https://www.dynaland.co.jp/news/wp-content/uploads/2026/03/campbase_logo_yoko-670x102.png" alt="" width="322" height="49" /></a></p>        </div><a id="lift_anch"></a>
++          <h3>■ 営業情報<br /><strong><br />昨晩からの新雪がうっすら！</strong><strong>天然雪が圧雪された極上バーン！！<br /></strong><strong>さらに人工降雪機が稼働で積雪量もアップ！！<br /></strong><strong>気温が低いので防寒対策をしっかりしてご来場ください！<br />本日は雪予報になっていますが、降ったり止んだりを繰り返しそうです。<br /></strong><strong><br />ただいまゲレンデは『全面滑走可能』！ 全体の100％のエリアが開放されています！<br />リフトも全基運行でスイスイ♪　もちろん『高鷲スノーパークとの山頂往来可能』！</strong><strong><br /></strong>※βライナーは8:15からの運行開始となります。<br />※高鷲スノーパークとの往来は、8:30からになります。<br /><strong><br />平日も朝８</strong><strong>時～夜２３時まで！ 1５時間のロング営業！！<br />総滑走距離 20,000ｍ超え！初心者～上級者まで楽しめる１８コースを開放！！</strong><strong><br />毎日２３時までナイター営業「ヨルダイナ」開催中！3/28まで毎日ナイター営業！<br /><br />お得なリフト券の<a href="https://www.dynaland.co.jp/ec/">事前購入サイト</a>がOPENしています！ 並ばずそのままリフトへGO！<br /></strong></h3><table style="border-color: #000000; background-color: #ffffff;" border="2"><tbody><tr><td style="background-color: #1497f5; text-align: center;"><span style="color: #ffffff;"><strong>滑走エリア</strong></span></td><td><p><strong>◎：全面滑走可能</strong><br />※ コース全体の80％以上開放</p></td></tr><tr><td style="background-color: #1497f5; text-align: center;"><span style="color: #ffffff;"><strong>営業時間</strong></span></td><td><h2><span style="color: #ffffff;"><span style="color: #000000;">8</span><span style="color: #000000;">:00 ～ 23:00<br /></span></span></h2></td></tr><tr><td style="background-color: #1497f5; text-align: center;"><strong><span style="color: #ffffff;">運行リフト</span></strong></td><td><p><strong>■ 全５基運行</strong><br /><strong><span style="color: #ffffff;">＿</span>・第1ペアリフト</strong><br /><strong><span style="color: #ffffff;">＿</span>・から松ビギナーリフト　</strong><br /><strong>　・αライナー</strong><br /><span style="color: #ff0000;"><span style="color: #000000;"><strong>　・βライナー</strong><br /><span style="color: #ff0000;"><strong><span style="color: #ffffff;">＿</span><span style="color: #000000;">・γライナー</span></strong><br /></span></span></span></p></td></tr><tr><td style="background-color: #1497f5; text-align: center;"><span style="color: #ffffff;"><strong>Baboon<br />ファミリー</strong></span></td><td><p>Baboon エリアパス　1,000円 / 3歳以上<br />■ Snow Baboon（そりゲレンデ）：○<br />■ Play Baboon（屋内遊具エリア）：○<br />■ フードコート：○</p></td></tr></tbody></table><p>&nbsp;</p><hr /><h2>■ パークレイアウト</h2><h3>【ステップアップパーク】</h3><h3><img class=" wp-image-8112 alignnone" src="https://www.dynaland.co.jp/news/wp-content/uploads/2026/01/S__427581443-670x474.jpg" alt="" width="518" height="367" /></h3><h3>【Re:テレインパーク】</h3><p><img class="wp-image-8240 alignnone" src="https://www.dynaland.co.jp/news/wp-content/uploads/2026/01/S__429146175.jpg" alt="" width="521" height="368" /></p><p>&nbsp;</p><p>&nbsp;</p><hr /><h3>■ お知らせ<br />・2/4(水) 毎週水曜日はダイナランド半額デー！ダイナ単独リフト券 通常大人5,500円→2,750円！<br />・2/11(祝) Snow Surfing Classic　サーフライドパークで行われるMOSSイベント！<br />・3/7(土)　ダイナランドカップ SKI GS 2026　大会概要を公開中！お申し込みをお待ちしております。2/27まで！<br />・3/7(土)　ダイナ大花火祭り＆スノースカイランタン　開催！　公式ECサイトで販売中！</h3>        </div><a id="lift_anch"></a>
+       </div>
+     </section>
+ 
+@@ -560,32 +553,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+             </tr>
+                                               <tr>
+                     <td>第１ペアリフト</td>
+-                    <td>今シーズンの営業は終了いたしました</td>
+-                    <td>×</td>
++                    <td>8:00～16:30</td>
++                    <td>◯</td>
+                     <td class="info"></td>
+                   </tr>
+                                                               <tr>
+                     <td>アルファーライナー</td>
+-                    <td>今シーズンの営業は終了いたしました</td>
+-                    <td>×</td>
+-                    <td class="info"></td>
++                    <td>8:00～22:30</td>
++                    <td>◯</td>
++                    <td class="info">※ 16:30～18:00 の間はゲレンデ整備のため、リフトの運行を休止いたします。その間リフトはご乗車いただけません。</td>
+                   </tr>
+                                                               <tr>
+                     <td>ベータライナー</td>
+-                    <td>今シーズンの営業は終了いたしました</td>
+-                    <td>×</td>
+-                    <td class="info"></td>
++                    <td>8:15～16:15</td>
++                    <td>◯</td>
++                    <td class="info">高鷲スノーパークとの往来は8:30からになります。</td>
+                   </tr>
+                                                               <tr>
+                     <td>ガンマライナー</td>
+-                    <td>今シーズンの営業は終了いたしました</td>
+-                    <td>×</td>
++                    <td>9:00～16:30</td>
++                    <td>◯</td>
+                     <td class="info"></td>
+                   </tr>
+                                                               <tr>
+                     <td>からまつビギナーリフト</td>
+-                    <td>今シーズンの営業は終了いたしました</td>
+-                    <td>×</td>
++                    <td>9:00～16:30</td>
++                    <td>◯</td>
+                     <td class="info"></td>
+                   </tr>
+                                       </table>
+@@ -616,54 +609,54 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+           <!-- 最新ゲレンデ情報マップ ここから// -->
+                     <figure class="condition_map js-pinch-hint">
+ 
+-                            <img src="/assets/img/condition/map/lift_01_00.png" alt="×" class="map-lift">
+-                                              <img src="/assets/img/condition/map/lift_02_00.png" alt="×" class="map-lift">
+-                                              <img src="/assets/img/condition/map/lift_03_00.png" alt="×" class="map-lift">
+-                                              <img src="/assets/img/condition/map/lift_04_00.png" alt="×" class="map-lift">
+-                                              <img src="/assets/img/condition/map/lift_05_00.png" alt="×" class="map-lift">
++                            <img src="/assets/img/condition/map/lift_01_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_02_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_03_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_04_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_05_02.png" alt="◯" class="map-lift">
+                                             <script>
+-                                  lift01_status="×";
+-                                  lift02_status="×";
+-                                  lift03_status="×";
+-                                  lift04_status="×";
+-                                  lift05_status="×";
++                                  lift01_status="◯";
++                                  lift02_status="◯";
++                                  lift03_status="◯";
++                                  lift04_status="◯";
++                                  lift05_status="◯";
+                               </script>
+             
+-                            <img src="/assets/img/condition/map/course_0101_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0102_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0103_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0104_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0105_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0106_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0107_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0108_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0109_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0101_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0102_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0103_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0104_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0105_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0106_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0107_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0108_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0109_02.png" alt="◯" class="map-course">
+             
+-                            <img src="/assets/img/condition/map/course_0201_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0202_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0203_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0204_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0205_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0201_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0202_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0203_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0204_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0205_02.png" alt="◯" class="map-course">
+                             <img src="/assets/img/condition/map/course_0206_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0207_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0207_02.png" alt="◯" class="map-course">
+             
+-                            <img src="/assets/img/condition/map/course_0301_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0302_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0303_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0304_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0305_00.png" alt="×" class="map-course">
+-                                                                        <img src="/assets/img/condition/map/course_0307_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0308_00.png" alt="×" class="map-course">
+-                            <img src="/assets/img/condition/map/course_0309_00.png" alt="×" class="map-course">
++                            <img src="/assets/img/condition/map/course_0301_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0302_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0303_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0304_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0305_02.png" alt="◯" class="map-course">
++                                                                        <img src="/assets/img/condition/map/course_0307_00.png" alt="要確認" class="map-course">
++                            <img src="/assets/img/condition/map/course_0308_00.png" alt="要確認" class="map-course">
++                            <img src="/assets/img/condition/map/course_0309_00.png" alt="要確認" class="map-course">
+             
+-                            <img src="/assets/img/condition/map/park_07_00.png" alt="×" class="map-park">
+-                            <img src="/assets/img/condition/map/park_01_00.png" alt="×" class="map-park">
+-                                                                        <img src="/assets/img/condition/map/park_03_00.png" alt="×" class="map-park">
++                            <img src="/assets/img/condition/map/park_07_02.png" alt="◯" class="map-park">
++                            <img src="/assets/img/condition/map/park_01_02.png" alt="◯" class="map-park">
++                                                                        <img src="/assets/img/condition/map/park_03_02.png" alt="◯" class="map-park">
+                                                                         <img src="/assets/img/condition/map/park_05_00.png" alt="×" class="map-park">
+-                            <img src="/assets/img/condition/map/park_06_00.png" alt="×" class="map-park">
++                            <img src="/assets/img/condition/map/park_06_02.png" alt="◯" class="map-park">
+             
+-                            <img src="/assets/img/condition/map/kidspark_01_00.png" alt="×" class="map-kidspark">
+-                            <img src="/assets/img/condition/map/kidspark_02_00.png" alt="×" class="map-kidspark">
++                            <img src="/assets/img/condition/map/kidspark_01_02.png" alt="◯" class="map-kidspark">
++                            <img src="/assets/img/condition/map/kidspark_02_02.png" alt="◯" class="map-kidspark">
+                         <img src="/assets/img/condition/map/course_name.png" alt="コース名" class="map-name">
+             <img src="/assets/img/condition/map/course_base.jpg" alt="コースマップ" class="map-base">
+           </figure>
+@@ -691,55 +684,55 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                                                     <tr>
+                       <td>パラダイスAコース</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        ◯                        </td>
++                      <td class="info">規制を開放しました。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>乙女コース（上部）</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>乙女コース（下部）</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>第1ゲレンデ</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>から松ゲレンデ</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>第6ゲレンデ</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>神中Aコース</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>ラビットコース</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>β‐α連絡コース</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                 
+@@ -757,43 +750,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                                                     <tr>
+                       <td>ダウンヒルコース</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>パラダイスツリーラン</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        ◯                        </td>
++                      <td class="info">【未圧雪】規制を開放しました。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>モーグルコース</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        ◯                        </td>
++                      <td class="info">全３レーン オープン！うちエア台有１レーン　目印がつけてるのでモーグル中上級者のみ滑走可。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>スカイラインBコース（上部）</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>スカイラインBコース（下部）</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                                                       <tr>
+                       <td>パラダイスBコース</td>
+                       <td>
+                         ×                        </td>
+-                      <td class="info"></td>
++                      <td class="info">井上春樹レーシングアカデミー専用ポールバーンのコースです。本日はクローズです。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>クマダナコース</td>
+                       <td>
+-                        ×                        </td>
++                        ◯                        </td>
+                       <td class="info"></td>
+                     </tr>
+                                             </table>
+@@ -811,50 +804,50 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                                                     <tr>
+                       <td>神中Bコース</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        ◯                        </td>
++                      <td class="info">【未圧雪】上級者のみ滑走可。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>神中回転バーン</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        ◯                        </td>
++                      <td class="info">【未圧雪】上級者のみ滑走可。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>チャレンジBコース</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        ◯                        </td>
++                      <td class="info">【未圧雪】上級者のみ滑走可。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>チャレンジCコース</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        ◯                        </td>
++                      <td class="info">【未圧雪】上級者のみ滑走可。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>スカイラインAコース</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        ◯                        </td>
++                      <td class="info">上部は圧雪、下部は未圧雪となります。</td>
+                     </tr>
+                                                                                                                         <tr>
+                       <td>チャレンジツリーランエリア</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        要確認                        </td>
++                      <td class="info">【未圧雪】上級者のみ滑走可。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>ウマノセツリーランエリア</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        要確認                        </td>
++                      <td class="info">【未圧雪】上級者のみ滑走可。</td>
+                     </tr>
+                                                                       <tr>
+                       <td>乙女ツリーランエリア</td>
+                       <td>
+-                        ×                        </td>
+-                      <td class="info"></td>
++                        要確認                        </td>
++                      <td class="info">【未圧雪】上級者のみ滑走可。</td>
+                     </tr>
+                                             </table>
+           
+@@ -881,36 +874,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                                               <table class="table_basic">
+                     <tr>
+                       <td class="course_name cell1">ステップアップパーク</td>
+-                      <td class="cell2">×</td>
+-                      <td class="info cell3">今シーズンの営業は終了いたしました</td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3">【場所】　第1ゲレンデ（上部）
++【開放時間】　9:00 ～16:00　
++【開放アイテム】全8アイテムHIT!
++・ダブルレール　・ナローBOX　・5mキッカー　・太丸レール
++・畳BOX　・ポコジャン　・塩ビ管　・６mワイドBOX</td>
+                     </tr>
+                   </table>
+                                                               <table class="table_basic">
+                     <tr>
+                       <td class="course_name cell1">Re:テレインパーク</td>
+-                      <td class="cell2">×</td>
+-                      <td class="info cell3">今シーズンの営業は終了いたしました</td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3">【場所】　乙女コース　上部～中腹
++【開放時間】　9:00 ～ 15:00　
++【開放アイテム】　全15アイテムHIT！
++・3m / 4m / 5m / 6m / 8mキッカー　・連続ウェーブ　・ウェーブ
++・フラットダウンBOX　・ワイドBOX　・キャノンレール
++・ナローBOX　・7mレール　・ダブルダウンレール　・段々レール
++・ステップオーバーキッカー</td>
+                     </tr>
+                   </table>
+                                                                                                           <table class="table_basic">
+                     <tr>
+                       <td class="course_name cell1">モーグルコース</td>
+-                      <td class="cell2">×</td>
+-                      <td class="info cell3"></td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3">【開放時間】　9:00 ～ 15:00　
++【開放レーン】　全３レーン（うち１レーンはエア台あり）
++</td>
+                     </tr>
+                   </table>
+                                                                                                           <table class="table_basic">
+                     <tr>
+                       <td class="course_name cell1">サーフライドパーク</td>
+                       <td class="cell2">×</td>
+-                      <td class="info cell3">今シーズンの営業は終了いたしました</td>
++                      <td class="info cell3">2月上旬に造成開始！！</td>
+                     </tr>
+                   </table>
+                                                               <table class="table_basic">
+                     <tr>
+                       <td class="course_name cell1">ナイトパーク</td>
+-                      <td class="cell2">×</td>
+-                      <td class="info cell3">今シーズンの営業は終了いたしました</td>
++                      <td class="cell2">◯</td>
++                      <td class="info cell3">【場所】　第1ゲレンデ（上部）
++【開放時間】　18:00 ～21:00　
++【開放アイテム】全8アイテム
++・ダブルレール　・ナローBOX　・5mキッカー　・太丸レール
++・畳BOX　・ポコジャン　・塩ビ管　・６mワイドBOX
++※悪天候や降雪が多い場合、一部アイテムがクローズする可能性がありますので、ご了承ください。</td>
+                     </tr>
+                   </table>
+                                       
+@@ -967,20 +977,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+                     <table class="table_basic">
+                                                                         <tr>
+                             <td class="course_name cell1">Baboon</td>
+-                            <td class="cell2">×</td>
+-                                                          <td rowspan="4" class="info cell3">今シーズンの営業は終了いたしました</td>
++                            <td class="cell2">◯</td>
++                                                          <td rowspan="4" class="info cell3">そりゲレンデ「SnowBaboon」がオープン！
++ムービングベルトも稼働するので、楽に雪遊びが楽しめます！！
++冬の思い出はBaboonで作ってくださいね☆
++
++■ 営業状況
++・スノーバブーン・プレイバブーン　・ハイハイバブーン　・バブーンフードコート　・レンタル
++・窓口にてリフト券を販売しております。
++※Baboonフードコートは、現在店舗が限られており、ラーメン、カレー、飛騨牛、甘味処の営業となります。
++　ラーメンについて土日は待ち時間が発生する場合があります。
++
++※バブーンへは、シャトルバスまたはお客様のお車でご移動をお願いいたします。</td>
+                                                       </tr>
+                                                                                                 <tr>
+                             <td class="course_name cell1">Snow Baboon そり専用ゲレンデ</td>
+-                            <td class="cell2">×</td>
++                            <td class="cell2">◯</td>
+                                                       </tr>
+                                                                                                 <tr>
+                             <td class="course_name cell1">Play Baboon 屋内遊具エリア</td>
+-                            <td class="cell2">×</td>
++                            <td class="cell2">◯</td>
+                                                       </tr>
+                                                                                                 <tr>
+                             <td class="course_name cell1">Baboon フードコート</td>
+-                            <td class="cell2">×</td>
++                            <td class="cell2">◯</td>
+                                                       </tr>
+                                               
+                     </table>
+@@ -1169,8 +1189,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>
+         <li><a href="../faq/">FAQ</a></li>
+         <li><a href="../company/">会社概要</a></li>
+         <li><a href="https://www.takasumountains.com/" target="_blank">TAKASU MOUNTAINS</a></li>
+-        <li><a href="https://asobito-resort.com/login" target="_blank">会員ログイン</a></li>
+-        <li><a href="https://asobito-resort.com/register" target="_blank">新規会員登録</a></li>
++        <li><a href="https://chubu-snow.com/member/login.php" target="_blank">会員ログイン</a></li>        
++        <li><a href="https://chubu-snow.com/register/" target="_blank">新規会員登録</a></li>
+         <li><a href="../contact/">お問い合わせ</a></li>
+       </ul>
+     </nav>
+-- 
+2.39.5
+

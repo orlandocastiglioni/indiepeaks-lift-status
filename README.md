@@ -50,4 +50,15 @@ or a plain `{name: status}` map when it doesn't. Trails-only resorts
 
 Lift status is collected by [Liftie](https://github.com/pirxpilot/liftie)
 (BSD-3-Clause, see [LIFTIE-LICENSE](LIFTIE-LICENSE)). The data itself
-originates from the linked resorts' public websites.
+originates from the linked resorts' public websites. Sites that render
+their reports with JavaScript or sit behind Cloudflare are fetched through
+a headless-chromium tier (FlareSolverr / renderd — see
+[pi-setup/RESTORE.md](pi-setup/RESTORE.md)).
+
+## Index
+
+`status/_index.json` lists every published resort id with its display name —
+apps can discover newly added resorts from it instead of shipping their own
+list. `status/_health.json` records per-resort row counts and the last time
+each resort had data (empty in summer is normal; `lastNonEmpty` shows the
+last real report).

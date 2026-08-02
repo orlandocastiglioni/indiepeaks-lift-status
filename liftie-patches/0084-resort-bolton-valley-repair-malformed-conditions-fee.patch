@@ -1,0 +1,1376 @@
+From 7fe17d67e546914bda2883692b9805bf5df1cd08 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:11 -0400
+Subject: resort: bolton-valley - repair malformed conditions feed json, add
+ trail status
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/bolton-valley/resort.json   |  12 +-
+ lib/resorts/bolton-valley/trails.js     |  22 +
+ test/resorts/bolton-valley-trails.js    | 363 +++++++++++++++++
+ test/resorts/bolton-valley.js           |  12 +-
+ test/resorts/example/bolton-valley.json | 511 +++++++++++++-----------
+ 5 files changed, 678 insertions(+), 242 deletions(-)
+ create mode 100644 lib/resorts/bolton-valley/trails.js
+ create mode 100644 test/resorts/bolton-valley-trails.js
+
+diff --git a/lib/resorts/bolton-valley/resort.json b/lib/resorts/bolton-valley/resort.json
+index f9b5603e..03b241ba 100644
+--- a/lib/resorts/bolton-valley/resort.json
++++ b/lib/resorts/bolton-valley/resort.json
+@@ -10,7 +10,17 @@
+     "query": {
+       "action": "get_prop_conditions"
+     },
+-    "json": true
++    "json": true,
++    "fixJson": true
++  },
++  "trails": {
++    "host": "https://www.boltonvalley.com",
++    "pathname": "/wp-admin/admin-ajax.php",
++    "query": {
++      "action": "get_prop_conditions"
++    },
++    "json": true,
++    "fixJson": true
+   },
+   "tags": [
+     "Vermont",
+diff --git a/lib/resorts/bolton-valley/trails.js b/lib/resorts/bolton-valley/trails.js
+new file mode 100644
+index 00000000..02f76877
+--- /dev/null
++++ b/lib/resorts/bolton-valley/trails.js
+@@ -0,0 +1,22 @@
++// same admin-ajax feed as the lifts; trail statuses[] is [modifier?, Open|Closed]
++// (e.g. ['Groomed', 'Open']) - the definitive token is always the LAST element,
++// statuses[0] would read the modifier
++const statuses = {
++  // coerce does not know 'Partially Open' (it would become 'scheduled')
++  'partially open': 'open'
++};
++
++export default function parse(data) {
++  const { trails = [] } = data?.report?.facilities ?? {};
++  return trails
++    .filter(t => !t.excluded)
++    .map(({ name, difficulty, statuses: s = [] }) => {
++      const status = s[s.length - 1];
++      return {
++        name,
++        status: statuses[status?.toLowerCase()] ?? status,
++        // easiest, more-difficult, most-difficult, expert-only, terrain
++        level: difficulty
++      };
++    });
++}
+diff --git a/test/resorts/bolton-valley-trails.js b/test/resorts/bolton-valley-trails.js
+new file mode 100644
+index 00000000..f88a4576
+--- /dev/null
++++ b/test/resorts/bolton-valley-trails.js
+@@ -0,0 +1,363 @@
++import trails from '../trails/index.js';
++
++trails(
++  'bolton-valley',
++  [
++    {
++      name: 'Abenaki Trail',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Bear Run',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Bull Run',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Cobrass Lane',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Deer Run',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Lower Bently',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Lower Crossover',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Lower Fanny Hill',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Lower Foxy',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Lower Turnpike',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Lower Villager',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Lower Wilderness',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Mighty Mite',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Primer Loop',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Sherman&#039;s Pass',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Snowflake Bentley',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Spillway Exit',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Sprig O&#039; Pine',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Spur',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Swing',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Timberline Lane',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Timberline Run',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Upper Villager',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Work Road',
++      status: 'open',
++      level: 'green'
++    },
++    {
++      name: 'Alta Vista',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Beech Seal',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Cobrass',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Cobrass Run',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Coyote',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Deer Path',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Enchanted Forest',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Fanny Hill',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Five Corners',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Foxy',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Glades',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Hard Luck Lane',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Lower Brandywine',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Lower Tattle Tale',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Moonlight Park',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Moose Run',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Mousehole',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Old Turnpike',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Peggy Dow&#039;s',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Showtime',
++      status: 'closed',
++      level: 'blue'
++    },
++    {
++      name: 'Spillway Lane',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Sure Shot',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'TFR',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Twice as Nice',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Valley Road',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Wilderness Liftline',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Wood&#039;s Hole',
++      status: 'open',
++      level: 'blue'
++    },
++    {
++      name: 'Bolton Outlaw',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'Brandywine',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'Cougar',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'Hard Luck',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'Intro',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'Schuss',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'Show Off - Lower',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'Show Off - Upper',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'Spellbinder',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'Spillway',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'Upper Crossover',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'Upper Fanny Hill',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'Upper Tattle Tale',
++      status: 'closed',
++      level: 'black'
++    },
++    {
++      name: 'Vermont 200',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'Vista Glades',
++      status: 'open',
++      level: 'black'
++    },
++    {
++      name: 'Adam&#039;s Solitude',
++      status: 'closed',
++      level: 'doubleBlack'
++    },
++    {
++      name: 'Lost Boyz',
++      status: 'closed',
++      level: 'doubleBlack'
++    },
++    {
++      name: 'Preacher',
++      status: 'open',
++      level: 'doubleBlack'
++    },
++    {
++      name: 'TNT',
++      status: 'open',
++      level: 'doubleBlack'
++    },
++    {
++      name: 'Hide Away',
++      status: 'open',
++      level: 'terrainPark'
++    }
++  ],
++  { ext: 'json' }
++);
+diff --git a/test/resorts/bolton-valley.js b/test/resorts/bolton-valley.js
+index 2e36dca4..71b471c4 100644
+--- a/test/resorts/bolton-valley.js
++++ b/test/resorts/bolton-valley.js
+@@ -1,10 +1,10 @@
+ import lifts from '../lifts/index.js';
+ 
+ lifts('bolton-valley', 'json', {
+-  'Mid Mountain': 'closed',
+-  'Mighty Mite': 'closed',
+-  'Snowflake': 'closed',
+-  'Timberline': 'closed',
+-  'Vista': 'closed',
+-  'Wilderness': 'closed'
++  'Mid Mountain': 'open',
++  'Mighty Mite': 'open',
++  'Snowflake': 'open',
++  'Timberline': 'open',
++  'Vista': 'open',
++  'Wilderness': 'open'
+ });
+diff --git a/test/resorts/example/bolton-valley.json b/test/resorts/example/bolton-valley.json
+index 81c4f28a..367a8008 100644
+--- a/test/resorts/example/bolton-valley.json
++++ b/test/resorts/example/bolton-valley.json
+@@ -1,200 +1,207 @@
+ {
+ 	"report": {
+ 		"name": "Resort",
+-		"updated": "2021-07-17T10:44:00-04:00",
++		"updated": "2023-02-24T07:10:00-05:00",
+ 		"units": "imperial",
+ 
+ 		"operations": {
+-			"resortStatus": "7",
+-			"openWeekday": "Closed",
+-			"openWeekend": "Closed",
+-			"totalAcres": ""
++			"resortStatus": "1",
++			"openWeekday": "Mon: 9a-4p, Tue-Fri: 9a-10p",
++			"openWeekend": "Sat: 9a-10p, Sun: 9a-4p",
++			"totalAcres": "0.00"
+ 		},
+ 		"currentConditions": {
+                         "weather": {
+-                            "date": "2021-10-04T12:44:35-04:00",
++                            "date": "2023-02-24T08:12:36-05:00",
+                             "icon": {
+                                 "class": "wi-forecast-io-cloudy",
+                                 "title": "Cloudy"
+                             },
+                             "summary": "Overcast",
+-                            "temperature": "54.71",
+-                            "minTemperature": "50.14",
+-                            "maxTemperature": "55.29",
+-                            "sunrise": "2021-10-04T06:55:00-04:00",
+-                            "sunset": "2021-10-04T18:28:00-04:00",
++                            "temperature": "6.04",
++                            "minTemperature": "-0.49",
++                            "maxTemperature": "20.95",
++                            "sunrise": "2023-02-24T06:39:00-05:00",
++                            "sunset": "2023-02-24T17:34:00-05:00",
+                             "precipType": "na",
+                             "intensity": "none",
+                             "precipProbability": "",
+-                                                        "humidity": "0.86",
+-                            "windSpeed": "6.1",
+-                            "windBearing": "135",
+-                            "windDirection": "se",
+-                            "pressure": "1018.1"
++                                                        "humidity": "0.81",
++                            "windSpeed": "7.76",
++                            "windBearing": "319",
++                            "windDirection": "nw",
++                            "pressure": "1020.8"
+                         },
+-			"totalDownhillAcresOpen": "",
++			"totalDownhillAcresOpen": "0.00",
+ 			"resortLocations": {
+ 				"location": {
+ 					"name": "Resort",
+-					"primarySurface": "Variable Conditions",
+-					"secondarySurface": "Variable Conditions",
+-					"baseRange": "-",
+-					"snow24Hours": "-",
+-					"snow48Hours": "0",
+-					"snow72Hours": "0",
+-					"snow7days": "0",
+-					"seasonTotal": "201"
++					"primarySurface": "Machine Groomed",
++					"secondarySurface": "Packed Powder",
++					"baseRange": "16-20",
++					"snow24Hours": "2-3",
++					"snow48Hours": "9",
++					"snow72Hours": "11",
++					"snow7days": "14",
++					"seasonTotal": "157"
+ 				}
+ 			}
+ 		},
+ 		"forecast": {
+                     "days": [
+                         {
+-                            "date": "2021-10-05T00:00:00-04:00",
++                            "date": "2023-02-25T00:00:00-05:00",
+                             "icon": {
+-                                "class": "wi-forecast-io-rain",
+-                                "title": "Rain"
++                                "class": "wi-forecast-io-cloudy",
++                                "title": "Cloudy"
+                             },
+-                            "summary": "Light rain in the morning.",
+-                            "temperature": "51.935",
+-                            "minTemperature": "47.74",
+-                            "maxTemperature": "56.13",
+-                            "sunrise": "2021-10-05T06:56:00-04:00",
+-                            "sunset": "2021-10-05T18:26:00-04:00",
+-                            "precipType": "rain",
++                            "summary": "Overcast throughout the day.",
++                            "temperature": "3.06",
++                            "minTemperature": "-5.24",
++                            "maxTemperature": "11.36",
++                            "sunrise": "2023-02-25T06:37:00-05:00",
++                            "sunset": "2023-02-25T17:35:00-05:00",
++                            "precipType": "snow",
+                             "intensity": "light",
+-                            "precipProbability": "0.82",
+-                                                        "humidity": "0.88",
+-                            "windSpeed": "3",
+-                            "windBearing": "119",
+-                            "windDirection": "ese",
+-                            "pressure": "1024.8"
++                            "precipProbability": "0.2",
++                                                        "accumulation": "1.1",
++                                                        "humidity": "0.72",
++                            "windSpeed": "2.93",
++                            "windBearing": "233",
++                            "windDirection": "sw",
++                            "pressure": "1029.4"
+                         },{
+-                            "date": "2021-10-06T00:00:00-04:00",
++                            "date": "2023-02-26T00:00:00-05:00",
+                             "icon": {
+-                                "class": "wi-forecast-io-partly-cloudy-day",
+-                                "title": "Partly Cloudy"
++                                "class": "wi-forecast-io-snow",
++                                "title": "Snow"
+                             },
+-                            "summary": "Partly cloudy throughout the day.",
+-                            "temperature": "55.06",
+-                            "minTemperature": "46.18",
+-                            "maxTemperature": "63.94",
+-                            "sunrise": "2021-10-06T06:57:00-04:00",
+-                            "sunset": "2021-10-06T18:24:00-04:00",
+-                            "precipType": "rain",
++                            "summary": "Snow (1–3 in.) in the afternoon.",
++                            "temperature": "14.89",
++                            "minTemperature": "3.86",
++                            "maxTemperature": "25.92",
++                            "sunrise": "2023-02-26T06:35:00-05:00",
++                            "sunset": "2023-02-26T17:36:00-05:00",
++                            "precipType": "snow",
+                             "intensity": "light",
+-                            "precipProbability": "0.05",
+-                                                        "humidity": "0.84",
+-                            "windSpeed": "1.89",
+-                            "windBearing": "1",
+-                            "windDirection": "n",
+-                            "pressure": "1028.4"
++                            "precipProbability": "0.45",
++                                                        "accumulation": "2",
++                                                        "humidity": "0.83",
++                            "windSpeed": "5.57",
++                            "windBearing": "199",
++                            "windDirection": "ssw",
++                            "pressure": "1012.2"
+                         },{
+-                            "date": "2021-10-07T00:00:00-04:00",
++                            "date": "2023-02-27T00:00:00-05:00",
+                             "icon": {
+-                                "class": "wi-forecast-io-clear-day",
+-                                "title": "Clear"
++                                "class": "wi-forecast-io-fog",
++                                "title": "Fog"
+                             },
+-                            "summary": "Clear throughout the day.",
+-                            "temperature": "56.75",
+-                            "minTemperature": "48.6",
+-                            "maxTemperature": "64.9",
+-                            "sunrise": "2021-10-07T06:58:00-04:00",
+-                            "sunset": "2021-10-07T18:22:00-04:00",
+-                            "precipType": "na",
+-                            "intensity": "none",
+-                            "precipProbability": "0.03",
+-                                                        "humidity": "0.82",
+-                            "windSpeed": "2.29",
+-                            "windBearing": "307",
+-                            "windDirection": "nw",
+-                            "pressure": "1025.3"
++                            "summary": "Foggy overnight.",
++                            "temperature": "14.94",
++                            "minTemperature": "5.82",
++                            "maxTemperature": "24.06",
++                            "sunrise": "2023-02-27T06:34:00-05:00",
++                            "sunset": "2023-02-27T17:38:00-05:00",
++                            "precipType": "snow",
++                            "intensity": "light",
++                            "precipProbability": "0.14",
++                                                        "accumulation": "0.7",
++                                                        "humidity": "0.7",
++                            "windSpeed": "3.46",
++                            "windBearing": "119",
++                            "windDirection": "ese",
++                            "pressure": "1013.9"
+                         },{
+-                            "date": "2021-10-08T00:00:00-04:00",
++                            "date": "2023-02-28T00:00:00-05:00",
+                             "icon": {
+-                                "class": "wi-forecast-io-clear-day",
+-                                "title": "Clear"
++                                "class": "wi-forecast-io-snow",
++                                "title": "Snow"
+                             },
+-                            "summary": "Clear throughout the day.",
+-                            "temperature": "56.75",
+-                            "minTemperature": "47.81",
+-                            "maxTemperature": "65.69",
+-                            "sunrise": "2021-10-08T06:59:00-04:00",
+-                            "sunset": "2021-10-08T18:20:00-04:00",
+-                            "precipType": "na",
+-                            "intensity": "none",
+-                            "precipProbability": "0",
+-                                                        "humidity": "0.77",
+-                            "windSpeed": "1.95",
+-                            "windBearing": "36",
+-                            "windDirection": "ne",
+-                            "pressure": "1021.5"
++                            "summary": "Heavy snow (4–7 in.) until evening.",
++                            "temperature": "25.27",
++                            "minTemperature": "20.7",
++                            "maxTemperature": "29.84",
++                            "sunrise": "2023-02-28T06:32:00-05:00",
++                            "sunset": "2023-02-28T17:39:00-05:00",
++                            "precipType": "snow",
++                            "intensity": "moderate",
++                            "precipProbability": "0.83",
++                                                        "accumulation": "7.5",
++                                                        "humidity": "0.82",
++                            "windSpeed": "7.74",
++                            "windBearing": "153",
++                            "windDirection": "sse",
++                            "pressure": "1004.4"
+                         },{
+-                            "date": "2021-10-09T00:00:00-04:00",
++                            "date": "2023-03-01T00:00:00-05:00",
+                             "icon": {
+                                 "class": "wi-forecast-io-cloudy",
+                                 "title": "Cloudy"
+                             },
+-                            "summary": "Overcast throughout the day.",
+-                            "temperature": "53.245",
+-                            "minTemperature": "47.96",
+-                            "maxTemperature": "58.53",
+-                            "sunrise": "2021-10-09T07:01:00-04:00",
+-                            "sunset": "2021-10-09T18:19:00-04:00",
+-                            "precipType": "na",
+-                            "intensity": "none",
+-                            "precipProbability": "0.01",
+-                                                        "humidity": "0.79",
+-                            "windSpeed": "5.43",
+-                            "windBearing": "135",
+-                            "windDirection": "se",
+-                            "pressure": "1024.2"
++                            "summary": "Foggy overnight.",
++                            "temperature": "27.015",
++                            "minTemperature": "19.36",
++                            "maxTemperature": "34.67",
++                            "sunrise": "2023-03-01T06:30:00-05:00",
++                            "sunset": "2023-03-01T17:40:00-05:00",
++                            "precipType": "snow",
++                            "intensity": "light",
++                            "precipProbability": "0.18",
++                                                        "accumulation": "0.2",
++                                                        "humidity": "0.64",
++                            "windSpeed": "3.18",
++                            "windBearing": "194",
++                            "windDirection": "ssw",
++                            "pressure": "1014.7"
+                         },{
+-                            "date": "2021-10-10T00:00:00-04:00",
++                            "date": "2023-03-02T00:00:00-05:00",
+                             "icon": {
+-                                "class": "wi-forecast-io-cloudy",
+-                                "title": "Cloudy"
++                                "class": "wi-forecast-io-snow",
++                                "title": "Snow"
+                             },
+-                            "summary": "Overcast throughout the day.",
+-                            "temperature": "53.905",
+-                            "minTemperature": "48.13",
+-                            "maxTemperature": "59.68",
+-                            "sunrise": "2021-10-10T07:02:00-04:00",
+-                            "sunset": "2021-10-10T18:17:00-04:00",
+-                            "precipType": "na",
+-                            "intensity": "none",
+-                            "precipProbability": "0.02",
+-                                                        "humidity": "0.75",
+-                            "windSpeed": "5.58",
+-                            "windBearing": "144",
+-                            "windDirection": "se",
+-                            "pressure": "1024.7"
++                            "summary": "Snow (1–4 in.) until evening.",
++                            "temperature": "26.87",
++                            "minTemperature": "18.58",
++                            "maxTemperature": "35.16",
++                            "sunrise": "2023-03-02T06:28:00-05:00",
++                            "sunset": "2023-03-02T17:42:00-05:00",
++                            "precipType": "snow",
++                            "intensity": "light",
++                            "precipProbability": "0.76",
++                                                        "accumulation": "2.4",
++                                                        "humidity": "0.76",
++                            "windSpeed": "4.33",
++                            "windBearing": "220",
++                            "windDirection": "sw",
++                            "pressure": "1004.3"
+                         },{
+-                            "date": "2021-10-11T00:00:00-04:00",
++                            "date": "2023-03-03T00:00:00-05:00",
+                             "icon": {
+-                                "class": "wi-forecast-io-rain",
+-                                "title": "Rain"
++                                "class": "wi-forecast-io-fog",
++                                "title": "Fog"
+                             },
+-                            "summary": "Possible light rain in the morning and afternoon.",
+-                            "temperature": "55.17",
+-                            "minTemperature": "49.53",
+-                            "maxTemperature": "60.81",
+-                            "sunrise": "2021-10-11T07:03:00-04:00",
+-                            "sunset": "2021-10-11T18:15:00-04:00",
+-                            "precipType": "rain",
++                            "summary": "Foggy until morning, starting again in the evening.",
++                            "temperature": "15.49",
++                            "minTemperature": "10.83",
++                            "maxTemperature": "20.15",
++                            "sunrise": "2023-03-03T06:27:00-05:00",
++                            "sunset": "2023-03-03T17:43:00-05:00",
++                            "precipType": "snow",
+                             "intensity": "light",
+-                            "precipProbability": "0.6",
+-                                                        "humidity": "0.8",
+-                            "windSpeed": "4.23",
+-                            "windBearing": "153",
+-                            "windDirection": "sse",
+-                            "pressure": "1019.4"
++                            "precipProbability": "0.16",
++                                                        "accumulation": "0.6",
++                                                        "humidity": "0.57",
++                            "windSpeed": "6.21",
++                            "windBearing": "317",
++                            "windDirection": "nw",
++                            "pressure": "1014.8"
+                         }                    ],
+-                    "weather": "Sunny"
++                    "weather": "Mostly Cloudy"
+ 		},
+ 		"comment": {
+-			"comments": "0",
+-			"scoop": ""
++			"comments": "8&quot;  past  2 days",
++			"scoop": "9&quot; of fresh snow in the last 48 hours with all 6 lifts and top to bottom skiing until 10pm"
+ 		},
+ 		"facilities": {
+ 			"areas": [					{
+@@ -202,296 +209,335 @@
+ 					},									{
+ 						"name": "Nordic Trails"
+ 					}							],
+-                        "openDownHillLifts": "0",
++                        "openDownHillLifts": "6",
+                         "maxOpenDownHillLifts": "6",
+ 			"lifts": [					{
+ 						"name": "Mid Mountain",
+ 						"type": "Double",
+-						"statuses": [                                                    "Closed"
++						"statuses": [                                                    "Open"
+                                                 ]
+ 					},									{
+ 						"name": "Mighty Mite",
+ 						"type": "Surface Lift",
+-						"statuses": [                                                    "Closed"
++						"statuses": [                                                    "Open"
+                                                 ]
+ 					},									{
+ 						"name": "Snowflake",
+ 						"type": "Double",
+-						"statuses": [                                                    "Closed"
++						"statuses": [                                                    "Open"
+                                                 ]
+ 					},									{
+ 						"name": "Timberline",
+ 						"type": "Quad",
+-						"statuses": [                                                    "Closed"
++						"statuses": [                                                    "Open"
+                                                 ]
+ 					},									{
+ 						"name": "Vista",
+ 						"type": "Quad",
+-						"statuses": [                                                    "Closed"
++						"statuses": [                                                    "Open"
+                                                 ]
+ 					},									{
+ 						"name": "Wilderness",
+ 						"type": "Double",
+-						"statuses": [                                                    "Closed"
++						"statuses": [                                                    "Open"
+                                                 ]
+ 					}							],
+-                        "openDownHillTrails": "0",
+-                        "maxOpenDownHillTrails": "72",
++                        "openDownHillTrails": "60",
++                        "maxOpenDownHillTrails": "71",
+ 			"trails": [
+-
++				                                  
+         			                            			{
+             			    "name": "Abenaki Trail",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Bear Run",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Bull Run",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Cobrass Lane",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Deer Run",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Bently",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Crossover",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Fanny Hill",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Foxy",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Turnpike",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Villager",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Wilderness",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Mighty Mite",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Primer Loop",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Sherman&#039;s Pass",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Snowflake Bentley",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Spillway Exit",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Sprig O&#039; Pine",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Spur",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Swing",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Timberline Lane",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
++                                    ]
++                  },                            			{
++            			    "name": "Timberline Run",
++                                    "difficulty": "easiest",
++                                    "excluded": false,
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Upper Villager",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Work Road",
+                                     "difficulty": "easiest",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+-                  }
+-
++                  }                
++        			      			                                          
+         			                ,             			{
+             			    "name": "Alta Vista",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Beech Seal",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Cobrass",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Cobrass Run",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Coyote",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Deer Path",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Enchanted Forest",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Fanny Hill",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Five Corners",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Foxy",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Glades",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Hard Luck Lane",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Brandywine",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Partial Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Lower Tattle Tale",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Partial Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Moonlight Park",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Partially Open"
+                                     ]
+                   },                            			{
+             			    "name": "Moose Run",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Partial Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Mousehole",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Old Turnpike",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Peggy Dow&#039;s",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Showtime",
+@@ -503,46 +549,50 @@
+             			    "name": "Spillway Lane",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Sure Shot",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "TFR",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+-            			    "name": "Timberline Run",
++            			    "name": "Twice as Nice",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+-            			    "name": "Twice as Nice",
++            			    "name": "Valley Road",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Wilderness Liftline",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Wood&#039;s Hole",
+                                     "difficulty": "more-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+-                  }
+-
++                  }                
++        			      			                                          
+         			                ,             			{
+             			    "name": "Bolton Outlaw",
+                                     "difficulty": "most-difficult",
+@@ -565,7 +615,8 @@
+             			    "name": "Hard Luck",
+                                     "difficulty": "most-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Intro",
+@@ -577,19 +628,19 @@
+             			    "name": "Schuss",
+                                     "difficulty": "most-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Show Off - Lower",
+                                     "difficulty": "most-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Show Off - Upper",
+                                     "difficulty": "most-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Partially Open"
+                                     ]
+                   },                            			{
+             			    "name": "Spellbinder",
+@@ -601,7 +652,8 @@
+             			    "name": "Spillway",
+                                     "difficulty": "most-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Upper Crossover",
+@@ -625,16 +677,16 @@
+             			    "name": "Vermont 200",
+                                     "difficulty": "most-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "Vista Glades",
+                                     "difficulty": "most-difficult",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+-                  }
+-
++                  }                
++        			      			                                          
+         			                ,             			{
+             			    "name": "Adam&#039;s Solitude",
+                                     "difficulty": "expert-only",
+@@ -651,36 +703,25 @@
+             			    "name": "Preacher",
+                                     "difficulty": "expert-only",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+                   },                            			{
+             			    "name": "TNT",
+                                     "difficulty": "expert-only",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Open"
+                                     ]
+-                  }
+-
++                  }                
++        			      			                                          
+         			                ,             			{
+             			    "name": "Hide Away",
+                                     "difficulty": "terrain",
+                                     "excluded": false,
+-                                    "statuses": [                                        "Closed"
+-                                    ]
+-                  },                            			{
+-            			    "name": "Pine Street Progression Park",
+-                                    "difficulty": "terrain",
+-                                    "excluded": false,
+-                                    "statuses": [                                        "Closed"
+-                                    ]
+-                  },                            			{
+-            			    "name": "Valley Road",
+-                                    "difficulty": "terrain",
+-                                    "excluded": false,
+-                                    "statuses": [                                        "Closed"
++                                    "statuses": [                                        "Groomed",
++                                                                                "Open"
+                                     ]
+-                  }
+-
++                  }                
++        			      			                                          
+         			      			        			]
+ 		}
+ 	}
+-- 
+2.39.5
+

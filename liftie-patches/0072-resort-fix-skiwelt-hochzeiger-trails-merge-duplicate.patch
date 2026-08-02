@@ -1,8 +1,8 @@
 From 88e327932e0732b76ca069dd0a309d448b1188c4 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 13:05:39 +0000
-Subject: [PATCH 72/77] resort: fix skiwelt/hochzeiger trails - merge duplicate
- piste segments
+Subject: resort: fix skiwelt/hochzeiger trails - merge duplicate piste
+ segments
 
 The micadoweb facility API lists multi-segment pistes once per segment
 (Kaiserexpress x3, Filzboden Abfahrt x3, ...), inflating SkiWelt's trail

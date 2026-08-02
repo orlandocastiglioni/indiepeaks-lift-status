@@ -1,0 +1,707 @@
+From 0598fc76cc2079278a65c8daef3f33f8f13ada96 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:52:55 -0400
+Subject: resort: washigatake - fix trails - course/park sections; winter lift
+ fixture
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/washigatake/trails.js     |  47 ++--
+ test/resorts/example/washigatake.html | 378 ++++++++++++++++++++++----
+ test/resorts/washigatake-trails.js    | 108 +++++++-
+ test/resorts/washigatake.js           |   9 +-
+ 4 files changed, 466 insertions(+), 76 deletions(-)
+
+diff --git a/lib/resorts/washigatake/trails.js b/lib/resorts/washigatake/trails.js
+index 76785d2a..b7830a47 100644
+--- a/lib/resorts/washigatake/trails.js
++++ b/lib/resorts/washigatake/trails.js
+@@ -3,37 +3,42 @@ import { findText } from '../../tools/domutil.js';
+ import status from './status.js';
+ 
+ const sections = { 初級: 'green', 中級: 'blue', 上級: 'black' };
++// course tables also carry a level class (the sister takasu site dropped
++// the <caption> in favor of an outside <h3> mid-2026, keep both signals)
++const classes = { shokyu: 'green', chukyu: 'blue', jokyu: 'black' };
+ 
+-// course tables: [section row like 初級コース] コース名 | 滑走状況 | お知らせ;
+-// park tables use パーク名 in the header instead
++// section#course tables: caption 初級コース/中級コース/上級コース (level also in
++// the table class), header コース名 | 滑走状況 | お知らせ, rows th/td name + glyph;
++// section#park: the パーク名 header sits in its own table and every park is a
++// separate header-less one-row table, so scope by section instead of headers
+ export default function parse(dom) {
+   const rows = [];
+-  for (const table of select(dom, 'table')) {
+-    const trs = select(table.children, 'tr');
++  for (const table of select(dom, 'section#course table')) {
+     const caption = select(table.children, 'caption')[0];
+-    let level = caption && sections[Object.keys(sections).find(k => (findText(caption) ?? '').includes(k))];
+-    let headerIdx = -1;
+-    for (const [i, tr] of trs.entries()) {
++    const tableClass = table.attribs?.class ?? '';
++    const level =
++      classes[Object.keys(classes).find(c => tableClass.includes(c))] ??
++      (caption && sections[Object.keys(sections).find(k => (findText(caption) ?? '').includes(k))]);
++    for (const tr of select(table.children, 'tr')) {
+       const cells = select(tr.children, 'th, td').map(findText);
+-      const joined = cells.filter(Boolean).join(' ');
+-      if (/コース名|パーク名/.test(joined)) {
+-        headerIdx = i;
+-        if (/パーク名/.test(joined)) {
+-          level = 'terrainPark';
+-        }
+-        continue;
+-      }
+-      if (headerIdx < 0) {
+-        const section = Object.keys(sections).find(k => joined.includes(k));
+-        if (section) {
+-          level = sections[section];
+-        }
+-        continue;
++      if (/コース名/.test(cells.filter(Boolean).join(' '))) {
++        continue; // header row
+       }
+       if (cells[0] && cells[1]) {
+         rows.push({ name: cells[0].trim(), status: status(cells[1]), level });
+       }
+     }
+   }
++  for (const table of select(dom, 'section#park table')) {
++    for (const tr of select(table.children, 'tr')) {
++      const cells = select(tr.children, 'th, td').map(findText);
++      if (/パーク名/.test(cells.filter(Boolean).join(' '))) {
++        continue; // header-only table
++      }
++      if (cells[0] && cells[1]) {
++        rows.push({ name: cells[0].trim(), status: status(cells[1]), level: 'terrainPark' });
++      }
++    }
++  }
+   return rows;
+ }
+diff --git a/test/resorts/example/washigatake.html b/test/resorts/example/washigatake.html
+index 5cd356d9..065f4fc4 100644
+--- a/test/resorts/example/washigatake.html
++++ b/test/resorts/example/washigatake.html
+@@ -17,14 +17,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+ })(window,document,'script','dataLayer','GTM-N97XPSP');</script>
+ <!-- End Google Tag Manager -->
+ 
+-<!-- Google Tag Manager -->
+-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+-})(window,document,'script','dataLayer','GTM-WJ62RRXQ');</script>
+-<!-- End Google Tag Manager -->
+-    
+ <meta name="format-detection" content="telephone=no">
+ <link href="favicon.ico" rel="shortcut icon" />
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/yakuhanjp@4.1.1/dist/css/yakuhanjp.css">
+@@ -46,6 +38,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+   <!-- InstanceEndEditable -->
+ <!-- InstanceParam name="pagetype" type="text" value="" -->
+ 
++<!-- Google tag (gtag.js) -->
++<script async src="https://www.googletagmanager.com/gtag/js?id=G-23JYSTPHWY"></script>
++<script>
++  window.dataLayer = window.dataLayer || [];
++  function gtag(){dataLayer.push(arguments);}
++  gtag('js', new Date());
++
++  gtag('config', 'G-23JYSTPHWY');
++  gtag('config', 'UA-68285404-1');
++</script>
+ <script src="https://d.shutto-translation.com/trans.js?id=1327"></script>
+     
+ <script type="application/ld+json">
+@@ -154,11 +156,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+ <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N97XPSP"
+ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+ <!-- End Google Tag Manager (noscript) -->
+-<!-- Google Tag Manager (noscript) -->
+-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WJ62RRXQ"
+-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+-<!-- End Google Tag Manager (noscript) -->
+-    
++
+ <header class="header">
+     
+ 
+@@ -322,7 +320,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+     </div>
+     <section class="date">
+       <div class="inner">
+-        <time>2026-04-07 10:00 更新</time>
++        <time>2026-01-28 07:10 更新</time>
+       </div>
+     </section>
+     <section class="page_nav">
+@@ -349,17 +347,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+           <div class="weather">
+                             <ul>
+               <li class="ico">
+-                <img src="../assets/img/condition/ico_mid_info_02.png" alt=""></figure>
++                <img src="../assets/img/condition/ico_mid_info_01.png" alt=""></figure>
+               </li>
+-              <li>曇り</li>
+-              <li class="condition">滑走不可</li></ul>
++              <li>晴れ</li>
++              <li class="condition">全面滑走可</li></ul>
+             <dl class="snow">
+               <dt>積雪</dt>
+-              <dd>0cm&nbsp;</dd>
++              <dd>150cm&nbsp;</dd>
+               <dt>気温</dt>
+-              <dd>5&#8451;&nbsp;</dd>
++              <dd>-6&#8451;&nbsp;</dd>
+               <dt>雪質</dt>
+-              <dd>土と解け残りの雪</dd>
++              <dd>新雪極上バーン</dd>
+             </dl>
+             <ul>
+               <li class="btn"><a href="https://cdn.wgis.jp/white-eyes/?q=Bbn3ZHv0T6jidm4OPcXnFB8an1waB6kO" class="takezo" target="_blank">タケゾーくんのピンポイント予報 </a></li>
+@@ -394,7 +392,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+             </div>
+             
+             <div class="youtube-container">
+-                <iframe width="560" height="315" src="https://www.youtube.com/embed/HN7HF5dF1d8?si=o6NNHLoAUiBzD_ZG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
++            <iframe width="560" height="315" src="https://www.youtube.com/embed/JPqtbTdQjM8?si=K-V_t1EwY9V0iRjj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+             </div>
+         </div>
+       </div>
+@@ -407,7 +405,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+           <div id="road-informaion" class="road">
+             <dl class="road-condition">
+               <dt>道路状況</dt>
+-              <dd>走りやすいアスファルト路面です。&nbsp;</dd>
++              <dd>除雪・融雪された雪道です。スタッドレスタイヤ装着の車両でお越しください。&nbsp;</dd>
+             </dl>
+             <ul class="road-bnr">
+               <li><a href="http://www.jartic.or.jp/" target="_blank">・日本道路交通情報センター
+@@ -447,10 +445,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+         <div class="content_inner">
+           <div class="cm-line"><br />
+ <br />
+-<span style="font-size: 18pt;">25-26シーズンもついにファイナル！<br />
+-ご来場いただいた皆様、誠にありがとうございました。</span><br />
++<span style="font-size: 14pt;">寒波の影響により、</span><br />
++<span style="font-size: 14pt;">朝は締まりのある良好なゲレンデコンディションとなっています。</span><br />
++<br />
++<span style="font-size: 14pt;">天候は晴れ予報で、日中の気温は－1℃～－8℃と冷え込みが続く見込みです。</span><br />
++<span style="font-size: 14pt;">体の装備も車の装備も整えて、快適な滑走をお楽しみください。</span><br />
++<br />
++<span style="font-size: 14pt;">【今後の予定】<br />
++毎週火曜　🚩鷲ヶ岳半額デー！</span><br />
++<span style="font-size: 14pt;">毎週水曜　🚩鷲の湯風呂の日♨</span><br />
++<span style="font-size: 14pt;">2/1(日)　 🏁SNOW CANDY<br />
++</span><br />
++<br />
++<span style="font-size: 14pt;"><span style="color: #ff0000;"><span style="color: #000000;"><span style="color: #333300;"><span style="color: #ff0000;">※</span></span>ホワイトアドベンチャーは</span></span>準備が出来次第、オープンとなります。</span><br />
++<br />
++降雪条件が整った場合には日中も降雪機を稼働させていただきます。<br />
++今後のゲレンデコンディション確保の為の取り組みとして、ご理解とご協力をお願いいたします。<br />
+ <br />
+-<span style="font-size: 18pt;">また26-27シーズンのご来場をお待ちしております。</span><br />
++<span style="font-size: 14pt;">【道路状況】<br />
++除雪・融雪されていますが、雪道です。<br />
++スタッドレスタイヤを装着の上、安全運転でご来場ください。<br />
++2WD車両はチェーンのご用意をお願いします。</span><br />
++<br />
++<hr /><br />
++<br />
++</div><br />
++<div class="cm-line"><br />
++<br />
++<span style="font-size: 14pt;"><span style="font-size: 14pt;"> </span></span><br />
+ <br />
+ </div>        </div>
+       </div>
+@@ -470,12 +492,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+               <th class="info">お知らせ</th>
+             </tr>
+                                               <tr>
+-                    <th class="name"></th>
+-                    <td></td>
+-                    <td>×</td>
+-                    <td class="info">25-26シーズンの運行は終了いたしました。ご利用いただき、ありがとうございました！</td>
++                    <th class="name">第１クワッドリフト</th>
++                    <td>8:00　～　16:30</td>
++                    <td>◯</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <th class="name">第２クワッドリフト</th>
++                    <td>8:00　～　16:20</td>
++                    <td>◯</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <th class="name">第３クワッドリフト</th>
++                    <td>8:30　～　16:00</td>
++                    <td>◯</td>
++                    <td class="info"></td>
+                   </tr>
+-                                                                                                                                                                                                                                                                                                              </table>
++                                                                                                          <tr>
++                    <th class="name">第２ペアリフト</th>
++                    <td>8:00　～　16:20</td>
++                    <td>◯</td>
++                    <td class="info"></td>
++                  </tr>
++                                                              <tr>
++                    <th class="name">１００ｍムービングベルト</th>
++                    <td>9:00　～　16:00</td>
++                    <td>◯</td>
++                    <td class="info">準備が整い次第、オープンさせていただきます。</td>
++                  </tr>
++                                                              <tr>
++                    <th class="name">５０ｍムービングベルト</th>
++                    <td>9:00　～　16:00</td>
++                    <td>◯</td>
++                    <td class="info">準備が整い次第、オープンさせていただきます。</td>
++                  </tr>
++                                      </table>
+ 
+ <ul class="flex-wrap terms-wrap sp-flex-wrap">
+ <li class="btn"><a href="../assets/pdf/agreement.pdf" target="_blank">スキー場利用約款</a></li>
+@@ -496,23 +548,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+           <!-- 最新ゲレンデ情報マップ ここから// -->
+                     <figure class="condition_map js-pinch-hint">
+ 
+-                            <img src="/assets/img/condition/map/lift_01_00.png" alt="×" class="map-lift">
+-                                                                                                                                                                                                                                                                                                                                <script>
+-                                  lift01_status="×";
+-                                  lift02_status="×";
+-                                  lift03_status="×";
++                            <img src="/assets/img/condition/map/lift_01_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_02_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_03_02.png" alt="◯" class="map-lift">
++                                                                                            <img src="/assets/img/condition/map/lift_05_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_06_02.png" alt="◯" class="map-lift">
++                                              <img src="/assets/img/condition/map/lift_07_02.png" alt="◯" class="map-lift">
++                                            <script>
++                                  lift01_status="◯";
++                                  lift02_status="◯";
++                                  lift03_status="◯";
+                                   lift04_status="×";
+-                                  lift05_status="×";
+-                                  lift06_status="×";
+-                                  lift07_status="×";
++                                  lift05_status="◯";
++                                  lift06_status="◯";
++                                  lift07_status="◯";
+                               </script>
+             
+-                                                                                                                                                                                                                                                                                                                                                                            
+-                                                                                                                                                                                                                                                                                                                                
+-                                                                                                                                                                                            
+-                                                                                                                                                                                                                                                                                    
+-                            <img src="/assets/img/condition/map/kidspark_01_00.png" alt="×" class="map-kidspark">
+-                                                                                                                                                            <img src="/assets/img/condition/map/course_name.png" alt="コース名" class="map-name">
++                                                                        <img src="/assets/img/condition/map/course_0102_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0103_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0104_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0105_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0106_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0107_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0108_02.png" alt="◯" class="map-course">
++            
++                            <img src="/assets/img/condition/map/course_0201_02.png" alt="◯" class="map-course">
++                                                                        <img src="/assets/img/condition/map/course_0202_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0203_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0204_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0205_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0206_02.png" alt="◯" class="map-course">
++            
++                            <img src="/assets/img/condition/map/course_0301_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0302_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0303_02.png" alt="◯" class="map-course">
++                            <img src="/assets/img/condition/map/course_0304_00.png" alt="×" class="map-course">
++            
++                            <img src="/assets/img/condition/map/park_01_02.png" alt="◯" class="map-park">
++                            <img src="/assets/img/condition/map/park_01_02.png" alt="◯" class="map-park">
++                            <img src="/assets/img/condition/map/park_03_02.png" alt="◯" class="map-park">
++                            <img src="/assets/img/condition/map/park_04_00.png" alt="×" class="map-park">
++                                                                                                    
++                            <img src="/assets/img/condition/map/kidspark_01_02.png" alt="◯" class="map-kidspark">
++                            <img src="/assets/img/condition/map/kidspark_02_02.png" alt="◯" class="map-kidspark">
++                            <img src="/assets/img/condition/map/kidspark_03_02.png" alt="◯" class="map-kidspark">
++                            <img src="/assets/img/condition/map/kidspark_04_00.png" alt="×" class="map-kidspark">
++                        <img src="/assets/img/condition/map/course_name.png" alt="コース名" class="map-name">
+             <img src="/assets/img/condition/map/course_base.jpg" alt="コースマップ" class="map-base">
+           </figure>
+           <!-- //最新ゲレンデ情報マップ ここまで -->
+@@ -522,14 +603,147 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+           <h2 class="lttl">滑走可能コース</h2>
+ 
+ 
+-                    
++                                <table class="table_basic shokyu">
++              <caption>
++                初級コース
++              </caption>
++              <tr>
++                <th class="cell1">コース名</th>
++                <th class="status">滑走状況</th>
++                <th class="info">お知らせ</th>
++              </tr>
++                                                                                                      <tr>
++                      <td class="name">パノラマコース上部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">パノラマコース下部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">ノースバーンコース下部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">パラレルコース下部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">ラビットコース下部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">イーグルコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">ノースウェイコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                            </table>
++          
+ 
+ 
+ 
+-                    
++                                <table class="table_basic chukyu">
++              <caption>
++                中級コース
++              </caption>
++              <tr>
++                <th class="cell1">コース名</th>
++                <th class="status">滑走状況</th>
++                <th class="info">お知らせ</th>
++              </tr>
++                                                    <tr>
++                      <td class="name">ブナ平コース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info">下部に３m・５mキッカーあり</td>
++                    </tr>
++                                                                                                                        <tr>
++                      <td class="name">ラビットコース上部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">マジカルコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">ホワイトコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">アタックコース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">林間コース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                            </table>
++          
+ 
+ 
+-                    
++                                <table class="table_basic jokyu">
++              <caption>
++                上級コース
++              </caption>
++              <tr>
++                <th class="cell1">コース名</th>
++                <th class="status">滑走状況</th>
++                <th class="info">お知らせ</th>
++              </tr>
++                                                    <tr>
++                      <td class="name">ノースバーンコース上部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">パラレルコース上部</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info">一部ブッシュあり</td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">尾根コース</td>
++                      <td>
++                        ◯                        </td>
++                      <td class="info"></td>
++                    </tr>
++                                                                      <tr>
++                      <td class="name">パラダイスコース</td>
++                      <td>
++                        ×                        </td>
++                      <td class="info">コースオープンまでいましばらくお待ちください。</td>
++                    </tr>
++                                
++            </table>
++          
+         </div>
+       </div>
+     </section>
+@@ -546,7 +760,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+                 src="../assets/img/condition/insta_bnr_park.jpg" width="602" height="152" alt="" /></a></p>
+ 
+           
+-          
++                      <table class="table_basic">
++              <tr>
++                <th class="cell1">パーク名</th>
++                <th class="status">滑走状況</th>
++                <th class="info">パーク・アイテム情報</th>
++              </tr>
++            </table>
++                                              <table class="table_basic">
++                    <tr>
++                      <th class="name">THE ACTIVE 上部</th>
++                      <td class="status">◯</td>
++                      <td class="info cell3">1/26　リメイク
++2連キッカー（4・7m）　／　 ワイドBOX・ポコジャン・ポコジャン</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <th class="name">THE ACTIVE 中腹</th>
++                      <td class="status">◯</td>
++                      <td class="info cell3">1/26　リメイク
++10mキッカー　／　2wayジブ（ショートレール・塩ビレール）・5mBOX・初心者卒業キッカー</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <th class="name">THE ACTIVE　ウラ口</th>
++                      <td class="status">◯</td>
++                      <td class="info cell3">1/26　リメイク
++5mBOX・3ｍキッカー</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <th class="name">THE ACTIVE　下部</th>
++                      <td class="status">×</td>
++                      <td class="info cell3">ノンアイテム</td>
++                    </tr>
++                  </table>
++                                                                                                                              
+         </div>
+       </div>
+     </section>
+@@ -566,14 +818,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+             </table>
+                                               <table class="table_basic">
+                     <tr>
+-                      <th class="name"></th>
++                      <th class="name">ホワイトアドベンチャー</th>
++                      <td class="status">◯</td>
++                      <td class="info">100mのロングムービングベルトが登場！
++今シーズンはさらにエリアを拡大し、お荷物スペースもご用意しています。</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <th class="name">ソリコース</th>
++                      <td class="status">◯</td>
++                      <td class="info">コースコンディションに合わせてスタート位置を調整させていただきます。</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <th class="name">お子様スキー・スノーボード練習コース</th>
++                      <td class="status">◯</td>
++                      <td class="info">今シーズンからお子様同伴の保護者様の滑走もＯＫ！</td>
++                    </tr>
++                  </table>
++                                                              <table class="table_basic">
++                    <tr>
++                      <th class="name">チュービングコース</th>
+                       <td class="status">×</td>
+-                      <td class="info">25-26シーズンの営業は終了いたしました。
+-ご来場いただき、ありがとうございました。
+-</td>
++                      <td class="info">コース制作中。オープンまでいましばらくお待ちください。</td>
+                     </tr>
+                   </table>
+-                                                                                                                                                                        </div>
++                                    </div>
+             </div>
+     </section>
+ 
+diff --git a/test/resorts/washigatake-trails.js b/test/resorts/washigatake-trails.js
+index ea29d6be..e6c0b7c3 100644
+--- a/test/resorts/washigatake-trails.js
++++ b/test/resorts/washigatake-trails.js
+@@ -1,3 +1,109 @@
+ import trails from '../trails/index.js';
+ 
+-trails('washigatake', []);
++trails('washigatake', [
++  {
++    name: 'パノラマコース上部',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'パノラマコース下部',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'ノースバーンコース下部',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'パラレルコース下部',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'ラビットコース下部',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'イーグルコース',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'ノースウェイコース',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'ブナ平コース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'ラビットコース上部',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'マジカルコース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'ホワイトコース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'アタックコース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: '林間コース',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'ノースバーンコース上部',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'パラレルコース上部',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: '尾根コース',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'パラダイスコース',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'THE ACTIVE 上部',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'THE ACTIVE 中腹',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'THE ACTIVE ウラ口',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'THE ACTIVE 下部',
++    status: 'closed',
++    level: 'terrainPark'
++  }
++]);
+diff --git a/test/resorts/washigatake.js b/test/resorts/washigatake.js
+index 4673850c..eff7c0a7 100644
+--- a/test/resorts/washigatake.js
++++ b/test/resorts/washigatake.js
+@@ -1,3 +1,10 @@
+ import lifts from '../lifts/index.js';
+ 
+-lifts('washigatake', 'html', {});
++lifts('washigatake', 'html', {
++  '第１クワッドリフト': 'open',
++  '第２クワッドリフト': 'open',
++  '第３クワッドリフト': 'open',
++  '第２ペアリフト': 'open',
++  '１００ｍムービングベルト': 'open',
++  '５０ｍムービングベルト': 'open'
++});
+-- 
+2.39.5
+

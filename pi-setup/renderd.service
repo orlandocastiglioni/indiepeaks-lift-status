@@ -1,0 +1,27 @@
+[Unit]
+Description=renderd - headless chromium render service for liftie (localhost only)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=orlando
+Group=orlando
+WorkingDirectory=/home/orlando/renderd
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=10
+
+# chromium is heavy; keep it from eating the pi
+MemoryMax=1200M
+CPUWeight=50
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,196 @@
+From 863d6ec8111ef6244a57fbe2bcb004321e33c6de Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:12 -0400
+Subject: resort: granite-peak - fix trails - dedupe repeated runs with
+ open-wins merge
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/granite-peak/trails.js     | 30 +++++++++++++++++++-------
+ test/resorts/example/granite-peak.html | 24 ++++++++++-----------
+ test/resorts/granite-peak-trails.js    | 15 -------------
+ 3 files changed, 34 insertions(+), 35 deletions(-)
+
+diff --git a/lib/resorts/granite-peak/trails.js b/lib/resorts/granite-peak/trails.js
+index 6855064c..1a19be60 100644
+--- a/lib/resorts/granite-peak/trails.js
++++ b/lib/resorts/granite-peak/trails.js
+@@ -1,21 +1,35 @@
+ import select from '../../select.js';
+ import { allText } from '../../tools/domutil.js';
+ 
++const rank = { open: 0, closed: 1 };
++
+ // trail rows are nested under each lift's <details>; the difficulty and
+-// status icons carry title attributes (occasionally a raw term id, coerced away)
+-export default {
+-  selector: '.trail.component-row',
+-  parse: row => {
++// status icons carry title attributes (occasionally a raw term id, coerced
++// away). Beginner trails served by two lifts (Meadows, Mystery, Whitetail)
++// are listed under both sections - merge by name, open wins, first level kept
++export default function parse(dom) {
++  const byName = new Map();
++  for (const row of select(dom, '.trail.component-row')) {
+     const title = select(row.children, '.cell.title')[0];
+     const status = select(row.children, '.status .f-icon')[0];
+     const level = title && select(title.children, '.f-icon.level')[0];
+     if (!title || !status) {
+-      return;
++      continue;
+     }
+-    return {
+-      name: allText(title),
++    const trail = {
++      name: allText(title).trim(),
+       status: status.attribs.title,
+       level: level?.attribs.title
+     };
++    const prev = byName.get(trail.name);
++    if (!prev) {
++      byName.set(trail.name, trail);
++    } else {
++      if (rank[trail.status] < rank[prev.status]) {
++        prev.status = trail.status;
++      }
++      prev.level ??= trail.level;
++    }
+   }
+-};
++  return [...byName.values()];
++}
+diff --git a/test/resorts/example/granite-peak.html b/test/resorts/example/granite-peak.html
+index a4a19edb..9ba86bf2 100644
+--- a/test/resorts/example/granite-peak.html
++++ b/test/resorts/example/granite-peak.html
+@@ -42,13 +42,13 @@
+         {
+             "@type": "Organization",
+             "@id": "https://www.skigranitepeak.com/#organization",
+-            "name": "Granite Peak",
+-            "url": "https://www.skigranitepeak.com/",
+             "sameAs": [
+                 "https://www.facebook.com/granitepeak/",
+                 "https://www.instagram.com/granitepeakskiarea/",
+                 "https://twitter.com/granitepeak"
+             ],
++            "url": "https://www.skigranitepeak.com/",
++            "name": "Granite Peak",
+             "telephone": "+1 (715) 845-2846",
+             "contactPoint": {
+                 "@type": "ContactPoint",
+@@ -98,7 +98,7 @@
+ 
+         <title>Mountain Report | Granite Peak</title>
+         <link rel="stylesheet" media="all" href="/sites/default/files/css/css_4AHaSwpydv3_ZRP9pQGWIW73dunagu3E-ITBqCfoXAk.css?delta=0&amp;language=en&amp;theme=granitepeak&amp;include=eJx9j9EKwyAMRX_I1k8aqaYaFhMxyui-fkIZ3Uv3lJvcw4EAeaBHYt2AXYCQcedh2V9xLSjDBQazwxc0g4T23UUjuqANfdBSVVC6rdookSwLhNlEUrklmKyTJLsF_vqbvm47m1rGJSiPInPU40RFWwGmN7rUQKhjRXj6n-xOg98naK5Cg1nWbD62UYHX67IOqWObL2SMzg7rWPwGhh-K5ILz" />
+-<link rel="stylesheet" media="all" href="/sites/default/files/css/css_FmtQfgWnEMN2v5H-vY9vJo-JmPNsG-0kj391gwYGXAk.css?delta=1&amp;language=en&amp;theme=granitepeak&amp;include=eJx9j9EKwyAMRX_I1k8aqaYaFhMxyui-fkIZ3Uv3lJvcw4EAeaBHYt2AXYCQcedh2V9xLSjDBQazwxc0g4T23UUjuqANfdBSVVC6rdookSwLhNlEUrklmKyTJLsF_vqbvm47m1rGJSiPInPU40RFWwGmN7rUQKhjRXj6n-xOg98naK5Cg1nWbD62UYHX67IOqWObL2SMzg7rWPwGhh-K5ILz" />
++<link rel="stylesheet" media="all" href="/sites/default/files/css/css__wSYHKKSwTsvJow-lBmzBdkgc2MltIcpp6dWYSGMCug.css?delta=1&amp;language=en&amp;theme=granitepeak&amp;include=eJx9j9EKwyAMRX_I1k8aqaYaFhMxyui-fkIZ3Uv3lJvcw4EAeaBHYt2AXYCQcedh2V9xLSjDBQazwxc0g4T23UUjuqANfdBSVVC6rdookSwLhNlEUrklmKyTJLsF_vqbvm47m1rGJSiPInPU40RFWwGmN7rUQKhjRXj6n-xOg98naK5Cg1nWbD62UYHX67IOqWObL2SMzg7rWPwGhh-K5ILz" />
+ 
+             
+ 
+@@ -388,12 +388,12 @@
+         data-unit="imperial"
+         class="reset-button lh-1 f-icon icon-chevron-down weather-widget-toggle">
+         <span class="t-align-center jc-center d-grid weather-icon">
+-            <span class="wi wi-day-sunny"></span>
++            <span class="wi wi-cloudy"></span>
+             <span class="temp">
+                 
+ <span class="imperial-value">
+     <span class="value ">
+-        64
++        82
+     </span>
+     <span class="unit">
+                     &deg;F
+@@ -402,7 +402,7 @@
+ 
+ <span class="metric-value">
+      <span class="value ">
+-                          18
++                          28
+                 </span>
+     <span class="unit">
+                     &deg;C
+@@ -459,17 +459,17 @@
+                     <div class="d-flex items-wrap">
+                         <div class="item">
+                             <h3 class="h4">
+-                                Sunny
++                                Some Cloud
+                             </h3>
+                             <div class="data h3 d-flex ai-center">
+                                 <div class="weather-icon-wrapper">
+-                                    <span class="wi wi-day-sunny"></span>
++                                    <span class="wi wi-cloudy"></span>
+                                 </div>
+                                 <div class="data h3">
+                                     
+ <span class="imperial-value">
+     <span class="value h2 m-0">
+-        64
++        82
+     </span>
+     <span class="unit">
+                     &deg;F
+@@ -478,7 +478,7 @@
+ 
+ <span class="metric-value">
+      <span class="value h2 m-0">
+-                          18
++                          28
+                 </span>
+     <span class="unit">
+                     &deg;C
+@@ -499,7 +499,7 @@
+                                     
+ <span class="imperial-value">
+     <span class="value h2 m-0">
+-        2
++        9
+     </span>
+     <span class="unit">
+                     mph
+@@ -508,7 +508,7 @@
+ 
+ <span class="metric-value">
+      <span class="value h2 m-0">
+-                          3
++                          14
+                 </span>
+     <span class="unit">
+                     kph
+diff --git a/test/resorts/granite-peak-trails.js b/test/resorts/granite-peak-trails.js
+index 102be197..c443033f 100644
+--- a/test/resorts/granite-peak-trails.js
++++ b/test/resorts/granite-peak-trails.js
+@@ -151,26 +151,11 @@ trails('granite-peak', [
+     'status': 'closed',
+     'level': 'green'
+   },
+-  {
+-    'name': 'Meadows',
+-    'status': 'closed',
+-    'level': 'green'
+-  },
+-  {
+-    'name': 'Mystery',
+-    'status': 'closed',
+-    'level': 'green'
+-  },
+   {
+     'name': 'Snowflake',
+     'status': 'closed',
+     'level': 'green'
+   },
+-  {
+-    'name': 'Whitetail',
+-    'status': 'closed',
+-    'level': 'green'
+-  },
+   {
+     'name': 'Frosty Learning',
+     'status': 'closed',
+-- 
+2.39.5
+

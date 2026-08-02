@@ -1,8 +1,8 @@
 From da04374d8cc84d26e23f5fa2dcbae6d4a8c0e452 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Fri, 17 Jul 2026 12:59:21 +0000
-Subject: [PATCH 62/77] resort: fix red-lodge-mountain - row layout changed,
- all lifts collapsed into one phantom
+Subject: resort: fix red-lodge-mountain - row layout changed, all lifts
+ collapsed into one phantom
 
 The site moved the lift name into .chair-header-right h2 and put a
 'Chair Status' label first in each row, so every row parsed to the same

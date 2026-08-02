@@ -1,0 +1,26 @@
+From e2f1d902db894cab3dcc75f8a0f47597aeb1bd48 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:20:11 -0400
+Subject: coerce: map openpartial / partially-open to open
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/tools/coerce.js | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/tools/coerce.js b/lib/tools/coerce.js
+index 5a2805d7..a0960e2c 100644
+--- a/lib/tools/coerce.js
++++ b/lib/tools/coerce.js
+@@ -23,6 +23,8 @@ const map = {
+   aperto: 'open',
+   normal: 'open',
+   groomed: 'open',
++  openpartial: 'open',
++  partiallyopen: 'open',
+ 
+   n: 'closed',
+   x: 'closed',
+-- 
+2.39.5
+

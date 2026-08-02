@@ -1,0 +1,891 @@
+From b0c26564223385a4c772fc76e4f3c159881797ed Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 17:52:55 -0400
+Subject: resort: waterville - add trail status
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/waterville/resort.json   |   1 +
+ lib/resorts/waterville/trails.js     |  30 +++
+ test/resorts/example/waterville.html | 303 ++++++++++++-----------
+ test/resorts/waterville-trails.js    | 344 +++++++++++++++++++++++++++
+ test/resorts/waterville.js           |  15 +-
+ 5 files changed, 550 insertions(+), 143 deletions(-)
+ create mode 100644 lib/resorts/waterville/trails.js
+ create mode 100644 test/resorts/waterville-trails.js
+
+diff --git a/lib/resorts/waterville/resort.json b/lib/resorts/waterville/resort.json
+index bec7b028..b8eaf948 100644
+--- a/lib/resorts/waterville/resort.json
++++ b/lib/resorts/waterville/resort.json
+@@ -8,6 +8,7 @@
+     "host": "http://features.waterville.com",
+     "pathname": "/propsnow/"
+   },
++  "trails": true,
+   "tags": [
+     "New Hampshire",
+     "New England"
+diff --git a/lib/resorts/waterville/trails.js b/lib/resorts/waterville/trails.js
+new file mode 100644
+index 00000000..e8ae4d89
+--- /dev/null
++++ b/lib/resorts/waterville/trails.js
+@@ -0,0 +1,30 @@
++import select from '../../select.js';
++import { findText } from '../../tools/domutil.js';
++
++// the propsnow legend labels pti-hold as "Wind Delay" and pti-hold-check as
++// "On Hold" - coerce knows 'hold' but not 'hold-check', so map it here
++const statuses = {
++  'hold-check': 'hold'
++};
++
++// trails share the features.waterville.com/propsnow page with the lifts,
++// grouped in sections whose <h2> leading text is the difficulty (Easiest,
++// More Difficult, Most Difficult, Expert Only, Terrain Park - normalizeLevel
++// knows them all); each trail article's FIRST SnowReport-item-status span
++// carries the pti-(open|closed|hold|hold-check) icon - later spans are flags
++// like Groomed, so only the first one counts
++export default function parse(dom) {
++  const rows = [];
++  for (const section of select(dom, 'section.SnowReport-section--trails')) {
++    const level = findText(select(section, 'h2.SnowReport-section-title')[0])?.trim();
++    for (const article of select(section, 'article.SnowReport-Trail')) {
++      const name = findText(select(article, 'h3.SnowReport-feature-title')[0]);
++      const icon = select(article, 'span.SnowReport-item-status i.pti')[0];
++      const status = icon?.attribs.class.match(/pti-([a-z-]+)/)?.[1];
++      if (name && status) {
++        rows.push({ name, status: statuses[status] ?? status, level });
++      }
++    }
++  }
++  return rows;
++}
+diff --git a/test/resorts/example/waterville.html b/test/resorts/example/waterville.html
+index a0773c1c..a45f9376 100644
+--- a/test/resorts/example/waterville.html
++++ b/test/resorts/example/waterville.html
+@@ -6,7 +6,8 @@
+     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+ 
+     <meta name="description" content="">
+-      
++    
++                
+             <title>Waterville Valley Resort - Snow Report</title>
+       
+         <link rel="stylesheet" href="/assets/theme/wvr/css/style.min.css"/>      <link rel="stylesheet" href="/assets/theme/wvr/css/trailmap.css"/>      <link rel="stylesheet" href="/assets/theme/wvr/css/snowreport.css"/>      <link rel="stylesheet" href="/assets/instagram/instagrid.css"/>      <link rel="stylesheet" href="/assets/theme/wvr/css/trailmap.css"/>
+@@ -27,32 +28,21 @@
+         
+         
+ <div class="SnowReport">
+-    <div class="SnowReport-Tab-bar">
+-    <ul class="SnowReport-Nav SnowReport-Nav--tabs">
+-      <li class="is-active">
+-        <a data-pmw-toggle="tab" href="#snowreport-132-conditions">Snow Report</a>
+-      </li>
+-      <li>
+-        <a data-pmw-toggle="tab" href="#snowreport-132-written">Written Report</a>
+-      </li>
+-    </ul>
+-  </div>
+-  
++    
+ 
+     <div class="SnowReport-Tab-content">
+ 
+        <div class="SnowReport-info">
+ 
+-            <div>
+-        <dl class="date-info">
++        <dl class="SnowReport-Weather">
++    <dt>Current Weather:</dt>
++    <dd>29&deg; F</dd>
++    <dd><i class="wi wi-propsnow-cloudy"></i> Cloudy</dd>  </dl>
++          <dl class="date-info">
+           <dd>Updated: </dd>
+-          <dd> 08:22am, January 06, 2018</dd>
++          <dd> 07:10am, February 02, 2024</dd>
+         </dl>
+ 
+-                <dl class="date-info">
+-          <dd>Open: </dd>
+-          <dd>Mon-Fri 9-3:45p</dd>          <dd>Sat/Sun &amp; Holidays 8-3:45p</dd>        </dl>
+-        </div>
+             </div>
+ 
+               <ul class="SnowReport-Nav SnowReport-Nav--links">
+@@ -60,8 +50,66 @@
+                   <li><a href="/propsnow/report/print/" target="_blank">Printer Friendly</a></li>
+               </ul>
+         
+-        <div class="SnowReport-Tab-pane is-active" id="snowreport-132-conditions">
+-            <div id="snow-cond">  
++        <div class="SnowReport-Tab-pane is-active" id="snowreport-1826-conditions">      
++<section class="SnowReport-section SnowReport-section--written">
++
++  <article>
++    <p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Good Morning skiers and riders! We are open today, Friday, February 2nd. Last night we received a nice dusting of snow on the mountain.</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Lifts and Trails:</strong></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">Lifts open at 9:00 am. We anticipate spinning the following lifts: Tecumseh Express, High Country T-Bar, Green Peak, Valley Run Quad, Lower Pasture Carpet, Lower Meadows and Exhibition.&nbsp;</span></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">Higher Ground and Lower Bobby's are now open!&nbsp;</span></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">We currently have 58 trails open across two mountain peaks, with 256 skiable acres!</span></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Expect snowmaking to resume later today on Piano Man, Calvert's Crossing, and True Grit.</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Conditions and Weather:</strong></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Today's temperatures will reach 25 degrees at the summit and 34 degrees at the base, accompanied by mostly cloudy skies.</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><br />Winds are expected to reach 14-20 mph from the north at the summit, and 10-16 mph at the base area.&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Thanks to recent snow, trails are consisting of soft corduroy with firmer yet carvable conditions on select trails.&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Nordic:</strong></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">Nordic skiing is open, <a href="https://www.waterville.com/nordic-snow-report" target="_blank" rel="noopener">Click here to view the full Nordic Report!</a></span></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">The Nordic Center is open for retail daily --&gt; </span><a class="editor-rtfLink" style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt; color: #4a6ee0;" href="https://www.waterville.com/nordic-center" target="_blank" rel="noopener"><span style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt; color: #4a6ee0;" data-preserver-spaces="true">Click here to visit the Nordic Center!</span></a></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Terrain Parks:</strong></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Our main park on Utter Abandon is open! So far there are 5 rail and box features, with 2 large and 2 medium jumps. The build is continuing throughout the next week!</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">High Country Park: 2 tubes, 1 medium jump</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Rock Island Park: 2 tap features, 3 rails, 1 small jump</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Lower White Caps: 1 tube, 1 box, 1 rail</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Boardercross Course: Variety of banked turns, rollers, jumps, and drops.</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">FunRun: Small banks, rollers, and tabletops.</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Dining:</strong></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">The following dining options are open today: Schwendi Hutte, Freestyle Lounge, Next Level Food Truck, T-Bars, and Marketplace. We have new and enhanced menus at these spots so stop in and fuel up!</span></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Uphill Access:</strong></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">Oblivion Route: Open&nbsp;</span>Sun-Fri only (No Saturday or Holidays) from 7am-10am<span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">: </span><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">Valley Run -&gt; Upper Valley Run -&gt; Oblivion. Please keep to climber's left of trail during ascent. </span><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">Must descend by 10am.</span></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">High Country Route: Open: Main Street -&gt; Ruthie's Run -&gt; Tree Line. Uphill access every day during normal operating hours (lift-serviced hours)</span></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">Green Peak Route: Open: Leroy's Loop -&gt; Bourbon Street -&gt; Stillness -&gt; South Street -&gt; Chandler's Way</span></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="text-size-adjust: auto; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">IF DESCENDING PRIOR TO CHAIRLIFT OPERATING HOURS, YOU MUST DESCEND THE SAME DESIGNATED ROUTE YOU ASCENDED</strong></p>
++<p style="text-size-adjust: auto; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">UPHILL RULES</strong><span style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">:&nbsp;</span><em style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Uphill access is permitted only to those who purchase a valid Uphill Trail Pass (reflective armband) and sign a Liability Release. Reflective armbands must be worn while ascending. No descending until lifts open on powder days. No dogs. Only skinning and touring are allowed on alpine trails, sorry, no foot traffic is permitted.</em><span style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">&nbsp;</span></p>
++<p style="text-size-adjust: auto; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="text-size-adjust: auto; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">*These restrictions and modifications are temporary. Once snowmaking is complete on Green Peak Route, we will revert to normal designated trails.</span></p>
++<p style="text-size-adjust: auto; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">Waterville Valley is thrilled to be a part of the brand-new Uphill New England Pass,&nbsp;</span><a class="editor-rtfLink" style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt; color: #4a6ee0;" href="https://www.waterville.com/uphill#pass" target="_blank" rel="noopener"><span style="background-color: transparent; margin-top: 0pt; margin-bottom: 0pt; color: #4a6ee0;" data-preserver-spaces="true">click here to learn more!</span></a></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><strong style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Additional Info:</strong></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">Vote for Waterville Valley Resort Snowmakers in the 2024 I AM A SNOWMAKER competition! You can vote once per day, per device until Feb. 2nd. --&gt; <a href="https://www.saminfo.com/i-am-a-snowmaker?fbclid=IwAR2zcFas0z9_RIoH11YJbZw-UnUCVzTkvz4MfFc_VU1szYliHVKrLLXd2M8#waterville" target="_blank" rel="noopener">Vote Here!</a></p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;</p>
++<p style="font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; text-decoration: none; color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;"><span style="color: #0e101a; background-color: transparent; margin-top: 0pt; margin-bottom: 0pt;" data-preserver-spaces="true">To get direct alerts about lift closures and wind holds, text "SNOW" to 603-825-7989.</span></p>
++  </article>
++
++</section>
++                <div id="snow-cond">
+         
+ 
+ 
+@@ -70,8 +118,8 @@
+   <h2 class="SnowReport-section-title">Snow Fall</h2>
+ 
+   <div class="SnowReport-measures SnowReport-measures--columns">
+-    <dl class="SnowReport-measure"><dt>Past 24 Hours</dt><dd> -  in.</dd></dl>      <dl class="SnowReport-measure"><dt>Past 48 Hours</dt><dd>12 in.</dd></dl>
+-      <dl class="SnowReport-measure"><dt>Season Total</dt><dd>70 in.</dd></dl>
++    <dl class="SnowReport-measure"><dt>Past 24 Hours</dt><dd>0 - 0 in.</dd></dl>      <dl class="SnowReport-measure"><dt>Past 48 Hours</dt><dd>0 in.</dd></dl>
++      <dl class="SnowReport-measure"><dt>Season Total</dt><dd>75 in.</dd></dl>
+   </div>
+ 
+ </section>
+@@ -85,75 +133,58 @@
+ 
+   <div class="SnowReport-measures SnowReport-measures--columns">
+ 
+-      <dl class="SnowReport-measure"><dt>Base Depth</dt><dd>34 - 40 in.</dd></dl>
+-     <dl class="SnowReport-measure"><dt>Grooming</dt><dd>14 Trails<small> / 93%</small></dd></dl>              <dl class="SnowReport-measure"><dt>Terrain Parks</dt><dd>The FunRun, Exhibition, and People&#039;s Park are OPEN - come shred!</dd></dl>
++      <dl class="SnowReport-measure"><dt>Base Depth</dt><dd>20 - 30 in.</dd></dl>
++     <dl class="SnowReport-measure"><dt>Grooming</dt><dd>45 Trails<small> / 77%</small></dd></dl>              <dl class="SnowReport-measure"><dt>Terrain Parks</dt><dd>Utter Abandon, High Country, BX Course, FunRun, Lower White Caps, Rock Island</dd></dl>
+       
+     <!--
+       <dl class="SnowReport-measure"><dt>Tubing</dt><dd> Lanes</dd></dl>
+         <dl class="SnowReport-measure"><dt>Tubing Hours</dt><dd></dd></dl>
+               -->
+-          <dl class="SnowReport-measure"><dt>Open Lifts</dt><dd>5 Lifts</dd></dl>
+-              <dl class="SnowReport-measure"><dt>Open Trails</dt><dd>15 Trails</dd></dl>
+-        <!--  <dl class="SnowReport-measure"><dt>Primary Surface</dt><dd>Powder</dd></dl>-->
++          <dl class="SnowReport-measure"><dt>Open Lifts</dt><dd>7 Lifts</dd></dl>
++              <dl class="SnowReport-measure"><dt>Open Trails</dt><dd>58 Trails</dd></dl>
++    
++    
++    <!--  <dl class="SnowReport-measure"><dt>Primary Surface</dt><dd>Machine Groomed</dd></dl>-->
+ 
+     <!--  <dl class="SnowReport-measure"><dt>Secondary Surface</dt><dd>Packed Powder</dd></dl>-->
+ 
+-    
++        <dl class="SnowReport-measure"><dt>Acreage Open</dt><dd>256 Acres</dd></dl>
+ 
+ 
+ 
+ 
+ 
+-        <!--  <dl class="SnowReport-measure"><dt>X-Country</dt><dd>25 Trails</dd></dl>-->
++        <!--  <dl class="SnowReport-measure"><dt>X-Country</dt><dd>0 Trails</dd></dl>-->
+     
+   </div>
+ 
+ </section>
+       </div>
+           </div>
+-        <div class="SnowReport-Tab-pane" id="snowreport-132-written">
+-      
+-<section class="SnowReport-section SnowReport-section--written">
+-
+-  <article>
+-    <p class="MsoNormal"><strong>Saturday 1/6/18 - Update; Upper Mountain Lifts and Valley Run are on hold until further notice due to very high winds both at the base, and the summit.&nbsp;</strong></p>
+-<p class="MsoNormal">We will open&nbsp;the lower mountain at 8AM,&nbsp;with&nbsp;a powder/packed powder surface. The&nbsp;FunRun and People's Park&nbsp;are ready for your jibbing enjoyment. We're expecting high winds to continue for most of the day; <em>please plan&nbsp;accordingly</em> and wear your facemasks and extra layers if you're joining us. With low ambient temps, and high wind chill - frostbite can occur quickly.&nbsp;Make sure to stay&nbsp;covered up out there!</p>
+-<p class="MsoNormal">The glades still have plenty of untracked&nbsp;stashes -&nbsp;explore some new zones and find a new line in Narnia, The Sugar Shack Glades, and beyond. We also have over 50K of open Nordic terrain - try out some skinny skis in Town Square and be sure to explore&nbsp;our interactive trail map for the most up-to-date&nbsp;terrain and weather information.&nbsp;</p>
+-<p class="MsoNormal">T-Bars, Buckets, Sunnyside, The Waffle Cabin, and the Marketplace&nbsp;are open for all of your food and beverage needs, plus live&nbsp;Apres entertainment and great food and beverage specials every weekend!&nbsp;</p>
+-<p class="MsoNormal">If you missed&nbsp;out on the fun, be sure to buy your tickets for the next Starry Nights Dinner at Sunnyside Timberlodge - happening on January 13th. Call 236-8311 x3000&nbsp;</p>
+-<p class="MsoNormal">&nbsp;</p>
+-<p class="MsoNormal">Stay warm&nbsp;out there, I'll see you on the hill!&nbsp;</p>
+-<p class="MsoNormal">Mike Cuddihy - Snow Reporter</p>
+-<p class="MsoNormal">&nbsp;</p>
+-  </article>
+-
+-</section>
+-    </div>
+     
+-         
+               
+ 
++
+ <section class="SnowReport-section SnowReport-section--trails">
+ 
+   <h2 class="SnowReport-section-title">
+     Easiest
+     <span class="SnowReport-item-type">
+-      <i class="pti pti-easiest"></i>
++      <i class="pti pti-easiest"  aria-hidden="true"></i>
+     </span>
+   </h2>
+ 
+   <div class="SnowReport-features">
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Baseway</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Bourbon Street</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Chandler&#039;s Way</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Kinderpark</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Leroy&#039;s Loop</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Revelation</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Rock Island</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Stemtation</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Stillness</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">The Pasture</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Valley Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Baseway</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Bourbon Street</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Chandler&#039;s Way</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Kinderpark</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Leroy&#039;s Loop</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Revelation</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Rock Island</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Stemtation</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">The Pasture</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Valley Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+   </div>
+ </section>
+ 
+@@ -163,43 +194,46 @@
+   <h2 class="SnowReport-section-title">
+     More Difficult
+     <span class="SnowReport-item-type">
+-      <i class="pti pti-more-difficult"></i>
++      <i class="pti pti-more-difficult"  aria-hidden="true"></i>
+     </span>
+   </h2>
+ 
+   <div class="SnowReport-features">
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">And Tyler Too</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-snowmaking"><span class="SnowReport-sr-label">Snowmaking in progress</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Bail Out</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Calvert&#039;s Crossing</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Governor&#039;s Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Grimes Way</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Hassle</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Old Tecumseh</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Periphery</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Stillness</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Tippy</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower White Caps</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Main Street</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Mean Jean&#039;s Ravine</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">No Grit</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Oblivion</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Old Tecumseh</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Palmer&#039;s Way</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Periphery</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Pianoman</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Ruthie&#039;s Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Scramble</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Sidewinder</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Siegel Street</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">South Street</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Sun Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Tangent</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Terry&#039;s Trail</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Tippecanoe</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Tree Line</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Upper Bobby&#039;s Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Upper Valley Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">White Caps</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">And Tyler Too</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed-partial"  aria-hidden="true"><span class="SnowReport-sr-label">Partial Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Bail Out</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Calvert&#039;s Crossing</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"  aria-hidden="true"></i><span class="SnowReport-sr-label">Closed</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Exhibition</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Governor&#039;s Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Grimes Way</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Hassle</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Higher Ground</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Old Tecumseh</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Periphery</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Stillness</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Tippy</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower White Caps</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Main Street</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Mean Jean&#039;s Ravine</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">No Grit</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Oblivion</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Old Tecumseh</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Palmer&#039;s Way</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Periphery</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Pianoman</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Ruthie&#039;s Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Scramble</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Sidewinder</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Siegel Street</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">South Street</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Stillness</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Sun Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Tangent</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Terry&#039;s Trail</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Tippecanoe</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed-partial"  aria-hidden="true"><span class="SnowReport-sr-label">Partial Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Tree Line</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Upper Bobby&#039;s Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed-partial"  aria-hidden="true"><span class="SnowReport-sr-label">Partial Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Upper Valley Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">White Caps</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+   </div>
+ </section>
+ 
+@@ -209,26 +243,25 @@
+   <h2 class="SnowReport-section-title">
+     Most Difficult
+     <span class="SnowReport-item-type">
+-      <i class="pti pti-most-difficult"></i>
++      <i class="pti pti-most-difficult"  aria-hidden="true"></i>
+     </span>
+   </h2>
+ 
+   <div class="SnowReport-features">
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Ciao</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Clean Shaven</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Gema</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Sel&#039;s Choice</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Pfosi&#039;s Pfolly</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Preston&#039;s Path</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Psyched</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Psyched Out Glades</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Ruffled Feathers</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">The Boneyard</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-snowmaking"><span class="SnowReport-sr-label">Snowmaking in progress</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">The Chute</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Tommy&#039;s World Cup Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Upper Sel&#039;s Choice</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Utter Abandon</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Wayne Wong Way</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Ciao</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Clean Shaven</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"  aria-hidden="true"></i><span class="SnowReport-sr-label">Closed</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Gema</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Sel&#039;s Choice</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Pfosi&#039;s Pfolly</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"  aria-hidden="true"></i><span class="SnowReport-sr-label">Closed</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Preston&#039;s Path</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Psyched</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Psyched Out</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Ruffled Feathers</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">The Boneyard</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">The Chute</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed-partial"  aria-hidden="true"><span class="SnowReport-sr-label">Partial Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Tommy&#039;s World Cup Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Upper Sel&#039;s Choice</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Utter Abandon</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+   </div>
+ </section>
+ 
+@@ -238,13 +271,14 @@
+   <h2 class="SnowReport-section-title">
+     Expert Only
+     <span class="SnowReport-item-type">
+-      <i class="pti pti-expert-only"></i>
++      <i class="pti pti-expert-only"  aria-hidden="true"></i>
+     </span>
+   </h2>
+ 
+   <div class="SnowReport-features">
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Bobby&#039;s Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">True Grit</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Bobby&#039;s Run</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed-partial"  aria-hidden="true"><span class="SnowReport-sr-label">Partial Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">True Grit</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Wayne Wong Way</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"  aria-hidden="true"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+   </div>
+ </section>
+ 
+@@ -254,17 +288,17 @@
+   <h2 class="SnowReport-section-title">
+     Terrain Park
+     <span class="SnowReport-item-type">
+-      <i class="pti pti-terrain"></i>
++      <i class="pti pti-terrain"  aria-hidden="true"></i>
+     </span>
+   </h2>
+ 
+   <div class="SnowReport-features">
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Exhibition</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">FunRun</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Higher Ground</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">People&#039;s Park</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Sugar Shack Glades</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span></article>
+-      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">TFL (Terrain Focused Learning) Park</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Boardercross Course</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">FunRun</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">High Country Park</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Lower White Caps</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Rock Island</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
++      <article class="SnowReport-Trail SnowReport-feature"><h3 class="SnowReport-feature-title">Utter Abandon</h3><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-groomed"  aria-hidden="true"><span class="SnowReport-sr-label">Groomed</span></i></span></article>
+   </div>
+ </section>
+ 
+@@ -274,18 +308,17 @@
+   <h2 class="SnowReport-section-title">Lifts</h2>
+ 
+   <div class="SnowReport-features">
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Exhibition Poma</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-single"></i><span class="SnowReport-sr-label">Single</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Green Peak Triple</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-triple"></i><span class="SnowReport-sr-label">Triple</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">High Country</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-double"></i><span class="SnowReport-sr-label">Double</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-hold"></i><span class="SnowReport-sr-label">Wind Delay</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Kinderpark Lift</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-single"></i><span class="SnowReport-sr-label">Single</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Meadows</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-double"></i><span class="SnowReport-sr-label">Double</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Pasture Carpet</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-carpet"></i><span class="SnowReport-sr-label">Carpet</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Northside</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-double"></i><span class="SnowReport-sr-label">Double</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Sunny Side</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-triple"></i><span class="SnowReport-sr-label">Triple</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-hold"></i><span class="SnowReport-sr-label">Wind Delay</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Upper Pasture Carpet</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-carpet"></i><span class="SnowReport-sr-label">Carpet</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Valley Run Quad</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-quad"></i><span class="SnowReport-sr-label">Quad</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-hold"></i><span class="SnowReport-sr-label">Wind Delay</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">White Peaks Express</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-quad"></i><span class="SnowReport-sr-label">Quad</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"></i><span class="SnowReport-sr-label">Closed</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-hold"></i><span class="SnowReport-sr-label">Wind Delay</span></span></div></article>
+-      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">World Cup T-Bar</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-single"></i><span class="SnowReport-sr-label">Single</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Exhibition Poma</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-surface"  aria-hidden="true"></i><span class="SnowReport-sr-label">Surface Lift</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Green Peak Triple</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-triple"  aria-hidden="true"></i><span class="SnowReport-sr-label">Triple</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">High Country</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-surface"  aria-hidden="true"></i><span class="SnowReport-sr-label">Surface Lift</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Meadows</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-double"  aria-hidden="true"></i><span class="SnowReport-sr-label">Double</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Lower Pasture Carpet</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-carpet"  aria-hidden="true"></i><span class="SnowReport-sr-label">Conveyor</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Northside</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-double"  aria-hidden="true"></i><span class="SnowReport-sr-label">Double</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"  aria-hidden="true"></i><span class="SnowReport-sr-label">Closed</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Sunny Side</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-triple"  aria-hidden="true"></i><span class="SnowReport-sr-label">Triple</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"  aria-hidden="true"></i><span class="SnowReport-sr-label">Closed</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Tecumseh Express</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-six-pack"  aria-hidden="true"></i><span class="SnowReport-sr-label">6 Person Bubble Lift</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Upper Pasture Carpet</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-carpet"  aria-hidden="true"></i><span class="SnowReport-sr-label">Conveyor</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"  aria-hidden="true"></i><span class="SnowReport-sr-label">Closed</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">Valley Run Quad</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-quad"  aria-hidden="true"></i><span class="SnowReport-sr-label">Quad</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-open"  aria-hidden="true"></i><span class="SnowReport-sr-label">Open</span></span></div></article>
++      <article class="SnowReport-Lift SnowReport-feature"><h3 class="SnowReport-feature-title">World Cup T-Bar</h3><div class="SnowReport-feature-icons"><span class="SnowReport-feature-icon SnowReport-item-type"><i class="pti pti-surface"  aria-hidden="true"></i><span class="SnowReport-sr-label">Surface Lift</span></span><span class="SnowReport-feature-icon SnowReport-item-status"><i class="pti pti-closed"  aria-hidden="true"></i><span class="SnowReport-sr-label">Closed</span></span></div></article>
+   </div>
+ </section>
+       
+@@ -298,10 +331,10 @@
+     <ul class="SnowReport-legend-list">
+       <span class="SnowReport-legend-label">TRAILS</span>
+                     
+-                <li><i class="SnowReport-icon--legend pti pti-open" title="Open"></i><span class="SnowReport-legend-label">Open</span></li>  <li><i class="SnowReport-icon--legend pti pti-closed" title="Closed"></i><span class="SnowReport-legend-label">Closed</span></li>  <li><i class="SnowReport-icon--legend pti pti-groomed" title="Groomed"></i><span class="SnowReport-legend-label">Groomed</span></li>  <li><i class="SnowReport-icon--legend pti pti-groomed-partial" title="Partial Groomed"></i><span class="SnowReport-legend-label">Partial Groomed</span></li>  <li><i class="SnowReport-icon--legend pti pti-moguls" title="Moguls"></i><span class="SnowReport-legend-label">Moguls</span></li>  <li><i class="SnowReport-icon--legend pti pti-snowmaking" title="Snowmaking in progress"></i><span class="SnowReport-legend-label">Snowmaking in progress</span></li>  <li><i class="SnowReport-icon--legend pti pti-racing" title="Race Course"></i><span class="SnowReport-legend-label">Race Course</span></li>          </ul>
++                <li><i class="SnowReport-icon--legend pti pti-open" title="Open"></i><span class="SnowReport-legend-label">Open</span></li>  <li><i class="SnowReport-icon--legend pti pti-closed" title="Closed"></i><span class="SnowReport-legend-label">Closed</span></li>  <li><i class="SnowReport-icon--legend pti pti-night" title="Night Skiing"></i><span class="SnowReport-legend-label">Night Skiing</span></li>  <li><i class="SnowReport-icon--legend pti pti-groomed" title="Groomed"></i><span class="SnowReport-legend-label">Groomed</span></li>  <li><i class="SnowReport-icon--legend pti pti-groomed-partial" title="Partial Groomed"></i><span class="SnowReport-legend-label">Partial Groomed</span></li>  <li><i class="SnowReport-icon--legend pti pti-moguls" title="Moguls"></i><span class="SnowReport-legend-label">Moguls</span></li>  <li><i class="SnowReport-icon--legend pti pti-snowmaking" title="Snowmaking in progress"></i><span class="SnowReport-legend-label">Snowmaking in progress</span></li>  <li><i class="SnowReport-icon--legend pti pti-racing" title="Race Course"></i><span class="SnowReport-legend-label">Race Course</span></li>  <li><i class="SnowReport-icon--legend pti pti-tracked" title="Tracked"></i><span class="SnowReport-legend-label">Tracked</span></li>          </ul>
+     <ul class="SnowReport-legend-list">
+       <span class="SnowReport-legend-label">LIFTS</span>
+-                <li><i class="SnowReport-icon--legend pti pti-single" title="Single"></i><span class="SnowReport-legend-label">Single</span></li>  <li><i class="SnowReport-icon--legend pti pti-carpet" title="Carpet"></i><span class="SnowReport-legend-label">Carpet</span></li>  <li><i class="SnowReport-icon--legend pti pti-double" title="Double"></i><span class="SnowReport-legend-label">Double</span></li>  <li><i class="SnowReport-icon--legend pti pti-triple" title="Triple"></i><span class="SnowReport-legend-label">Triple</span></li>  <li><i class="SnowReport-icon--legend pti pti-quad" title="Quad"></i><span class="SnowReport-legend-label">Quad</span></li>      
++                <li><i class="SnowReport-icon--legend pti pti-carpet" title="Conveyor"></i><span class="SnowReport-legend-label">Conveyor</span></li>  <li><i class="SnowReport-icon--legend pti pti-surface" title="Surface Lift"></i><span class="SnowReport-legend-label">Surface Lift</span></li>  <li><i class="SnowReport-icon--legend pti pti-double" title="Double"></i><span class="SnowReport-legend-label">Double</span></li>  <li><i class="SnowReport-icon--legend pti pti-triple" title="Triple"></i><span class="SnowReport-legend-label">Triple</span></li>  <li><i class="SnowReport-icon--legend pti pti-quad" title="Quad"></i><span class="SnowReport-legend-label">Quad</span></li>  <li><i class="SnowReport-icon--legend pti pti-six-pack" title="6 Person Bubble Lift"></i><span class="SnowReport-legend-label">6 Person Bubble Lift</span></li>      
+                 <li><i class="SnowReport-icon--legend pti pti-hold-check" title="On Hold"></i><span class="SnowReport-legend-label">On Hold</span></li>  <li><i class="SnowReport-icon--legend pti pti-hold" title="Wind Delay"></i><span class="SnowReport-legend-label">Wind Delay</span></li>          </ul>
+   </section>
+ 
+@@ -320,5 +353,5 @@
+ 
+ 
+ 
+-<script src="/assets/propmaps/js/pmw-trailmap.js"></script><script src="/assets/digital-signage/signage.js"></script><script src="/assets/instagram/instagrid.js"></script></body>
++<script src="/assets/propmaps/js/pmw-trailmap.js"></script><script src="/assets/digital-signage/signage.js"></script><script src="/assets/instagram/instagrid.js"></script><script src="/assets/youtube/player.js"></script></body>
+ </html>
+diff --git a/test/resorts/waterville-trails.js b/test/resorts/waterville-trails.js
+new file mode 100644
+index 00000000..60209767
+--- /dev/null
++++ b/test/resorts/waterville-trails.js
+@@ -0,0 +1,344 @@
++import trails from '../trails/index.js';
++
++trails('waterville', [
++  {
++    name: 'Baseway',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Bourbon Street',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: "Chandler's Way",
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Kinderpark',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: "Leroy's Loop",
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Revelation',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Rock Island',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Stemtation',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'The Pasture',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'Valley Run',
++    status: 'open',
++    level: 'green'
++  },
++  {
++    name: 'And Tyler Too',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Bail Out',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Calvert's Crossing",
++    status: 'closed',
++    level: 'blue'
++  },
++  {
++    name: 'Exhibition',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Governor's Run",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Grimes Way',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Hassle',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Higher Ground',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Lower Old Tecumseh',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Lower Periphery',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Lower Stillness',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Lower Tippy',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Lower White Caps',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Main Street',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Mean Jean's Ravine",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'No Grit',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Oblivion',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Old Tecumseh',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Palmer's Way",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Periphery',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Pianoman',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Ruthie's Run",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Scramble',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Sidewinder',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Siegel Street',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'South Street',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Stillness',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Sun Run',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Tangent',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Terry's Trail",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Tippecanoe',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Tree Line',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: "Upper Bobby's Run",
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Upper Valley Run',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'White Caps',
++    status: 'open',
++    level: 'blue'
++  },
++  {
++    name: 'Ciao',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Clean Shaven',
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: 'Gema',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: "Lower Sel's Choice",
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: "Pfosi's Pfolly",
++    status: 'closed',
++    level: 'black'
++  },
++  {
++    name: "Preston's Path",
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Psyched',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Psyched Out',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Ruffled Feathers',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'The Boneyard',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'The Chute',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: "Tommy's World Cup Run",
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: "Upper Sel's Choice",
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: 'Utter Abandon',
++    status: 'open',
++    level: 'black'
++  },
++  {
++    name: "Lower Bobby's Run",
++    status: 'open',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'True Grit',
++    status: 'open',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Wayne Wong Way',
++    status: 'closed',
++    level: 'doubleBlack'
++  },
++  {
++    name: 'Boardercross Course',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'FunRun',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'High Country Park',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'Lower White Caps',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'Rock Island',
++    status: 'open',
++    level: 'terrainPark'
++  },
++  {
++    name: 'Utter Abandon',
++    status: 'open',
++    level: 'terrainPark'
++  }
++]);
+diff --git a/test/resorts/waterville.js b/test/resorts/waterville.js
+index d0299c14..1dd29e5f 100644
+--- a/test/resorts/waterville.js
++++ b/test/resorts/waterville.js
+@@ -1,16 +1,15 @@
+ import lifts from '../lifts/index.js';
+ 
+ lifts('waterville', 'html', {
+-  'High Country': 'closed',
+   'Exhibition Poma': 'open',
++  'Green Peak Triple': 'open',
++  'High Country': 'open',
++  'Lower Meadows': 'open',
++  'Lower Pasture Carpet': 'open',
+   'Northside': 'closed',
+   'Sunny Side': 'closed',
+-  'White Peaks Express': 'closed',
++  'Tecumseh Express': 'open',
++  'Upper Pasture Carpet': 'closed',
+   'Valley Run Quad': 'open',
+-  'Lower Pasture Carpet': 'closed',
+-  'Upper Pasture Carpet': 'open',
+-  'World Cup T-Bar': 'open',
+-  'Lower Meadows': 'open',
+-  'Green Peak Triple': 'closed',
+-  'Kinderpark Lift': 'closed'
++  'World Cup T-Bar': 'closed'
+ });
+-- 
+2.39.5
+
