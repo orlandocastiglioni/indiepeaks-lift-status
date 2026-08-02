@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-07-13T23:00:32Z",
-  "href": "http://www.winterplace.com/snow-report",
+  "fetchedAt": "2026-08-02T21:54:05Z",
+  "href": "https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace",
   "id": "winterplace",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 11,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "#1 Double Chairlift": "closed",
+      "#10 Tubing Carpet": "closed",
+      "#11 Tubing Carpet": "closed",
+      "#12 Ski-Wee Carpet": "closed",
+      "#2 Triple Chairlift": "closed",
+      "#3 Triple Chairlift": "closed",
+      "#4 Triple Chairlift": "closed",
+      "#5 Double Chairlift": "closed",
+      "#6 Carpet Lift": "closed",
+      "#8 Quad Chairlift": "closed",
+      "#9 Quad Chairlift": "closed"
+    }
   },
   "ll": [
     -81.11824,
@@ -23,15 +35,165 @@
   ],
   "name": "Winterplace",
   "timestamp": {
-    "lifts": 1783982989795,
-    "opening": 1783949096082,
-    "trails": 1783982987121,
-    "weather": 1783905899245,
-    "webcams": 1783905899032
+    "lifts": 1785707596235,
+    "opening": 1785707591637,
+    "trails": 1785707596353,
+    "weather": 1785707602018,
+    "webcams": 1785707601663
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Buttermilk",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Country Roads",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Compromise",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Easy Street",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Glades",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Last Chance",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Last Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Meadows",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No Problem",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Over Easy",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Panorama",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Snowfield",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Wanderer",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Plunge",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Nose Dive",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Turkey Chute",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Snow Bowl",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Drop Off",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Rendezvous",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Cascade",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hickory",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Look at Me!",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Milkshake",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Rendezvous Too",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Ridge Runner",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Wood's Run",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Heaven Holler",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Fire Tower",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 28,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   },
   "weather": {
-    "conditions": "Chance Showers And Thunderstorms",
-    "date": "2026-07-13",
+    "conditions": "Showers And Thunderstorms",
+    "date": "2026-08-02",
     "icon": [
       "basecloud",
       "icon-thunder"
@@ -43,8 +205,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 62
+      "max": 74
     },
-    "text": "A chance of showers and thunderstorms. Mostly cloudy, with a low around 62. Southeast wind around 8 mph. Chance of precipitation is 40%."
+    "text": "Showers and thunderstorms. Cloudy, with a high near 74. South wind around 6 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
