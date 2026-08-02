@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-30T11:30:37Z",
+  "fetchedAt": "2026-08-02T21:26:00Z",
   "href": "https://www.wintergreenresort.com/mountain-report-cams/",
   "id": "wintergreen",
   "lifts": {
@@ -30,43 +30,154 @@
   ],
   "name": "Wintergreen Resort",
   "timestamp": {
-    "lifts": 1785410139020,
-    "opening": 1785407455941,
-    "trails": 1785410139041,
+    "lifts": 1785705859987,
+    "opening": 1785705853606,
+    "trails": 1785705859761,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {
-      "Big Acorn": "closed",
-      "Cross Cut": "closed",
-      "Devils Elbow": "closed",
-      "Eagles Swoop": "closed",
-      "Hydraulic": "closed",
-      "Logger's Alley": "closed",
-      "Lower Cliffhanger": "closed",
-      "Lower Cross Trail": "closed",
-      "Lower Diamond Hill": "closed",
-      "Lower Dobie": "closed",
-      "Lower Sunrise": "closed",
-      "Lower Tyro": "closed",
-      "Lower Wild Turkey": "closed",
-      "Outer Limits": "closed",
-      "Potato Patch": "closed",
-      "Progression Park": "closed",
-      "Sunrise Glades": "closed",
-      "Tequila": "closed",
-      "Terrain Park": "closed",
-      "The Gap": "closed",
-      "The Plunge Tubing Park": "closed",
-      "Upper Cliffhanger": "closed",
-      "Upper Cross Trail": "closed",
-      "Upper Diamond Hill": "closed",
-      "Upper Dobie": "closed",
-      "Upper Sunrise": "closed",
-      "Upper Tyro": "closed",
-      "Upper Wild Turkey": "closed"
-    },
+    "list": [
+      {
+        "level": "green",
+        "name": "Potato Patch",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Cross Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Cross Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Diamond Hill",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Dobie",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Diamond Hill",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Dobie",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Eagles Swoop",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Sunrise",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Tequila",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Tyro",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Tyro",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Big Acorn",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Sunrise Glades",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Sunrise",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Cross Cut",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Devils Elbow",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hydraulic",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Logger's Alley",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Wild Turkey",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Outer Limits",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Gap",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Cliffhanger",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Wild Turkey",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Lower Cliffhanger",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Progression Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Terrain Park",
+        "status": "closed"
+      },
+      {
+        "name": "The Plunge Tubing Park",
+        "status": "closed"
+      }
+    ],
     "stats": {
       "closed": 28,
       "hold": 0,
