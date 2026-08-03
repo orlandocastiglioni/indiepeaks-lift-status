@@ -1,35 +1,21 @@
 {
-  "fetchedAt": "2026-08-02T21:26:00Z",
+  "fetchedAt": "2026-08-03T12:31:15Z",
   "href": "http://www.mthigh.com/site/trails-and-conditions/conditions/alpine-grooming/@@alpine-grooming",
   "id": "mthigh",
   "lifts": {
     "stats": {
-      "closed": 13,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Blue Ridge Express": "closed",
-      "Competition": "closed",
-      "Conquest": "closed",
-      "Coyote": "closed",
-      "Discovery": "closed",
-      "Easy Rider": "closed",
-      "Exhibition": "closed",
-      "Mountain High Express": "closed",
-      "Moving Carpet East": "closed",
-      "Moving Carpet West Long": "closed",
-      "Moving Carpet West Short": "closed",
-      "Roadrunner": "closed",
-      "Snowflake": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -117.691544,
@@ -37,11 +23,11 @@
   ],
   "name": "Mountain High",
   "timestamp": {
-    "lifts": 1785705856994,
-    "opening": 1785705853605,
-    "trails": 1785705856906,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1785759332513,
+    "opening": 1785757935876,
+    "trails": 1785760237431,
+    "weather": 1785758427760,
+    "webcams": 1785759317808
   },
   "trails": {
     "list": [
@@ -302,5 +288,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Clear",
+    "date": "2026-08-03",
+    "icon": [
+      "basenone",
+      "icon-moon"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=34.376888&lon=-117.691544",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 74
+    },
+    "text": "Clear, with a low around 74. Southwest wind around 10 mph."
   }
 }
