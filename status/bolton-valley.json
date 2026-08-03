@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-02T23:45:37Z",
+  "fetchedAt": "2026-08-03T01:45:27Z",
   "href": "https://www.boltonvalley.com/winter/trail-maps-snow-reports/snow-reports/",
   "id": "bolton-valley",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Mid Mountain": "closed",
+      "Mighty Mite": "closed",
+      "Snowflake": "closed",
+      "Timberline": "closed",
+      "Vista": "closed",
+      "Wilderness": "closed"
+    }
   },
   "ll": [
     -72.84948,
@@ -23,11 +30,11 @@
   ],
   "name": "Bolton Valley",
   "timestamp": {
-    "lifts": 1785713469665,
-    "opening": 1785711646833,
-    "trails": 1785712569602,
-    "weather": 1785707651864,
-    "webcams": 1785713466980
+    "lifts": 1785720682521,
+    "opening": 1785719739471,
+    "trails": 1785720682523,
+    "weather": 1785715250245,
+    "webcams": 1785720679956
   },
   "trails": {
     "list": [
@@ -395,8 +402,8 @@
     }
   },
   "weather": {
-    "conditions": "Slight Chance Showers And Thunderstorms",
-    "date": "2026-08-02",
+    "conditions": "Showers And Thunderstorms",
+    "date": "2026-08-03",
     "icon": [
       "basecloud",
       "icon-thunder"
@@ -408,8 +415,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 72
+      "max": 64
     },
-    "text": "A slight chance of showers and thunderstorms. Mostly cloudy, with a high near 72. South wind around 9 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Showers and thunderstorms after 9pm. Cloudy, with a low around 64. South wind 9 to 13 mph. Chance of precipitation is 80%. New rainfall amounts between a quarter and half of an inch possible."
   }
 }
