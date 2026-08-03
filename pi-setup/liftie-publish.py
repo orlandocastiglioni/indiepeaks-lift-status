@@ -170,6 +170,14 @@ def main():
         out_file.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
         changed.append(resort_id)
 
+    # if EVERY resort failed to fetch, liftie is down (e.g. still starting
+    # after a reboot) - bail before rewriting _health/_index, which would
+    # otherwise clobber them with an all-empty snapshot.
+    if not results and errors:
+        log(f"All {len(errors)} resorts failed to fetch; liftie is likely down. "
+            "Skipping publish to preserve _health/_index.")
+        return 0
+
     if write_health(fetched_at, results, errors):
         changed.append("_health")
     if write_index(names):
