@@ -1,0 +1,290 @@
+From 59a47b175696b21f4706467f8fc364b4a7ce1d66 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 23:06:45 -0400
+Subject: resort: add antelope-butte (WY) - Google Sheet CSV report
+
+First Indy Pass expansion resort. 3 lifts + 33 trails/terrain from the
+published report sheet; terrain areas tagged terrainPark.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/antelope-butte/index.js     | 12 ++++++
+ lib/resorts/antelope-butte/resort.json  | 34 +++++++++++++++++
+ lib/resorts/antelope-butte/rows.js      | 42 ++++++++++++++++++++
+ lib/resorts/antelope-butte/trails.js    | 14 +++++++
+ test/resorts/antelope-butte-trails.js   | 51 +++++++++++++++++++++++++
+ test/resorts/antelope-butte.js          | 19 +++++++++
+ test/resorts/example/antelope-butte.csv | 47 +++++++++++++++++++++++
+ 7 files changed, 219 insertions(+)
+ create mode 100644 lib/resorts/antelope-butte/index.js
+ create mode 100644 lib/resorts/antelope-butte/resort.json
+ create mode 100644 lib/resorts/antelope-butte/rows.js
+ create mode 100644 lib/resorts/antelope-butte/trails.js
+ create mode 100644 test/resorts/antelope-butte-trails.js
+ create mode 100644 test/resorts/antelope-butte.js
+ create mode 100644 test/resorts/example/antelope-butte.csv
+
+diff --git a/lib/resorts/antelope-butte/index.js b/lib/resorts/antelope-butte/index.js
+new file mode 100644
+index 00000000..ed7bfeca
+--- /dev/null
++++ b/lib/resorts/antelope-butte/index.js
+@@ -0,0 +1,12 @@
++import coerce from '../../tools/coerce.js';
++import statusRows from './rows.js';
++
++export default function parse(rows) {
++  const status = {};
++  for (const row of statusRows(rows)) {
++    if (row.isLift) {
++      status[row.name] = coerce(row.status);
++    }
++  }
++  return status;
++}
+diff --git a/lib/resorts/antelope-butte/resort.json b/lib/resorts/antelope-butte/resort.json
+new file mode 100644
+index 00000000..d4bd89df
+--- /dev/null
++++ b/lib/resorts/antelope-butte/resort.json
+@@ -0,0 +1,34 @@
++{
++  "name": "Antelope Butte",
++  "url": {
++    "host": "https://www.skiantelopebutte.com",
++    "pathname": "/weather-reports"
++  },
++  "api": {
++    "host": "https://docs.google.com",
++    "pathname": "/spreadsheets/d/e/2PACX-1vR7k-4mexab07MXUV05ExN4fjlSv-JGV_TspTa3Vj_AUJz-hAuW5fR04ZSJcj4r9Xs0pzt0KaYSl55o/pub",
++    "query": {
++      "gid": "0",
++      "single": "true",
++      "output": "csv"
++    },
++    "csv": true
++  },
++  "trails": {
++    "host": "https://docs.google.com",
++    "pathname": "/spreadsheets/d/e/2PACX-1vR7k-4mexab07MXUV05ExN4fjlSv-JGV_TspTa3Vj_AUJz-hAuW5fR04ZSJcj4r9Xs0pzt0KaYSl55o/pub",
++    "query": {
++      "gid": "0",
++      "single": "true",
++      "output": "csv"
++    },
++    "csv": true
++  },
++  "tags": [
++    "Wyoming"
++  ],
++  "ll": [
++    -107.5182,
++    44.6073
++  ]
++}
+diff --git a/lib/resorts/antelope-butte/rows.js b/lib/resorts/antelope-butte/rows.js
+new file mode 100644
+index 00000000..ce7aa29e
+--- /dev/null
++++ b/lib/resorts/antelope-butte/rows.js
+@@ -0,0 +1,42 @@
++/**
++ * Antelope Butte publishes its lift/trail/grooming report as a "publish to
++ * web" Google Sheet served as CSV. The sheet is hand-maintained and its
++ * wording drifts between seasons, so the row reader is deliberately lenient:
++ * a data row has a name in column 0 and a status in column 2 (grooming is
++ * column 4). Everything else - section headers, snow totals, meta lines - is
++ * dropped by requiring both cells and filtering known label rows.
++ */
++
++// label / section-header rows that also happen to carry a column-2 value
++const META =
++  /^(lift\s*\/\s*trail|trail status|lift-trail|current snow|snow total|recent snowfall|last \d+ (hour|day)|primary\b|secondary\b|day:|date:|report time|note:|this report|thank you|we'?re|we are|reopening in)/i;
++
++const LIFT = /chair|conveyor|lift|gondola|tram|t-?bar|rope tow|magic carpet|poma|surface/i;
++
++function cleanName(raw) {
++  // strip the optional "12. " ordinal the sheet prefixes to most rows
++  return raw.replace(/^\s*\d+\.\s*/, '').trim();
++}
++
++export default function statusRows(rows) {
++  const out = [];
++  for (const row of rows) {
++    const name = (row[0] || '').trim();
++    const status = (row[2] || '').trim();
++    if (!name || !status) {
++      continue;
++    }
++    // a header row reads "Open / Closed"/"Groomed / Not Groomed" in these
++    // cells; real statuses are single words, so a slash means it is a header
++    if (status.includes('/') || META.test(name)) {
++      continue;
++    }
++    out.push({
++      name: cleanName(name),
++      status,
++      grooming: (row[4] || '').trim(),
++      isLift: LIFT.test(name)
++    });
++  }
++  return out;
++}
+diff --git a/lib/resorts/antelope-butte/trails.js b/lib/resorts/antelope-butte/trails.js
+new file mode 100644
+index 00000000..ab331bf3
+--- /dev/null
++++ b/lib/resorts/antelope-butte/trails.js
+@@ -0,0 +1,14 @@
++import statusRows from './rows.js';
++
++// trail rows are every status row that is not a lift. no difficulty is
++// published, but terrain-park rows are named as such - tag those so they
++// group under the terrain-park level; collect() coerces status downstream.
++export default function parse(rows) {
++  return statusRows(rows)
++    .filter(row => !row.isLift)
++    .map(row => ({
++      name: row.name,
++      status: row.status,
++      level: /terrain/i.test(row.name) ? 'terrainPark' : undefined
++    }));
++}
+diff --git a/test/resorts/antelope-butte-trails.js b/test/resorts/antelope-butte-trails.js
+new file mode 100644
+index 00000000..c476459d
+--- /dev/null
++++ b/test/resorts/antelope-butte-trails.js
+@@ -0,0 +1,51 @@
++import assert from 'node:assert/strict';
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import test from 'node:test';
++import descriptor from '../../lib/resorts/antelope-butte/trails.js';
++import parseCsv from '../../lib/tools/csv.js';
++import collect from '../../lib/trails/parse.js';
++
++// trail rows share the report CSV with the lifts; grooming notes and the
++// section-header rows must be skipped, terrain areas tagged terrainPark.
++const fixture = resolve(import.meta.dirname, 'example/antelope-butte.csv');
++
++test('antelope-butte trails', () => {
++  const rows = parseCsv(readFileSync(fixture, 'utf8'));
++  const list = collect(rows, descriptor);
++  assert.deepEqual(list, [
++    { name: 'HAPPY TRAILS', status: 'open' },
++    { name: 'HO HA HA', status: 'open' },
++    { name: "SADIE'S WAY", status: 'open' },
++    { name: 'ENTABENI', status: 'open' },
++    { name: 'SUZ MOOSE', status: 'open' },
++    { name: 'LAST TANGO', status: 'open' },
++    { name: 'SPEED GOAT', status: 'open' },
++    { name: 'PALOMA', status: 'open' },
++    { name: 'PILUNGE', status: 'open' },
++    { name: "SHINEY'S SLOPE", status: 'open' },
++    { name: "ASHLEY'S ALLEY", status: 'open' },
++    { name: 'NO WAHALA', status: 'open' },
++    { name: '"NO WAHALA" Terrain Park', status: 'open', level: 'terrainPark' },
++    { name: 'BOOMERANG', status: 'open' },
++    { name: 'NAMING OPPORTUNITY', status: 'open' },
++    { name: "HEAVEN'S DOOR", status: 'open' },
++    { name: '"HOLLYWOOD" Terrain Park', status: 'open', level: 'terrainPark' },
++    { name: "SCOTT'S BLUFF", status: 'open' },
++    { name: 'HOT DOG', status: 'open' },
++    { name: 'BUCKHORN ROLL', status: 'open' },
++    { name: 'NAMING OPPORTUNITY', status: 'open' },
++    { name: 'CRAZY BONES', status: 'open' },
++    { name: "SHASSETZ' CHUTE", status: 'open' },
++    { name: 'BIG HORN TRAIL', status: 'open' },
++    { name: 'FAST EDDIE', status: 'open' },
++    { name: "REIMER'S RUN", status: 'open' },
++    { name: 'J-9', status: 'open' },
++    { name: 'WILD BILL', status: 'open' },
++    { name: 'COWBOY CANNON', status: 'open' },
++    { name: "SCHWAMMY'S WAY", status: 'open' },
++    { name: "PAPA'S PARADISE", status: 'open' },
++    { name: 'FINAL EXAM TERRAIN AREA', status: 'open', level: 'terrainPark' },
++    { name: 'WEST SIDE TERRAIN AREA', status: 'open', level: 'terrainPark' }
++  ]);
++});
+diff --git a/test/resorts/antelope-butte.js b/test/resorts/antelope-butte.js
+new file mode 100644
+index 00000000..b06f3df2
+--- /dev/null
++++ b/test/resorts/antelope-butte.js
+@@ -0,0 +1,19 @@
++import assert from 'node:assert/strict';
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import test from 'node:test';
++import parse from '../../lib/resorts/antelope-butte/index.js';
++import parseCsv from '../../lib/tools/csv.js';
++
++// antelope-butte serves its report as a published-to-web Google Sheet (CSV),
++// so it exercises the csv fetch path rather than the html/json test helpers.
++const fixture = resolve(import.meta.dirname, 'example/antelope-butte.csv');
++
++test('antelope-butte should return lift status from the report CSV', () => {
++  const rows = parseCsv(readFileSync(fixture, 'utf8'));
++  assert.deepEqual(parse(rows), {
++    'Summit Lift Double Chair': 'open',
++    'Park Lift Double Chair': 'open',
++    "Pole'r Express Conveyor": 'open'
++  });
++});
+diff --git a/test/resorts/example/antelope-butte.csv b/test/resorts/example/antelope-butte.csv
+new file mode 100644
+index 00000000..06cb333a
+--- /dev/null
++++ b/test/resorts/example/antelope-butte.csv
+@@ -0,0 +1,47 @@
++LIFT // TRAIL // SNOW // GROOMING REPORT for  WINTER 2024/25,,,,
++,,,,
++WE'RE 100% WIDE OPEN HERE AT AB AND HAVE BEEN ALL SEASON!,,,,
++Day:,Saturday,,,
++Snow Totals,"109"" since Halloween!",,,
++Last 24 hours,"0""",,,
++Lift-Trail-Area Status Report,,,,
++Lift / Trail / Area,,Open / Closed,,Groomed / Not Groomed
++,,,,
++1. Summit Lift Double Chair,,OPEN,,N/A
++2. Park Lift Double Chair,,OPEN,,N/A
++3. Pole'r Express Conveyor,,OPEN,,N/A
++Trail Status / Grooming Plan,,,,Groomed / Not Groomed / Partial / All-Natural
++,,,,
++1. HAPPY TRAILS,,OPEN,,GROOMED
++2. HO HA HA,,OPEN,,GROOMED
++3. SADIE'S WAY,,OPEN,,GROOMED
++23. ENTABENI,,OPEN,,GROOMED
++4. SUZ MOOSE,,OPEN,,GROOMED
++5. LAST TANGO,,OPEN,,PARTIAL GROOM / LOWER SECTION
++10. SPEED GOAT,,OPEN,,GROOMED
++11. PALOMA,,OPEN,,GROOMED
++15. PILUNGE,,OPEN,,GROOMED
++17. SHINEY'S SLOPE,,OPEN,,GROOMED
++18. ASHLEY'S ALLEY,,OPEN,,NOT GROOMED
++28. NO WAHALA,,OPEN,,GROOMED
++"""NO WAHALA"" Terrain Park",,OPEN,,NOT GROOMED / HAND WORK ONLY
++29. BOOMERANG,,OPEN,,GROOMED
++30. NAMING OPPORTUNITY,,OPEN,,GROOMED
++6. HEAVEN'S DOOR,,OPEN,,PARTIAL GROOM / LOWER SECTION
++"""HOLLYWOOD"" Terrain Park",,OPEN,,NOT GROOMED / HAND WORK ONLY
++7. SCOTT'S BLUFF,,OPEN,,NOT GROOMED
++8. HOT DOG,,OPEN,,NOT GROOMED
++9. BUCKHORN ROLL,,OPEN,,NOT GROOMED
++12. NAMING OPPORTUNITY,,OPEN,,NOT GROOMED
++13. CRAZY BONES,,OPEN,,NOT GROOMED
++14. SHASSETZ' CHUTE,,OPEN,,GROOMED
++16. BIG HORN TRAIL,,OPEN,,NOT GROOMED
++19. FAST EDDIE,,OPEN,,NOT GROOMED
++20. REIMER'S RUN,,OPEN,,NOT GROOMED
++21. J-9,,OPEN,,NOT GROOMED
++24. WILD BILL,,OPEN,,NOT GROOMED
++25. COWBOY CANNON,,OPEN,,NATURAL AREA / NEVER GROOMED
++26. SCHWAMMY'S WAY,,OPEN,,GROOMED
++27. PAPA'S PARADISE,,OPEN,,NATURAL AREA / NEVER GROOMED
++FINAL EXAM TERRAIN AREA,,OPEN,,NATURAL AREA / NEVER GROOMED
++WEST SIDE TERRAIN AREA,,OPEN,,NATURAL AREA / NEVER GROOMED
+-- 
+2.39.5
+

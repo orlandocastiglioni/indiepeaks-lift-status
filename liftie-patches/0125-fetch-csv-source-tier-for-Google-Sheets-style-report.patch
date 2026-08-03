@@ -1,0 +1,190 @@
+From e55f95c898bed06bb271df74897503c2b69f5cf5 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Sun, 2 Aug 2026 23:06:45 -0400
+Subject: fetch: csv source tier for Google-Sheets-style reports
+
+A url/trails descriptor can declare "csv": true; the body is parsed into
+rows (array of string-arrays) and handed to the resort's parse function,
+same as json:true hands it parsed JSON. Small resorts commonly publish
+their lift/trail report as a published-to-web Google Sheet.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/lifts/rest.js   |  5 +++
+ lib/tools/csv.js    | 74 +++++++++++++++++++++++++++++++++++++++++++++
+ lib/trails/index.js |  5 +++
+ test/tools/csv.js   | 37 +++++++++++++++++++++++
+ 4 files changed, 121 insertions(+)
+ create mode 100644 lib/tools/csv.js
+ create mode 100644 test/tools/csv.js
+
+diff --git a/lib/lifts/rest.js b/lib/lifts/rest.js
+index 9f2c5936..e3a2311c 100644
+--- a/lib/lifts/rest.js
++++ b/lib/lifts/rest.js
+@@ -1,4 +1,5 @@
+ import { LIFTIE_USER_AGENT } from '../env.js';
++import parseCsv from '../tools/csv.js';
+ import fetchVia, { fullUrl, hasVia } from '../tools/fetchvia.js';
+ import parseLoose from '../tools/fixjson.js';
+ import { parseHtml } from './parser.js';
+@@ -24,6 +25,10 @@ export default function rest(url, parse, fn) {
+       if (url.html) {
+         return parseHtml(await res.text(), parse, fn);
+       }
++      if (url.csv) {
++        const rows = parseCsv(await res.text());
++        return parse.isAsync ? parse(rows, fn) : fn(null, parse(rows));
++      }
+       const body = url.fixJson ? parseLoose(await res.text()) : await res.json();
+       if (parse.isAsync) {
+         parse(body, fn);
+diff --git a/lib/tools/csv.js b/lib/tools/csv.js
+new file mode 100644
+index 00000000..14441878
+--- /dev/null
++++ b/lib/tools/csv.js
+@@ -0,0 +1,74 @@
++/**
++ * minimal RFC-4180 CSV parser for resorts that publish their report as a
++ * CSV endpoint (typically a "Publish to web" Google Sheet). Returns an
++ * array of rows, each row an array of string cells. Handles quoted fields,
++ * embedded commas/newlines, doubled quotes, and CRLF or LF line endings.
++ *
++ * a url descriptor opts in with "csv": true; the resort's parse function
++ * then receives the rows array instead of parsed JSON or a DOM.
++ */
++export default function parseCsv(text) {
++  const rows = [];
++  let row = [];
++  let field = '';
++  let quoted = false;
++  let i = 0;
++  const n = text.length;
++
++  const endField = () => {
++    row.push(field);
++    field = '';
++  };
++  const endRow = () => {
++    endField();
++    rows.push(row);
++    row = [];
++  };
++
++  while (i < n) {
++    const c = text[i];
++    if (quoted) {
++      if (c === '"') {
++        if (text[i + 1] === '"') {
++          field += '"';
++          i += 2;
++          continue;
++        }
++        quoted = false;
++        i++;
++        continue;
++      }
++      field += c;
++      i++;
++      continue;
++    }
++    if (c === '"') {
++      quoted = true;
++      i++;
++      continue;
++    }
++    if (c === ',') {
++      endField();
++      i++;
++      continue;
++    }
++    if (c === '\r') {
++      // swallow CRLF and lone CR as a single line break
++      endRow();
++      i += text[i + 1] === '\n' ? 2 : 1;
++      continue;
++    }
++    if (c === '\n') {
++      endRow();
++      i++;
++      continue;
++    }
++    field += c;
++    i++;
++  }
++  // flush trailing field/row unless the text ended exactly on a line break
++  if (field !== '' || row.length > 0) {
++    endRow();
++  }
++  return rows;
++}
+diff --git a/lib/trails/index.js b/lib/trails/index.js
+index 7b2502e8..6f44ccc1 100644
+--- a/lib/trails/index.js
++++ b/lib/trails/index.js
+@@ -1,6 +1,7 @@
+ import Debug from 'debug';
+ import { parseHtml } from '../lifts/parser.js';
+ import request from '../lifts/request.js';
++import parseCsv from '../tools/csv.js';
+ import parseLoose from '../tools/fixjson.js';
+ import collect from './parse.js';
+ import stats from './stats.js';
+@@ -41,6 +42,10 @@ export default async function fetch(resort, fn) {
+         const body = url.fixJson ? parseLoose(await res.text()) : await res.json();
+         return fn(null, shape(collect(body, resort._trailsParse)));
+       }
++      if (url.csv) {
++        const rows = parseCsv(await res.text());
++        return fn(null, shape(collect(rows, resort._trailsParse)));
++      }
+       const html = await res.text();
+       const parse = dom => {
+         try {
+diff --git a/test/tools/csv.js b/test/tools/csv.js
+new file mode 100644
+index 00000000..31979e84
+--- /dev/null
++++ b/test/tools/csv.js
+@@ -0,0 +1,37 @@
++import assert from 'node:assert/strict';
++import test from 'node:test';
++import parseCsv from '../../lib/tools/csv.js';
++
++test('parses simple rows', () => {
++  assert.deepEqual(parseCsv('a,b,c\n1,2,3'), [
++    ['a', 'b', 'c'],
++    ['1', '2', '3']
++  ]);
++});
++
++test('handles CRLF line endings', () => {
++  assert.deepEqual(parseCsv('a,b\r\nc,d\r\n'), [
++    ['a', 'b'],
++    ['c', 'd']
++  ]);
++});
++
++test('keeps quoted fields with embedded commas', () => {
++  assert.deepEqual(parseCsv('name,note\r\nSummit,"steep, icy"'), [
++    ['name', 'note'],
++    ['Summit', 'steep, icy']
++  ]);
++});
++
++test('unescapes doubled quotes', () => {
++  // google-sheet terrain-park names arrive as """HOLLYWOOD"" Terrain Park"
++  assert.deepEqual(parseCsv('"""HOLLYWOOD"" Terrain Park",,OPEN'), [['"HOLLYWOOD" Terrain Park', '', 'OPEN']]);
++});
++
++test('preserves empty cells and does not emit a trailing blank row', () => {
++  assert.deepEqual(parseCsv('a,,c\r\n'), [['a', '', 'c']]);
++});
++
++test('keeps newlines inside quoted fields', () => {
++  assert.deepEqual(parseCsv('"line1\nline2",x'), [['line1\nline2', 'x']]);
++});
+-- 
+2.39.5
+
