@@ -21,7 +21,7 @@ REPO = Path.home() / "lift-status-data"
 STATUS_DIR = REPO / "status"
 
 RESORTS = [
-    "49-degrees-north", "berkshire-east", "big-moose", "big-white",
+    "49-degrees-north", "antelope-butte", "berkshire-east", "big-moose", "big-white",
     "bolton-valley", "burke-mountain", "caberfae-peaks", "calabogie",
     "canaan-valley", "cannon", "castle-mountain", "cataloochee", "chinapeak",
     "cooper-spur", "crystal-ridge", "donner-ski-ranch", "dynaland",
