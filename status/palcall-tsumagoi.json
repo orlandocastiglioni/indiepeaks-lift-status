@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-03T21:48:42Z",
+  "fetchedAt": "2026-08-03T22:31:04Z",
   "href": "https://tsumagoiskiresort.life/",
   "id": "palcall-tsumagoi",
   "lifts": {
@@ -23,10 +23,30 @@
   ],
   "name": "Palcall Tsumagoi",
   "timestamp": {
-    "lifts": 1785763768640,
-    "opening": 1785763766003,
-    "trails": 0,
+    "lifts": 1785795369387,
+    "opening": 1785795056217,
+    "trails": 1785795806284,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "terrainPark",
+        "name": "Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Tube Park",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 2,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }
