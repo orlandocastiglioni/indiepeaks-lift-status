@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-08-03T12:00:15Z",
+  "fetchedAt": "2026-08-03T12:15:15Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 11,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beginner Carpet": "closed",
+      "Beginner Tow I": "closed",
+      "Bluster Carpet": "closed",
+      "Cascade Basin Triple Chair": "closed",
+      "F5 Tow": "closed",
+      "Gusty JBar": "closed",
+      "Hurricane Quad Chair": "closed",
+      "Peak Triple Chair": "closed",
+      "Turbulence Triple Chair": "closed",
+      "Valley Double Chair": "closed",
+      "Vortex Double Chair": "closed"
+    }
   },
   "ll": [
     -71.833412,
@@ -23,11 +35,11 @@
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 1785757938483,
+    "lifts": 1785758462333,
     "opening": 1785757935876,
-    "trails": 1785758245881,
-    "weather": 0,
-    "webcams": 0
+    "trails": 1785758462756,
+    "weather": 1785758428804,
+    "webcams": 1785758426310
   },
   "trails": {
     "list": [
@@ -188,5 +200,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Areas Of Fog",
+    "date": "2026-08-03",
+    "icon": [
+      "basecloud",
+      "icon-thunder"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=43.180679&lon=-71.833412",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 78
+    },
+    "text": "Areas of fog and showers and thunderstorms before 10am, then areas of fog and a chance of showers and thunderstorms between 10am and 11am, then areas of fog and showers and thunderstorms. Cloudy, with a high near 78. South wind 0 to 10 mph, with gusts as high as 25 mph. Chance of precipitation is 100%. New rainfall amounts between a quarter and half of an inch possible."
   }
 }
