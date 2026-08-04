@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-08-04T00:45:41Z",
+  "fetchedAt": "2026-08-04T01:00:41Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 11,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beginner Carpet": "closed",
+      "Beginner Tow I": "closed",
+      "Bluster Carpet": "closed",
+      "Cascade Basin Triple Chair": "closed",
+      "F5 Tow": "closed",
+      "Gusty JBar": "closed",
+      "Hurricane Quad Chair": "closed",
+      "Peak Triple Chair": "closed",
+      "Turbulence Triple Chair": "closed",
+      "Valley Double Chair": "closed",
+      "Vortex Double Chair": "closed"
+    }
   },
   "ll": [
     -71.833412,
@@ -23,11 +35,11 @@
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 1785804025204,
-    "opening": 1785803765261,
-    "trails": 1785804224462,
-    "weather": 1785804026019,
-    "webcams": 1785804025128
+    "lifts": 1785804895234,
+    "opening": 1785804802997,
+    "trails": 1785804825758,
+    "weather": 0,
+    "webcams": 0
   },
   "trails": {
     "list": [
@@ -188,23 +200,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Slight Chance Showers And Thunderstorms then Patchy Fog",
-    "date": "2026-08-04",
-    "icon": [
-      "basenone",
-      "icon-mist"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=43.180679&lon=-71.833412",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 60
-    },
-    "text": "A slight chance of showers and thunderstorms before 8pm, then patchy fog. Mostly clear, with a low around 60. West wind 5 to 10 mph. Chance of precipitation is 20%. New rainfall amounts between a quarter and half of an inch possible."
   }
 }

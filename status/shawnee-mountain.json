@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-08-04T00:45:41Z",
+  "fetchedAt": "2026-08-04T01:00:41Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "B. Arrowhead - Quad": "closed",
+      "C. Tomahawk - Express": "closed",
+      "D. Tecumseh - Double": "closed",
+      "E. Lookout - Double": "closed",
+      "F. Bushkill - Double": "closed",
+      "G. Little Chief - Double": "closed",
+      "H. Little Chief - Carpet": "closed",
+      "I. Learning Center - Carpet": "closed",
+      "Skiwee Carpet": "closed"
+    }
   },
   "ll": [
     -75.078117,
@@ -23,11 +33,11 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1785804025202,
-    "opening": 1785803765261,
-    "trails": 1785804250543,
-    "weather": 1785804026085,
-    "webcams": 1785804025128
+    "lifts": 1785804905638,
+    "opening": 1785804802997,
+    "trails": 1785804834026,
+    "weather": 0,
+    "webcams": 0
   },
   "trails": {
     "list": [
@@ -188,23 +198,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Mostly Clear then Patchy Fog",
-    "date": "2026-08-04",
-    "icon": [
-      "basenone",
-      "icon-mist"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=41.03688&lon=-75.078117",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 57
-    },
-    "text": "Patchy fog after 2am. Mostly clear, with a low around 57. Northwest wind 0 to 5 mph."
   }
 }
