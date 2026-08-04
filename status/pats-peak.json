@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-04T00:40:12Z",
+  "fetchedAt": "2026-08-04T00:45:41Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
@@ -23,10 +23,188 @@
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 1785803767325,
+    "lifts": 1785804025204,
     "opening": 1785803765261,
-    "trails": 0,
-    "weather": 0,
-    "webcams": 0
+    "trails": 1785804224462,
+    "weather": 1785804026019,
+    "webcams": 1785804025128
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Breeze",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Zephyr",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "East Wind",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower East Wind",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Duster",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Cyclone",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Tornado",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Tornado",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Squall Line",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Blast",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Hurricane",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Knight Slope",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Vortex",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "FIS Race Trail",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Twister",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Beginners Area",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bluster",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Gusty",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Downdraft",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Valley Slope",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Whisper",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Puff",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Cascade Brook",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Blizzard",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Tempest",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Nor'easter",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Crosswind",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Backdraft",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Turbulence Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Microburst MiniPark",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 30,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
+  },
+  "weather": {
+    "conditions": "Slight Chance Showers And Thunderstorms then Patchy Fog",
+    "date": "2026-08-04",
+    "icon": [
+      "basenone",
+      "icon-mist"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=43.180679&lon=-71.833412",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 60
+    },
+    "text": "A slight chance of showers and thunderstorms before 8pm, then patchy fog. Mostly clear, with a low around 60. West wind 5 to 10 mph. Chance of precipitation is 20%. New rainfall amounts between a quarter and half of an inch possible."
   }
 }
