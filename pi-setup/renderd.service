@@ -14,6 +14,7 @@ RestartSec=10
 
 # chromium is heavy; keep it from eating the pi
 MemoryMax=1200M
+CPUQuota=100%
 CPUWeight=50
 
 NoNewPrivileges=true

@@ -1,0 +1,121 @@
+From a90cd5eb06707a3dfada78253d4cbbbebcdb4089 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 3 Aug 2026 20:53:09 -0400
+Subject: fetchvia: serialize chromium-backed fetches (1 in flight per backend)
+
+liftie fetches every resort on one interval; the ~8 flaresolverr resorts
+were spawning ~8 concurrent chromiums and pinning the 4-core Pi. Gate each
+backend to one in-flight request (LIFTIE_FLARESOLVERR_CONCURRENCY /
+LIFTIE_RENDERD_CONCURRENCY to tune). Data freshness is not time-critical.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/tools/fetchvia.js  | 44 +++++++++++++++++++++++++++++++++++-------
+ test/tools/fetchvia.js | 23 ++++++++++++++++++++--
+ 2 files changed, 58 insertions(+), 9 deletions(-)
+
+diff --git a/lib/tools/fetchvia.js b/lib/tools/fetchvia.js
+index 8eed4830..f4ab37f9 100644
+--- a/lib/tools/fetchvia.js
++++ b/lib/tools/fetchvia.js
+@@ -27,15 +27,45 @@ export function fullUrl({ host, pathname, query }) {
+   return url;
+ }
+ 
++/**
++ * Each proxied fetch spins up a headless-chromium instance (FlareSolverr
++ * launches one per in-flight request; renderd drives one page at a time).
++ * liftie's background fetcher fires every resort on the same interval, so
++ * without a gate the ~8 flaresolverr resorts would spawn ~8 chromiums at
++ * once and pin this 4-core Pi. Serialize per backend (default 1 in flight)
++ * so browser instances never pile up; data freshness is not time-critical.
++ */
++function createGate(limit) {
++  let active = 0;
++  const waiters = [];
++  const release = () => {
++    active--;
++    waiters.shift()?.();
++  };
++  return async function run(task) {
++    if (active >= limit) {
++      await new Promise(resolve => waiters.push(resolve));
++    }
++    active++;
++    try {
++      return await task();
++    } finally {
++      release();
++    }
++  };
++}
++
++const gates = {
++  flaresolverr: createGate(Number(process.env.LIFTIE_FLARESOLVERR_CONCURRENCY) || 1),
++  renderd: createGate(Number(process.env.LIFTIE_RENDERD_CONCURRENCY) || 1)
++};
++
+ export default function fetchVia(url) {
+-  switch (url.via) {
+-    case 'flaresolverr':
+-      return flaresolverr(url);
+-    case 'renderd':
+-      return renderd(url);
+-    default:
+-      return Promise.reject(new Error(`unknown fetch proxy: ${url.via}`));
++  const gate = gates[url.via];
++  if (!gate) {
++    return Promise.reject(new Error(`unknown fetch proxy: ${url.via}`));
+   }
++  return gate(() => (url.via === 'flaresolverr' ? flaresolverr(url) : renderd(url)));
+ }
+ 
+ async function flaresolverr(url) {
+diff --git a/test/tools/fetchvia.js b/test/tools/fetchvia.js
+index f8ed5afa..588879e0 100644
+--- a/test/tools/fetchvia.js
++++ b/test/tools/fetchvia.js
+@@ -6,6 +6,9 @@ let server;
+ let fetchVia;
+ let unwrapJson;
+ let solution; // what the mock flaresolverr answers with
++let active = 0; // in-flight requests the mock is currently handling
++let peak = 0; // high-water mark, to prove the gate serializes
++let delayMs = 0; // artificial handler latency for the concurrency test
+ 
+ before(async () => {
+   server = createServer((req, res) => {
+@@ -17,8 +20,13 @@ before(async () => {
+       const { cmd, url } = JSON.parse(body);
+       assert.equal(cmd, 'request.get');
+       assert.ok(url.startsWith('https://'));
+-      res.setHeader('Content-Type', 'application/json');
+-      res.end(JSON.stringify(solution));
++      active++;
++      peak = Math.max(peak, active);
++      setTimeout(() => {
++        active--;
++        res.setHeader('Content-Type', 'application/json');
++        res.end(JSON.stringify(solution));
++      }, delayMs);
+     });
+   });
+   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+@@ -86,3 +94,14 @@ test('request bodies are rejected for flaresolverr', async () => {
+ test('unwrapJson rejects non-json pages', () => {
+   assert.throws(() => unwrapJson('<html><body>404</body></html>'), /neither JSON/);
+ });
++
++test('flaresolverr requests are serialized (never two chromiums at once)', async () => {
++  // liftie fires every resort on one interval; the gate must keep the mock
++  // (a stand-in for a chromium-spawning backend) at one in-flight request.
++  solution = { status: 'ok', solution: { status: 200, response: 'ok' } };
++  peak = 0;
++  delayMs = 30;
++  await Promise.all(Array.from({ length: 6 }, () => fetchVia(url)));
++  delayMs = 0;
++  assert.equal(peak, 1, `flaresolverr concurrency peaked at ${peak}, expected 1`);
++});
+-- 
+2.39.5
+

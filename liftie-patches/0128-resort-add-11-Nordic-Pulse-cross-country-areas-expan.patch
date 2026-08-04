@@ -1,0 +1,472 @@
+From 435cb86721da6f8b6617fb7c939e12bd1f161078 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 3 Aug 2026 18:47:34 -0400
+Subject: resort: add 11 Nordic Pulse cross-country areas (expansion)
+
+Black Jack, Caledonia, Kimberley, Mt Washington XC, Nelson, Nickel Plate,
+Sovereign Lake, Telemark, Whitehorse, Williams Lake, Bethel Village - all
+trails-only via the shared nordic-pulse embed parser.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/bethel-village-trails/resort.json | 25 +++++++++++++++++++
+ lib/resorts/bethel-village-trails/trails.js   |  1 +
+ lib/resorts/black-jack/resort.json            | 24 ++++++++++++++++++
+ lib/resorts/black-jack/trails.js              |  1 +
+ lib/resorts/caledonia-nordic/resort.json      | 24 ++++++++++++++++++
+ lib/resorts/caledonia-nordic/trails.js        |  1 +
+ lib/resorts/kimberley-nordic/resort.json      | 25 +++++++++++++++++++
+ lib/resorts/kimberley-nordic/trails.js        |  1 +
+ lib/resorts/mt-washington-bc-xc/resort.json   | 25 +++++++++++++++++++
+ lib/resorts/mt-washington-bc-xc/trails.js     |  1 +
+ lib/resorts/nelson-nordic/resort.json         | 24 ++++++++++++++++++
+ lib/resorts/nelson-nordic/trails.js           |  1 +
+ lib/resorts/nickel-plate-nordic/resort.json   | 24 ++++++++++++++++++
+ lib/resorts/nickel-plate-nordic/trails.js     |  1 +
+ lib/resorts/sovereign-lake/resort.json        | 24 ++++++++++++++++++
+ lib/resorts/sovereign-lake/trails.js          |  1 +
+ lib/resorts/telemark-nordic/resort.json       | 24 ++++++++++++++++++
+ lib/resorts/telemark-nordic/trails.js         |  1 +
+ lib/resorts/whitehorse-nordic/resort.json     | 25 +++++++++++++++++++
+ lib/resorts/whitehorse-nordic/trails.js       |  1 +
+ lib/resorts/williams-lake-xc/resort.json      | 25 +++++++++++++++++++
+ lib/resorts/williams-lake-xc/trails.js        |  1 +
+ 22 files changed, 280 insertions(+)
+ create mode 100644 lib/resorts/bethel-village-trails/resort.json
+ create mode 100644 lib/resorts/bethel-village-trails/trails.js
+ create mode 100644 lib/resorts/black-jack/resort.json
+ create mode 100644 lib/resorts/black-jack/trails.js
+ create mode 100644 lib/resorts/caledonia-nordic/resort.json
+ create mode 100644 lib/resorts/caledonia-nordic/trails.js
+ create mode 100644 lib/resorts/kimberley-nordic/resort.json
+ create mode 100644 lib/resorts/kimberley-nordic/trails.js
+ create mode 100644 lib/resorts/mt-washington-bc-xc/resort.json
+ create mode 100644 lib/resorts/mt-washington-bc-xc/trails.js
+ create mode 100644 lib/resorts/nelson-nordic/resort.json
+ create mode 100644 lib/resorts/nelson-nordic/trails.js
+ create mode 100644 lib/resorts/nickel-plate-nordic/resort.json
+ create mode 100644 lib/resorts/nickel-plate-nordic/trails.js
+ create mode 100644 lib/resorts/sovereign-lake/resort.json
+ create mode 100644 lib/resorts/sovereign-lake/trails.js
+ create mode 100644 lib/resorts/telemark-nordic/resort.json
+ create mode 100644 lib/resorts/telemark-nordic/trails.js
+ create mode 100644 lib/resorts/whitehorse-nordic/resort.json
+ create mode 100644 lib/resorts/whitehorse-nordic/trails.js
+ create mode 100644 lib/resorts/williams-lake-xc/resort.json
+ create mode 100644 lib/resorts/williams-lake-xc/trails.js
+
+diff --git a/lib/resorts/bethel-village-trails/resort.json b/lib/resorts/bethel-village-trails/resort.json
+new file mode 100644
+index 00000000..f92ad64b
+--- /dev/null
++++ b/lib/resorts/bethel-village-trails/resort.json
+@@ -0,0 +1,25 @@
++{
++  "name": "Bethel Village Trails (Inland Woods + Trails)",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/US/ME/Inland-Woods-Trails"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/US/ME/Inland-Woods-Trails",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "Maine",
++    "USA"
++  ],
++  "ll": [
++    -70.79079885,
++    44.40251575
++  ]
++}
+diff --git a/lib/resorts/bethel-village-trails/trails.js b/lib/resorts/bethel-village-trails/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/bethel-village-trails/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/black-jack/resort.json b/lib/resorts/black-jack/resort.json
+new file mode 100644
+index 00000000..f93d7108
+--- /dev/null
++++ b/lib/resorts/black-jack/resort.json
+@@ -0,0 +1,24 @@
++{
++  "name": "Black Jack Cross Country Ski Club",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Black-Jack-Ski-Club"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Black-Jack-Ski-Club",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia"
++  ],
++  "ll": [
++    -117.81361,
++    49.112922
++  ]
++}
+diff --git a/lib/resorts/black-jack/trails.js b/lib/resorts/black-jack/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/black-jack/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/caledonia-nordic/resort.json b/lib/resorts/caledonia-nordic/resort.json
+new file mode 100644
+index 00000000..8edf0c81
+--- /dev/null
++++ b/lib/resorts/caledonia-nordic/resort.json
+@@ -0,0 +1,24 @@
++{
++  "name": "Caledonia Nordic Ski Club",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/centres/CA/BC/Caledonia-Nordic"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/centres/CA/BC/Caledonia-Nordic",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia"
++  ],
++  "ll": [
++    -122.877,
++    53.968
++  ]
++}
+diff --git a/lib/resorts/caledonia-nordic/trails.js b/lib/resorts/caledonia-nordic/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/caledonia-nordic/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/kimberley-nordic/resort.json b/lib/resorts/kimberley-nordic/resort.json
+new file mode 100644
+index 00000000..c623e687
+--- /dev/null
++++ b/lib/resorts/kimberley-nordic/resort.json
+@@ -0,0 +1,25 @@
++{
++  "name": "Kimberley Nordic Club",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Kimberley-Nordic"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Kimberley-Nordic",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia",
++    "Nordic"
++  ],
++  "ll": [
++    -116.00781,
++    49.68278
++  ]
++}
+diff --git a/lib/resorts/kimberley-nordic/trails.js b/lib/resorts/kimberley-nordic/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/kimberley-nordic/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/mt-washington-bc-xc/resort.json b/lib/resorts/mt-washington-bc-xc/resort.json
+new file mode 100644
+index 00000000..11b6a1f3
+--- /dev/null
++++ b/lib/resorts/mt-washington-bc-xc/resort.json
+@@ -0,0 +1,25 @@
++{
++  "name": "Mt. Washington Alpine Resort XC",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Mount-Washington"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Mount-Washington",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia",
++    "Nordic"
++  ],
++  "ll": [
++    -125.3203787,
++    49.7452811
++  ]
++}
+diff --git a/lib/resorts/mt-washington-bc-xc/trails.js b/lib/resorts/mt-washington-bc-xc/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/mt-washington-bc-xc/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/nelson-nordic/resort.json b/lib/resorts/nelson-nordic/resort.json
+new file mode 100644
+index 00000000..a5a3fbcb
+--- /dev/null
++++ b/lib/resorts/nelson-nordic/resort.json
+@@ -0,0 +1,24 @@
++{
++  "name": "Nelson Nordic Ski Club",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Nelson-Nordic-Ski-Club"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Nelson-Nordic-Ski-Club",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia"
++  ],
++  "ll": [
++    -117.2133359,
++    49.409235
++  ]
++}
+diff --git a/lib/resorts/nelson-nordic/trails.js b/lib/resorts/nelson-nordic/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/nelson-nordic/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/nickel-plate-nordic/resort.json b/lib/resorts/nickel-plate-nordic/resort.json
+new file mode 100644
+index 00000000..efde427a
+--- /dev/null
++++ b/lib/resorts/nickel-plate-nordic/resort.json
+@@ -0,0 +1,24 @@
++{
++  "name": "Nickel Plate Nordic Centre",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Nickel-Plate-Nordic"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Nickel-Plate-Nordic",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia"
++  ],
++  "ll": [
++    -119.9574253,
++    49.3848243
++  ]
++}
+diff --git a/lib/resorts/nickel-plate-nordic/trails.js b/lib/resorts/nickel-plate-nordic/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/nickel-plate-nordic/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/sovereign-lake/resort.json b/lib/resorts/sovereign-lake/resort.json
+new file mode 100644
+index 00000000..adda0f67
+--- /dev/null
++++ b/lib/resorts/sovereign-lake/resort.json
+@@ -0,0 +1,24 @@
++{
++  "name": "Sovereign Lake Nordic Club",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Sovereign-Lake-Nordic-Centre"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Sovereign-Lake-Nordic-Centre",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia"
++  ],
++  "ll": [
++    -119.10414,
++    50.36662
++  ]
++}
+diff --git a/lib/resorts/sovereign-lake/trails.js b/lib/resorts/sovereign-lake/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/sovereign-lake/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/telemark-nordic/resort.json b/lib/resorts/telemark-nordic/resort.json
+new file mode 100644
+index 00000000..3c28ebf4
+--- /dev/null
++++ b/lib/resorts/telemark-nordic/resort.json
+@@ -0,0 +1,24 @@
++{
++  "name": "Telemark Nordic Centre",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Telemark-Nordic"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Telemark-Nordic",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia"
++  ],
++  "ll": [
++    -119.72272,
++    49.86393
++  ]
++}
+diff --git a/lib/resorts/telemark-nordic/trails.js b/lib/resorts/telemark-nordic/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/telemark-nordic/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/whitehorse-nordic/resort.json b/lib/resorts/whitehorse-nordic/resort.json
+new file mode 100644
+index 00000000..34eebfdc
+--- /dev/null
++++ b/lib/resorts/whitehorse-nordic/resort.json
+@@ -0,0 +1,25 @@
++{
++  "name": "Whitehorse Nordic Centre",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/YT/Whitehorse"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/YT/Whitehorse",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "Yukon",
++    "Canada"
++  ],
++  "ll": [
++    -135.1006179,
++    60.731119
++  ]
++}
+diff --git a/lib/resorts/whitehorse-nordic/trails.js b/lib/resorts/whitehorse-nordic/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/whitehorse-nordic/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/williams-lake-xc/resort.json b/lib/resorts/williams-lake-xc/resort.json
+new file mode 100644
+index 00000000..8f2946a2
+--- /dev/null
++++ b/lib/resorts/williams-lake-xc/resort.json
+@@ -0,0 +1,25 @@
++{
++  "name": "Williams Lake Cross Country Ski Club",
++  "url": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Williams-Lake-Cross-Country-Ski-Club"
++  },
++  "trails": {
++    "host": "https://nordic-pulse.com",
++    "pathname": "/ski-areas/CA/BC/Williams-Lake-Cross-Country-Ski-Club",
++    "query": {
++      "embed": "true"
++    }
++  },
++  "no": {
++    "lifts": true
++  },
++  "tags": [
++    "British Columbia",
++    "Canada"
++  ],
++  "ll": [
++    -122.1322846,
++    52.2415189
++  ]
++}
+diff --git a/lib/resorts/williams-lake-xc/trails.js b/lib/resorts/williams-lake-xc/trails.js
+new file mode 100644
+index 00000000..dedfca58
+--- /dev/null
++++ b/lib/resorts/williams-lake-xc/trails.js
+@@ -0,0 +1 @@
++export { default } from '../../tools/nordic-pulse.js';
+-- 
+2.39.5
+

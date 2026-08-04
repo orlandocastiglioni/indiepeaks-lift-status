@@ -1,0 +1,167 @@
+From 6ac45628a56dae44d7d3e5648dd3ebfaad3f8c22 Mon Sep 17 00:00:00 2001
+From: Orlando Castiglioni <orlando@orlandocc.me>
+Date: Mon, 3 Aug 2026 18:47:33 -0400
+Subject: trails: shared nordic-pulse module + refactor rikert/manning-park-xc
+
+The per-area data-npww JSON feed is 403 to direct requests; the ?embed=true
+page server-renders it into script#ng-state. Extract it there. rikert and
+manning-park-xc had byte-identical copies of this parser - collapse to one
+lib/tools/nordic-pulse.js they both re-export.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ lib/resorts/manning-park-xc/trails.js        | 21 +---------
+ lib/resorts/rikert/trails.js                 | 21 +---------
+ lib/tools/nordic-pulse.js                    | 28 +++++++++++++
+ test/resorts/example/nordic-pulse-embed.html |  1 +
+ test/tools/nordic-pulse.js                   | 42 ++++++++++++++++++++
+ 5 files changed, 73 insertions(+), 40 deletions(-)
+ create mode 100644 lib/tools/nordic-pulse.js
+ create mode 100644 test/resorts/example/nordic-pulse-embed.html
+ create mode 100644 test/tools/nordic-pulse.js
+
+diff --git a/lib/resorts/manning-park-xc/trails.js b/lib/resorts/manning-park-xc/trails.js
+index 58353555..dedfca58 100644
+--- a/lib/resorts/manning-park-xc/trails.js
++++ b/lib/resorts/manning-park-xc/trails.js
+@@ -1,20 +1 @@
+-import select from '../../select.js';
+-import { findText } from '../../tools/domutil.js';
+-
+-const levels = { easy: 'green', intermediate: 'blue', advanced: 'black', expert: 'doubleBlack' };
+-
+-// Nordic Pulse embed page: the Angular TransferState JSON in script#ng-state
+-// carries the area's trails (open boolean, piste:difficulty, hazard)
+-export default function parse(dom) {
+-  const script = select(dom, 'script#ng-state')[0];
+-  if (!script) {
+-    return [];
+-  }
+-  const state = JSON.parse(findText(script) ?? '{}');
+-  const data = Object.values(state).find(v => v?.url?.includes('/data-npww'));
+-  return (data?.body?.trails ?? []).map(t => ({
+-    name: t.names?.en ?? t.name,
+-    status: t.hazard ? 'hold' : t.open ? 'open' : 'closed',
+-    level: levels[t['piste:difficulty']]
+-  }));
+-}
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/resorts/rikert/trails.js b/lib/resorts/rikert/trails.js
+index 58353555..dedfca58 100644
+--- a/lib/resorts/rikert/trails.js
++++ b/lib/resorts/rikert/trails.js
+@@ -1,20 +1 @@
+-import select from '../../select.js';
+-import { findText } from '../../tools/domutil.js';
+-
+-const levels = { easy: 'green', intermediate: 'blue', advanced: 'black', expert: 'doubleBlack' };
+-
+-// Nordic Pulse embed page: the Angular TransferState JSON in script#ng-state
+-// carries the area's trails (open boolean, piste:difficulty, hazard)
+-export default function parse(dom) {
+-  const script = select(dom, 'script#ng-state')[0];
+-  if (!script) {
+-    return [];
+-  }
+-  const state = JSON.parse(findText(script) ?? '{}');
+-  const data = Object.values(state).find(v => v?.url?.includes('/data-npww'));
+-  return (data?.body?.trails ?? []).map(t => ({
+-    name: t.names?.en ?? t.name,
+-    status: t.hazard ? 'hold' : t.open ? 'open' : 'closed',
+-    level: levels[t['piste:difficulty']]
+-  }));
+-}
++export { default } from '../../tools/nordic-pulse.js';
+diff --git a/lib/tools/nordic-pulse.js b/lib/tools/nordic-pulse.js
+new file mode 100644
+index 00000000..544acb83
+--- /dev/null
++++ b/lib/tools/nordic-pulse.js
+@@ -0,0 +1,28 @@
++import select from '../select.js';
++import { findText } from './domutil.js';
++
++const levels = { easy: 'green', intermediate: 'blue', advanced: 'black', expert: 'doubleBlack' };
++
++/**
++ * Shared trail parser for Nordic Pulse areas (nordic-pulse.com). The public
++ * per-area JSON feed (api2.nordic-pulse.com/.../data-npww) is 403 to direct
++ * requests, but the "?embed=true" page server-renders that same payload into
++ * the Angular TransferState blob in <script id="ng-state">. We pull the
++ * data-npww body out of that blob and map its trails.
++ *
++ * Resorts use it by pointing "trails" at their nordic-pulse embed page and
++ * re-exporting this parser as their trails.js.
++ */
++export default function parse(dom) {
++  const script = select(dom, 'script#ng-state')[0];
++  if (!script) {
++    return [];
++  }
++  const state = JSON.parse(findText(script) ?? '{}');
++  const data = Object.values(state).find(v => v?.url?.includes('/data-npww'));
++  return (data?.body?.trails ?? []).map(t => ({
++    name: t.names?.en ?? t.name,
++    status: t.hazard ? 'hold' : t.open ? 'open' : 'closed',
++    level: levels[t['piste:difficulty']]
++  }));
++}
+diff --git a/test/resorts/example/nordic-pulse-embed.html b/test/resorts/example/nordic-pulse-embed.html
+new file mode 100644
+index 00000000..97c4cdaa
+--- /dev/null
++++ b/test/resorts/example/nordic-pulse-embed.html
+@@ -0,0 +1 @@
++<!doctype html><html><head></head><body><app-root></app-root><script id="ng-state" type="application/json">{"G.https://api2.nordic-pulse.com/v3/regions": {"url": "https://api2.nordic-pulse.com/v3/regions", "body": {}}, "G.https://api2.nordic-pulse.com/v3/ski-areas/CA-BC-Test/data-npww": {"url": "https://api2.nordic-pulse.com/v3/ski-areas/CA-BC-Test/data-npww", "body": {"trails": [{"names": {"en": "Meadow Loop"}, "open": true, "piste:difficulty": "easy"}, {"names": {"en": "River Run"}, "open": false, "piste:difficulty": "intermediate"}, {"names": {"en": "Summit Trail"}, "open": true, "hazard": true, "piste:difficulty": "advanced"}, {"name": "Expert Glade", "open": true, "piste:difficulty": "expert"}]}}}</script></body></html>
+\ No newline at end of file
+diff --git a/test/tools/nordic-pulse.js b/test/tools/nordic-pulse.js
+new file mode 100644
+index 00000000..980e6d32
+--- /dev/null
++++ b/test/tools/nordic-pulse.js
+@@ -0,0 +1,42 @@
++import assert from 'node:assert/strict';
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import test from 'node:test';
++import { parseHtml } from '../../lib/lifts/parser.js';
++import parse from '../../lib/tools/nordic-pulse.js';
++import collect from '../../lib/trails/parse.js';
++
++// shared parser for every nordic-pulse.com area (rikert, manning-park-xc,
++// and the expansion nordic clubs). The 403 data-npww feed is server-rendered
++// into script#ng-state on the ?embed=true page; we read it back from there.
++const fixture = resolve(import.meta.dirname, '../resorts/example/nordic-pulse-embed.html');
++
++test('nordic-pulse: extracts trails from the ng-state data-npww blob', (_t, done) => {
++  const html = readFileSync(fixture, 'utf8');
++  parseHtml(
++    html,
++    dom => collect(dom, parse),
++    (err, list) => {
++      assert.ifError(err);
++      assert.deepEqual(list, [
++        { name: 'Meadow Loop', status: 'open', level: 'green' },
++        { name: 'River Run', status: 'closed', level: 'blue' },
++        { name: 'Summit Trail', status: 'hold', level: 'black' },
++        { name: 'Expert Glade', status: 'open', level: 'doubleBlack' }
++      ]);
++      done();
++    }
++  );
++});
++
++test('nordic-pulse: no ng-state yields an empty list, not a throw', (_t, done) => {
++  parseHtml(
++    '<html><body>nope</body></html>',
++    dom => collect(dom, parse),
++    (err, list) => {
++      assert.ifError(err);
++      assert.deepEqual(list, []);
++      done();
++    }
++  );
++});
+-- 
+2.39.5
+

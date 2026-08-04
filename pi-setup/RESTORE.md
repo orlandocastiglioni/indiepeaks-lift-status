@@ -7,6 +7,25 @@ pipeline lives in this repo: this directory (units + scripts) and
 Target: Raspberry Pi, 64-bit Raspberry Pi OS (aarch64 — check with `uname -m`),
 user `orlando` with sudo. Adjust paths if the user differs.
 
+## CPU protection (important on a 4-core Pi)
+
+Headless-chromium fetches are the one thing that can pin this box. Three
+layers keep it from ever hitting 100% CPU:
+
+1. **liftie serializes browser fetches** — `lib/tools/fetchvia.js` gates each
+   backend to one in-flight request (`LIFTIE_FLARESOLVERR_CONCURRENCY` /
+   `LIFTIE_RENDERD_CONCURRENCY`, default 1), so the ~8 flaresolverr resorts
+   can't spawn 8 chromiums at once when the fetch interval fires.
+2. **systemd CPU ceilings** — `liftie.service` has `CPUQuota=200%` (≤2 cores),
+   `renderd.service` `CPUQuota=100%` (≤1 core). Both are in the unit files.
+3. **FlareSolverr container** — capped at 1 CPU:
+   `docker update --cpus=1 flaresolverr` (add `cpus: 1.0` to its compose
+   service so it survives recreation).
+
+Net worst case: liftie 2 + FlareSolverr 1 + renderd 1 = leaves headroom on 4
+cores. If the Pi still struggles, lower `CPUQuota` or reduce the number of
+`"via": "flaresolverr"` resorts.
+
 ## 1. Node.js 24 (NodeSource) + pnpm 10
 
 ```sh
