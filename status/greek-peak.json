@@ -1,15 +1,30 @@
 {
-  "fetchedAt": "2026-08-05T00:50:14Z",
+  "fetchedAt": "2026-08-05T01:00:46Z",
   "href": "https://www.greekpeak.net/ski-ride/current-conditions/",
   "id": "greek-peak",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     -76.136,
     42.5034
   ],
   "name": "Greek Peak",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1785851122664,
+    "lifts": 1785891024783,
+    "opening": 1785891022371,
     "trails": 1785891016259,
     "weather": 0,
     "webcams": 0

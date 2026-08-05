@@ -1,18 +1,33 @@
 {
-  "fetchedAt": "2026-08-05T00:50:14Z",
+  "fetchedAt": "2026-08-05T01:00:46Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     -105.89595,
     39.679993
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1785851122664,
+    "lifts": 1785891024791,
+    "opening": 1785891022371,
     "trails": 1785891015980,
-    "weather": 0,
-    "webcams": 0
+    "weather": 1785891032710,
+    "webcams": 1785891022371
   },
   "trails": {
     "list": [

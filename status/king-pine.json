@@ -1,18 +1,33 @@
 {
-  "fetchedAt": "2026-08-05T00:50:14Z",
+  "fetchedAt": "2026-08-05T01:00:46Z",
   "href": "http://www.kingpine.com/snow-report-conditions",
   "id": "king-pine",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     -71.088127,
     43.86063
   ],
   "name": "King Pine",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1785851122664,
+    "lifts": 1785891024712,
+    "opening": 1785891022371,
     "trails": 1785891015636,
-    "weather": 0,
-    "webcams": 0
+    "weather": 1785891032711,
+    "webcams": 1785891022371
   },
   "trails": {
     "list": [

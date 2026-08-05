@@ -1,15 +1,30 @@
 {
-  "fetchedAt": "2026-08-05T00:50:14Z",
+  "fetchedAt": "2026-08-05T01:00:46Z",
   "href": "https://ski.washigatake.jp/condition/",
   "id": "washigatake",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     136.9276,
     35.9808
   ],
   "name": "Washigatake",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1785851122666,
+    "lifts": 1785891024756,
+    "opening": 1785891022372,
     "trails": 1785891020375,
     "weather": 0,
     "webcams": 0
