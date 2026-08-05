@@ -1,195 +1,184 @@
 {
   "fetchedAt": "2026-08-05T02:37:11Z",
-  "href": "https://www.saskadenasix.com/winter/conditions",
-  "id": "saskadena-six",
+  "href": "https://www.mohawkmtn.com/snow-report/",
+  "id": "mohawk-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Arrowhead Triple Chair": "closed",
+      "Boulder Summit Triple Chair": "closed",
+      "Deer Run Triple Chair": "closed",
+      "Mohawk Triple Chair": "closed",
+      "Nutmeg Triple Chair": "closed",
+      "Robin's Nest": "closed",
+      "Runway": "closed",
+      "The Glider": "closed",
+      "The Rooster": "closed"
+    }
   },
   "ll": [
-    -72.5464,
-    43.6702
+    -73.3119,
+    41.8403
   ],
-  "name": "Saskadena Six",
+  "name": "Mohawk Mountain",
   "timestamp": {
-    "lifts": 1785897410351,
+    "lifts": 1785897422818,
     "opening": 1785897407962,
-    "trails": 1785897416515,
+    "trails": 1785897422869,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
     "list": [
       {
-        "name": "UPHILL - Backdoor>Gully>Summit",
-        "status": "closed"
-      },
-      {
-        "name": "UPHILL - Easy Mile",
-        "status": "closed"
-      },
-      {
-        "name": "UPHILL - Easy Mile Woods Route",
-        "status": "closed"
-      },
-      {
-        "name": "UPHILL - Milky Way>Top of Chair 2",
+        "level": "green",
+        "name": "Back Bowl",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Begin-A-Glade",
+        "name": "Deer Run",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Easy Mile",
+        "name": "Indian Crossing",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Milky Way",
+        "name": "Laurel",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Pearson's Path",
+        "name": "Ledges",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Patrol Loop",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Standard",
+        "name": "Lower Mohawk",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Nutmeg - Beginner Slope",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Ridge Run",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Back Door",
+        "name": "Skyline Drive",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Victor's Way",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Bee Line",
+        "name": "Tomahawk",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Bourdon's Bowl",
+        "name": "Arrowhead",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Bunny's Boulevard",
+        "name": "Exhibition",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Chimney",
+        "name": "Housatonic",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Double Dip",
+        "name": "Mohawk",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Duane's Drop",
+        "name": "Pinnacle",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Lasky Lot",
+        "name": "Rabbit Run",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Perley's Peril",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Road Way",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Skyline",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Spring Pine Glade",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "The Chute",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "The Gully",
+        "name": "Rimrock",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Crystal",
+        "name": "Chute",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Jug Handle",
+        "name": "Lift Line",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Showoff",
+        "name": "Route 100",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "The Face",
+        "name": "The Rapids",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "Back Scratcher",
+        "level": "black",
+        "name": "Timber",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "Mid Face",
+        "level": "black",
+        "name": "Wildwood",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "Pomfret Plunge",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Porcupine",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "The Glade",
+        "level": "green",
+        "name": "Mahlzeit",
         "status": "closed"
       }
     ],
     "stats": {
-      "closed": 32,
+      "closed": 27,
       "hold": 0,
       "open": 0,
       "scheduled": 0
