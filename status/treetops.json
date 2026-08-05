@@ -1,135 +1,74 @@
 {
   "fetchedAt": "2026-08-05T19:54:08Z",
-  "href": "https://www.saskadenasix.com/winter/conditions",
-  "id": "saskadena-six",
+  "href": "https://www.treetops.com/live/",
+  "id": "treetops",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chair #1": "closed",
+      "Chair #3": "closed",
+      "Chair #4": "closed",
+      "Magic Carpet": "closed"
+    }
   },
   "ll": [
-    -72.5464,
-    43.6702
+    -84.5915,
+    45.0355
   ],
-  "name": "Saskadena Six",
+  "name": "Treetops Resort",
   "timestamp": {
-    "lifts": 1785959627055,
+    "lifts": 1785959636160,
     "opening": 1785959625506,
-    "trails": 1785959635717,
+    "trails": 1785959636122,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
     "list": [
       {
-        "name": "UPHILL - Backdoor>Gully>Summit",
+        "level": "terrainPark",
+        "name": "Loafer Park",
         "status": "closed"
       },
       {
-        "name": "UPHILL - Easy Mile",
+        "level": "terrainPark",
+        "name": "The Yard- BoarderX",
         "status": "closed"
       },
       {
-        "name": "UPHILL - Easy Mile Woods Route",
-        "status": "closed"
-      },
-      {
-        "name": "UPHILL - Milky Way>Top of Chair 2",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Begin-A-Glade",
+        "level": "terrainPark",
+        "name": "Birch Run Park",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Easy Mile",
+        "name": "Sitzmark",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Milky Way",
+        "name": "Stubby",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Pearson's Path",
+        "name": "Birch Run",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Standard",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Back Door",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bee Line",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bourdon's Bowl",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bunny's Boulevard",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Chimney",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Double Dip",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Duane's Drop",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lasky Lot",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Perley's Peril",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Road Way",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Skyline",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Spring Pine Glade",
+        "name": "Loafer",
         "status": "closed"
       },
       {
@@ -139,57 +78,122 @@
       },
       {
         "level": "blue",
-        "name": "The Gully",
+        "name": "Money Pit",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Al\u2019s Bypass",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Cross Cut",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sweet Caroline",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Old Face Full",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Round House",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Schuss-Away",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Crystal",
+        "name": "Hemlock Hollow",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Jug Handle",
+        "name": "Lookout",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Showoff",
+        "name": "Tournament Hill",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "The Face",
+        "name": "Hunter\u2019s Drop",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Spillway",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Lark",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Jumpin\u2019 Judas",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Ridge Run",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Timber Trail",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Kathryn\u2019s Way",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Yard",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Straight Shot",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Razzle Dazzle",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Wood Splitter",
         "status": "closed"
       },
       {
         "level": "doubleBlack",
-        "name": "Back Scratcher",
+        "name": "The Glades",
         "status": "closed"
       },
       {
         "level": "doubleBlack",
-        "name": "Mid Face",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Pomfret Plunge",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Porcupine",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "The Glade",
+        "name": "Rollaway",
         "status": "closed"
       }
     ],
     "stats": {
-      "closed": 32,
+      "closed": 31,
       "hold": 0,
       "open": 0,
       "scheduled": 0
