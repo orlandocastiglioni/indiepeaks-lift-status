@@ -1,31 +1,38 @@
 {
   "fetchedAt": "2026-08-05T11:23:47Z",
-  "href": "https://www.mohawkmtn.com/snow-report/",
-  "id": "mohawk-mountain",
+  "href": "https://www.bcmountainresort.com/activities/ski-snowboarding/ski-conditions/",
+  "id": "bear-creek-pa",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A Lift (Opens when volume dictates)": "closed",
+      "B Lift": "closed",
+      "Carpet": "closed",
+      "E Lift": "closed",
+      "F Lift": "closed",
+      "SNOWTUBING LIFT": "closed"
+    }
   },
   "ll": [
-    -73.3119,
-    41.8403
+    -75.6257642,
+    40.476212
   ],
-  "name": "Mohawk Mountain",
+  "name": "Bear Creek Mountain Resort",
   "timestamp": {
-    "lifts": 1785929011997,
-    "opening": 1785929009897,
-    "trails": 1785929024942,
+    "lifts": 1785929023868,
+    "opening": 1785929009895,
+    "trails": 1785929023822,
     "weather": 0,
     "webcams": 0
   },
@@ -33,142 +40,122 @@
     "list": [
       {
         "level": "green",
-        "name": "Back Bowl",
+        "name": "Bear Pass",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Deer Run",
+        "name": "Coaster",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Indian Crossing",
+        "name": "DISCOVERY TEACHING AREA",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Laurel",
+        "name": "EASY STREET",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Ledges",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Patrol Loop",
+        "name": "SUN BEAR",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Lower Mohawk",
+        "name": "BROADWAY",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Nutmeg - Beginner Slope",
+        "name": "CUB RUN",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Pine",
+        "name": "DRIFTER",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Ridge Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Skyline Drive",
+        "name": "HOME RUN",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Victor's Way",
+        "name": "TEDDY BEAR TEACHING AREA",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Tomahawk",
+        "name": "Bear Claw",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Arrowhead",
+        "name": "GROWLER",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Exhibition",
+        "name": "POLAR BEAR",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Housatonic",
+        "name": "BROWN BEAR",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Mohawk",
+        "name": "KODIAK",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Pinnacle",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Rabbit Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Rimrock",
+        "name": "TIMBERLINE",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Chute",
+        "name": "Bear TRAP",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Lift Line",
+        "name": "GRIZZLY",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Route 100",
+        "name": "Extreme",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "The Rapids",
+        "name": "Sasquatch",
         "status": "closed"
       },
       {
-        "level": "black",
-        "name": "Timber",
+        "level": "terrainPark",
+        "name": "Black Bear Park",
         "status": "closed"
       },
       {
-        "level": "black",
-        "name": "Wildwood",
+        "level": "terrainPark",
+        "name": "Family Park",
         "status": "closed"
       },
       {
-        "level": "green",
-        "name": "Mahlzeit",
+        "level": "terrainPark",
+        "name": "CASCADE PARK",
         "status": "closed"
       }
     ],
     "stats": {
-      "closed": 27,
+      "closed": 23,
       "hold": 0,
       "open": 0,
       "scheduled": 0
