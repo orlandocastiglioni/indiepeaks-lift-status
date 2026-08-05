@@ -1,31 +1,35 @@
 {
   "fetchedAt": "2026-08-05T11:23:47Z",
-  "href": "https://www.mohawkmtn.com/snow-report/",
-  "id": "mohawk-mountain",
+  "href": "https://hatleypointe.com/slope-report/",
+  "id": "hatley-pointe",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Summit Lift": "closed",
+      "Tennessee Walker": "closed",
+      "Way Out Tow": "closed"
+    }
   },
   "ll": [
-    -73.3119,
-    41.8403
+    -82.509,
+    35.955
   ],
-  "name": "Mohawk Mountain",
+  "name": "Hatley Pointe",
   "timestamp": {
-    "lifts": 1785929011997,
+    "lifts": 1785929016637,
     "opening": 1785929009897,
-    "trails": 1785929024942,
+    "trails": 1785929015638,
     "weather": 0,
     "webcams": 0
   },
@@ -33,142 +37,117 @@
     "list": [
       {
         "level": "green",
-        "name": "Back Bowl",
+        "name": "Broadway",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Deer Run",
+        "name": "Eagle",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Indian Crossing",
+        "name": "Pat's Way",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Laurel",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Ledges",
+        "name": "Tennessee Walker",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Patrol Loop",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lower Mohawk",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Nutmeg - Beginner Slope",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Pine",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Ridge Run",
+        "name": "Hatley Highway",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Skyline Drive",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Victor's Way",
+        "name": "Lower Streak",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Tomahawk",
+        "name": "Lower Viewfinder",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Arrowhead",
+        "name": "Midway",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Exhibition",
+        "name": "Redemption Run",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Housatonic",
+        "name": "Side Slip",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Mohawk",
+        "name": "Simply Savage",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Pinnacle",
+        "name": "The Glades",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Rabbit Run",
+        "name": "The Howling",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Rimrock",
+        "name": "Upper Viewfinder",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Way Out",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Chute",
+        "name": "Powder Hill",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Lift Line",
+        "name": "Snowchute",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Route 100",
+        "name": "Upper Streak",
         "status": "closed"
       },
       {
-        "level": "black",
-        "name": "The Rapids",
+        "level": "doubleBlack",
+        "name": "Flame Out",
         "status": "closed"
       },
       {
-        "level": "black",
-        "name": "Timber",
+        "level": "doubleBlack",
+        "name": "Southern Express",
         "status": "closed"
       },
       {
-        "level": "black",
-        "name": "Wildwood",
+        "level": "doubleBlack",
+        "name": "The Bowl",
         "status": "closed"
       },
       {
-        "level": "green",
-        "name": "Mahlzeit",
+        "level": "terrainPark",
+        "name": "Way Out",
         "status": "closed"
       }
     ],
     "stats": {
-      "closed": 27,
+      "closed": 22,
       "hold": 0,
       "open": 0,
       "scheduled": 0

@@ -1,31 +1,39 @@
 {
   "fetchedAt": "2026-08-05T11:23:47Z",
-  "href": "https://www.mohawkmtn.com/snow-report/",
-  "id": "mohawk-mountain",
+  "href": "https://www.massresort.com/play/conditions/",
+  "id": "massanutten",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Creekside - Quad Chair": "closed",
+      "Easy Rider - Quad Chair": "closed",
+      "Flying Carpet - Conveyor": "closed",
+      "Magic Carpet - Conveyor": "closed",
+      "Peak Express - Quad Chair": "closed",
+      "Ridge Triple - Triple Chair": "closed",
+      "Sunkid - Conveyor": "closed"
+    }
   },
   "ll": [
-    -73.3119,
-    41.8403
+    -78.7597454,
+    38.3988308
   ],
-  "name": "Mohawk Mountain",
+  "name": "Massanutten Resort",
   "timestamp": {
-    "lifts": 1785929011997,
+    "lifts": 1785929017057,
     "opening": 1785929009897,
-    "trails": 1785929024942,
+    "trails": 1785929016232,
     "weather": 0,
     "webcams": 0
   },
@@ -33,142 +41,122 @@
     "list": [
       {
         "level": "green",
-        "name": "Back Bowl",
+        "name": "Boardwalk",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Deer Run",
+        "name": "Easy Street",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Indian Crossing",
+        "name": "Meadow",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Laurel",
+        "name": "Paul's Way",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Ledges",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Patrol Loop",
+        "name": "Southern Comfort",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Lower Mohawk",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Nutmeg - Beginner Slope",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Pine",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Ridge Run",
+        "name": "Upper Nutten-To-It",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Skyline Drive",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Victor's Way",
+        "name": "Lower MAKAttack",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Tomahawk",
+        "name": "Lower Mass Transit",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Arrowhead",
+        "name": "Lower Showtime",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Exhibition",
+        "name": "Mueller's Mile",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Housatonic",
+        "name": "Ridgecrest",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Mohawk",
+        "name": "Upper Mass Transit",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Pinnacle",
+        "name": "Upper ParaDice",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Rabbit Run",
+        "name": "Upper Showtime",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Rimrock",
+        "name": "YeeHa",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Chute",
+        "name": "Lower Diamond Jim",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Lift Line",
+        "name": "Lower ParaDice",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Route 100",
+        "name": "Slot",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "The Rapids",
+        "name": "Upper Diamond Jim",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Timber",
+        "name": "Upper MAKAttack",
         "status": "closed"
       },
       {
-        "level": "black",
-        "name": "Wildwood",
+        "level": "doubleBlack",
+        "name": "No Hessitation",
         "status": "closed"
       },
       {
-        "level": "green",
-        "name": "Mahlzeit",
+        "level": "terrainPark",
+        "name": "Lower Nutten-To-It",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Pacesetter",
         "status": "closed"
       }
     ],
     "stats": {
-      "closed": 27,
+      "closed": 23,
       "hold": 0,
       "open": 0,
       "scheduled": 0
