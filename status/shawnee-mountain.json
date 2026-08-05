@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-08-04T01:00:41Z",
+  "fetchedAt": "2026-08-05T00:50:14Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "B. Arrowhead - Quad": "closed",
-      "C. Tomahawk - Express": "closed",
-      "D. Tecumseh - Double": "closed",
-      "E. Lookout - Double": "closed",
-      "F. Bushkill - Double": "closed",
-      "G. Little Chief - Double": "closed",
-      "H. Little Chief - Carpet": "closed",
-      "I. Learning Center - Carpet": "closed",
-      "Skiwee Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.078117,
@@ -33,170 +23,10 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1785804905638,
-    "opening": 1785804802997,
-    "trails": 1785804834026,
+    "lifts": 1785891015004,
+    "opening": 1785851122665,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Blue Mountain",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Meadows",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Greenhouse Slope",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Minisink",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Hiawatha",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Pocahontas",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Indian Queen",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Kittatinny",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "SKIwee",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Learning Center",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Little Chief",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Upper Pennsylvania",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lower Pennsylvania",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Bushkill",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lower Bushkill",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Arrowhead",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Delaware",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lower Delaware",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bennekill",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lookout",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Country Club",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Tomahawk",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lower Tomahawk",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Chief Thunder Cloud",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Renegade",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Tecumseh",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lenape",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lower Arrowhead",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Country Club Park",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Delaware Park",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 30,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

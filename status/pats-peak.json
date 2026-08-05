@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-08-04T01:00:41Z",
+  "fetchedAt": "2026-08-05T00:50:14Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Beginner Carpet": "closed",
-      "Beginner Tow I": "closed",
-      "Bluster Carpet": "closed",
-      "Cascade Basin Triple Chair": "closed",
-      "F5 Tow": "closed",
-      "Gusty JBar": "closed",
-      "Hurricane Quad Chair": "closed",
-      "Peak Triple Chair": "closed",
-      "Turbulence Triple Chair": "closed",
-      "Valley Double Chair": "closed",
-      "Vortex Double Chair": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.833412,
@@ -35,170 +23,10 @@
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 1785804895234,
-    "opening": 1785804802997,
-    "trails": 1785804825758,
+    "lifts": 1785891014948,
+    "opening": 1785851122665,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Breeze",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Zephyr",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "East Wind",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lower East Wind",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Duster",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Cyclone",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Tornado",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lower Tornado",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Squall Line",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Blast",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Hurricane",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Knight Slope",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Vortex",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "FIS Race Trail",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Twister",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Beginners Area",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Bluster",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Gusty",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Downdraft",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Valley Slope",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Whisper",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Puff",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Cascade Brook",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Blizzard",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Tempest",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Nor'easter",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Crosswind",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Backdraft",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Turbulence Terrain Park",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Microburst MiniPark",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 30,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }
