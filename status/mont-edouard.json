@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-08-05T01:00:46Z",
+  "fetchedAt": "2026-08-05T01:15:27Z",
   "href": "https://www.montedouard.com/info-remontee",
   "id": "mont-edouard",
   "lifts": {
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 0,
+        "hold": 0,
+        "open": 100,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Mi-montagne/Mid-mountain": "open",
+      "Sommet / Summit": "open"
+    }
   },
   "ll": [
     -70.36,
@@ -23,9 +26,9 @@
   ],
   "name": "Mont \u00c9douard",
   "timestamp": {
-    "lifts": 1785891024734,
+    "lifts": 1785891658084,
     "opening": 1785851122664,
-    "trails": 1785891022340,
+    "trails": 1785891652682,
     "weather": 0,
     "webcams": 0
   }
