@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-03T12:45:29Z",
+  "fetchedAt": "2026-08-05T12:00:28Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1785760282095,
-    "opening": 1785757935876,
-    "trails": 1785760238342,
-    "weather": 1785758427104,
-    "webcams": 1785760277334
+    "lifts": 1785930322390,
+    "opening": 1785929009899,
+    "trails": 1785929434379,
+    "weather": 1785929040386,
+    "webcams": 1785930320900
   },
   "trails": {
     "list": [
@@ -103,11 +100,11 @@
     }
   },
   "weather": {
-    "conditions": "Areas Of Fog",
-    "date": "2026-08-03",
+    "conditions": "Mostly Sunny",
+    "date": "2026-08-05",
     "icon": [
-      "basecloud",
-      "icon-thunder"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -116,8 +113,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 73
+      "max": 85
     },
-    "text": "Rain showers and areas of fog before 11am, then areas of fog and showers and thunderstorms likely between 11am and noon, then areas of fog and a chance of showers and thunderstorms between noon and 2pm, then areas of fog and showers and thunderstorms. Cloudy, with a high near 73. South wind 5 to 10 mph, with gusts as high as 25 mph. Chance of precipitation is 100%. New rainfall amounts between three quarters and one inch possible."
+    "text": "Mostly sunny, with a high near 85. Southwest wind 0 to 5 mph."
   }
 }
