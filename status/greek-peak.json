@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-05T01:15:27Z",
+  "fetchedAt": "2026-08-05T13:15:14Z",
   "href": "https://www.greekpeak.net/ski-ride/current-conditions/",
   "id": "greek-peak",
   "lifts": {
@@ -32,9 +32,9 @@
   ],
   "name": "Greek Peak",
   "timestamp": {
-    "lifts": 1785891656084,
-    "opening": 1785891022371,
-    "trails": 1785891656035,
+    "lifts": 1785934839476,
+    "opening": 1785933061121,
+    "trails": 1785934839511,
     "weather": 0,
     "webcams": 0
   },
@@ -68,16 +68,6 @@
       {
         "level": "blue",
         "name": "Freebird",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Lower Freebird",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Lower Thanatos",
         "status": "open"
       },
       {
@@ -122,17 +112,12 @@
       },
       {
         "level": "black",
-        "name": "Lower Trident",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Mortis",
-        "status": "open"
-      },
-      {
-        "level": "black",
         "name": "Spartan",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Trident",
         "status": "open"
       },
       {
@@ -142,12 +127,12 @@
       },
       {
         "level": "doubleBlack",
-        "name": "Nemesis",
+        "name": "Mortis",
         "status": "open"
       },
       {
         "level": "doubleBlack",
-        "name": "Trident",
+        "name": "Nemesis",
         "status": "open"
       },
       {
@@ -277,6 +262,11 @@
       },
       {
         "level": "blue",
+        "name": "Lower Thanatos",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
         "name": "Lower Zeus",
         "status": "closed"
       },
@@ -402,9 +392,9 @@
       }
     ],
     "stats": {
-      "closed": 55,
+      "closed": 56,
       "hold": 0,
-      "open": 17,
+      "open": 14,
       "scheduled": 0
     }
   }
