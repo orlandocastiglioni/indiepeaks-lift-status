@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-05T01:00:46Z",
+  "fetchedAt": "2026-08-05T01:15:27Z",
   "href": "https://apexresort.com/weather/",
   "id": "apex-mountain-resort",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Magic Carpet": "closed",
+      "Quickdraw - Quad": "closed",
+      "Stock's Chair": "closed",
+      "T-Bar": "closed",
+      "Wildside": "closed"
+    }
   },
   "ll": [
     -119.903937,
@@ -23,9 +29,9 @@
   ],
   "name": "Apex Mountain Resort",
   "timestamp": {
-    "lifts": 1785891024792,
+    "lifts": 1785891655294,
     "opening": 1785891022370,
-    "trails": 1785891146241,
+    "trails": 1785891655332,
     "weather": 0,
     "webcams": 0
   },

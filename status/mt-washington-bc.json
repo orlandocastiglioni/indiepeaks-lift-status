@@ -1,21 +1,37 @@
 {
-  "fetchedAt": "2026-08-05T01:00:46Z",
+  "fetchedAt": "2026-08-05T01:15:27Z",
   "href": "https://mountwashington.ca/the-mountain/conditions-terrain/alpine-conditions.html",
   "id": "mt-washington-bc",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 15,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Boomerang Quad": "closed",
+      "Eagle Quad": "closed",
+      "Hawk 6 Pack": "closed",
+      "Lower Carpet (C2)": "closed",
+      "Lower Easy Acres Carpet (C2)": "closed",
+      "Middle Carpet (C3)": "closed",
+      "Middle Easy Acres Carpet (C3)": "closed",
+      "Snow Tube Park": "closed",
+      "Sunrise Quad": "closed",
+      "Teaching Carpet (C1)": "closed",
+      "Training Carpet (C1)": "closed",
+      "Tubing and Night Skiing Carpet (C5)": "closed",
+      "Upper Carpet (C4)": "closed",
+      "Upper Easy Acres Carpet (C4)": "closed",
+      "Whiskey Jack": "closed"
+    }
   },
   "ll": [
     -125.29861,
@@ -23,9 +39,9 @@
   ],
   "name": "Mt. Washington Alpine Resort",
   "timestamp": {
-    "lifts": 1785891024737,
+    "lifts": 1785891662383,
     "opening": 1785891022371,
-    "trails": 1785891020602,
+    "trails": 1785891662544,
     "weather": 0,
     "webcams": 0
   },

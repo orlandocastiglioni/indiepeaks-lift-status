@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-08-05T01:00:46Z",
+  "fetchedAt": "2026-08-05T01:15:27Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "B. Arrowhead - Quad": "closed",
+      "C. Tomahawk - Express": "closed",
+      "D. Tecumseh - Double": "closed",
+      "E. Lookout - Double": "closed",
+      "F. Bushkill - Double": "closed",
+      "G. Little Chief - Double": "closed",
+      "H. Little Chief - Carpet": "closed",
+      "I. Learning Center - Carpet": "closed",
+      "Skiwee Carpet": "closed"
+    }
   },
   "ll": [
     -75.078117,
@@ -23,11 +33,11 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1785891015004,
+    "lifts": 1785891879069,
     "opening": 1785891022372,
-    "trails": 1785891319944,
+    "trails": 1785891888438,
     "weather": 1785891032704,
-    "webcams": 1785891022372
+    "webcams": 1785891652835
   },
   "trails": {
     "list": [

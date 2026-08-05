@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-08-05T01:00:46Z",
+  "fetchedAt": "2026-08-05T01:15:27Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chet's Dream": "closed",
+      "Lift 2": "closed",
+      "Lift 3": "closed",
+      "Lift 4": "closed",
+      "Lift 6": "closed",
+      "Lift 7": "closed",
+      "Lift 8": "closed",
+      "Lift 9": "closed",
+      "PTARMIGAN LIFT": "closed",
+      "Rainbow Magic Carpet": "closed"
+    }
   },
   "ll": [
     -105.89595,
@@ -23,11 +34,11 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1785891024791,
+    "lifts": 1785891657674,
     "opening": 1785891022371,
-    "trails": 1785891015980,
+    "trails": 1785891657724,
     "weather": 1785891032710,
-    "webcams": 1785891022371
+    "webcams": 1785891652834
   },
   "trails": {
     "list": [
