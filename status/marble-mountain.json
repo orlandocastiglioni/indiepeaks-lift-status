@@ -1,15 +1,30 @@
 {
-  "fetchedAt": "2026-08-05T00:50:14Z",
+  "fetchedAt": "2026-08-05T01:00:46Z",
   "href": "https://skimarble.com/terrain-status/",
   "id": "marble-mountain",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     -57.82722,
     48.93667
   ],
   "name": "Marble Mountain",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1785851122664,
+    "lifts": 1785891024733,
+    "opening": 1785891022371,
     "trails": 1785891016453,
     "weather": 0,
     "webcams": 0

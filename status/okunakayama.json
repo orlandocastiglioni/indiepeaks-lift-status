@@ -1,15 +1,30 @@
 {
-  "fetchedAt": "2026-08-05T00:50:14Z",
+  "fetchedAt": "2026-08-05T01:00:46Z",
   "href": "https://www.okunakayamakogen.jp/winter-season/lift-status/",
   "id": "okunakayama",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     141.2431,
     40.1447
   ],
   "name": "Okunakayama Kogen",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1785851122665,
+    "lifts": 1785891024739,
+    "opening": 1785891022372,
     "trails": 1785891020329,
     "weather": 0,
     "webcams": 0
