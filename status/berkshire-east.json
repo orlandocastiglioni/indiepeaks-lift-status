@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-08-06T16:15:54Z",
+  "fetchedAt": "2026-08-06T21:30:21Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 2,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 50,
+        "closed": 100,
         "hold": 0,
-        "open": 50,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "open"
+      "T-Bar Express Quad": "closed"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1786032077413,
-    "opening": 1786029369071,
-    "trails": 1786032077432,
-    "weather": 1786029375073,
-    "webcams": 1786032069745
+    "lifts": 1786050964024,
+    "opening": 1786050014639,
+    "trails": 1786050963520,
+    "weather": 1786044666514,
+    "webcams": 1786050954833
   },
   "trails": {
     "list": [
@@ -223,7 +223,7 @@
     }
   },
   "weather": {
-    "conditions": "Partly Sunny then Chance Showers And Thunderstorms",
+    "conditions": "Chance Showers And Thunderstorms",
     "date": "2026-08-06",
     "icon": [
       "basecloud",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 83
+      "max": 84
     },
-    "text": "A chance of showers and thunderstorms after 2pm. Partly sunny, with a high near 83. Southwest wind 0 to 3 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "text": "A chance of showers and thunderstorms. Partly sunny, with a high near 84. Southwest wind around 3 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
