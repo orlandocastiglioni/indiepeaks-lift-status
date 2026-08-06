@@ -1,18 +1,45 @@
 {
-  "fetchedAt": "2026-08-06T00:49:37Z",
+  "fetchedAt": "2026-08-06T00:51:56Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
+  "lifts": {
+    "stats": {
+      "closed": 11,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
+      },
+      "scheduled": 0
+    },
+    "status": {
+      "Beginner Carpet": "closed",
+      "Beginner Tow I": "closed",
+      "Bluster Carpet": "closed",
+      "Cascade Basin Triple Chair": "closed",
+      "F5 Tow": "closed",
+      "Gusty JBar": "closed",
+      "Hurricane Quad Chair": "closed",
+      "Peak Triple Chair": "closed",
+      "Turbulence Triple Chair": "closed",
+      "Valley Double Chair": "closed",
+      "Vortex Double Chair": "closed"
+    }
+  },
   "ll": [
     -71.833412,
     43.180679
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 0,
+    "lifts": 1785977470768,
     "opening": 1785977366834,
     "trails": 1785977391568,
-    "weather": 0,
-    "webcams": 0
+    "weather": 1785977397200,
+    "webcams": 1785977396997
   },
   "trails": {
     "list": [
@@ -173,5 +200,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Partly Cloudy then Patchy Fog",
+    "date": "2026-08-06",
+    "icon": [
+      "basenone",
+      "icon-mist"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=43.180679&lon=-71.833412",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 64
+    },
+    "text": "Patchy fog after 2am. Partly cloudy, with a low around 64. Southwest wind around 0 mph."
   }
 }
