@@ -1,31 +1,42 @@
 {
   "fetchedAt": "2026-08-06T11:22:57Z",
-  "href": "https://www.whaleback.com/trail-report",
-  "id": "whaleback-mountain",
+  "href": "https://www.kiroro.co.jp/dashboard/",
+  "id": "kiroro",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Asari No.1 Lift": "closed",
+      "Asari No.2 Express": "closed",
+      "Center Express": "closed",
+      "Family Lift": "closed",
+      "Gateway Express": "closed",
+      "Kiroro Gondola": "closed",
+      "Nagamine No.1 Express": "closed",
+      "Nagamine No.2 Express": "closed",
+      "Yoichi No.1 Express": "closed",
+      "Yoichi No.2 Lift": "closed"
+    }
   },
   "ll": [
-    -72.180225,
-    43.6016574
+    140.98,
+    43.0678
   ],
-  "name": "Whaleback Mountain",
+  "name": "Kiroro Snow World",
   "timestamp": {
-    "lifts": 1786015359575,
-    "opening": 1786015353818,
-    "trails": 1786015379487,
+    "lifts": 1786015367822,
+    "opening": 1786015353815,
+    "trails": 1786015367873,
     "weather": 0,
     "webcams": 0
   },
@@ -33,162 +44,148 @@
     "list": [
       {
         "level": "green",
-        "name": "Learning Area",
+        "name": "Asari Course1-A",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Lower Ivory Run",
+        "name": "Asari Course1-B",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Upper Ivory Run",
+        "name": "Yoichi Course2-A",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Dorsal",
+        "name": "Nagamine Course 1",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Flipper",
+        "name": "Family Course",
         "status": "closed"
       },
       {
         "level": "green",
-        "name": "Scrimshaw",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Upper Whaletail",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lower Whaletail",
+        "name": "Gateway Course",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Spout",
+        "name": "Asari Dynamic",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Bougainvillea",
+        "name": "Asari Panorama",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Rib Cage",
+        "name": "Yoichi Course1-A",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Fluke",
+        "name": "Yoichi Course1-B",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Jonahs Revenge",
+        "name": "Center A",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Davey Jones' Locker",
+        "name": "Center B",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Leviathan",
+        "name": "Nagamine Course 2-A",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Blubber",
+        "name": "Nagamine Course 2-C",
         "status": "closed"
       },
       {
         "level": "blue",
-        "name": "Whaleback",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Fin",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Ambergris",
+        "name": "Powder Ride",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "The Barnacles \ud83c\udf32",
+        "name": "Asari Expert A",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Belly-Up\ud83c\udf32",
+        "name": "Asari Expert B",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Beluga \ud83c\udf32",
+        "name": "Asari Course2-A",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Harpoon \ud83c\udf32",
+        "name": "Asari Course2-B",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Canyon",
+        "name": "Asari Course2-C",
         "status": "closed"
       },
       {
         "level": "black",
-        "name": "Lower Face",
+        "name": "Yoichi Course2-B",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "Upper Face",
+        "level": "black",
+        "name": "Center C",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "Jawbone",
+        "level": "black",
+        "name": "Nagamine Course 2-B",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "Blow Hole (bottom half)",
+        "level": "black",
+        "name": "Center Link",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "Y.O.O.Y.M. \ud83c\udf32",
+        "name": "Powder Ridge",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "Kraken \ud83c\udf32 upper /lower",
+        "name": "Orange Light",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
-        "name": "HIKE PARK",
+        "name": "Snow Saw",
+        "status": "closed"
+      },
+      {
+        "name": "Flashman",
+        "status": "closed"
+      },
+      {
+        "name": "Barcorde",
         "status": "closed"
       }
     ],
+    "reportedAt": "2026-05-03T07:27:00.000Z",
     "stats": {
-      "closed": 31,
+      "closed": 29,
       "hold": 0,
       "open": 0,
       "scheduled": 0
