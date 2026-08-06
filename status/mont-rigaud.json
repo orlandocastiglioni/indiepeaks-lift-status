@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-08-05T01:15:27Z",
+  "fetchedAt": "2026-08-06T18:30:38Z",
   "href": "https://ski.montrigaud.com/home",
   "id": "mont-rigaud",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "MAGIC CARP.": "closed",
-      "QUAD CHAIR": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -74.336,
@@ -26,9 +23,9 @@
   ],
   "name": "Ski Mont Rigaud",
   "timestamp": {
-    "lifts": 1785891657313,
-    "opening": 1785851122665,
-    "trails": 1785891652687,
+    "lifts": 1786040152741,
+    "opening": 1786021935777,
+    "trails": 1786040141850,
     "weather": 0,
     "webcams": 0
   }
