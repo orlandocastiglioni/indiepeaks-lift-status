@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-06T14:30:58Z",
+  "fetchedAt": "2026-08-06T14:45:06Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1786025736784,
+    "lifts": 1786026677405,
     "opening": 1786025728635,
-    "trails": 1786025737190,
+    "trails": 1786026677896,
     "weather": 1786021966983,
-    "webcams": 1786025728635
+    "webcams": 1786026668762
   },
   "trails": {
     "list": [
@@ -67,7 +67,7 @@
       {
         "level": "blue",
         "name": "Cat N' Mouse",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -87,7 +87,7 @@
       {
         "level": "blue",
         "name": "Harold's Blend",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -132,7 +132,7 @@
       {
         "level": "black",
         "name": "Juggernaut",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -152,12 +152,12 @@
       {
         "level": "black",
         "name": "New Blend",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Old Blend",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -197,7 +197,7 @@
       {
         "level": "doubleBlack",
         "name": "Keg Stand",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "doubleBlack",
@@ -216,9 +216,9 @@
       }
     ],
     "stats": {
-      "closed": 5,
+      "closed": 7,
       "hold": 0,
-      "open": 31,
+      "open": 29,
       "scheduled": 0
     }
   },
