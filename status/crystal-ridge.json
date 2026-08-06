@@ -1,14 +1,29 @@
 {
-  "fetchedAt": "2026-08-06T00:51:56Z",
+  "fetchedAt": "2026-08-06T01:00:03Z",
   "href": "https://crystalridge.com/mountain-info/snow-report/",
   "id": "crystal-ridge",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     -88.0384,
     42.8886
   ],
   "name": "Crystal Ridge",
   "timestamp": {
-    "lifts": 0,
+    "lifts": 1785977617550,
     "opening": 1785977366830,
     "trails": 1785977498249,
     "weather": 0,
