@@ -1,25 +1,21 @@
 {
-  "fetchedAt": "2026-08-05T01:15:27Z",
+  "fetchedAt": "2026-08-06T18:00:51Z",
   "href": "https://echomtn.com/mountain-conditions",
   "id": "echo-mountain",
   "lifts": {
     "stats": {
-      "closed": 3,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Hot Laps Special Triple Chair": "closed",
-      "Magic Vista Conveyor": "closed",
-      "Stairway to Shreddin Conveyor": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -105.5225,
@@ -27,9 +23,9 @@
   ],
   "name": "Echo Mountain",
   "timestamp": {
-    "lifts": 1785891657788,
-    "opening": 1785891022371,
-    "trails": 1785891656222,
+    "lifts": 1786038485280,
+    "opening": 1786038321321,
+    "trails": 1786038329263,
     "weather": 0,
     "webcams": 0
   },
