@@ -1,26 +1,21 @@
 {
-  "fetchedAt": "2026-08-06T10:30:54Z",
+  "fetchedAt": "2026-08-06T16:30:31Z",
   "href": "https://www.hudsonbaymountain.com/snowreport",
   "id": "hudson-bay-mountain",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Carpet Lift": "closed",
-      "Panorama T-Bar": "closed",
-      "Prairie T-Bar": "closed",
-      "Skyline Chair Lift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -127.2712,
@@ -28,9 +23,9 @@
   ],
   "name": "Hudson Bay Mountain",
   "timestamp": {
-    "lifts": 1786011360418,
-    "opening": 1786009523027,
-    "trails": 1786011360546,
+    "lifts": 1786032969052,
+    "opening": 1786029369074,
+    "trails": 1786032976857,
     "weather": 0,
     "webcams": 0
   },
