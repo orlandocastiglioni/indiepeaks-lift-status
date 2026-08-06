@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-08-06T11:22:57Z",
+  "fetchedAt": "2026-08-06T12:45:36Z",
   "href": "https://catamountski.com/winter/the-mountain/mountain-conditions",
   "id": "catamount-ny",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Catamount Quad": "closed",
-      "Glade Triple": "closed",
-      "Learning Area Carpet 1": "closed",
-      "Learning Area Carpet 2": "closed",
-      "Learning Area Carpet 3": "closed",
-      "Meadows Triple": "closed",
-      "Promenade Triple": "closed",
-      "Ridge Quad": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -73.4805037,
@@ -32,249 +23,18 @@
   ],
   "name": "Catamount Mountain Resort",
   "timestamp": {
-    "lifts": 1786015362377,
-    "opening": 1786015353814,
-    "trails": 1786015363008,
+    "lifts": 1786019463469,
+    "opening": 1786019456910,
+    "trails": 1786019463467,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Ali's Alley",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Upper Colonel's Caper",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lower Colonel's Caper",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Cat's Meow",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Echo's Run",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Esplanade",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Holiday",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Homeward Bound",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Kelli's Run",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lauren's Run",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lower Promenade",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Ridge Run",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Ridge Run Extension",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "SnowSports Learning Center",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Upper Promenade",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Bobcat",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Alley Cat",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Catamount",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Chute",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Fisher's Fluke",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lower Sidewinder",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Mountain View",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "On Stage",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Toni Matt",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Shawenon",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Sidewinder",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Walter's Way",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Off Stage",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lower Alley Cat",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lower Glade",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Marty's Run",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Upper Glade",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Catapult",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Christopher's Leap",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Ripper",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Spencer's Run",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Birch Cathedral",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Sunrise",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Birch Glades",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lookout",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Turnpike",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Expressway",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Lynx",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Bobcat",
-        "status": "open"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Sunrise",
-        "status": "open"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Panter Pop-Up Park",
-        "status": "closed"
-      }
-    ],
+    "list": {},
     "stats": {
-      "closed": 44,
+      "closed": 0,
       "hold": 0,
-      "open": 2,
+      "open": 0,
       "scheduled": 0
     }
   }
