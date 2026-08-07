@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-08-07T04:30:29Z",
+  "fetchedAt": "2026-08-07T19:15:09Z",
   "href": "https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace",
   "id": "winterplace",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "#1 Double Chairlift": "closed",
-      "#10 Tubing Carpet": "closed",
-      "#11 Tubing Carpet": "closed",
-      "#12 Ski-Wee Carpet": "closed",
-      "#2 Triple Chairlift": "closed",
-      "#3 Triple Chairlift": "closed",
-      "#4 Triple Chairlift": "closed",
-      "#5 Double Chairlift": "closed",
-      "#6 Carpet Lift": "closed",
-      "#8 Quad Chairlift": "closed",
-      "#9 Quad Chairlift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -81.11824,
@@ -35,11 +23,11 @@
   ],
   "name": "Winterplace",
   "timestamp": {
-    "lifts": 1786076171623,
-    "opening": 1786074019023,
-    "trails": 1786076170318,
-    "weather": 1786074059921,
-    "webcams": 1786076161316
+    "lifts": 1786129254467,
+    "opening": 1786129247037,
+    "trails": 1786129256933,
+    "weather": 1786123868000,
+    "webcams": 1786129247037
   },
   "trails": {
     "list": [
@@ -192,11 +180,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy then Widespread Fog",
+    "conditions": "Chance Showers And Thunderstorms",
     "date": "2026-08-07",
     "icon": [
-      "basenone",
-      "icon-mist"
+      "basecloud",
+      "icon-thunder icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=37.59594&lon=-81.11824",
@@ -205,8 +193,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 64
+      "max": 78
     },
-    "text": "Widespread fog after 5am. Mostly cloudy, with a low around 64. South wind around 3 mph."
+    "text": "A chance of showers and thunderstorms. Partly sunny, with a high near 78. West wind around 5 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
