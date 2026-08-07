@@ -1,28 +1,28 @@
 {
-  "fetchedAt": "2026-08-07T12:45:41Z",
+  "fetchedAt": "2026-08-07T13:00:31Z",
   "href": "https://corralco.com",
   "id": "corralco",
   "lifts": {
-    "reportedAt": "2026-08-07T12:30:00.000Z",
+    "reportedAt": "2026-08-07T12:44:00.000Z",
     "stats": {
-      "closed": 6,
-      "hold": 1,
-      "open": 1,
+      "closed": 2,
+      "hold": 2,
+      "open": 4,
       "percentage": {
-        "closed": 75,
-        "hold": 12.5,
-        "open": 12.5,
+        "closed": 25,
+        "hold": 25,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Coloradito": "closed",
-      "Cornisa": "closed",
-      "Cruce": "closed",
-      "Cumbre": "hold",
-      "Escuelita": "closed",
-      "Navidad": "closed",
+      "Coloradito": "open",
+      "Cornisa": "hold",
+      "Cruce": "open",
+      "Cumbre": "closed",
+      "Escuelita": "open",
+      "Navidad": "hold",
       "Volc\u00e1n": "open",
       "Volc\u00e1n Express": "closed"
     }
@@ -33,9 +33,9 @@
   ],
   "name": "Corralco Mountain Resort",
   "timestamp": {
-    "lifts": 1786105847419,
+    "lifts": 1786106756277,
     "opening": 1786104040253,
-    "trails": 1786105847436,
+    "trails": 1786106756292,
     "weather": 0,
     "webcams": 0
   },
@@ -44,7 +44,7 @@
       {
         "level": "green",
         "name": "Bandurrias",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -192,11 +192,11 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-08-07T12:30:00.000Z",
+    "reportedAt": "2026-08-07T12:44:00.000Z",
     "stats": {
-      "closed": 13,
+      "closed": 12,
       "hold": 0,
-      "open": 17,
+      "open": 18,
       "scheduled": 0
     }
   }
