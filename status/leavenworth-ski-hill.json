@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-08-06T20:15:46Z",
+  "fetchedAt": "2026-08-07T23:45:51Z",
   "href": "https://skileavenworth.com/conditions",
   "id": "leavenworth-ski-hill",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Moving Carpet": "closed",
-      "Rope Tows": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -120.66939,
@@ -26,9 +23,9 @@
   ],
   "name": "Leavenworth Ski Hill",
   "timestamp": {
-    "lifts": 1786046470006,
-    "opening": 1786045563311,
-    "trails": 1786046470007,
+    "lifts": 1786145461712,
+    "opening": 1786145459983,
+    "trails": 1786146349878,
     "weather": 0,
     "webcams": 0
   },
