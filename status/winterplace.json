@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-08-03T12:45:29Z",
+  "fetchedAt": "2026-08-07T04:15:51Z",
   "href": "https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace",
   "id": "winterplace",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "#1 Double Chairlift": "closed",
-      "#10 Tubing Carpet": "closed",
-      "#11 Tubing Carpet": "closed",
-      "#12 Ski-Wee Carpet": "closed",
-      "#2 Triple Chairlift": "closed",
-      "#3 Triple Chairlift": "closed",
-      "#4 Triple Chairlift": "closed",
-      "#5 Double Chairlift": "closed",
-      "#6 Carpet Lift": "closed",
-      "#8 Quad Chairlift": "closed",
-      "#9 Quad Chairlift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -81.11824,
@@ -35,11 +23,11 @@
   ],
   "name": "Winterplace",
   "timestamp": {
-    "lifts": 1785760281417,
-    "opening": 1785757935876,
-    "trails": 1785760239476,
-    "weather": 1785758427883,
-    "webcams": 1785760277335
+    "lifts": 1786075247988,
+    "opening": 1786074019023,
+    "trails": 1786075251871,
+    "weather": 1786074059921,
+    "webcams": 1786075241172
   },
   "trails": {
     "list": [
@@ -192,11 +180,11 @@
     }
   },
   "weather": {
-    "conditions": "Slight Chance Showers And Thunderstorms then Chance Showers And Thunderstorms",
-    "date": "2026-08-03",
+    "conditions": "Mostly Cloudy then Widespread Fog",
+    "date": "2026-08-07",
     "icon": [
-      "basecloud",
-      "icon-thunder icon-sunny"
+      "basenone",
+      "icon-mist"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=37.59594&lon=-81.11824",
@@ -205,8 +193,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 73
+      "max": 64
     },
-    "text": "Areas of fog and a chance of rain showers before 11am, then a slight chance of showers and thunderstorms between 11am and noon, then a chance of showers and thunderstorms between noon and 2pm, then a chance of showers and thunderstorms between 2pm and 5pm. Partly sunny, with a high near 73. Northwest wind 3 to 7 mph. Chance of precipitation is 30%."
+    "text": "Widespread fog after 5am. Mostly cloudy, with a low around 64. South wind around 3 mph."
   }
 }
