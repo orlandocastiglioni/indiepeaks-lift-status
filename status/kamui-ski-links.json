@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-07T13:30:36Z",
+  "fetchedAt": "2026-08-07T13:45:53Z",
   "href": "https://www.kamui-skilinks.com/today/",
   "id": "kamui-ski-links",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u30ab\u30e0\u30a4\u30b4\u30f3\u30c9\u30e9": "closed",
+      "\u7b2c1\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c3\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c4\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c5\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     142.189522,
@@ -23,9 +30,9 @@
   ],
   "name": "Kamui Ski Links",
   "timestamp": {
-    "lifts": 1786108527029,
+    "lifts": 1786109452708,
     "opening": 1786108139481,
-    "trails": 1786108321820,
+    "trails": 1786109452694,
     "weather": 0,
     "webcams": 0
   },
