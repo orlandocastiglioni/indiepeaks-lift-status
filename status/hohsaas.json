@@ -1,0 +1,130 @@
+{
+  "fetchedAt": "2026-08-07T03:40:34Z",
+  "href": "https://www.hohsaas.ch",
+  "id": "hohsaas",
+  "lifts": {
+    "reportedAt": "2026-08-07T03:31:00.000Z",
+    "stats": {
+      "closed": 6,
+      "hold": 0,
+      "open": 3,
+      "percentage": {
+        "closed": 66.6,
+        "hold": 0,
+        "open": 33.3,
+        "scheduled": 0
+      },
+      "scheduled": 0
+    },
+    "status": {
+      "Bodu (Saas-Balen)": "closed",
+      "F\u00f6rderband Kinderland": "closed",
+      "F\u00f6rderband Pipo": "closed",
+      "Kreuzboden": "closed",
+      "Kreuzboden - Hohsaas": "open",
+      "Saas-Grund - Kreuzboden": "open",
+      "Sandiger Boden": "closed",
+      "Ziebel (Dorflift)": "closed",
+      "Zwischenstation Trift": "open"
+    }
+  },
+  "ll": [
+    7.93867,
+    46.1282
+  ],
+  "name": "Hohsaas",
+  "timestamp": {
+    "lifts": 1786074031260,
+    "opening": 1786074019020,
+    "trails": 1786074030307,
+    "weather": 0,
+    "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "grade": "rot",
+        "level": "black",
+        "name": "1 Gletscher rot",
+        "status": "closed"
+      },
+      {
+        "grade": "rot",
+        "level": "black",
+        "name": "1a Gletscher Hohkraut",
+        "status": "closed"
+      },
+      {
+        "grade": "rot",
+        "level": "black",
+        "name": "2 Weissmiespiste",
+        "status": "closed"
+      },
+      {
+        "grade": "rot",
+        "level": "black",
+        "name": "2a T\u00e4lli",
+        "status": "closed"
+      },
+      {
+        "grade": "rot",
+        "level": "black",
+        "name": "3 Kreuzboden",
+        "status": "closed"
+      },
+      {
+        "grade": "blau",
+        "level": "blue",
+        "name": "4 Sandiger Boden",
+        "status": "closed"
+      },
+      {
+        "grade": "blau",
+        "level": "blue",
+        "name": "5 Snowland",
+        "status": "closed"
+      },
+      {
+        "grade": "rot",
+        "level": "black",
+        "name": "6 Trift",
+        "status": "closed"
+      },
+      {
+        "grade": "rot",
+        "level": "black",
+        "name": "7 Talabfahrt Saas-Grund",
+        "status": "closed"
+      },
+      {
+        "grade": "gelb",
+        "name": "8 Talabfahrt Saas-Balen",
+        "status": "closed"
+      },
+      {
+        "grade": "blau",
+        "level": "blue",
+        "name": "9 Ziebel",
+        "status": "closed"
+      },
+      {
+        "grade": "blau",
+        "level": "blue",
+        "name": "10 Bodu (Saas-Balen)",
+        "status": "closed"
+      },
+      {
+        "grade": "gelb",
+        "name": "Hohkraut Gelb",
+        "status": "scheduled"
+      }
+    ],
+    "reportedAt": "2026-08-07T03:31:00.000Z",
+    "stats": {
+      "closed": 12,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 1
+    }
+  }
+}
