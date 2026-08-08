@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-08-08T20:16:07Z",
+  "fetchedAt": "2026-08-08T20:30:31Z",
   "href": "https://www.mtu.edu/mont-ripley/about/snow-report/",
   "id": "mont-ripley",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Husky Chair": "closed",
+      "T-Bar": "closed"
+    }
   },
   "ll": [
     -88.5596,
@@ -23,9 +26,9 @@
   ],
   "name": "Mont Ripley",
   "timestamp": {
-    "lifts": 1786219262070,
+    "lifts": 1786220182261,
     "opening": 1786217439549,
-    "trails": 1786219273289,
+    "trails": 1786220182280,
     "weather": 0,
     "webcams": 0
   },
