@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-08-08T16:15:34Z",
+  "fetchedAt": "2026-08-08T16:30:08Z",
   "href": "https://skibigmoose.com/trail-report-1",
   "id": "big-moose",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 50,
+        "hold": 0,
+        "open": 50,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beginner Conveyor": "closed",
+      "Triple Chair": "open"
+    }
   },
   "ll": [
     -69.696,
@@ -23,7 +26,7 @@
   ],
   "name": "Big Moose Mountain",
   "timestamp": {
-    "lifts": 1786204873230,
+    "lifts": 1786205746074,
     "opening": 1786204856721,
     "trails": 1786205725775,
     "weather": 0,
