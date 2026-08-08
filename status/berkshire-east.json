@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-08-07T21:15:51Z",
+  "fetchedAt": "2026-08-08T13:45:53Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 100,
+        "closed": 0,
         "hold": 0,
-        "open": 0,
+        "open": 100,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "Summit Quad": "open",
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1786136476156,
-    "opening": 1786133718393,
-    "trails": 1786136477388,
-    "weather": 1786131942886,
-    "webcams": 1786136468984
+    "lifts": 1786195822205,
+    "opening": 1786192242791,
+    "trails": 1786195822231,
+    "weather": 1786192249320,
+    "webcams": 1786195813452
   },
   "trails": {
     "list": [
@@ -127,7 +127,7 @@
       {
         "level": "black",
         "name": "Billy's World",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -137,7 +137,7 @@
       {
         "level": "black",
         "name": "Loamstar",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -212,22 +212,22 @@
       {
         "level": "doubleBlack",
         "name": "Too Easy",
-        "status": "open"
+        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 34,
+      "open": 35,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-08-07",
+    "conditions": "Partly Sunny then Chance Showers And Thunderstorms",
+    "date": "2026-08-08",
     "icon": [
-      "basenone",
-      "icon-sun"
+      "basecloud",
+      "icon-thunder icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 84
+      "max": 81
     },
-    "text": "Sunny, with a high near 84. West wind around 3 mph."
+    "text": "A chance of showers and thunderstorms after 3pm. Partly sunny, with a high near 81. West wind 5 to 8 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
