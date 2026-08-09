@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-07-30T20:00:59Z",
+  "fetchedAt": "2026-08-09T16:01:01Z",
   "href": "https://www.skiburke.com/ski-ride/weather-conditions",
   "id": "burke-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "J-Bar": "closed",
-      "Magic Carpet": "closed",
-      "Mid-Burke Express": "closed",
-      "Sherburne Express": "closed",
-      "T-Bar": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.91745,
@@ -29,11 +23,11 @@
   ],
   "name": "Burke Mountain",
   "timestamp": {
-    "lifts": 1785440717913,
-    "opening": 1785439865621,
-    "trails": 1785440717944,
-    "weather": 1785436244676,
-    "webcams": 1785440716024
+    "lifts": 1786290324646,
+    "opening": 1786289449921,
+    "trails": 1786290571173,
+    "weather": 1786284923544,
+    "webcams": 1786290319557
   },
   "trails": {
     "list": [
@@ -330,11 +324,11 @@
     }
   },
   "weather": {
-    "conditions": "Chance Rain Showers",
-    "date": "2026-07-30",
+    "conditions": "Chance Showers And Thunderstorms then Mostly Sunny",
+    "date": "2026-08-09",
     "icon": [
-      "basecloud",
-      "icon-showers icon-sunny"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.587898&lon=-71.91745",
@@ -343,8 +337,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 71
+      "max": 80
     },
-    "text": "A chance of rain showers. Cloudy, with a high near 71. North wind around 5 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "A chance of showers and thunderstorms before noon. Mostly sunny, with a high near 80. West wind 1 to 6 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
