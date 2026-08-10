@@ -1,22 +1,25 @@
 {
-  "fetchedAt": "2026-08-10T18:30:58Z",
+  "fetchedAt": "2026-08-10T19:15:13Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "ifen",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 1,
       "percentage": {
-        "closed": 0,
+        "closed": 75,
         "hold": 0,
-        "open": 100,
+        "open": 25,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Ifen I": "open"
+      "Gaisb\u00fchllift": "closed",
+      "Ifen I": "open",
+      "Ifen II": "closed",
+      "Olympiabahn": "closed"
     }
   },
   "ll": [
@@ -25,9 +28,9 @@
   ],
   "name": "Ifen (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1786385764791,
+    "lifts": 1786388435558,
     "opening": 1786384856871,
-    "trails": 1786385765211,
+    "trails": 1786388435843,
     "weather": 0,
     "webcams": 0
   },
