@@ -1,26 +1,21 @@
 {
-  "fetchedAt": "2026-08-10T21:15:05Z",
+  "fetchedAt": "2026-08-10T21:30:54Z",
   "href": "http://skismokey.ca/general-information/current-conditions",
   "id": "smokey-mountain",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Coach's Poma": "closed",
-      "Magic Carpet": "closed",
-      "Red Lift": "closed",
-      "Skytrac Quad Chair Lift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -66.920512,
@@ -28,9 +23,9 @@
   ],
   "name": "Smokey Mountain Ski Club",
   "timestamp": {
-    "lifts": 1786395952302,
+    "lifts": 1786396812680,
     "opening": 1786367350132,
-    "trails": 1786395649462,
+    "trails": 1786396509992,
     "weather": 0,
     "webcams": 0
   }
