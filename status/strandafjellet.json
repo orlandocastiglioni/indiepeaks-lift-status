@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T03:15:45Z",
+  "fetchedAt": "2026-08-11T11:31:14Z",
   "href": "https://www.strandafjellet.no/no/node/386",
   "id": "strandafjellet",
   "lifts": {
-    "reportedAt": "2026-04-21T08:29:40.000Z",
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Bandet": "closed",
-      "Egga fjelltrekk": "closed",
-      "Fursetheisa": "closed",
-      "Fursettrekket": "closed",
-      "Roaldsheisa": "closed",
-      "Roaldshorn fjelltrekk": "closed",
-      "Sn\u00f8kvit": "closed"
-    }
+    "status": {}
   },
   "ll": [
     6.844085,
@@ -32,116 +23,10 @@
   ],
   "name": "Strandafjellet",
   "timestamp": {
-    "lifts": 1786417224174,
-    "opening": 1786413665982,
-    "trails": 1786417224173,
+    "lifts": 1786447874416,
+    "opening": 1786447866007,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Gr\u00f8nel\u00f8ypa",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Skarel\u00f8ypa",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Raudel\u00f8ypa",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Alpinisten",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Familiel\u00f8ypa",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Kuffertl\u00f8ypa 6a",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Kuffertl\u00f8ypa 6b",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Roaldsvegen",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Skitreffen",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Meraftal\u00f8ypa",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Stien",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "World Cup l\u00f8ypa",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Turisten",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Fallet",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Barneparken",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Minialpinisten",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Sn\u00f8kvit",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Parken",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Mini skicross",
-        "status": "closed"
-      }
-    ],
-    "reportedAt": "2026-04-21T08:29:40.000Z",
-    "stats": {
-      "closed": 19,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }
