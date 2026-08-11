@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-11T11:31:14Z",
+  "fetchedAt": "2026-08-11T11:41:20Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,14 +8,17 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 0,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 100
       },
-      "scheduled": 0
+      "scheduled": 2
     },
-    "status": {}
+    "status": {
+      "Rangeley": "scheduled",
+      "South Branch": "scheduled"
+    }
   },
   "ll": [
     -70.632965,
@@ -23,10 +26,80 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1786447878688,
-    "opening": 1786447866006,
-    "trails": 0,
+    "lifts": 1786448485235,
+    "opening": 1786448472874,
+    "trails": 1786448485226,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Gee Whiz Highway",
+        "status": "scheduled"
+      },
+      {
+        "level": "green",
+        "name": "Lower Barr Hopper",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Sweet Meat Caddis",
+        "status": "scheduled"
+      },
+      {
+        "level": "green",
+        "name": "Upper Barr Hopper",
+        "status": "scheduled"
+      },
+      {
+        "level": "blue",
+        "name": "Green Weaver",
+        "status": "scheduled"
+      },
+      {
+        "level": "blue",
+        "name": "Don\u2019s Delight",
+        "status": "scheduled"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Mr. Dullay",
+        "status": "scheduled"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Mrs. Duley",
+        "status": "scheduled"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Mr. Dullay",
+        "status": "scheduled"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Mrs. Duley",
+        "status": "scheduled"
+      },
+      {
+        "level": "black",
+        "name": "Rusty Usual",
+        "status": "scheduled"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Bronco",
+        "status": "scheduled"
+      }
+    ],
+    "stats": {
+      "closed": 1,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 11
+    }
   }
 }

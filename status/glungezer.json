@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-08-11T11:31:14Z",
+  "fetchedAt": "2026-08-11T11:41:20Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/glungezer/",
   "id": "glungezer",
   "lifts": {
+    "reportedAt": "2026-08-10T10:43:14.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 50,
+        "hold": 0,
+        "open": 50,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A 10 EUB- Glungezer I": "open",
+      "B Kombilift Glungezer Sektion 2": "open",
+      "D DSB Schartenkogellift": "open",
+      "E Halsmarterlift": "closed",
+      "F \u00dcbungslift": "closed",
+      "G Halsmarter-Express": "closed"
+    }
   },
   "ll": [
     11.5417,
@@ -23,10 +31,85 @@
   ],
   "name": "Glungezer (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1786447873782,
-    "opening": 1786447866000,
-    "trails": 0,
+    "lifts": 1786448480636,
+    "opening": 1786448472872,
+    "trails": 1786448480656,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "1 Halsmarterabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "1a Familienabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "5 Sch\u00e4ferh\u00fcttenabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "6 Skiweg Schartenkogel",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "4a Trainingsstrecke",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "4 Tulfeinalm-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "2 FIS-Standardabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "3 Zum Tulfeinalmlift",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "1b Trichterabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "7 Kanonenrohr und Verl\u00e4ngerung",
+        "status": "closed"
+      },
+      {
+        "name": "Skiroute Glungezer",
+        "status": "closed"
+      }
+    ],
+    "reportedAt": "2026-08-10T10:43:14.000Z",
+    "stats": {
+      "closed": 11,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

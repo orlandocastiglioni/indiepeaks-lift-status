@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-08-11T11:31:14Z",
+  "fetchedAt": "2026-08-11T11:41:20Z",
   "href": "https://www.hochzeiger.com/de/liftstatus-hochzeiger.html",
   "id": "hochzeiger",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 66.6,
+        "hold": 0,
+        "open": 33.3,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Hahntennenlift": "closed",
+      "Hochzeiger 2.5": "open",
+      "Hochzeiger Gondelbahn": "open",
+      "Lisslift": "closed",
+      "Panoramabahn": "closed",
+      "Sechszeigerbahn": "open",
+      "Wiesenlift": "closed",
+      "Zirbenbahn": "closed",
+      "Zollberglift": "closed"
+    }
   },
   "ll": [
     10.75339,
@@ -23,10 +33,19 @@
   ],
   "name": "Hochzeiger",
   "timestamp": {
-    "lifts": 1786447871014,
-    "opening": 1786447866001,
-    "trails": 0,
+    "lifts": 1786448477296,
+    "opening": 1786448472872,
+    "trails": 1786448477269,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": {},
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

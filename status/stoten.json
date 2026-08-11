@@ -1,21 +1,49 @@
 {
-  "fetchedAt": "2026-08-11T11:31:14Z",
+  "fetchedAt": "2026-08-11T11:41:20Z",
   "href": "https://www.stoten.se/backar-vader/",
   "id": "stoten",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 27,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Dubbelliften": "closed",
+      "Dubbelliften 1": "closed",
+      "Dubbelliften 2": "closed",
+      "Granfj\u00e4llsliften": "closed",
+      "Grillknappen": "closed",
+      "Knapp 398": "closed",
+      "Knatten": "closed",
+      "Kortknappen": "closed",
+      "Kronliften": "closed",
+      "Lillknappen": "closed",
+      "L\u00e5ngknappen": "closed",
+      "L\u00e5ngliften": "closed",
+      "Ranchliften": "closed",
+      "Ravinliften": "closed",
+      "Rullis": "closed",
+      "Snurris": "closed",
+      "Solliften": "closed",
+      "Toppliften": "closed",
+      "Traversen": "closed",
+      "Trippelliften": "closed",
+      "Trippelliften 1": "closed",
+      "Trippelliften 2": "closed",
+      "Vargliften 1": "closed",
+      "Vargliften 2": "closed",
+      "Vargy Express": "closed",
+      "Vargys Tunnelbana": "closed",
+      "World Cup Express": "closed"
+    }
   },
   "ll": [
     12.8886274,
@@ -23,10 +51,429 @@
   ],
   "name": "St\u00f6ten i S\u00e4len",
   "timestamp": {
-    "lifts": 1786447873373,
-    "opening": 1786447866006,
-    "trails": 0,
+    "lifts": 1786448481188,
+    "opening": 1786448472875,
+    "trails": 1786448480138,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Granis",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Vargen",
+        "status": "closed"
+      },
+      {
+        "name": "Mormors St\u00f6rtlopp",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Mormors St\u00f6rtlopp, \u00f6vre",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Mormors St\u00f6rtlopp, nedre",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Vargys \u00c4ventyrsbana",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Mommov\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Halkosp\u00e5ret",
+        "status": "closed"
+      },
+      {
+        "name": "Halkotrikken",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Halkotrikken, \u00f6vre",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Halkotrikken, nedre",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Mormorluvan",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bj\u00f6rnsp\u00e5ret",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "J\u00e4rvsv\u00e4ngen",
+        "status": "closed"
+      },
+      {
+        "name": "\u00c4lvan",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "\u00c4lvan \u00f6vre",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "\u00c4lvan nedre",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Pistoff",
+        "status": "closed"
+      },
+      {
+        "name": "Bj\u00f6rnen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bj\u00f6rnen, \u00f6vre",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bj\u00f6rnen, mitten",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bj\u00f6rnen, nedre",
+        "status": "closed"
+      },
+      {
+        "name": "Losv\u00e4ngen",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Losv\u00e4ngen, \u00f6vre",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Losv\u00e4ngen, nedre",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Vargsvansen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Gammelmormor",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Granbarret",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "R\u00e4ven",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Haren",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Skidv\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Familjebacken",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Tomteluvan",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Tomten",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Trollet",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Dv\u00e4rgen (St\u00f6ten SnowPark)",
+        "status": "closed"
+      },
+      {
+        "name": "World Cup",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "World Cup, \u00f6vre",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "World Cup, mitten",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "World Cup, nedre",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Alven",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "V\u00e4tten",
+        "status": "closed"
+      },
+      {
+        "name": "Parallellen",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Parallellen, \u00f6vre",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Parallellen, mitten",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Parallellen, nedre",
+        "status": "closed"
+      },
+      {
+        "name": "N\u00e4cken",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "N\u00e4cken, \u00f6vre",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "N\u00e4cken, nedre",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Ranchv\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Solv\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Kronv\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Kronoparken",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Tunneln",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Harv\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lov\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Genv\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Myrstigen",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Puderr\u00e4nnan",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Ravinen",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Varulven",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Pistv\u00e4gen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lill-Haren",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Mullvaden",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Nissen",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "\u00c4lvdansen",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Harlorten",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bj\u00e4rven",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Farfars fartvind",
+        "status": "closed"
+      },
+      {
+        "name": "\u00d6stra Granfj\u00e4llsturen",
+        "status": "closed"
+      },
+      {
+        "name": "Toppsp\u00e5ret",
+        "status": "closed"
+      },
+      {
+        "name": "Comborundan",
+        "status": "closed"
+      },
+      {
+        "name": "Slingersvansen",
+        "status": "closed"
+      },
+      {
+        "name": "Tr\u00e4ningssp\u00e5ret",
+        "status": "closed"
+      },
+      {
+        "name": "Pipsv\u00e4ngen",
+        "status": "closed"
+      },
+      {
+        "name": "Lysrundan (t\u00e4nd till 23:00)",
+        "status": "closed"
+      },
+      {
+        "name": "Konstsn\u00f6sp\u00e5ret",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Jibb Arena",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Junior Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Pucklis",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Self-timer",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Side by side",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Speed Freak",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "St\u00f6ten Cross",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "St\u00f6ten Snowpark",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 85,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }
