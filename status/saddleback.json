@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-11T00:15:54Z",
+  "fetchedAt": "2026-08-11T08:00:46Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1786406465580,
-    "opening": 1786405562428,
-    "trails": 1786406465821,
-    "weather": 1786405568981,
-    "webcams": 1786406452675
+    "lifts": 1786434334072,
+    "opening": 1786430730917,
+    "trails": 1786433462878,
+    "weather": 1786432569982,
+    "webcams": 1786434331640
   },
   "trails": {
     "list": [
@@ -103,11 +100,11 @@
     }
   },
   "weather": {
-    "conditions": "Scattered Showers And Thunderstorms",
+    "conditions": "Slight Chance Rain Showers",
     "date": "2026-08-11",
     "icon": [
       "basecloud",
-      "icon-thunder"
+      "icon-showers icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -116,8 +113,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 60
+      "max": 58
     },
-    "text": "Isolated rain showers before 8pm, then scattered showers and thunderstorms between 8pm and 11pm, then showers and thunderstorms likely between 11pm and midnight, then scattered showers and thunderstorms between midnight and 3am. Mostly cloudy, with a low around 60. Southwest wind 0 to 5 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "text": "A slight chance of rain showers before 4am. Mostly cloudy, with a low around 58. West wind around 5 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
