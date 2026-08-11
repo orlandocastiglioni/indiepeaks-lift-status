@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-11T00:54:52Z",
+  "fetchedAt": "2026-08-11T00:57:18Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/muttereralm/",
   "id": "muttereralm",
   "lifts": {
@@ -23,10 +23,80 @@
   ],
   "name": "Muttereralm (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1786409687708,
-    "opening": 1786409674819,
-    "trails": 0,
+    "lifts": 1786409715611,
+    "opening": 1786409703223,
+    "trails": 1786409755669,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "1 Familienabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "11 Skiweg Axamer Lizum",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "1a Familienabfahrt (Tal)",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "2 FIS- Abfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "3 Pfriemesabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "3a Umfahrung Primesk\u00f6pfl",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "4 Rennstrecke",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "5 G\u00f6tznerabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "5a G\u00f6tznerabfahrt (Tal)",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "6 Almbodenabfahrt",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 10,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

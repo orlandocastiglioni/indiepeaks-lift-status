@@ -1,14 +1,29 @@
 {
-  "fetchedAt": "2026-08-11T00:55:06Z",
+  "fetchedAt": "2026-08-11T00:57:18Z",
   "href": "https://spiritmt.com/current-conditions/",
   "id": "spirit-mountain",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     -92.2181,
     46.7194
   ],
   "name": "Spirit Mountain",
   "timestamp": {
-    "lifts": 0,
+    "lifts": 1786409711776,
     "opening": 1786409703224,
     "trails": 1786409709410,
     "weather": 0,
