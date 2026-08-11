@@ -1,16 +1,33 @@
 {
-  "fetchedAt": "2026-08-11T11:04:12Z",
+  "fetchedAt": "2026-08-11T11:08:32Z",
   "href": "https://maneige.ski/stations/vallee-bleue-la-station-familiale/",
   "id": "vallee-bleue",
+  "lifts": {
+    "stats": {
+      "closed": 1,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
+      },
+      "scheduled": 0
+    },
+    "status": {
+      "Lifts (day): 0/3 open": "closed"
+    }
+  },
   "ll": [
     -74.218483,
     46.025871
   ],
   "name": "Ski Vall\u00e9e Bleue",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1786446094899,
-    "trails": 1786446221854,
+    "lifts": 1786446451173,
+    "opening": 1786446357295,
+    "trails": 1786446419939,
     "weather": 0,
     "webcams": 0
   },

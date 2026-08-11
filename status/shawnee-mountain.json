@@ -1,18 +1,43 @@
 {
-  "fetchedAt": "2026-08-11T11:04:12Z",
+  "fetchedAt": "2026-08-11T11:08:32Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
+  "lifts": {
+    "stats": {
+      "closed": 9,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
+      },
+      "scheduled": 0
+    },
+    "status": {
+      "B. Arrowhead - Quad": "closed",
+      "C. Tomahawk - Express": "closed",
+      "D. Tecumseh - Double": "closed",
+      "E. Lookout - Double": "closed",
+      "F. Bushkill - Double": "closed",
+      "G. Little Chief - Double": "closed",
+      "H. Little Chief - Carpet": "closed",
+      "I. Learning Center - Carpet": "closed",
+      "Skiwee Carpet": "closed"
+    }
+  },
   "ll": [
     -75.078117,
     41.03688
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1786446094898,
-    "trails": 1786446165460,
-    "weather": 1786446136173,
-    "webcams": 1786446135973
+    "lifts": 1786446472347,
+    "opening": 1786446357294,
+    "trails": 1786446396241,
+    "weather": 0,
+    "webcams": 0
   },
   "trails": {
     "list": [
@@ -173,23 +198,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Partly Sunny then Showers And Thunderstorms Likely",
-    "date": "2026-08-11",
-    "icon": [
-      "basecloud",
-      "icon-thunder icon-sunny"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=41.03688&lon=-75.078117",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 87
-    },
-    "text": "Showers and thunderstorms likely between 2pm and 5pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 87. West wind 0 to 5 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
   }
 }
