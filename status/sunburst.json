@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-08-11T11:31:14Z",
+  "fetchedAt": "2026-08-11T11:41:20Z",
   "href": "https://skisunburst.com/our-hills/",
   "id": "sunburst",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 11,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chair 1": "closed",
+      "Chair 2": "closed",
+      "Chair 3": "closed",
+      "Terrain Park Rope": "closed",
+      "Tubing North Conveyor": "closed",
+      "Tubing South Conveyor": "closed",
+      "Wunderberg Magic Carpet Conveyor": "closed",
+      "Wunderberg North Rope Tow": "closed",
+      "Wunderberg South Rope Tow": "closed",
+      "Wunderberg Sunkid Carpet Lift": "closed",
+      "Zig Zag Rope Tow": "closed"
+    }
   },
   "ll": [
     -88.224007,
@@ -23,10 +35,85 @@
   ],
   "name": "Sunburst Ski & Snowboard Area",
   "timestamp": {
-    "lifts": 1786447871090,
-    "opening": 1786447866007,
-    "trails": 0,
+    "lifts": 1786448477391,
+    "opening": 1786448472875,
+    "trails": 1786448477386,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "doubleBlack",
+        "name": "The Other Way",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Zig Zag",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "South Tubing Area",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Ridge Runner",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "North Park",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "North Tubing Area",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Werner's Way",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "South Park",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Wunderberg",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Edelweiss",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Freida's Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Second Chance",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Eco Alley",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 13,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-08-11T11:31:14Z",
+  "fetchedAt": "2026-08-11T11:41:20Z",
   "href": "https://skileavenworth.com/conditions",
   "id": "leavenworth-ski-hill",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Moving Carpet": "closed",
+      "Rope Tows": "closed"
+    }
   },
   "ll": [
     -120.66939,
@@ -23,10 +26,32 @@
   ],
   "name": "Leavenworth Ski Hill",
   "timestamp": {
-    "lifts": 1786447874411,
-    "opening": 1786447866004,
-    "trails": 0,
+    "lifts": 1786448481071,
+    "opening": 1786448472873,
+    "trails": 1786448481541,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": {
+      "Golf Course - Nordic Trails 8km": "closed",
+      "Golf Course - Sledding Hill": "closed",
+      "Golf Course - Snowshoe Trail": "closed",
+      "Icicle River Trails - Nordic Trails 8km": "closed",
+      "Icicle River Trails - Snowshoe Trail": "closed",
+      "Peshastin Mill Site - Dog Friendly Nordic Trail": "closed",
+      "Ski Hill - Fat Bike Trail": "closed",
+      "Ski Hill - Lodge": "closed",
+      "Ski Hill - Nordic Trails 10km": "closed",
+      "Ski Hill - Ski Jump": "closed",
+      "Ski Hill - Snowshoe Trail": "closed",
+      "Ski Hill - Tubing Park": "closed"
+    },
+    "stats": {
+      "closed": 12,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }
