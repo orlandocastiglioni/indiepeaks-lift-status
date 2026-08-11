@@ -1,14 +1,29 @@
 {
-  "fetchedAt": "2026-08-11T00:55:06Z",
+  "fetchedAt": "2026-08-11T00:57:18Z",
   "href": "https://www.skihood.com/mountain-report",
   "id": "mthood",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     -121.665688,
     45.331936
   ],
   "name": "Mount Hood",
   "timestamp": {
-    "lifts": 0,
+    "lifts": 1786409710508,
     "opening": 1786409703222,
     "trails": 1786409706308,
     "weather": 0,

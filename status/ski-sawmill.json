@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-11T00:54:52Z",
+  "fetchedAt": "2026-08-11T00:57:18Z",
   "href": "https://skisawmill.com/ski-report/",
   "id": "ski-sawmill",
   "lifts": {
@@ -23,10 +23,94 @@
   ],
   "name": "Ski Sawmill",
   "timestamp": {
-    "lifts": 1786409688148,
-    "opening": 1786409674821,
-    "trails": 0,
+    "lifts": 1786409715851,
+    "opening": 1786409703224,
+    "trails": 1786409757911,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "name": "Snow Tubing",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Sawmill Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bark Peeler's Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Forester Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Jigsaw",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Buzzsaw",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Nancy's Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sawdust Trail",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sawmill Run - Upper",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Buzzsaw",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Chainsaw",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Double Bucker",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Pete's Run",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Ripsaw",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Pete's Run",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 15,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-11T00:54:52Z",
+  "fetchedAt": "2026-08-11T00:57:18Z",
   "href": "https://www.yuzawa-nakazato.com/winter/",
   "id": "yuzawa-nakazato",
   "lifts": {
@@ -23,10 +23,48 @@
   ],
   "name": "Yuzawa Nakazato Snow Resort",
   "timestamp": {
-    "lifts": 1786409687683,
-    "opening": 1786409674823,
-    "trails": 0,
+    "lifts": 1786409715577,
+    "opening": 1786409703225,
+    "trails": 1786409753881,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "name": "\u30b9\u30de\u30a4\u30eb\u30ad\u30c3\u30ba\u30d1\u30fc\u30af",
+        "status": "closed"
+      },
+      {
+        "name": "\u96ea\u904a\u3073\u30d1\u30fc\u30af",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "\u30a8\u30f3\u30bc\u30eb\u30b2\u30ec\u30f3\u30c7",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "\u30b6\u30fb\u30d1\u30fc\u30af",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "\u30b6\u30fb\u30a6\u30a7\u30a4\u30d3\u30fc",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "\u30b6\u30fb\u30d0\u30f3\u30d4\u30fc",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 6,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

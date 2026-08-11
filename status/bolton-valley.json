@@ -1,14 +1,36 @@
 {
-  "fetchedAt": "2026-08-11T00:55:06Z",
+  "fetchedAt": "2026-08-11T00:57:18Z",
   "href": "https://www.boltonvalley.com/winter/trail-maps-snow-reports/snow-reports/",
   "id": "bolton-valley",
+  "lifts": {
+    "stats": {
+      "closed": 6,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
+      },
+      "scheduled": 0
+    },
+    "status": {
+      "Mid Mountain": "closed",
+      "Mighty Mite": "closed",
+      "Snowflake": "closed",
+      "Timberline": "closed",
+      "Vista": "closed",
+      "Wilderness": "closed"
+    }
+  },
   "ll": [
     -72.84948,
     44.421673
   ],
   "name": "Bolton Valley",
   "timestamp": {
-    "lifts": 0,
+    "lifts": 1786409709504,
     "opening": 1786409703219,
     "trails": 1786409706286,
     "weather": 0,
