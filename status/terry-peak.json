@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-11T00:57:18Z",
+  "fetchedAt": "2026-08-11T00:57:40Z",
   "href": "https://terrypeak.com/the-mountain/trails-lifts/",
   "id": "terry-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Coeur Wharf Express": "closed",
+      "Kussy Express": "closed",
+      "Snow Carpet": "closed",
+      "Stewart Lift": "closed",
+      "Surprise Express": "closed"
+    }
   },
   "ll": [
     -103.840383,
@@ -23,9 +29,9 @@
   ],
   "name": "Terry Peak Ski Area",
   "timestamp": {
-    "lifts": 1786409715838,
+    "lifts": 1786409854529,
     "opening": 1786409703224,
-    "trails": 1786409754895,
+    "trails": 1786409854549,
     "weather": 0,
     "webcams": 0
   },

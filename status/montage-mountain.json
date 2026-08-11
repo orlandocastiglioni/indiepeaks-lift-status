@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-08-11T00:57:18Z",
+  "fetchedAt": "2026-08-11T00:57:40Z",
   "href": "https://www.montagemountainresorts.com/trails/",
   "id": "montage-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 62.5,
+        "hold": 0,
+        "open": 37.5,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Iron Horse": "closed",
+      "Learning Area (Magic Carpet)": "closed",
+      "Long Haul": "closed",
+      "Magic Carpet": "closed",
+      "Phoebe Snow": "open",
+      "Short Haul": "open",
+      "Shuttle": "open",
+      "The Yard \u2013 Rope Tow": "closed"
+    }
   },
   "ll": [
     -75.6629169,
@@ -23,9 +32,9 @@
   ],
   "name": "Montage Mountain",
   "timestamp": {
-    "lifts": 1786409715890,
+    "lifts": 1786409857424,
     "opening": 1786409703222,
-    "trails": 1786409756584,
+    "trails": 1786409857446,
     "weather": 0,
     "webcams": 0
   },
