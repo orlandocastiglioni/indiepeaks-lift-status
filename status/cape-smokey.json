@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-08-03T23:41:12Z",
+  "fetchedAt": "2026-08-11T11:31:14Z",
   "href": "https://www.capesmokey.ca/ski-runs",
   "id": "cape-smokey",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 50,
-        "hold": 0,
-        "open": 50,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Gondola": "open",
-      "Magic Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -60.3812,
@@ -26,170 +23,10 @@
   ],
   "name": "Cape Smokey",
   "timestamp": {
-    "lifts": 1785800397337,
-    "opening": 1785800392561,
-    "trails": 1785800397332,
+    "lifts": 1786447873766,
+    "opening": 1786447865999,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Bunny Hill",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Country Mile (2a)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Country Mile (2b)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Country Mile (2c)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Country Mile (2d)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Country Mile (2e)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Country Mile (2f)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Country Mile (2g)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Jigs & Reels (8a)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Jigs & Reels (8b)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Sneek A Peek",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Racers Edge",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Hecklers Highway (4a)",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Hecklers Highway (4b)",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Boomerang",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Racing Pitch",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Chicken Chute",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Chicken Chute (7b)",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Far Side (14a)",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Far Side (14b)",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Far Side (14c)",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Far Side (14d)",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Snowboard Heaven (15a)",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Pit Fall",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Cliff Hanger",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Check Me Shorts (12a)",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Check Me Shorts (12b)",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Hickory Dickory & Dock (13a)",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Hickory Dickory & Dock (13b)",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Choker",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 30,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

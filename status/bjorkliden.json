@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:57:40Z",
+  "fetchedAt": "2026-08-11T11:31:14Z",
   "href": "https://bjorkliden.com/snorapport-fjallstatus/",
   "id": "bjorkliden",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Grytliften": "closed",
-      "Kitteldalsliften": "closed",
-      "K\u00e5ppasliften": "closed",
-      "Lappbergsliften": "closed",
-      "Rakkasliften": "closed"
-    }
+    "status": {}
   },
   "ll": [
     18.6792269,
@@ -29,167 +23,10 @@
   ],
   "name": "Bj\u00f6rkliden",
   "timestamp": {
-    "lifts": 1786409854401,
-    "opening": 1786409703219,
-    "trails": 1786409854390,
+    "lifts": 1786447877492,
+    "opening": 1786447865999,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "blue",
-        "name": "\u00c4ventyrssp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Haren",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Hemv\u00e4ndaren",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Himlabacken",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Karven",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lilla Bj\u00f6rn",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Raka Sp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Rallarsv\u00e4ngen",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "R\u00e4lsbrottet",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "R\u00e4ven",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Solkurvan",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Teknikbacken",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Ursp\u00e5rningen",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "V\u00e4xeln",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Vintergatan",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "\u00c4ngarna",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Banvallen",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Grytan",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Grytsp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Isfallet",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Stora Drivan",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Svarta Bj\u00f6rn",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Tunneln",
-        "status": "closed"
-      },
-      {
-        "name": "Hela Golfsp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "name": "Hela Rallarsp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "name": "Helslingan - Rallarsp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "name": "Korta slingan - Golfsp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "name": "Korta slingan - Rallarsp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "name": "L\u00e5nga slingan - Golfsp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "name": "Mellanslingan - Rallarsp\u00e5ret",
-        "status": "closed"
-      },
-      {
-        "name": "Raka sp\u00e5ret - Rallarleden",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 31,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

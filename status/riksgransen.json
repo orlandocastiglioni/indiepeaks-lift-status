@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:57:40Z",
+  "fetchedAt": "2026-08-11T11:31:14Z",
   "href": "https://riksgransen.se/fjallstatus-snorapport/",
   "id": "riksgransen",
   "lifts": {
-    "reportedAt": "2026-06-19T08:37:00.000Z",
     "stats": {
       "closed": 0,
-      "hold": 5,
-      "open": 1,
+      "hold": 0,
+      "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 83.3,
-        "open": 16.6,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Katterj\u00e5kksliften": "hold",
-      "Nedre stolliften": "open",
-      "Nordalsliften": "hold",
-      "Solliften": "hold",
-      "Vinkelliften": "hold",
-      "\u00d6vre stolliften": "hold"
-    }
+    "status": {}
   },
   "ll": [
     18.1222,
@@ -31,204 +23,10 @@
   ],
   "name": "Riksgr\u00e4nsen",
   "timestamp": {
-    "lifts": 1786409856236,
-    "opening": 1786409703223,
-    "trails": 1786409856255,
+    "lifts": 1786447878674,
+    "opening": 1786447866006,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "blue",
-        "name": "Apelsinklyftan",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "BH-l\u00f6pan",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bl\u00e5b\u00e4rsbacken",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Fj\u00e4llr\u00e4ven",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Gr\u00e4nsleden 1",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Gr\u00e4nsleden 2",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Kanan",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Klunken",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "L\u00e4mmeln",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lingonstigen",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "M\u00f6ssan",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Ripan",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Skimastern",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Smygarn",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Transporten",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Vargtassen",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Yankee",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Bj\u00f6rnfjellsbranten",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Branten",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Gr\u00e4ns\u00e4ngarna",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Hamres",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Jokken",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Keps",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Klumpen",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Rimfors",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Skidskolesv\u00e4ngen",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Skrattvallen",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Snobben",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Sommarstigen",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Tullhussv\u00e4ngen",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Uffes v\u00e4gg",
-        "status": "closed"
-      },
-      {
-        "name": "Gatternj\u00fanni-sp\u00e5ret - Delslingan",
-        "status": "closed"
-      },
-      {
-        "name": "Gatternj\u00fanni-sp\u00e5ret - Huvudslingan",
-        "status": "closed"
-      },
-      {
-        "name": "Katterj\u00e5kk - Nordalsk\u00f6ket",
-        "status": "closed"
-      },
-      {
-        "name": "Korta slingan",
-        "status": "closed"
-      },
-      {
-        "name": "L\u00e5nga slingan",
-        "status": "closed"
-      },
-      {
-        "name": "Soldalen",
-        "status": "closed"
-      },
-      {
-        "name": "Vassivarvet",
-        "status": "closed"
-      }
-    ],
-    "reportedAt": "2026-06-19T08:37:00.000Z",
-    "stats": {
-      "closed": 37,
-      "hold": 0,
-      "open": 1,
-      "scheduled": 0
-    }
   }
 }
