@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-08-07T19:45:26Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.kaunertaler-gletscher.at/kaunertaler-gletscher/nowbox.html",
   "id": "kaunertaler-gletscher",
   "lifts": {
-    "reportedAt": "2026-07-07T14:15:00.000Z",
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 90,
-        "hold": 0,
-        "open": 10,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Dorflift in Feichten": "closed",
-      "Falginjochbahn": "closed",
-      "Fernerlift": "closed",
-      "Karlesjochbahn": "open",
-      "N\u00f6rderjoch": "closed",
-      "Ochsenalmbahn I": "closed",
-      "Ochsenalmbahn II": "closed",
-      "Sonnenlift": "closed",
-      "Wei\u00dfseejochbahn": "closed",
-      "Zauberteppich": "closed"
-    }
+    "status": {}
   },
   "ll": [
     10.707048,
@@ -35,9 +23,9 @@
   ],
   "name": "Kaunertaler Gletscher",
   "timestamp": {
-    "lifts": 1786131026220,
-    "opening": 1786129247034,
-    "trails": 1786131026245,
+    "lifts": 1786409687940,
+    "opening": 1786409674817,
+    "trails": 1786409686994,
     "weather": 0,
     "webcams": 0
   },

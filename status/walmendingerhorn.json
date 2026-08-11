@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:49:50Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "walmendingerhorn",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Doppelsessellift Walmendingerhorn": "closed",
-      "Jedermannlift": "closed",
-      "Mooslift": "closed",
-      "Muttelberg": "closed",
-      "Walmendingerhornbahn": "closed",
-      "Wildentallift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     10.145,
@@ -30,122 +23,10 @@
   ],
   "name": "Walmendingerhorn (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1786409402793,
-    "opening": 1786409379913,
-    "trails": 1786409402418,
+    "lifts": 1786409688177,
+    "opening": 1786409674822,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Walmendingerhorn-Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Talabfahrt Walmendingerhorn",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Doppelsessellift-Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Muttelberg-Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "Route Schwer",
-        "level": "doubleBlack",
-        "name": "Route Muttelberg",
-        "status": "closed"
-      },
-      {
-        "grade": "Route Schwer",
-        "level": "doubleBlack",
-        "name": "Route Steilhang",
-        "status": "closed"
-      },
-      {
-        "grade": "Route",
-        "level": "black",
-        "name": "Route L\u00fcchlemulde",
-        "status": "closed"
-      },
-      {
-        "grade": "Route Schwer",
-        "level": "doubleBlack",
-        "name": "Route B\u00fchlalpe - Heudohle",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Jedermannpiste",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Wildental-Piste",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Wildental Waldabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Wildental Panoramaabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Skiweg Mais\u00e4ss-Moos",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Moosliftpiste",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Skiweg Moos-Jedermann",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Spur Moos-Zaferna",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Skiweg Zaferna-Moos",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 17,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-08-10T18:15:54Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/innsbrucker-nordkettenbahnen/",
   "id": "nordkette",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "A Sektion I Hungerburg": "closed",
-      "B Sektion II Seegrube": "closed",
-      "C Sektion III Hafelekar": "closed",
-      "D Seegrube": "closed",
-      "E Frau - Hitt - Warte": "closed",
-      "Zauberteppich": "closed"
-    }
+    "status": {}
   },
   "ll": [
     11.3792,
@@ -30,58 +23,10 @@
   ],
   "name": "Nordkette (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1786384869591,
-    "opening": 1786384856873,
-    "trails": 1786384869940,
+    "lifts": 1786409687705,
+    "opening": 1786409674819,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "4 \u00dcbungslift",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "7 Kurzes Tal",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "8 Kasermandel - Talele",
-        "status": "closed"
-      },
-      {
-        "name": "2 Zweier Abfahrt",
-        "status": "closed"
-      },
-      {
-        "name": "1 Osthang",
-        "status": "closed"
-      },
-      {
-        "name": "5 Karrinne",
-        "status": "closed"
-      },
-      {
-        "name": "6 Langes Tal",
-        "status": "closed"
-      },
-      {
-        "name": "6 Seilbahnrinne",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 8,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

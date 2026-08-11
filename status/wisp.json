@@ -1,32 +1,21 @@
 {
-  "fetchedAt": "2026-08-10T04:45:31Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.wispresort.com/mountain-report-cams/",
   "id": "wisp",
   "lifts": {
     "stats": {
-      "closed": 10,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Central Park Handle Tow": "closed",
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 3": "closed",
-      "Chair 4": "closed",
-      "Chair 5": "closed",
-      "Chair 6": "closed",
-      "Chair 7": "closed",
-      "Sunset Carpet 1": "closed",
-      "Sunset Carpet 2": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -79.3903,
@@ -34,200 +23,10 @@
   ],
   "name": "Wisp Resort",
   "timestamp": {
-    "lifts": 1786336226378,
-    "opening": 1786335353030,
-    "trails": 1786336226339,
+    "lifts": 1786409688185,
+    "opening": 1786409674822,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Happy Camper",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Possum",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Wisp Trail",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Sunset Boulevard",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bear Paw",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Beaver",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Boulder Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Deer Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Fox Way",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Grouse Way",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Longview",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Muskrat",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Randall's Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Roadrunner",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Central Park",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Devil's Drop",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Squirrel Cage",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "The Face",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Central Park Terrain",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Backbone Pass",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Big Dipper",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Little Dipper",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Logger's Way",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Ridge Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Ace's Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Slider",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Whip Saw",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Over The Edge",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Down Under",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Bobcat Bowl",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Eye Opener",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Highline Pass",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Mainstreet",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Odin's Chute",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Mountain Coaster",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Snow Tubing",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 36,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

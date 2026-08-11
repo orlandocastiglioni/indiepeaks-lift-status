@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-08-05T19:54:08Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://trollhaugen.com/snow-report/",
   "id": "trollhaugen",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 3": "closed",
-      "Chair 4": "closed",
-      "Mickebakken Rope": "closed",
-      "Minibakken Rope": "closed",
-      "Tomtebakken Rope": "closed",
-      "Valhalla Rope": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -92.6202444,
@@ -32,175 +23,10 @@
   ],
   "name": "Trollhaugen",
   "timestamp": {
-    "lifts": 1785959635995,
-    "opening": 1785959625506,
-    "trails": 1785959635974,
+    "lifts": 1786409687685,
+    "opening": 1786409674822,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "blue",
-        "name": "Jim's Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "J\u00f6tunn",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Julebakken",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lee's Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lillebakken",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Logan's Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Nissebakken",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Ragnar\u00f6k",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Skadi",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Vesterdahl",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Bjorkedahl",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "G\u00fcttenhaugen",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Half Rabbit",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "K\u00e5lbakken",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Mickebakken",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Minibakken",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Galende",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Helgen Rose",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Jumpin Judy",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Oppogopp",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Storebakken",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "S\u00f8ppelhaug",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "The Chute",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "The Glade",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "The Summit",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Troll's End",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Fall Line",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Tomtebakken",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Valhalla",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Valgrind",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Guttenhaugen",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 31,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

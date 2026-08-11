@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:45:23Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.saskadenasix.com/winter/conditions",
   "id": "saskadena-six",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Chair 1": "closed",
-      "Conveyor Lift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.5464,
@@ -26,176 +23,10 @@
   ],
   "name": "Saskadena Six",
   "timestamp": {
-    "lifts": 1786409121788,
-    "opening": 1786409107868,
-    "trails": 1786409121775,
+    "lifts": 1786409688134,
+    "opening": 1786409674820,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "name": "UPHILL - Backdoor>Gully>Summit",
-        "status": "closed"
-      },
-      {
-        "name": "UPHILL - Easy Mile",
-        "status": "closed"
-      },
-      {
-        "name": "UPHILL - Easy Mile Woods Route",
-        "status": "closed"
-      },
-      {
-        "name": "UPHILL - Milky Way>Top of Chair 2",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Begin-A-Glade",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Easy Mile",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Milky Way",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Pearson's Path",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Standard",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Back Door",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bee Line",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bourdon's Bowl",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bunny's Boulevard",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Chimney",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Double Dip",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Duane's Drop",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lasky Lot",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Perley's Peril",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Road Way",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Skyline",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Spring Pine Glade",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "The Chute",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "The Gully",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Crystal",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Jug Handle",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Showoff",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "The Face",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Back Scratcher",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Mid Face",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Pomfret Plunge",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Porcupine",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "The Glade",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 32,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

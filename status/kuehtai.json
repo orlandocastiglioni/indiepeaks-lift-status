@@ -1,34 +1,21 @@
 {
-  "fetchedAt": "2026-08-07T13:09:32Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/kuehtai/",
   "id": "kuehtai",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 91.6,
-        "hold": 0,
-        "open": 8.3,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Alpenrosenlift": "closed",
-      "DreiSeenBahn": "open",
-      "GaisKogelBahn": "closed",
-      "HochAlterBahn": "closed",
-      "HoheMutBahn": "closed",
-      "KaiserBahn": "closed",
-      "K\u00fchTeppich": "closed",
-      "Schwarzmooslift": "closed",
-      "Sonnenlift": "closed",
-      "StartBahn": "closed",
-      "Wiesbergbahn": "closed",
-      "Wunderteppich": "closed"
-    }
+    "status": {}
   },
   "ll": [
     11.0161,
@@ -36,232 +23,10 @@
   ],
   "name": "Kuehtai (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1786108154320,
-    "opening": 1786108139481,
-    "trails": 1786108154266,
+    "lifts": 1786409687727,
+    "opening": 1786409674818,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "1 Hochalter",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "10 Wiesberg",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "11 Alpenrosen",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "12 Alpenrosen",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "13 Alpenrosen",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "13 HoheMut",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "14 Alpenrosen",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "14 HoheMut",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "16 Kaiserbahn",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "2 Hochalter",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "3 Hochalter",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "4 Gaiskogel",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "4a Gaiskogel",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "5 Gaiskogel",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "6 Gaiskogel",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "7 Wiesberg",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "8 Wiesberg",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "9 Gaiskogel",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "10 Dreiseen",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "K\u00fchteppich \u00dcbungshang",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "KPark",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "17 Schwarzmoos-Skiweg",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "Skiweg Kaiser-Max-H\u00fctte",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "Sonnenlift-Skiweg",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "Sonnenlift-\u00dcbungshang",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "StartBahn-Skiweg",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "StartBahn-\u00dcbungshang Ost",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "StartBahn-\u00dcbungshang West",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "Wiesberg-Skiweg",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "Wiesberg-Skiweg",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "Wunderteppich-\u00dcbungshang",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "Skiweg Loisl\u00b4s Schirm",
-        "status": "closed"
-      },
-      {
-        "name": "1 Gaiskogel",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "15 Kaiserbahn",
-        "status": "closed"
-      },
-      {
-        "name": "2 Hohe Mut",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "18 Schwarzmoos",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 36,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }
