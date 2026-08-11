@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:49:50Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "soellereck",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 85.7,
-        "hold": 0,
-        "open": 14.2,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "H\u00f6llwieslift": "closed",
-      "Ochsenh\u00f6flelift": "closed",
-      "Schrattenwangbahn": "closed",
-      "S\u00f6llereckbahn": "open",
-      "S\u00f6llis Winterwelt 1": "closed",
-      "S\u00f6llis Winterwelt 2": "closed",
-      "Wannenk\u00f6pflelift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     10.254,
@@ -31,98 +23,10 @@
   ],
   "name": "S\u00f6llereck (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1786409402733,
-    "opening": 1786409379913,
-    "trails": 1786409401723,
+    "lifts": 1786409688159,
+    "opening": 1786409674821,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Familienabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Dr\u00fcckeberger",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Panoramahang",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Schrattenwang",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Schwer",
-        "level": "doubleBlack",
-        "name": "Hexenschuss",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Ochsenh\u00f6fle",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Slalomhang",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Himmelfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "H\u00f6llenritt",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Wannebe",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "S\u00f6llis Home-Run",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Zauberwald",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "S\u00f6llis Winterwelt",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 13,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

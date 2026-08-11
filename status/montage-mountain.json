@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-08-05T11:23:47Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.montagemountainresorts.com/trails/",
   "id": "montage-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
-      "open": 3,
+      "open": 0,
       "percentage": {
-        "closed": 62.5,
-        "hold": 0,
-        "open": 37.5,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Iron Horse": "closed",
-      "Learning Area (Magic Carpet)": "closed",
-      "Long Haul": "closed",
-      "Magic Carpet": "closed",
-      "Phoebe Snow": "open",
-      "Short Haul": "open",
-      "Shuttle": "open",
-      "The Yard \u2013 Rope Tow": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.6629169,
@@ -32,159 +23,10 @@
   ],
   "name": "Montage Mountain",
   "timestamp": {
-    "lifts": 1785929019409,
-    "opening": 1785929009897,
-    "trails": 1785929019392,
+    "lifts": 1786409688092,
+    "opening": 1786409674818,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "name": "Snake (Gladed/Natural Trail)",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Easy Street",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "High Ball",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lesson Area",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Limited (Bunny)",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Mainline",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Branch Line",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Connection",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Doc\u2019s Way",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Nordic",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Pusher",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Sidewinder",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Spike",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Spur",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Stub",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Switch",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "The Yard Terrain Park",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Fast Track",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Runaway",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Whistler",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Cannonball",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Express",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lower Fast Track",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lower Runaway",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Rattler",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Boomer",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Smoke",
-        "status": "closed"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "White Lightning",
-        "status": "open"
-      }
-    ],
-    "stats": {
-      "closed": 22,
-      "hold": 0,
-      "open": 6,
-      "scheduled": 0
-    }
   }
 }

@@ -1,38 +1,21 @@
 {
-  "fetchedAt": "2026-08-07T03:40:34Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://pila.it/tempo-reale/apertura-piste-impianti/",
   "id": "pila",
   "lifts": {
-    "reportedAt": "2026-05-04T06:00:00.000Z",
     "stats": {
-      "closed": 15,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Aosta - Pila": "closed",
-      "Baby Gorraz": "closed",
-      "Baby Pila 1": "closed",
-      "Baby Pila 2": "closed",
-      "Chamol\u00e9": "closed",
-      "Couis - Platta de Grevon": "closed",
-      "Couis 2": "closed",
-      "Fun Park Chacard": "closed",
-      "Gorraz - Couis": "closed",
-      "Gorraz Gran Grimod": "closed",
-      "Grimod": "closed",
-      "Grimondet": "closed",
-      "La Nouva": "closed",
-      "Leiss\u00e9": "closed",
-      "Pila - Gorraz": "closed"
-    }
+    "status": {}
   },
   "ll": [
     7.2863,
@@ -40,249 +23,10 @@
   ],
   "name": "Pila",
   "timestamp": {
-    "lifts": 1786074031867,
-    "opening": 1786074019022,
-    "trails": 1786074031795,
+    "lifts": 1786409687696,
+    "opening": 1786409674820,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Chamol\u00e9",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Du Bois (Renato Rosa)",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Raccordo n. 2-3",
-        "status": "closed"
-      },
-      {
-        "grade": "blu",
-        "level": "blue",
-        "name": "Raccordo n. 2-3-4-5",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Gorraz",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Raccordo n. 3-15",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Plan Perdu",
-        "status": "closed"
-      },
-      {
-        "grade": "blu",
-        "level": "blue",
-        "name": "La Chatelaine",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "La Nouva",
-        "status": "closed"
-      },
-      {
-        "grade": "blu",
-        "level": "blue",
-        "name": "Raccordo n. 6-27-9-7",
-        "status": "closed"
-      },
-      {
-        "grade": "blu",
-        "level": "blue",
-        "name": "Plan de L'Eve",
-        "status": "closed"
-      },
-      {
-        "grade": "nero",
-        "level": "doubleBlack",
-        "name": "Tsa Creuisa",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Couis 1",
-        "status": "closed"
-      },
-      {
-        "grade": "nero",
-        "level": "doubleBlack",
-        "name": "Bellevue",
-        "status": "closed"
-      },
-      {
-        "grade": "nero",
-        "level": "doubleBlack",
-        "name": "Resselin",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Du Lac (Luciano Poli)",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Leiss\u00e9",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Pr\u00e9 Noir",
-        "status": "closed"
-      },
-      {
-        "grade": "blu",
-        "level": "blue",
-        "name": "Grimod",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Raccordo 15-14",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Couis 2",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Grimondet",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Variante Grimondet",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Lo Goil",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Variante Lo Goil",
-        "status": "closed"
-      },
-      {
-        "grade": "blu",
-        "level": "blue",
-        "name": "Baby Pila",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Alpage",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Pista gare basso",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Pista gare alto",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Snowpark",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Plan Praz",
-        "status": "closed"
-      },
-      {
-        "grade": "nero",
-        "level": "doubleBlack",
-        "name": "Platta de Grevon",
-        "status": "closed"
-      },
-      {
-        "grade": "blu",
-        "level": "blue",
-        "name": "Fun Park Chacard",
-        "status": "closed"
-      },
-      {
-        "grade": "blu",
-        "level": "blue",
-        "name": "Rientro villaggio",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Fun Slope",
-        "status": "closed"
-      },
-      {
-        "grade": "rosso",
-        "level": "black",
-        "name": "Skiweg 9-10-19",
-        "status": "closed"
-      },
-      {
-        "grade": "nero",
-        "level": "doubleBlack",
-        "name": "9a",
-        "status": "closed"
-      },
-      {
-        "grade": "nero",
-        "level": "doubleBlack",
-        "name": "9b",
-        "status": "closed"
-      }
-    ],
-    "reportedAt": "2026-05-04T06:00:00.000Z",
-    "stats": {
-      "closed": 38,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

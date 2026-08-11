@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:49:50Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "nebelhorn",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
-      "open": 3,
+      "open": 0,
       "percentage": {
-        "closed": 57.1,
-        "hold": 0,
-        "open": 42.8,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Koblat": "closed",
-      "NTC-Wintererlebnispark": "closed",
-      "Nebelhorn Gipfelbahn": "open",
-      "Nebelhornbahn I": "open",
-      "Nebelhornbahn II": "open",
-      "Seealp-Lift": "closed",
-      "Sonngehren": "closed"
-    }
+    "status": {}
   },
   "ll": [
     10.34,
@@ -31,98 +23,10 @@
   ],
   "name": "Nebelhorn (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1786409402176,
-    "opening": 1786409379912,
-    "trails": 1786409401652,
+    "lifts": 1786409688112,
+    "opening": 1786409674819,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "grade": "Piste Schwer",
-        "level": "doubleBlack",
-        "name": "Nebelhorn-Gipfelhang",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Nebelhorn-Gipfelskiweg",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Gipfelmulde",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Lifttrasse",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Pfannenh\u00f6lzle",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Schwer",
-        "level": "doubleBlack",
-        "name": "Sonngehren",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Schwer",
-        "level": "doubleBlack",
-        "name": "Talabfahrt-Seealpe",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Talabfahrt Oberstdorf",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Seealp-Wintersportgel\u00e4nde",
-        "status": "closed"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "NTC-Rodelpark",
-        "status": "closed"
-      },
-      {
-        "grade": "Route",
-        "level": "black",
-        "name": "Pfannenh\u00f6lzle Skiroute",
-        "status": "closed"
-      },
-      {
-        "grade": "Route",
-        "level": "black",
-        "name": "Nebelhornclassic Skiroute",
-        "status": "closed"
-      },
-      {
-        "grade": "Route",
-        "level": "black",
-        "name": "Talabfahrt Oberstdorf Skiroute",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 13,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

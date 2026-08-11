@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-08-07T13:09:32Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/schlick-2000-skiing-centre/",
   "id": "schlick-2000",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 0,
       "hold": 0,
-      "open": 3,
+      "open": 0,
       "percentage": {
-        "closed": 72.7,
-        "hold": 0,
-        "open": 27.2,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "4er Panoramabahn": "closed",
-      "4er Sennjochbahn": "closed",
-      "6er Zirmachbahn": "closed",
-      "BIG Ron's Tellerlift": "closed",
-      "EUB Galtbergbahn (10er Gondel)": "open",
-      "EUB Kreuzjochbahn I (6er Gondel)": "open",
-      "EUB Kreuzjochbahn II (6er Gondel)": "open",
-      "SL Schanzlin": "closed",
-      "SL Schlickerboden": "closed",
-      "Schneekarussell*": "closed",
-      "Zauberteppich 1-4*": "closed"
-    }
+    "status": {}
   },
   "ll": [
     11.3506,
@@ -35,156 +23,10 @@
   ],
   "name": "Schlick 2000 (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1786108155544,
-    "opening": 1786108139483,
-    "trails": 1786108154826,
+    "lifts": 1786409688141,
+    "opening": 1786409674820,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1 - Panorama - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1a - Panorama - Verbindung",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1b - Panorama - Abfahrt Talschluss",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "2 - Hohes Laub - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "3 - Panoramaschuss",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "5a - Kanonenrohr",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "10 - Latschen - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "4 - Mitterjoch - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "9 - Zirbenschuss",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "6a - Carving - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "7 - Burgstall - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "11 - Zirmachhang",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "5 - Zirmach - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "6 - Wasserfall - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "16 - Talabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "8 - Quellen - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "7a - Seespitz - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "12 - Waxeck - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "13 - Galtalm - Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "14 - Galtberghang",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "15 - \u00dcbungswiese Schanzlin",
-        "status": "closed"
-      },
-      {
-        "grade": "skiroute",
-        "name": "Skiroute Kreuzjoch",
-        "status": "closed"
-      },
-      {
-        "grade": "skiroute",
-        "name": "Skiroute Sennjoch",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 23,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

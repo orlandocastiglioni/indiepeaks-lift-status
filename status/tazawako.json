@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-08-06T11:22:57Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.tazawako-ski.com/",
   "id": "tazawako",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "\u304b\u3082\u3057\u304b\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed",
-      "\u304e\u3093\u308c\u3044\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed",
-      "\u304e\u3093\u308c\u3044\u7b2c1\u30ea\u30d5\u30c8": "closed",
-      "\u304e\u3093\u308c\u3044\u7b2c3\u30ea\u30d5\u30c8": "closed",
-      "\u6c34\u6ca2\u30ea\u30d5\u30c8": "closed",
-      "\u9ed2\u68ee\u5c71\u30ea\u30d5\u30c8": "closed"
-    }
+    "status": {}
   },
   "ll": [
     140.770713,
@@ -30,109 +23,10 @@
   ],
   "name": "Tazawako Ski Resort",
   "timestamp": {
-    "lifts": 1786015363963,
-    "opening": 1786015353817,
-    "trails": 1786015363941,
+    "lifts": 1786409688174,
+    "opening": 1786409674821,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "\u767d\u6a3a\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "\u6c34\u6ca2\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "\u304b\u3082\u3057\u304b\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "\u304b\u3082\u3057\u304b\u30b8\u30e5\u30cb\u30a2\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "\u56fd\u4f53\u30b3\u30fc\u30b9\uff08\u4e0a\u90e8\uff09",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "\u56fd\u4f53\u30b3\u30fc\u30b9\uff08\u4e0b\u90e8\uff09",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "\u30e6\u30fc\u30c8\u30d4\u30a2\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "\u30b9\u30ce\u30fc\u30d1\u30fc\u30af",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "\u9053\u5834\u30d1\u30fc\u30af",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "\u99d2\u30b1\u5cb3\u7b2c2\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "\u99d2\u30b1\u5cb3\u7b2c3\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "\u304e\u3093\u308c\u3044\u7b2c2\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "\u304e\u3093\u308c\u3044\u30d1\u30e9\u30c0\u30a4\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "\u6c34\u6ca2\u30c1\u30e3\u30f3\u30d4\u30aa\u30f3\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "\u9ed2\u68ee\u5c71\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "\u304b\u3082\u3057\u304b\u6797\u9593\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "name": "\u30b9\u30ad\u30eb\u30a2\u30c3\u30d7\u30b3\u30fc\u30b9",
-        "status": "closed"
-      },
-      {
-        "name": "\u30df\u30cb\u30af\u30ed\u30b9\u30b3\u30fc\u30b9",
-        "status": "closed"
-      }
-    ],
-    "reportedAt": "2026-04-01T03:00:00.000Z",
-    "stats": {
-      "closed": 18,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

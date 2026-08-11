@@ -1,37 +1,21 @@
 {
-  "fetchedAt": "2026-08-10T22:15:06Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.hochoetz.com/",
   "id": "hochoetz",
   "lifts": {
     "stats": {
-      "closed": 15,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "8 EUB Acherkogel": "closed",
-      "H10 \u2013 SL Zirbenlift": "closed",
-      "H11 \u2013 SL \u00d6tzilift": "closed",
-      "H12 \u2013 SL Weselelift": "closed",
-      "H13 \u2013 SL WIDI-Lift": "closed",
-      "H14 \u2013 WIDI-Band": "closed",
-      "H15 \u2013 \u00d6tziband": "closed",
-      "H2 \u2013 8EUB Ochsengartenbahn": "closed",
-      "H3 \u2013 6SK Wetterkreuzbahn": "closed",
-      "H4 \u2013 6SK K\u00fchtailebahn": "closed",
-      "H5 \u2013 4SK Brunnenkopfbahn": "closed",
-      "H6 \u2013 2SB Mohrenkopfbahn": "closed",
-      "H7 \u2013 2SB Balbachbahn": "closed",
-      "H8 \u2013 2SB Acherkogelbahn II": "closed",
-      "H9 \u2013 SL Balbach Wiesenlift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     10.8969,
@@ -39,40 +23,10 @@
   ],
   "name": "Hochoetz (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1786409549485,
-    "opening": 1786409379910,
-    "trails": 1786409549495,
+    "lifts": 1786409688079,
+    "opening": 1786409674813,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": {
-      "Piste Nr 1 - Brunnenkopf S\u00fcd": "closed",
-      "Piste Nr 10 - Balbachabfahrt": "closed",
-      "Piste Nr 11 - Balbach S\u00fcd": "closed",
-      "Piste Nr 12 - Wetterkreuzbahn schwarz": "closed",
-      "Piste Nr 13 - Wetterkreuzbahn rot": "closed",
-      "Piste Nr 14 - Balbach-Ochsengarten": "closed",
-      "Piste Nr 2 - Brunnenkopf": "closed",
-      "Piste Nr 3 - Skiweg Mohrenkopf": "closed",
-      "Piste Nr 4 - K\u00fchtaileabfahrt": "closed",
-      "Piste Nr 5 - ehem.Mittelstationsabfahrt": "closed",
-      "Piste Nr 6 - Panoramarestaurant-K\u00fchtaile Alm": "closed",
-      "Piste Nr 7 - Verbindung Balbach - Zirbenlift": "closed",
-      "Piste Nr 8 - Mohrenkopf": "closed",
-      "Piste Nr 9 - Talabfahrt Ochsengarten": "closed",
-      "Skiroute 1": "closed",
-      "Skiroute 2": "closed",
-      "Skiroute 3": "closed",
-      "Skiroute 4": "closed",
-      "Skiroute 5": "closed",
-      "Skiroute 6": "closed"
-    },
-    "stats": {
-      "closed": 20,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

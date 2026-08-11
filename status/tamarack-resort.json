@@ -1,23 +1,21 @@
 {
-  "fetchedAt": "2026-08-06T00:31:00Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://tamarackidaho.com/the-mountain/snow-report",
   "id": "tamarack-resort",
   "lifts": {
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 100,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Tamarack Express": "open"
-    }
+    "status": {}
   },
   "ll": [
     -116.1225,
@@ -25,260 +23,10 @@
   ],
   "name": "Tamarack Resort",
   "timestamp": {
-    "lifts": 1785976251949,
-    "opening": 1785976236715,
-    "trails": 1785976251432,
+    "lifts": 1786409688169,
+    "opening": 1786409674821,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Apollo",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Bombs Away!",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Buttercup",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Dirty Blonde",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "ESR",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Hibernator",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Hockey Mom",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Hot Shot",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Huckleberry",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Los AzuLejos",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Lower Waltz",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Lupine",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Money Pit",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Oblivion",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Paperboy",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Pura Vida",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Rockstar",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Shark Bait",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Show-Low",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Sky Pilot",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Smokejumper",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Stage Fright",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Super G",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Village Connector",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Blackbird",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Cottage Trail",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Culebra Loca",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Eagle",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Firebird",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Fireweed",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Gemini",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Kestrel",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Lodge Trail",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Lower Creek Song",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Lower Grove Way",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Lower Pinnacle",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Merlin",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Morel",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "North Grove",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Pelican",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Sandhill",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "South Grove",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Tamarack Traverse",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Creek Song",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Upper Grove Way",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Upper Pinnacle",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Waltz Climb Trail",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Wild Turkey",
-        "status": "open"
-      }
-    ],
-    "stats": {
-      "closed": 3,
-      "hold": 0,
-      "open": 45,
-      "scheduled": 0
-    }
   }
 }

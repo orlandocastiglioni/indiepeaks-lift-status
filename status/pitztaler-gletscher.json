@@ -1,34 +1,21 @@
 {
-  "fetchedAt": "2026-08-05T01:15:27Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus",
   "id": "pitztaler-gletscher",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
-      "open": 3,
+      "open": 0,
       "percentage": {
-        "closed": 75,
-        "hold": 0,
+        "closed": 25,
+        "hold": 25,
         "open": 25,
-        "scheduled": 0
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Dorflift Mandarfen": "closed",
-      "Gletscherexpress": "open",
-      "Gletscherseebahn": "closed",
-      "Grubenkopf": "closed",
-      "Hirschtal": "closed",
-      "Mittagskogel": "closed",
-      "Mittelbergbahn": "closed",
-      "Muttenkopf": "closed",
-      "Rifflseebahn": "open",
-      "Schlepplift Brunnenkogel": "closed",
-      "Sunna Alm Bahn": "closed",
-      "Wildspitzbahn": "open"
-    }
+    "status": {}
   },
   "ll": [
     10.8806,
@@ -36,170 +23,10 @@
   ],
   "name": "Pitztaler Gletscher",
   "timestamp": {
-    "lifts": 1785891659422,
-    "opening": 1785891022372,
-    "trails": 1785891659436,
+    "lifts": 1786409688122,
+    "opening": 1786409674820,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "20 Mittagskogel",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "21 WISBI Strecke",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "22 Brunnenkogel",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "23 Brunnenkogel Longline",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "24 Pitz-Live",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "25 Gletschersee",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "26 Wildspitz",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "28 Panorama",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "29 Downhill",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "33 Schweizer Weg",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "34 Hoher Rain",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "35 Ibex Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "36 Mittelberg",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Family Cross",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Funline",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "1 Rifflsee Talabfahrt",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "1a Talstation Muttenkopf",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "2 Muttenkopf",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "3 H\u00fcttenabfahrt",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "4 Almrosen",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "5 Steinbock",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "6 Sunnalm",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "7 Hirschtal",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "7a Hirschtal",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "7b Hirschtal",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "8 Seekogel",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "9 Grubengrat",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "10 Grubenkopf",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "10a Plodersee",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "11 Buckelpiste",
-        "status": "closed"
-      }
-    ],
-    "stats": {
-      "closed": 30,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }

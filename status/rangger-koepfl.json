@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-08-09T21:00:13Z",
+  "fetchedAt": "2026-08-11T00:54:52Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/oberperfuss-rangger-koepfl/",
   "id": "rangger-koepfl",
   "lifts": {
-    "reportedAt": "2026-08-09T20:37:24.000Z",
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Egghof Tellerlift": "closed",
-      "Peter-Anich-Bahn I": "closed",
-      "Peter-Anich-Bahn II": "closed",
-      "Peter-Anich-Bahn III": "closed",
-      "Zauberteppich Stiglreith": "closed"
-    }
+    "status": {}
   },
   "ll": [
     11.1583,
@@ -30,75 +23,10 @@
   ],
   "name": "Rangger Koepfl (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1786308324454,
-    "opening": 1786306564286,
-    "trails": 1786308324074,
+    "lifts": 1786409688130,
+    "opening": 1786409674820,
+    "trails": 0,
     "weather": 0,
     "webcams": 0
-  },
-  "trails": {
-    "list": [
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1a Egghof-Talstation",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1a Stiglreith-Egghof",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "1b Stiglreith-Egghof",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "1c Egghof-Talstation",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "F1 Rangger K\u00f6pfl-Rosskogelh\u00fctte",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "F1 Rangger K\u00f6pfl-Sulzstich",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "F1 Sulzstich-Stiglreith",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "2 Rangger K\u00f6pfl-Sulzstich",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "3 Rangger K\u00f6pfl-Mitte Schlepplift",
-        "status": "closed"
-      }
-    ],
-    "reportedAt": "2026-08-09T20:37:24.000Z",
-    "stats": {
-      "closed": 9,
-      "hold": 0,
-      "open": 0,
-      "scheduled": 0
-    }
   }
 }
