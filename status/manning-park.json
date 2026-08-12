@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-12T06:30:46Z",
+  "fetchedAt": "2026-08-12T06:45:28Z",
   "href": "https://manningpark.com/weather-webcams-trail-stats/",
   "id": "manning-park",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Bear Chair": "closed",
+      "Blue Chair": "closed",
+      "Handle Tow": "closed",
+      "T-Bar": "closed",
+      "Whiskey Jack Carpet": "closed"
+    }
   },
   "ll": [
     -120.91434120055804,
@@ -23,7 +29,7 @@
   ],
   "name": "Manning Park",
   "timestamp": {
-    "lifts": 1786515372562,
+    "lifts": 1786516252009,
     "opening": 1786514419728,
     "trails": 1786516231616,
     "weather": 0,
