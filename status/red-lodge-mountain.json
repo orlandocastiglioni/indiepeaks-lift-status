@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-08-12T02:30:18Z",
+  "fetchedAt": "2026-08-12T02:45:13Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Cole Creek": "closed",
+      "Grizzly Peak": "closed",
+      "Magic Carpet": "closed",
+      "Palisades": "closed",
+      "The Stache Express": "closed",
+      "Triple Chair": "closed",
+      "Willow Creek": "closed"
+    }
   },
   "ll": [
     -109.335037,
@@ -23,11 +31,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1786500970616,
+    "lifts": 1786501838667,
     "opening": 1786498256014,
-    "trails": 1786500019956,
-    "weather": 1786493957180,
-    "webcams": 1786500969089
+    "trails": 1786501838667,
+    "weather": 1786501833195,
+    "webcams": 1786501830172
   },
   "trails": {
     "list": [
@@ -410,6 +418,6 @@
     "temperature": {
       "max": 59
     },
-    "text": "Areas of smoke. Mostly cloudy, with a low around 59. Northwest wind around 8 mph."
+    "text": "Areas of smoke. Mostly cloudy. Low around 59, with temperatures rising to around 61 overnight. West northwest wind around 8 mph."
   }
 }
