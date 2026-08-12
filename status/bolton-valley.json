@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-12T00:19:02Z",
+  "fetchedAt": "2026-08-12T00:30:21Z",
   "href": "https://www.boltonvalley.com/winter/trail-maps-snow-reports/snow-reports/",
   "id": "bolton-valley",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Mid Mountain": "closed",
+      "Mighty Mite": "closed",
+      "Snowflake": "closed",
+      "Timberline": "closed",
+      "Vista": "closed",
+      "Wilderness": "closed"
+    }
   },
   "ll": [
     -72.84948,
@@ -23,11 +30,11 @@
   ],
   "name": "Bolton Valley",
   "timestamp": {
-    "lifts": 1786493873860,
+    "lifts": 1786493957705,
     "opening": 1786493871640,
-    "trails": 1786493874772,
-    "weather": 0,
-    "webcams": 0
+    "trails": 1786493957709,
+    "weather": 1786493956895,
+    "webcams": 1786493953160
   },
   "trails": {
     "list": [
@@ -393,5 +400,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Mostly Clear",
+    "date": "2026-08-12",
+    "icon": [
+      "basenone",
+      "icon-moon"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=44.421673&lon=-72.84948",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 56
+    },
+    "text": "Mostly clear, with a low around 56. Northwest wind 3 to 8 mph."
   }
 }
