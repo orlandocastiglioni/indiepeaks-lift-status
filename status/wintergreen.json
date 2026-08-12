@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-12T04:45:43Z",
+  "fetchedAt": "2026-08-12T05:00:54Z",
   "href": "https://www.wintergreenresort.com/mountain-report-cams/",
   "id": "wintergreen",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Big Acorn": "closed",
+      "Blue Ridge Express": "closed",
+      "Highlands": "closed",
+      "Loggers Alley": "closed",
+      "Potato Patch": "closed",
+      "Teaching Conveyor": "closed"
+    }
   },
   "ll": [
     -78.945,
@@ -23,8 +30,8 @@
   ],
   "name": "Wintergreen Resort",
   "timestamp": {
-    "lifts": 1786509049010,
-    "opening": 1786506343239,
+    "lifts": 1786509947007,
+    "opening": 1786509946947,
     "trails": 1786509926341,
     "weather": 0,
     "webcams": 0
