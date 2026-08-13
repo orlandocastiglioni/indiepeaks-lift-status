@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-08-11T00:57:18Z",
+  "fetchedAt": "2026-08-13T14:30:34Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1786409706799,
-    "opening": 1786409703219,
-    "trails": 1786409713824,
-    "weather": 1786409723796,
-    "webcams": 1786409713315
+    "lifts": 1786630543066,
+    "opening": 1786630536997,
+    "trails": 1786630543065,
+    "weather": 1786626030108,
+    "webcams": 1786630536997
   },
   "trails": {
     "list": [
@@ -112,7 +112,7 @@
       {
         "level": "black",
         "name": "Back O' The Shack",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -216,10 +216,28 @@
       }
     ],
     "stats": {
-      "closed": 3,
+      "closed": 4,
       "hold": 0,
-      "open": 33,
+      "open": 32,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Mostly Sunny then Chance Rain Showers",
+    "date": "2026-08-13",
+    "icon": [
+      "basecloud",
+      "icon-showers icon-sunny"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 77
+    },
+    "text": "A chance of rain showers after 3pm. Mostly sunny, with a high near 77. Northwest wind 5 to 8 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
