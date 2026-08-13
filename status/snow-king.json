@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-08-13T13:45:44Z",
+  "fetchedAt": "2026-08-13T14:00:26Z",
   "href": "https://snowkingmountain.com/mountain/conditions/",
   "id": "snow-king",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Base Area Magic Carpet 1": "closed",
-      "Cougar Triple Chairlift": "closed",
-      "Rafferty Chairlift": "closed",
-      "Summit Gondola": "closed",
-      "Summit Magic Carpet 2": "closed",
-      "Summit Magic Carpet 3": "closed",
-      "Summit Surface Tow": "closed",
-      "Sunnyside Lift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -110.7624,
@@ -32,7 +23,7 @@
   ],
   "name": "Snow King Mountain",
   "timestamp": {
-    "lifts": 1786627869389,
+    "lifts": 1786628760384,
     "opening": 1786626925641,
     "trails": 1786627835758,
     "weather": 0,
