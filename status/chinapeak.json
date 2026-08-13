@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:57:18Z",
+  "fetchedAt": "2026-08-13T12:30:31Z",
   "href": "https://www.skichinapeak.com/conditions",
   "id": "chinapeak",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Boulder Carpet": "closed",
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 4": "closed",
-      "Chair 5": "closed",
-      "Chair 6": "closed",
-      "Chair 7": "closed",
-      "Juniper Carpet": "closed",
-      "Kids Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -119.161705,
@@ -33,11 +23,11 @@
   ],
   "name": "China Peak",
   "timestamp": {
-    "lifts": 1786409706419,
-    "opening": 1786409703220,
-    "trails": 1786409715327,
-    "weather": 1786409723798,
-    "webcams": 1786409713315
+    "lifts": 1786623370034,
+    "opening": 1786622454188,
+    "trails": 1786622458981,
+    "weather": 1786617967251,
+    "webcams": 1786623354566
   },
   "trails": {
     "list": [
@@ -318,5 +308,23 @@
       "open": 1,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Chance Showers And Thunderstorms",
+    "date": "2026-08-13",
+    "icon": [
+      "basecloud",
+      "icon-thunder icon-moon"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=37.228348&lon=-119.161705",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 49
+    },
+    "text": "A chance of showers and thunderstorms before 5am, then rain likely. Mostly cloudy. Low around 49, with temperatures rising to around 51 overnight. East wind around 0 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
