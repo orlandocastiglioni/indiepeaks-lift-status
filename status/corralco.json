@@ -1,17 +1,17 @@
 {
-  "fetchedAt": "2026-08-13T12:30:31Z",
+  "fetchedAt": "2026-08-13T12:45:28Z",
   "href": "https://corralco.com",
   "id": "corralco",
   "lifts": {
-    "reportedAt": "2026-08-13T12:15:00.000Z",
+    "reportedAt": "2026-08-13T12:30:00.000Z",
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 1,
-      "open": 5,
+      "open": 7,
       "percentage": {
-        "closed": 25,
+        "closed": 0,
         "hold": 12.5,
-        "open": 62.5,
+        "open": 87.5,
         "scheduled": 0
       },
       "scheduled": 0
@@ -21,8 +21,8 @@
       "Cornisa": "open",
       "Cruce": "open",
       "Cumbre": "open",
-      "Escuelita": "closed",
-      "Navidad": "closed",
+      "Escuelita": "open",
+      "Navidad": "open",
       "Volc\u00e1n": "hold",
       "Volc\u00e1n Express": "open"
     }
@@ -33,9 +33,9 @@
   ],
   "name": "Corralco Mountain Resort",
   "timestamp": {
-    "lifts": 1786623358887,
+    "lifts": 1786624238716,
     "opening": 1786622454188,
-    "trails": 1786623358886,
+    "trails": 1786624238716,
     "weather": 0,
     "webcams": 0
   },
@@ -64,7 +64,7 @@
       {
         "level": "green",
         "name": "Chucao",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -99,7 +99,7 @@
       {
         "level": "blue",
         "name": "Aguilucho Alto",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -192,11 +192,11 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-08-13T12:15:00.000Z",
+    "reportedAt": "2026-08-13T12:30:00.000Z",
     "stats": {
-      "closed": 8,
+      "closed": 6,
       "hold": 0,
-      "open": 22,
+      "open": 24,
       "scheduled": 0
     }
   }
