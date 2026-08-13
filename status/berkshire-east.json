@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-13T14:45:51Z",
+  "fetchedAt": "2026-08-13T15:15:31Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1786631443804,
+    "lifts": 1786633274290,
     "opening": 1786630536997,
-    "trails": 1786631443804,
-    "weather": 1786626030108,
-    "webcams": 1786631437413
+    "trails": 1786633274290,
+    "weather": 1786633272283,
+    "webcams": 1786633268079
   },
   "trails": {
     "list": [
@@ -67,7 +67,7 @@
       {
         "level": "blue",
         "name": "Cat N' Mouse",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -167,12 +167,12 @@
       {
         "level": "black",
         "name": "Pony Keg",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Rocky Road",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -197,7 +197,7 @@
       {
         "level": "doubleBlack",
         "name": "Keg Stand",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -216,9 +216,9 @@
       }
     ],
     "stats": {
-      "closed": 5,
+      "closed": 3,
       "hold": 0,
-      "open": 31,
+      "open": 33,
       "scheduled": 0
     }
   },
@@ -238,6 +238,6 @@
     "temperature": {
       "max": 77
     },
-    "text": "A chance of rain showers after 3pm. Mostly sunny, with a high near 77. Northwest wind 5 to 8 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "A chance of rain showers after 3pm. Mostly sunny, with a high near 77. Northwest wind around 8 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
