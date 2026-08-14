@@ -1,30 +1,30 @@
 {
-  "fetchedAt": "2026-08-14T12:31:01Z",
+  "fetchedAt": "2026-08-14T12:45:41Z",
   "href": "https://corralco.com",
   "id": "corralco",
   "lifts": {
-    "reportedAt": "2026-08-14T12:15:00.000Z",
+    "reportedAt": "2026-08-14T12:30:00.000Z",
     "stats": {
-      "closed": 6,
-      "hold": 1,
-      "open": 1,
+      "closed": 1,
+      "hold": 2,
+      "open": 5,
       "percentage": {
-        "closed": 75,
-        "hold": 12.5,
-        "open": 12.5,
+        "closed": 12.5,
+        "hold": 25,
+        "open": 62.5,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Coloradito": "closed",
-      "Cornisa": "closed",
-      "Cruce": "closed",
-      "Cumbre": "open",
-      "Escuelita": "closed",
-      "Navidad": "closed",
-      "Volc\u00e1n": "hold",
-      "Volc\u00e1n Express": "closed"
+      "Coloradito": "open",
+      "Cornisa": "open",
+      "Cruce": "open",
+      "Cumbre": "hold",
+      "Escuelita": "open",
+      "Navidad": "hold",
+      "Volc\u00e1n": "closed",
+      "Volc\u00e1n Express": "open"
     }
   },
   "ll": [
@@ -33,9 +33,9 @@
   ],
   "name": "Corralco Mountain Resort",
   "timestamp": {
-    "lifts": 1786709736900,
-    "opening": 1786707032002,
-    "trails": 1786709736899,
+    "lifts": 1786710664141,
+    "opening": 1786710662091,
+    "trails": 1786710664141,
     "weather": 0,
     "webcams": 0
   },
@@ -64,7 +64,7 @@
       {
         "level": "green",
         "name": "Chucao",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "green",
@@ -99,7 +99,7 @@
       {
         "level": "blue",
         "name": "Aguilucho Alto",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -139,7 +139,7 @@
       {
         "level": "black",
         "name": "Chingues",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -192,11 +192,11 @@
         "status": "open"
       }
     ],
-    "reportedAt": "2026-08-14T12:15:00.000Z",
+    "reportedAt": "2026-08-14T12:30:00.000Z",
     "stats": {
-      "closed": 3,
+      "closed": 6,
       "hold": 0,
-      "open": 27,
+      "open": 24,
       "scheduled": 0
     }
   }
