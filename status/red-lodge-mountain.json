@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-08-14T08:30:43Z",
+  "fetchedAt": "2026-08-14T08:45:06Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Cole Creek": "closed",
+      "Grizzly Peak": "closed",
+      "Magic Carpet": "closed",
+      "Palisades": "closed",
+      "The Stache Express": "closed",
+      "Triple Chair": "closed",
+      "Willow Creek": "closed"
+    }
   },
   "ll": [
     -109.335037,
@@ -23,11 +31,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1786695349706,
+    "lifts": 1786696248644,
     "opening": 1786695328145,
     "trails": 1786696238249,
-    "weather": 1786688160380,
-    "webcams": 1786695328145
+    "weather": 1786696252662,
+    "webcams": 1786696248469
   },
   "trails": {
     "list": [
@@ -395,7 +403,7 @@
     }
   },
   "weather": {
-    "conditions": "Rain Showers Likely",
+    "conditions": "Chance Rain Showers",
     "date": "2026-08-14",
     "icon": [
       "basecloud",
@@ -408,8 +416,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 50
+      "max": 49
     },
-    "text": "Rain showers likely and areas of fog before 4am, then areas of fog and a chance of rain showers. Mostly cloudy, with a low around 50. West northwest wind around 2 mph. Chance of precipitation is 70%."
+    "text": "A chance of rain showers and patchy fog. Mostly cloudy, with a low around 49. Northwest wind around 2 mph. Chance of precipitation is 50%."
   }
 }

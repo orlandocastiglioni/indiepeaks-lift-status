@@ -1,21 +1,23 @@
 {
-  "fetchedAt": "2026-08-14T08:30:43Z",
+  "fetchedAt": "2026-08-14T08:45:06Z",
   "href": "https://tamarackidaho.com/the-mountain/snow-report",
   "id": "tamarack-resort",
   "lifts": {
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 0,
+        "hold": 0,
+        "open": 100,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Tamarack Express": "open"
+    }
   },
   "ll": [
     -116.1225,
@@ -23,7 +25,7 @@
   ],
   "name": "Tamarack Resort",
   "timestamp": {
-    "lifts": 1786695349940,
+    "lifts": 1786696248644,
     "opening": 1786695328145,
     "trails": 1786696238344,
     "weather": 0,
