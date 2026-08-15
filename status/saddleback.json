@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T00:45:06Z",
+  "fetchedAt": "2026-08-15T03:15:16Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1786753837869,
-    "opening": 1786752047122,
-    "trails": 1786753836563,
-    "weather": 1786751151465,
-    "webcams": 1786753827661
+    "lifts": 1786762842686,
+    "opening": 1786760119790,
+    "trails": 1786761941111,
+    "weather": 1786759253761,
+    "webcams": 1786762840869
   },
   "trails": {
     "list": [
@@ -103,7 +100,7 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Clear then Patchy Fog",
+    "conditions": "Clear then Patchy Fog",
     "date": "2026-08-15",
     "icon": [
       "basenone",
@@ -118,6 +115,6 @@
     "temperature": {
       "max": 47
     },
-    "text": "Patchy fog after 3am. Mostly clear, with a low around 47. Northwest wind 0 to 10 mph."
+    "text": "Patchy fog after 3am. Clear, with a low around 47. Northwest wind 0 to 5 mph."
   }
 }
