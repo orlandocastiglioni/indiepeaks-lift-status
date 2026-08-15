@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-08-15T20:15:42Z",
+  "fetchedAt": "2026-08-15T20:30:21Z",
   "href": "https://skisawmill.com/ski-report/",
   "id": "ski-sawmill",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Lumberjack T-Bar": "closed",
+      "Paul Bunyan Double": "closed",
+      "Triple Chair Lift": "closed",
+      "White Birch T-Bar": "closed"
+    }
   },
   "ll": [
     -77.3628,
@@ -23,16 +28,91 @@
   ],
   "name": "Ski Sawmill",
   "timestamp": {
-    "lifts": 1786824059617,
-    "opening": 1786820469780,
-    "trails": 1786824059616,
+    "lifts": 1786824962178,
+    "opening": 1786824950825,
+    "trails": 1786824962178,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "name": "Snow Tubing",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Sawmill Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bark Peeler's Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Forester Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Jigsaw",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Buzzsaw",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Nancy's Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sawdust Trail",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sawmill Run - Upper",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Buzzsaw",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Chainsaw",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Double Bucker",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Pete's Run",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Ripsaw",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Pete's Run",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 15,
       "hold": 0,
       "open": 0,
       "scheduled": 0
