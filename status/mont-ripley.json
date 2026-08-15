@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-08-15T15:00:13Z",
+  "fetchedAt": "2026-08-15T15:15:21Z",
   "href": "https://www.mtu.edu/mont-ripley/about/snow-report/",
   "id": "mont-ripley",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Husky Chair": "closed",
+      "T-Bar": "closed"
+    }
   },
   "ll": [
     -88.5596,
@@ -23,16 +26,137 @@
   ],
   "name": "Mont Ripley",
   "timestamp": {
-    "lifts": 1786805250817,
-    "opening": 1786801533385,
-    "trails": 1786805250817,
+    "lifts": 1786806033478,
+    "opening": 1786806024601,
+    "trails": 1786806033478,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "That Road",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Toots Tumble",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "The Dail Learning Area",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bypass",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Deer Track Trail",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Danny Boy",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Fred's Landing",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Center Bowl",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Racer's Ridge",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "The Ripley Triangle",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Look Out",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Powder Stash",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Rhythm Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Husky Bowl",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Chute",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Certified",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Wipeout",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Bonzai",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Copper Chute Glade",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Plunge",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Powder Stash Glade",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Cannonball",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Buddha Bowl",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Trestle",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 24,
       "hold": 0,
       "open": 0,
       "scheduled": 0
