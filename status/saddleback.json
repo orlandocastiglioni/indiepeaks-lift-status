@@ -1,22 +1,22 @@
 {
-  "fetchedAt": "2026-08-15T03:30:54Z",
+  "fetchedAt": "2026-08-15T14:15:58Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
         "closed": 0,
         "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "open": 50,
+        "scheduled": 50
       },
-      "scheduled": 2
+      "scheduled": 1
     },
     "status": {
-      "Rangeley": "scheduled",
+      "Rangeley": "open",
       "South Branch": "scheduled"
     }
   },
@@ -26,18 +26,18 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1786763731684,
-    "opening": 1786763720985,
-    "trails": 1786763730371,
-    "weather": 1786759253761,
-    "webcams": 1786763720985
+    "lifts": 1786802431573,
+    "opening": 1786801533386,
+    "trails": 1786802432759,
+    "weather": 1786799747596,
+    "webcams": 1786802423655
   },
   "trails": {
     "list": [
       {
         "level": "green",
         "name": "Gee Whiz Highway",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "green",
@@ -47,67 +47,67 @@
       {
         "level": "green",
         "name": "Sweet Meat Caddis",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Upper Barr Hopper",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Green Weaver",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Don\u2019s Delight",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Lower Mr. Dullay",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Lower Mrs. Duley",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Upper Mr. Dullay",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Upper Mrs. Duley",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Rusty Usual",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
         "name": "Bronco",
-        "status": "scheduled"
+        "status": "open"
       }
     ],
     "stats": {
       "closed": 1,
       "hold": 0,
-      "open": 0,
-      "scheduled": 11
+      "open": 11,
+      "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Clear then Patchy Fog",
+    "conditions": "Sunny",
     "date": "2026-08-15",
     "icon": [
       "basenone",
-      "icon-mist"
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -116,8 +116,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 47
+      "max": 70
     },
-    "text": "Patchy fog after 3am. Clear, with a low around 47. Northwest wind 0 to 5 mph."
+    "text": "Sunny, with a high near 70. Northwest wind 5 to 10 mph."
   }
 }
