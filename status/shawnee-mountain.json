@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T11:33:40Z",
+  "fetchedAt": "2026-08-16T20:15:28Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "B. Arrowhead - Quad": "closed",
-      "C. Tomahawk - Express": "closed",
-      "D. Tecumseh - Double": "closed",
-      "E. Lookout - Double": "closed",
-      "F. Bushkill - Double": "closed",
-      "G. Little Chief - Double": "closed",
-      "H. Little Chief - Carpet": "closed",
-      "I. Learning Center - Carpet": "closed",
-      "Skiwee Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.078117,
@@ -33,11 +23,11 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1786447908827,
-    "opening": 1786447866006,
-    "trails": 1786447908825,
-    "weather": 1786447906751,
-    "webcams": 1786447906275
+    "lifts": 1786910450976,
+    "opening": 1786909560153,
+    "trails": 1786909771581,
+    "weather": 1786908664927,
+    "webcams": 1786910450248
   },
   "trails": {
     "list": [
@@ -200,11 +190,11 @@
     }
   },
   "weather": {
-    "conditions": "Partly Sunny then Showers And Thunderstorms Likely",
-    "date": "2026-08-11",
+    "conditions": "Rain Showers Likely",
+    "date": "2026-08-16",
     "icon": [
       "basecloud",
-      "icon-thunder icon-sunny"
+      "icon-showers icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=41.03688&lon=-75.078117",
@@ -213,8 +203,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 87
+      "max": 78
     },
-    "text": "Showers and thunderstorms likely between 2pm and 5pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 87. West wind 0 to 5 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "text": "Rain showers likely before 4pm, then rain showers and patchy fog. Cloudy. High near 78, with temperatures falling to around 69 in the afternoon. South wind around 5 mph. Chance of precipitation is 90%. New rainfall amounts between a tenth and quarter of an inch possible."
   }
 }

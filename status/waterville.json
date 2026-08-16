@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-08-16T20:00:39Z",
+  "fetchedAt": "2026-08-16T20:15:28Z",
   "href": "http://www.waterville.com/snow-report-maps",
   "id": "waterville",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Exhibition T-Bar": "closed",
+      "Green Peak Triple": "closed",
+      "High Country": "closed",
+      "Lower Meadows": "closed",
+      "Lower Pasture Carpet": "closed",
+      "Northside": "closed",
+      "Sunny Side": "closed",
+      "Tecumseh Express": "closed",
+      "Upper Pasture Carpet": "closed",
+      "Valley Run Quad": "closed"
+    }
   },
   "ll": [
     -71.519989,
@@ -23,11 +34,11 @@
   ],
   "name": "Waterville Valley",
   "timestamp": {
-    "lifts": 1786909571667,
+    "lifts": 1786910456933,
     "opening": 1786909560153,
-    "trails": 1786908666981,
+    "trails": 1786910456933,
     "weather": 1786908664929,
-    "webcams": 1786909560153
+    "webcams": 1786910450249
   },
   "trails": {
     "list": [
