@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-08-13T20:00:46Z",
+  "fetchedAt": "2026-08-16T20:00:39Z",
   "href": "https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace",
   "id": "winterplace",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "#1 Double Chairlift": "closed",
-      "#10 Tubing Carpet": "closed",
-      "#11 Tubing Carpet": "closed",
-      "#12 Ski-Wee Carpet": "closed",
-      "#2 Triple Chairlift": "closed",
-      "#3 Triple Chairlift": "closed",
-      "#4 Triple Chairlift": "closed",
-      "#5 Double Chairlift": "closed",
-      "#6 Carpet Lift": "closed",
-      "#8 Quad Chairlift": "closed",
-      "#9 Quad Chairlift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -81.11824,
@@ -35,11 +23,11 @@
   ],
   "name": "Winterplace",
   "timestamp": {
-    "lifts": 1786650352717,
-    "opening": 1786650352671,
-    "trails": 1786650344375,
-    "weather": 1786649446989,
-    "webcams": 1786650352671
+    "lifts": 1786909571659,
+    "opening": 1786909560153,
+    "trails": 1786908668773,
+    "weather": 1786908664931,
+    "webcams": 1786909560153
   },
   "trails": {
     "list": [
@@ -192,8 +180,8 @@
     }
   },
   "weather": {
-    "conditions": "Slight Chance Showers And Thunderstorms",
-    "date": "2026-08-13",
+    "conditions": "Chance Showers And Thunderstorms",
+    "date": "2026-08-16",
     "icon": [
       "basecloud",
       "icon-thunder icon-sunny"
@@ -205,8 +193,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 77
+      "max": 80
     },
-    "text": "A slight chance of showers and thunderstorms. Mostly sunny, with a high near 77. West wind around 8 mph. Chance of precipitation is 20%."
+    "text": "A chance of showers and thunderstorms. Mostly sunny, with a high near 80. West wind around 10 mph, with gusts as high as 21 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
