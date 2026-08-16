@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-08-16T20:15:28Z",
+  "fetchedAt": "2026-08-16T20:30:51Z",
   "href": "https://maneige.ski/stations/ski-mont-habitant/",
   "id": "mont-habitant",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 50,
+        "hold": 0,
+        "open": 50,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Lifts (day): 1/3 open": "open",
+      "Lifts (night): 0/3 open": "closed"
+    }
   },
   "ll": [
     -74.173851,
@@ -23,9 +26,9 @@
   ],
   "name": "Ski Mont Habitant",
   "timestamp": {
-    "lifts": 1786910450312,
+    "lifts": 1786911363600,
     "opening": 1786909560151,
-    "trails": 1786909593736,
+    "trails": 1786911363600,
     "weather": 0,
     "webcams": 0
   },

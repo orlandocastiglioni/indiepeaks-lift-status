@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-08-16T20:15:28Z",
+  "fetchedAt": "2026-08-16T20:30:51Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 11,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beginner Carpet": "closed",
+      "Beginner Tow I": "closed",
+      "Bluster Carpet": "closed",
+      "Cascade Basin Triple Chair": "closed",
+      "F5 Tow": "closed",
+      "Gusty JBar": "closed",
+      "Hurricane Quad Chair": "closed",
+      "Peak Triple Chair": "closed",
+      "Turbulence Triple Chair": "closed",
+      "Valley Double Chair": "closed",
+      "Vortex Double Chair": "closed"
+    }
   },
   "ll": [
     -71.833412,
@@ -23,11 +35,11 @@
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 1786910450780,
+    "lifts": 1786911508083,
     "opening": 1786909560152,
-    "trails": 1786909762049,
+    "trails": 1786911508083,
     "weather": 1786908664920,
-    "webcams": 1786910450248
+    "webcams": 1786911331656
   },
   "trails": {
     "list": [

@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-16T20:15:28Z",
+  "fetchedAt": "2026-08-16T20:30:51Z",
   "href": "https://tsumagoiskiresort.life/",
   "id": "palcall-tsumagoi",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u30b9\u30ce\u30fc\u30a8\u30b9\u30ab\u30ec\u30fc\u30bf\u30fc": "closed",
+      "\u5b2c\u604b\u30b4\u30f3\u30c9\u30e9": "closed",
+      "\u7b2c1\u9ad8\u901f\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c2\u9ad8\u901f\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c3\u30da\u30a2\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     138.5375,
@@ -23,9 +29,9 @@
   ],
   "name": "Palcall Tsumagoi",
   "timestamp": {
-    "lifts": 1786910450684,
+    "lifts": 1786911498229,
     "opening": 1786909560152,
-    "trails": 1786909749665,
+    "trails": 1786911498229,
     "weather": 0,
     "webcams": 0
   },
