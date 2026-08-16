@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:57:40Z",
+  "fetchedAt": "2026-08-16T20:00:39Z",
   "href": "https://www.tangram.jp/ski/ski/lift.php",
   "id": "tangram-ski-circus",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "\u7b2c1\u30da\u30a2": "closed",
-      "\u7b2c2\u30da\u30a2": "closed",
-      "\u7b2c3\u30af\u30ef\u30c3\u30c9": "closed",
-      "\u7b2c5\u30af\u30ef\u30c3\u30c9\uff08\u91ce\u5c3b\u6e56\uff83\uff97\uff7d\u89b3\u5149\uff98\uff8c\uff84\uff09": "closed",
-      "\u7b2c6\u30da\u30a2": "closed"
-    }
+    "status": {}
   },
   "ll": [
     138.2642,
@@ -29,9 +23,9 @@
   ],
   "name": "Tangram Ski Circus",
   "timestamp": {
-    "lifts": 1786409854019,
-    "opening": 1786409703224,
-    "trails": 1786409853831,
+    "lifts": 1786909571684,
+    "opening": 1786909560153,
+    "trails": 1786908665960,
     "weather": 0,
     "webcams": 0
   },
