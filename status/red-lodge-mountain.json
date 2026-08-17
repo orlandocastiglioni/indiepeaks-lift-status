@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-08-17T08:16:01Z",
+  "fetchedAt": "2026-08-17T23:00:28Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1786953642870,
-    "opening": 1786950053735,
-    "trails": 1786953642870,
-    "weather": 1786948237536,
-    "webcams": 1786953634820
+    "lifts": 1787006724126,
+    "opening": 1787005872280,
+    "trails": 1787005884118,
+    "weather": 1787002255219,
+    "webcams": 1787006722455
   },
   "trails": {
     "list": [
@@ -403,11 +395,11 @@
     }
   },
   "weather": {
-    "conditions": "Slight Chance Rain Showers",
+    "conditions": "Chance Showers And Thunderstorms",
     "date": "2026-08-17",
     "icon": [
       "basecloud",
-      "icon-showers icon-moon"
+      "icon-thunder icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=45.191021&lon=-109.335037",
@@ -416,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 53
+      "max": 71
     },
-    "text": "A slight chance of rain showers after 4am. Mostly cloudy, with a low around 53. West wind around 6 mph. Chance of precipitation is 20%."
+    "text": "A chance of showers and thunderstorms before 3pm, then a chance of showers and thunderstorms. Mostly cloudy. High near 71, with temperatures falling to around 69 in the afternoon. North northwest wind around 6 mph. Chance of precipitation is 50%."
   }
 }
