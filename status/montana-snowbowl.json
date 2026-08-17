@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-17T03:00:29Z",
+  "fetchedAt": "2026-08-17T03:15:51Z",
   "href": "https://www.montanasnowbowl.com/trails-report/index.php",
   "id": "montana-snowbowl",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "GRIZZLY Double Chair": "closed",
+      "LaVALLE Double Chair": "closed",
+      "ROPE TOW": "closed",
+      "SNOW PARK Double Chair": "closed",
+      "SUNRISE T-BAR": "closed",
+      "THE TRANSPORTER Triple Chair": "closed"
+    }
   },
   "ll": [
     -113.999977,
@@ -23,9 +30,9 @@
   ],
   "name": "Montana Snowbowl",
   "timestamp": {
-    "lifts": 1786934734426,
+    "lifts": 1786935643745,
     "opening": 1786933848933,
-    "trails": 1786933852878,
+    "trails": 1786935643745,
     "weather": 0,
     "webcams": 0
   },
