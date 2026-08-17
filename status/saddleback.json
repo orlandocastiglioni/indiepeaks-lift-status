@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-17T16:15:16Z",
+  "fetchedAt": "2026-08-17T18:00:54Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1786982422869,
-    "opening": 1786978833239,
-    "trails": 1786982423449,
-    "weather": 1786978837483,
-    "webcams": 1786982414539
+    "lifts": 1786988738080,
+    "opening": 1786986945921,
+    "trails": 1786987866485,
+    "weather": 1786986068762,
+    "webcams": 1786988736242
   },
   "trails": {
     "list": [
@@ -103,7 +100,7 @@
     }
   },
   "weather": {
-    "conditions": "Showers And Thunderstorms",
+    "conditions": "Chance Showers And Thunderstorms",
     "date": "2026-08-17",
     "icon": [
       "basecloud",
@@ -118,6 +115,6 @@
     "temperature": {
       "max": 70
     },
-    "text": "Rain showers likely before 2pm, then showers and thunderstorms. Mostly cloudy, with a high near 70. South wind around 5 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "A chance of showers and thunderstorms before 2pm, then a chance of showers and thunderstorms between 2pm and 5pm, then a chance of showers and thunderstorms. Mostly cloudy, with a high near 70. South wind around 5 mph. Chance of precipitation is 80%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
