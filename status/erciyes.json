@@ -1,21 +1,40 @@
 {
-  "fetchedAt": "2026-08-16T18:16:01Z",
+  "fetchedAt": "2026-08-17T05:45:51Z",
   "href": "https://www.kayserierciyes.com.tr/pist-ve-teleferik-bilgisi",
   "id": "erciyes",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 16,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 88.8,
+        "hold": 0,
+        "open": 11.1,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Divan (Hisarc\u0131k Kap\u0131)": "closed",
+      "Hitit (Hac\u0131lar Kap\u0131)": "closed",
+      "Kani\u015f (Develi Kap\u0131)": "closed",
+      "Karakulak (Hac\u0131lar Kap\u0131)": "closed",
+      "Kart\u0131n (Develi Kap\u0131)": "closed",
+      "Keven (Hisarc\u0131k Kap\u0131)": "closed",
+      "K\u00fcltepe (Develi Kap\u0131)": "closed",
+      "Lifos Gondol (Hac\u0131lar Kap\u0131)": "open",
+      "Ottoman (Hisarc\u0131k Kap\u0131)": "closed",
+      "S\u0131rt (Hisarc\u0131k Kap\u0131)": "closed",
+      "T - Bar (Hisarc\u0131k Kap\u0131)": "closed",
+      "Tekir Gondol (Tekir Kap\u0131)": "open",
+      "Yal\u00e7\u0131n (Hisarc\u0131k Kap\u0131)": "closed",
+      "Y\u00fcr\u00fcyen Bant (Hac\u0131lar Kap\u0131)": "closed",
+      "Y\u00fcr\u00fcyen Bant (Tekir Kap\u0131)": "closed",
+      "Y\u00fcr\u00fcyen Bant1 (Hisarc\u0131k Kap\u0131)": "closed",
+      "Y\u00fcr\u00fcyen Bant2 (Hisarc\u0131k Kap\u0131)": "closed",
+      "Z\u00fcmr\u00fct (Tekir Kap\u0131)": "closed"
+    }
   },
   "ll": [
     35.4778,
@@ -23,16 +42,258 @@
   ],
   "name": "Erciyes",
   "timestamp": {
-    "lifts": 1786903262791,
-    "opening": 1786901437080,
-    "trails": 1786903262790,
+    "lifts": 1786944637964,
+    "opening": 1786941921007,
+    "trails": 1786944637964,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "blue",
+        "name": "No 15",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 15a",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 15b",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 15c",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 16",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 16a",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 16b",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 16c",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 19",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 19a",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 19b",
+        "status": "closed"
+      },
+      {
+        "name": "Develi - Tekir",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 12",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 13",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 13a",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 13b",
+        "status": "closed"
+      },
+      {
+        "name": "Tekir - Develi",
+        "status": "closed"
+      },
+      {
+        "name": "Tekir - Hisarc\u0131k",
+        "status": "closed"
+      },
+      {
+        "name": "K\u0131zak Alan\u0131 (Tekir Kap\u0131)",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 6",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 6a",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 7",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 7a",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "No 8",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 9",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 10",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 10a",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 11",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 11a(Egt)",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "No 14",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "No 14a",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "No 17",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "No 18",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 18a",
+        "status": "closed"
+      },
+      {
+        "name": "Hisarc\u0131k - Hac\u0131lar",
+        "status": "closed"
+      },
+      {
+        "name": "Hisarc\u0131k - Tekir",
+        "status": "closed"
+      },
+      {
+        "name": "K\u0131zak Alan\u0131 (Hisarc\u0131k Kap\u0131)",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "No 1",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 1a",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 1b",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 2",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 2a",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 2b",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 3",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 3a",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 3b",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No 4",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "No 5",
+        "status": "closed"
+      },
+      {
+        "name": "Hac\u0131lar - Hisarc\u0131k",
+        "status": "closed"
+      },
+      {
+        "name": "K\u0131zak Alan\u0131 (Hac\u0131lar Kap\u0131)",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 50,
       "hold": 0,
       "open": 0,
       "scheduled": 0
