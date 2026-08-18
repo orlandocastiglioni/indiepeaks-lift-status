@@ -1,30 +1,30 @@
 {
-  "fetchedAt": "2026-08-18T12:00:43Z",
+  "fetchedAt": "2026-08-18T12:15:28Z",
   "href": "https://corralco.com",
   "id": "corralco",
   "lifts": {
-    "reportedAt": "2026-08-18T11:44:00.000Z",
+    "reportedAt": "2026-08-18T12:00:00.000Z",
     "stats": {
-      "closed": 8,
+      "closed": 2,
       "hold": 0,
-      "open": 0,
+      "open": 6,
       "percentage": {
-        "closed": 100,
+        "closed": 25,
         "hold": 0,
-        "open": 0,
+        "open": 75,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Coloradito": "closed",
+      "Coloradito": "open",
       "Cornisa": "closed",
-      "Cruce": "closed",
-      "Cumbre": "closed",
-      "Escuelita": "closed",
-      "Navidad": "closed",
+      "Cruce": "open",
+      "Cumbre": "open",
+      "Escuelita": "open",
+      "Navidad": "open",
       "Volc\u00e1n": "closed",
-      "Volc\u00e1n Express": "closed"
+      "Volc\u00e1n Express": "open"
     }
   },
   "ll": [
@@ -33,9 +33,9 @@
   ],
   "name": "Corralco Mountain Resort",
   "timestamp": {
-    "lifts": 1787053541530,
-    "opening": 1787049954824,
-    "trails": 1787053541530,
+    "lifts": 1787054451693,
+    "opening": 1787054446952,
+    "trails": 1787054451693,
     "weather": 0,
     "webcams": 0
   },
@@ -49,17 +49,17 @@
       {
         "level": "green",
         "name": "Cacha\u00f1as Este",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Cacha\u00f1as Oeste",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Canaleta",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -79,12 +79,12 @@
       {
         "level": "green",
         "name": "Liebre Este",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Liebre Oeste",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -109,32 +109,32 @@
       {
         "level": "blue",
         "name": "Carpinteros",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Chichimoyes",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Mirador Navidad",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Tunducos Este",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Tunducos Oeste",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Zorros Bajos",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -149,17 +149,17 @@
       {
         "level": "black",
         "name": "Zorritos",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Zorros",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "\u00c1guilas",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -192,11 +192,11 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-08-18T11:44:00.000Z",
+    "reportedAt": "2026-08-18T12:00:00.000Z",
     "stats": {
-      "closed": 30,
+      "closed": 16,
       "hold": 0,
-      "open": 0,
+      "open": 14,
       "scheduled": 0
     }
   }
