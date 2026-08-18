@@ -1,17 +1,17 @@
 {
-  "fetchedAt": "2026-08-18T12:45:43Z",
+  "fetchedAt": "2026-08-18T13:15:36Z",
   "href": "https://www.steinplatte.tirol/de/liftstatus.html",
   "id": "steinplatte",
   "lifts": {
-    "reportedAt": "2026-08-18T12:30:30.000Z",
+    "reportedAt": "2026-08-18T13:00:30.000Z",
     "stats": {
-      "closed": 11,
+      "closed": 13,
       "hold": 0,
-      "open": 3,
+      "open": 1,
       "percentage": {
-        "closed": 78.5,
+        "closed": 92.8,
         "hold": 0,
-        "open": 21.4,
+        "open": 7.1,
         "scheduled": 0
       },
       "scheduled": 0
@@ -19,9 +19,9 @@
     "status": {
       "15-EUB Gondelbahn Steinplatte (Waidring)": "open",
       "4-SB M\u00f6sern": "closed",
-      "4-SL Ro\u00dfalm (Reit im Winkl)": "open",
+      "4-SL Ro\u00dfalm (Reit im Winkl)": "closed",
       "4-SL Schwarzlofer": "closed",
-      "6-SB B\u00e4reck": "open",
+      "6-SB B\u00e4reck": "closed",
       "6-SB Kammerk\u00f6r": "closed",
       "6-SB Plattenkogel": "closed",
       "6-SB Scheibelberg (Reit im Winkl)": "closed",
@@ -39,9 +39,9 @@
   ],
   "name": "Steinplatte",
   "timestamp": {
-    "lifts": 1787056252137,
-    "opening": 1787054446954,
-    "trails": 1787056252140,
+    "lifts": 1787058062858,
+    "opening": 1787058057910,
+    "trails": 1787058062840,
     "weather": 0,
     "webcams": 0
   },
@@ -69,7 +69,7 @@
         "grade": "blau",
         "level": "blue",
         "name": "Kammerk\u00f6r-Abfahrt (Nr. 4)",
-        "status": "open"
+        "status": "scheduled"
       },
       {
         "grade": "blau",
@@ -176,7 +176,7 @@
         "grade": "blau",
         "level": "blue",
         "name": "Kurvenlift-Abfahrt (Nr. 20)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "Skiroute",
@@ -184,12 +184,12 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-08-18T12:30:30.000Z",
+    "reportedAt": "2026-08-18T13:00:30.000Z",
     "stats": {
-      "closed": 21,
+      "closed": 22,
       "hold": 0,
-      "open": 2,
-      "scheduled": 0
+      "open": 0,
+      "scheduled": 1
     }
   }
 }
