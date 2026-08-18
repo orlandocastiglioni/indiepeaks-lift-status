@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-17T23:15:21Z",
+  "fetchedAt": "2026-08-18T09:30:43Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1787007642228,
-    "opening": 1787005872280,
-    "trails": 1787007642236,
-    "weather": 1787002253975,
-    "webcams": 1787007632850
+    "lifts": 1787044565151,
+    "opening": 1787042743026,
+    "trails": 1787045432884,
+    "weather": 1787040067412,
+    "webcams": 1787044563302
   },
   "trails": {
     "list": [
@@ -103,11 +100,11 @@
     }
   },
   "weather": {
-    "conditions": "Scattered Showers And Thunderstorms",
-    "date": "2026-08-17",
+    "conditions": "Patchy Fog",
+    "date": "2026-08-18",
     "icon": [
       "basecloud",
-      "icon-thunder"
+      "icon-showers icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -116,8 +113,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 70
+      "max": 58
     },
-    "text": "Scattered showers and thunderstorms before 5pm, then scattered showers and thunderstorms. Mostly cloudy, with a high near 70. South wind around 5 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Patchy fog and a slight chance of rain showers. Mostly cloudy, with a low around 58. Wind around 0 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
