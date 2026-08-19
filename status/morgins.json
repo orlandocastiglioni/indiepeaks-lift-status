@@ -1,21 +1,41 @@
 {
-  "fetchedAt": "2026-08-19T07:30:08Z",
+  "fetchedAt": "2026-08-19T07:45:31Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/morgins/",
   "id": "morgins",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 18,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 94.7,
+        "hold": 0,
+        "open": 5.2,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "20 gueilly": "closed",
+      "30 champey": "closed",
+      "31 pointe de l'au": "closed",
+      "33 derriere-pertuis": "closed",
+      "34 sepaya i": "closed",
+      "35 sepaya ii": "closed",
+      "36 aiguille des champeys": "closed",
+      "40 tc morgins": "open",
+      "41 chaux": "closed",
+      "42 gourtet": "closed",
+      "43 la truche": "closed",
+      "46 bochasses": "closed",
+      "48 corbeau": "closed",
+      "49 ecottis": "closed",
+      "51 geant": "closed",
+      "52 fil neige": "closed",
+      "61 culet": "closed",
+      "62 snowly i": "closed",
+      "64 tapis mini-gourtet": "closed"
+    }
   },
   "ll": [
     6.8567,
@@ -23,9 +43,9 @@
   ],
   "name": "Morgins (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1787123751122,
+    "lifts": 1787124630053,
     "opening": 1787121037833,
-    "trails": 1787122880144,
+    "trails": 1787124630053,
     "weather": 0,
     "webcams": 0
   },
