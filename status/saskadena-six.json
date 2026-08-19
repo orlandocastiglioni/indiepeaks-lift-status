@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-08-18T20:46:06Z",
+  "fetchedAt": "2026-08-19T09:00:54Z",
   "href": "https://www.saskadenasix.com/winter/conditions",
   "id": "saskadena-six",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Chair 1": "closed",
-      "Conveyor Lift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.5464,
@@ -26,9 +23,9 @@
   ],
   "name": "Saskadena Six",
   "timestamp": {
-    "lifts": 1787085062714,
-    "opening": 1787085056477,
-    "trails": 1787085025939,
+    "lifts": 1787129151425,
+    "opening": 1787129150939,
+    "trails": 1787128268272,
     "weather": 0,
     "webcams": 0
   },
