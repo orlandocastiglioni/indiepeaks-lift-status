@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-19T07:30:08Z",
+  "fetchedAt": "2026-08-19T07:45:31Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/torgon/",
   "id": "torgon",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Fil neige mini moilles": "closed",
+      "Tapis plan de croix": "closed",
+      "Tk conche 2000": "closed",
+      "Tk djeu des t\u00eates": "closed",
+      "Ts du tronchey": "closed"
+    }
   },
   "ll": [
     6.8236,
@@ -23,9 +29,9 @@
   ],
   "name": "Torgon (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1787123751164,
+    "lifts": 1787124630586,
     "opening": 1787121037835,
-    "trails": 1787122878925,
+    "trails": 1787124630585,
     "weather": 0,
     "webcams": 0
   },
