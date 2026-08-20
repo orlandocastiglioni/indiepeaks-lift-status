@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-20T17:15:51Z",
+  "fetchedAt": "2026-08-20T19:30:51Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1787245268115,
-    "opening": 1787245258926,
-    "trails": 1787245249341,
-    "weather": 1787244373500,
-    "webcams": 1787245258926
+    "lifts": 1787253332425,
+    "opening": 1787253330455,
+    "trails": 1787252450199,
+    "weather": 1787252446845,
+    "webcams": 1787253330455
   },
   "trails": {
     "list": [
@@ -116,8 +113,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 74
+      "max": 73
     },
-    "text": "Mostly cloudy, with a high near 74. West wind around 5 mph."
+    "text": "Mostly cloudy, with a high near 73. West wind around 5 mph."
   }
 }
