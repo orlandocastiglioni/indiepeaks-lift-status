@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-08-20T06:30:21Z",
+  "fetchedAt": "2026-08-20T06:45:46Z",
   "href": "https://brundage.com/grooming-report/",
   "id": "brundage",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Bear Chair": "closed",
+      "Blue Bird Express": "closed",
+      "Centennial Express": "closed",
+      "Easy Rider Conveyor": "closed",
+      "Easy Street Triple Chair Lift": "closed",
+      "Hidden Valley": "closed",
+      "Lakeview Triple": "closed"
+    }
   },
   "ll": [
     -116.1544,
@@ -23,9 +31,9 @@
   ],
   "name": "Brundage Mountain Resort",
   "timestamp": {
-    "lifts": 1787206506332,
+    "lifts": 1787207435366,
     "opening": 1787204754861,
-    "trails": 1787205641141,
+    "trails": 1787207435366,
     "weather": 0,
     "webcams": 0
   },
