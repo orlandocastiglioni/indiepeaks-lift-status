@@ -1,21 +1,38 @@
 {
-  "fetchedAt": "2026-08-21T10:00:42Z",
+  "fetchedAt": "2026-08-21T10:16:01Z",
   "href": "https://www.norefjell.com/skibakker",
   "id": "norefjell",
   "lifts": {
+    "reportedAt": "2026-04-22T08:09:32.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 15,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "B\u00f8seterheisen (J)": "closed",
+      "Fjellekspressen (G)": "closed",
+      "Fjellheisen (E)": "closed",
+      "Hotellheisen (M)": "closed",
+      "Lillebelte (I2)": "closed",
+      "Myggen (N)": "closed",
+      "Nedre B\u00f8seterheis (L)": "closed",
+      "Norefjellheisen (A)": "closed",
+      "Olaheisen (K)": "closed",
+      "Ravn\u00e5sheisen (H)": "closed",
+      "Storebelte (I1)": "closed",
+      "Tilbringerheisen (D)": "closed",
+      "Tosetern (F)": "closed",
+      "Turistheisen (C)": "closed",
+      "Vinkelheisen (B)": "closed"
+    }
   },
   "ll": [
     9.5994,
@@ -23,9 +40,9 @@
   ],
   "name": "Norefjell Ski & Spa",
   "timestamp": {
-    "lifts": 1787305549225,
+    "lifts": 1787306453398,
     "opening": 1787303757022,
-    "trails": 1787304661868,
+    "trails": 1787306453399,
     "weather": 0,
     "webcams": 0
   },
