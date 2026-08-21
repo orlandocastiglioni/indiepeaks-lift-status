@@ -1,26 +1,21 @@
 {
-  "fetchedAt": "2026-08-21T00:30:29Z",
+  "fetchedAt": "2026-08-21T14:16:01Z",
   "href": "https://www.marquettemountain.com/the-mountain/lift-terrain-status/",
   "id": "marquette-mountain",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "River Chair": "closed",
-      "Rocket Chair": "closed",
-      "Snowfield Chair": "closed",
-      "Tyro Paddle Tow Rope": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -87.42,
@@ -28,9 +23,9 @@
   ],
   "name": "Marquette Mountain",
   "timestamp": {
-    "lifts": 1787271330807,
-    "opening": 1787269566000,
-    "trails": 1787271330807,
+    "lifts": 1787320863059,
+    "opening": 1787319951803,
+    "trails": 1787319963847,
     "weather": 0,
     "webcams": 0
   },
