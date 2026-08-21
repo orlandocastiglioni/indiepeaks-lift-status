@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-21T10:00:42Z",
+  "fetchedAt": "2026-08-21T10:16:01Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,14 +8,17 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 0,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 100
       },
-      "scheduled": 0
+      "scheduled": 2
     },
-    "status": {}
+    "status": {
+      "Rangeley": "scheduled",
+      "South Branch": "scheduled"
+    }
   },
   "ll": [
     -70.632965,
@@ -23,11 +26,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1787305550129,
+    "lifts": 1787306456638,
     "opening": 1787303757022,
-    "trails": 1787304664446,
-    "weather": 1787299239914,
-    "webcams": 1787305547963
+    "trails": 1787306460336,
+    "weather": 1787306452838,
+    "webcams": 1787306448467
   },
   "trails": {
     "list": [
@@ -100,11 +103,11 @@
     }
   },
   "weather": {
-    "conditions": "Patchy Fog",
+    "conditions": "Patchy Fog then Sunny",
     "date": "2026-08-21",
     "icon": [
       "basenone",
-      "icon-mist icon-night"
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -113,8 +116,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 48
+      "max": 74
     },
-    "text": "Patchy fog. Partly cloudy, with a low around 48. South wind around 0 mph."
+    "text": "Patchy fog before 9am. Sunny, with a high near 74. Northeast wind around 0 mph."
   }
 }
