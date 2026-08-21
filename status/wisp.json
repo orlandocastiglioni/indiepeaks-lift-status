@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-08-21T05:15:58Z",
+  "fetchedAt": "2026-08-21T05:30:41Z",
   "href": "https://www.wispresort.com/mountain-report-cams/",
   "id": "wisp",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Central Park Handle Tow": "closed",
+      "Chair 1": "closed",
+      "Chair 2": "closed",
+      "Chair 3": "closed",
+      "Chair 4": "closed",
+      "Chair 5": "closed",
+      "Chair 6": "closed",
+      "Chair 7": "closed",
+      "Sunset Carpet 1": "closed",
+      "Sunset Carpet 2": "closed"
+    }
   },
   "ll": [
     -79.3903,
@@ -23,7 +34,7 @@
   ],
   "name": "Wisp Resort",
   "timestamp": {
-    "lifts": 1787288435380,
+    "lifts": 1787289375158,
     "opening": 1787286632352,
     "trails": 1787289332448,
     "weather": 0,
