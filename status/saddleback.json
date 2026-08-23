@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-08-23T13:15:38Z",
+  "fetchedAt": "2026-08-23T17:00:51Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 2,
+      "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 100,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Rangeley": "open",
-      "South Branch": "open"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1787490042985,
-    "opening": 1787488219732,
-    "trails": 1787490043334,
-    "weather": 1787485542668,
-    "webcams": 1787490040012
+    "lifts": 1787503555860,
+    "opening": 1787499972587,
+    "trails": 1787502663080,
+    "weather": 1787501757956,
+    "webcams": 1787503554364
   },
   "trails": {
     "list": [
@@ -118,6 +115,6 @@
     "temperature": {
       "max": 70
     },
-    "text": "A chance of rain showers and patchy fog. Mostly cloudy, with a high near 70. Southeast wind 0 to 5 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "A chance of rain showers. Mostly cloudy, with a high near 70. Southeast wind around 5 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
