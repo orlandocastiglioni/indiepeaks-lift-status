@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-23T03:00:23Z",
+  "fetchedAt": "2026-08-23T03:15:26Z",
   "href": "https://pebblecreekskiarea.com/",
   "id": "pebble-creek",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Aspen": "closed",
+      "Aspen Night": "closed",
+      "Conveyor": "closed",
+      "Skyline": "closed",
+      "Sunshine": "closed"
+    }
   },
   "ll": [
     -112.16,
@@ -23,9 +29,9 @@
   ],
   "name": "Pebble Creek Ski Area",
   "timestamp": {
-    "lifts": 1787453157738,
+    "lifts": 1787454035462,
     "opening": 1787452206173,
-    "trails": 1787453197955,
+    "trails": 1787454084967,
     "weather": 0,
     "webcams": 0
   },
