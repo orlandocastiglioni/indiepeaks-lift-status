@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-08-23T16:15:48Z",
+  "fetchedAt": "2026-08-24T11:30:21Z",
   "href": "https://www.raggedmountainresort.com/mountain-report-cams/",
   "id": "ragged-mountain",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Barnyard Triple": "closed",
-      "Meadows Carpet": "closed",
-      "Spear Mountain Express": "closed",
-      "Summit Six Express": "closed",
-      "Uphill Route": "closed",
-      "Wanna Be Wild Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.842003,
@@ -30,11 +23,11 @@
   ],
   "name": "Ragged Mountain",
   "timestamp": {
-    "lifts": 1787500822313,
-    "opening": 1787499972586,
-    "trails": 1787500822313,
-    "weather": 1787493636628,
-    "webcams": 1787500813197
+    "lifts": 1787570179970,
+    "opening": 1787568364655,
+    "trails": 1787569244631,
+    "weather": 1787564747942,
+    "webcams": 1787570125125
   },
   "trails": {
     "list": [
@@ -347,11 +340,11 @@
     }
   },
   "weather": {
-    "conditions": "Showers And Thunderstorms Likely",
-    "date": "2026-08-23",
+    "conditions": "Areas Of Fog",
+    "date": "2026-08-24",
     "icon": [
-      "basecloud",
-      "icon-thunder"
+      "basenone",
+      "icon-mist icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.486305&lon=-71.842003",
@@ -360,8 +353,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 72
+      "max": 59
     },
-    "text": "A chance of rain showers and patchy fog before 2pm, then showers and thunderstorms likely. Mostly cloudy, with a high near 72. Southeast wind around 5 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "text": "Areas of fog. Mostly cloudy, with a low around 59. South wind around 0 mph."
   }
 }
