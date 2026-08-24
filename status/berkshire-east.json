@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-08-23T21:30:21Z",
+  "fetchedAt": "2026-08-24T15:45:38Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1787519757147,
-    "opening": 1787518840434,
-    "trails": 1787519757147,
-    "weather": 1787517964853,
-    "webcams": 1787519750466
+    "lifts": 1787585478141,
+    "opening": 1787585470532,
+    "trails": 1787585478141,
+    "weather": 1787580033780,
+    "webcams": 1787585470532
   },
   "trails": {
     "list": [
@@ -223,11 +223,11 @@
     }
   },
   "weather": {
-    "conditions": "Chance Showers And Thunderstorms",
-    "date": "2026-08-23",
+    "conditions": "Mostly Sunny then Slight Chance Showers And Thunderstorms",
+    "date": "2026-08-24",
     "icon": [
       "basecloud",
-      "icon-thunder"
+      "icon-thunder icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 71
+      "max": 72
     },
-    "text": "A chance of showers and thunderstorms. Mostly cloudy, with a high near 71. South wind around 5 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "A slight chance of showers and thunderstorms between 3pm and 4pm. Mostly sunny, with a high near 72. Southwest wind 5 to 10 mph, with gusts as high as 21 mph. Chance of precipitation is 20%."
   }
 }
