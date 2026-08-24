@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-08-21T10:16:01Z",
+  "fetchedAt": "2026-08-24T05:45:54Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1787306460158,
-    "opening": 1787303757022,
-    "trails": 1787306460158,
-    "weather": 1787306452421,
-    "webcams": 1787306448467
+    "lifts": 1787549430841,
+    "opening": 1787549429451,
+    "trails": 1787550349458,
+    "weather": 1787549433583,
+    "webcams": 1787549429451
   },
   "trails": {
     "list": [
@@ -403,11 +395,11 @@
     }
   },
   "weather": {
-    "conditions": "Partly Cloudy",
-    "date": "2026-08-21",
+    "conditions": "Slight Chance Showers And Thunderstorms then Partly Cloudy",
+    "date": "2026-08-24",
     "icon": [
       "icon-cloud",
-      "icon-night"
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=45.191021&lon=-109.335037",
@@ -416,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 62
+      "max": 53
     },
-    "text": "Partly cloudy, with a low around 62. West wind around 5 mph."
+    "text": "A slight chance of showers and thunderstorms before midnight. Partly cloudy, with a low around 53. West wind around 10 mph. Chance of precipitation is 20%."
   }
 }
