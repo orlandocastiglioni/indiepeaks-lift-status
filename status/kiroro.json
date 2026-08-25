@@ -1,32 +1,21 @@
 {
-  "fetchedAt": "2026-08-20T02:00:11Z",
+  "fetchedAt": "2026-08-25T10:15:46Z",
   "href": "https://www.kiroro.co.jp/dashboard/",
   "id": "kiroro",
   "lifts": {
     "stats": {
-      "closed": 10,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Asari No.1 Lift": "closed",
-      "Asari No.2 Express": "closed",
-      "Center Express": "closed",
-      "Family Lift": "closed",
-      "Gateway Express": "closed",
-      "Kiroro Gondola": "closed",
-      "Nagamine No.1 Express": "closed",
-      "Nagamine No.2 Express": "closed",
-      "Yoichi No.1 Express": "closed",
-      "Yoichi No.2 Lift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     140.98,
@@ -34,9 +23,9 @@
   ],
   "name": "Kiroro Snow World",
   "timestamp": {
-    "lifts": 1787190368936,
-    "opening": 1787188569238,
-    "trails": 1787190368936,
+    "lifts": 1787652261998,
+    "opening": 1787652061221,
+    "trails": 1787652945143,
     "weather": 0,
     "webcams": 0
   },
