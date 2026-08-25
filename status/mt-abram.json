@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-08-25T10:30:46Z",
+  "fetchedAt": "2026-08-25T10:45:58Z",
   "href": "https://www.mtabram.com/winter/mountain-report/",
   "id": "mt-abram",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Maine T-Bar": "closed",
+      "Sawicki Carpet": "closed",
+      "Skyline Chair": "closed",
+      "Wayback Machine": "closed"
+    }
   },
   "ll": [
     -70.706,
@@ -23,9 +28,9 @@
   ],
   "name": "Mt. Abram",
   "timestamp": {
-    "lifts": 1787652961634,
+    "lifts": 1787653861932,
     "opening": 1787652061222,
-    "trails": 1787652070278,
+    "trails": 1787653861932,
     "weather": 0,
     "webcams": 0
   },
