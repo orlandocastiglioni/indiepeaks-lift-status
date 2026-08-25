@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-08-25T10:30:46Z",
+  "fetchedAt": "2026-08-25T10:45:58Z",
   "href": "https://www.skicpr.com/ski-report",
   "id": "cherry-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
         "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "hold": 0,
+        "open": 75,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Gateway": "open",
+      "Little Bit": "open",
+      "Summit": "closed",
+      "Vista": "open"
+    }
   },
   "ll": [
     -111.7563533,
@@ -23,9 +28,9 @@
   ],
   "name": "Cherry Peak Resort",
   "timestamp": {
-    "lifts": 1787652962676,
+    "lifts": 1787653869036,
     "opening": 1787652061207,
-    "trails": 1787652077916,
+    "trails": 1787653869036,
     "weather": 0,
     "webcams": 0
   },
