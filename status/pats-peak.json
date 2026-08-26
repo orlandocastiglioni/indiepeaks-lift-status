@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-08-16T20:30:51Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Beginner Carpet": "closed",
-      "Beginner Tow I": "closed",
-      "Bluster Carpet": "closed",
-      "Cascade Basin Triple Chair": "closed",
-      "F5 Tow": "closed",
-      "Gusty JBar": "closed",
-      "Hurricane Quad Chair": "closed",
-      "Peak Triple Chair": "closed",
-      "Turbulence Triple Chair": "closed",
-      "Valley Double Chair": "closed",
-      "Vortex Double Chair": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.833412,
@@ -35,11 +23,11 @@
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 1786911508083,
-    "opening": 1786909560152,
-    "trails": 1786911508083,
-    "weather": 1786908664920,
-    "webcams": 1786911331656
+    "lifts": 1787779126305,
+    "opening": 1787775350203,
+    "trails": 1787778229074,
+    "weather": 1787775353461,
+    "webcams": 1787778921240
   },
   "trails": {
     "list": [
@@ -203,7 +191,7 @@
   },
   "weather": {
     "conditions": "Mostly Sunny",
-    "date": "2026-08-16",
+    "date": "2026-08-26",
     "icon": [
       "icon-cloud",
       "icon-sunny"
@@ -215,8 +203,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 80
+      "max": 81
     },
-    "text": "Mostly sunny, with a high near 80. South wind around 5 mph."
+    "text": "Mostly sunny, with a high near 81. Southwest wind around 0 mph."
   }
 }

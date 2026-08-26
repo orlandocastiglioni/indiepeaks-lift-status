@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-08-02T21:26:00Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "https://skihoodoo.com/the-mountain/mountain-lift-status/",
   "id": "hoodoo",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 16.6,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 83.3
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 5
+      "scheduled": 0
     },
-    "status": {
-      "BIG GREEN MACHINE": "scheduled",
-      "EASY RIDER": "scheduled",
-      "ED": "scheduled",
-      "HAROLD'S MAGIC CARPET": "scheduled",
-      "HODAG": "closed",
-      "MANZANITA": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -121.871513,
@@ -30,11 +23,11 @@
   ],
   "name": "Hoodoo",
   "timestamp": {
-    "lifts": 1785705859343,
-    "opening": 1785705853605,
-    "trails": 1785705859299,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1787778931301,
+    "opening": 1787775350201,
+    "trails": 1787778042826,
+    "weather": 1787778036633,
+    "webcams": 1787778921240
   },
   "trails": {
     "list": [
@@ -255,5 +248,23 @@
       "open": 30,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Mostly Sunny",
+    "date": "2026-08-26",
+    "icon": [
+      "icon-cloud",
+      "icon-sunny"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=44.408646&lon=-121.871513",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 71
+    },
+    "text": "Mostly sunny. High near 71, with temperatures falling to around 68 in the afternoon. West southwest wind around 10 mph, with gusts as high as 21 mph."
   }
 }

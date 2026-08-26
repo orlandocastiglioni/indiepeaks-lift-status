@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-22T09:30:21Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "https://www.powderhorn.com/explore/conditions/mountain-report.html",
   "id": "powderhorn",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Discovery": "closed",
-      "Easy Rider": "closed",
-      "Explorer": "closed",
-      "Flat Top Flyer": "closed",
-      "West End": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -108.1506,
@@ -29,9 +23,9 @@
   ],
   "name": "Powderhorn",
   "timestamp": {
-    "lifts": 1787390132344,
-    "opening": 1787357964622,
-    "trails": 1787390116331,
+    "lifts": 1787778922164,
+    "opening": 1787746799464,
+    "trails": 1787778920996,
     "weather": 0,
     "webcams": 0
   }

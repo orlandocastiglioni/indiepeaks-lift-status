@@ -1,32 +1,21 @@
 {
-  "fetchedAt": "2026-08-25T10:30:46Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "http://www.waterville.com/snow-report-maps",
   "id": "waterville",
   "lifts": {
     "stats": {
-      "closed": 10,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Exhibition T-Bar": "closed",
-      "Green Peak Triple": "closed",
-      "High Country": "closed",
-      "Lower Meadows": "closed",
-      "Lower Pasture Carpet": "closed",
-      "Northside": "closed",
-      "Sunny Side": "closed",
-      "Tecumseh Express": "closed",
-      "Upper Pasture Carpet": "closed",
-      "Valley Run Quad": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.519989,
@@ -34,11 +23,11 @@
   ],
   "name": "Waterville Valley",
   "timestamp": {
-    "lifts": 1787652951672,
-    "opening": 1787652061223,
-    "trails": 1787652941483,
-    "weather": 1787651135707,
-    "webcams": 1787652951528
+    "lifts": 1787778931328,
+    "opening": 1787775350204,
+    "trails": 1787778038312,
+    "weather": 1787775354266,
+    "webcams": 1787778921241
   },
   "trails": {
     "list": [
@@ -386,11 +375,11 @@
     }
   },
   "weather": {
-    "conditions": "Patchy Fog",
-    "date": "2026-08-25",
+    "conditions": "Mostly Sunny",
+    "date": "2026-08-26",
     "icon": [
-      "basenone",
-      "icon-mist icon-night"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.961613&lon=-71.519989",
@@ -399,8 +388,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 51
+      "max": 74
     },
-    "text": "Patchy fog. Partly cloudy, with a low around 51. West wind around 0 mph."
+    "text": "Mostly sunny, with a high near 74. West wind around 0 mph."
   }
 }

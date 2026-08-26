@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-20T11:30:14Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "https://bryceresort.com/mountain-info/conditions",
   "id": "bryce-resort",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 80,
-        "hold": 0,
-        "open": 20,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Bunny Slope Carpet": "closed",
-      "Lift 3": "closed",
-      "Lift One": "closed",
-      "Lift Two": "open",
-      "Little Nip Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -78.76583,
@@ -29,9 +23,9 @@
   ],
   "name": "Bryce Resort",
   "timestamp": {
-    "lifts": 1787224537922,
-    "opening": 1787222741727,
-    "trails": 1787224537921,
+    "lifts": 1787778925812,
+    "opening": 1787775350199,
+    "trails": 1787778039135,
     "weather": 0,
     "webcams": 0
   },

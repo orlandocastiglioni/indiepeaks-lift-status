@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-08-25T10:00:53Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "https://jaypeakresort.com/skiing-riding/snow-report-maps/snow-report",
   "id": "jay-peak",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Aerial Tram": "closed",
-      "Bonaventure Quad": "closed",
-      "Flyer Quad": "closed",
-      "Jet Triple": "closed",
-      "Metro Quad": "closed",
-      "Stateside Carpet": "closed",
-      "Taxi Quad": "closed",
-      "Tramside Carpet": "closed",
-      "Village Double": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.501701,
@@ -33,11 +23,11 @@
   ],
   "name": "Jay Peak",
   "timestamp": {
-    "lifts": 1787651135983,
-    "opening": 1787647549980,
-    "trails": 1787651135982,
-    "weather": 1787644853791,
-    "webcams": 1787651131148
+    "lifts": 1787778925866,
+    "opening": 1787775350201,
+    "trails": 1787778036201,
+    "weather": 1787778035255,
+    "webcams": 1787778921240
   },
   "trails": {
     "list": [
@@ -515,11 +505,11 @@
     }
   },
   "weather": {
-    "conditions": "Scattered Rain Showers",
-    "date": "2026-08-25",
+    "conditions": "Partly Sunny",
+    "date": "2026-08-26",
     "icon": [
-      "basecloud",
-      "icon-showers icon-moon"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.928837&lon=-72.501701",
@@ -528,8 +518,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 55
+      "max": 70
     },
-    "text": "Scattered rain showers. Mostly cloudy, with a low around 55. Southwest wind around 9 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Partly sunny, with a high near 70. Southwest wind around 3 mph."
   }
 }
