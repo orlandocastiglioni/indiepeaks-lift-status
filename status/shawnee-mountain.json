@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-08-16T20:30:51Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "B. Arrowhead - Quad": "closed",
-      "C. Tomahawk - Express": "closed",
-      "D. Tecumseh - Double": "closed",
-      "E. Lookout - Double": "closed",
-      "F. Bushkill - Double": "closed",
-      "G. Little Chief - Double": "closed",
-      "H. Little Chief - Carpet": "closed",
-      "I. Learning Center - Carpet": "closed",
-      "Skiwee Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.078117,
@@ -33,11 +23,11 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1786911518028,
-    "opening": 1786909560153,
-    "trails": 1786911518028,
-    "weather": 1786908664927,
-    "webcams": 1786911331656
+    "lifts": 1787779169405,
+    "opening": 1787775350203,
+    "trails": 1787778240107,
+    "weather": 1787775354251,
+    "webcams": 1787778921241
   },
   "trails": {
     "list": [
@@ -200,11 +190,11 @@
     }
   },
   "weather": {
-    "conditions": "Rain Showers Likely",
-    "date": "2026-08-16",
+    "conditions": "Mostly Sunny",
+    "date": "2026-08-26",
     "icon": [
-      "basecloud",
-      "icon-showers icon-sunny"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=41.03688&lon=-75.078117",
@@ -213,8 +203,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 78
+      "max": 81
     },
-    "text": "Rain showers likely before 4pm, then rain showers and patchy fog. Cloudy. High near 78, with temperatures falling to around 69 in the afternoon. South wind around 5 mph. Chance of precipitation is 90%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "text": "Mostly sunny, with a high near 81. South wind around 0 mph."
   }
 }

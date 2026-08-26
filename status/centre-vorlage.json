@@ -1,23 +1,21 @@
 {
-  "fetchedAt": "2026-08-11T00:57:40Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "https://conditions.centrevorlage.ca/",
   "id": "centre-vorlage",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "North": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.93821,
@@ -25,9 +23,9 @@
   ],
   "name": "Centre Vorlage",
   "timestamp": {
-    "lifts": 1786409853888,
-    "opening": 1786409703220,
-    "trails": 1786409853900,
+    "lifts": 1787778925834,
+    "opening": 1787775350200,
+    "trails": 1787778036594,
     "weather": 0,
     "webcams": 0
   },

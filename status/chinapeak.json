@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-08-14T23:00:22Z",
+  "fetchedAt": "2026-08-26T21:30:46Z",
   "href": "https://www.skichinapeak.com/conditions",
   "id": "chinapeak",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Boulder Carpet": "closed",
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 4": "closed",
-      "Chair 5": "closed",
-      "Chair 6": "closed",
-      "Chair 7": "closed",
-      "Juniper Carpet": "closed",
-      "Kids Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -119.161705,
@@ -33,11 +23,11 @@
   ],
   "name": "China Peak",
   "timestamp": {
-    "lifts": 1786747549805,
-    "opening": 1786743954141,
-    "trails": 1786747549805,
-    "weather": 1786742118281,
-    "webcams": 1786747545202
+    "lifts": 1787778925840,
+    "opening": 1787775350200,
+    "trails": 1787778037552,
+    "weather": 1787778035652,
+    "webcams": 1787778921240
   },
   "trails": {
     "list": [
@@ -321,7 +311,7 @@
   },
   "weather": {
     "conditions": "Sunny",
-    "date": "2026-08-14",
+    "date": "2026-08-26",
     "icon": [
       "basenone",
       "icon-sun"
@@ -333,8 +323,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 65
+      "max": 77
     },
-    "text": "Sunny, with a high near 65. South southwest wind around 10 mph, with gusts as high as 20 mph."
+    "text": "Sunny. High near 77, with temperatures falling to around 75 in the afternoon. West southwest wind around 10 mph, with gusts as high as 20 mph."
   }
 }
