@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-08-27T22:00:44Z",
+  "fetchedAt": "2026-08-27T22:16:04Z",
   "href": "https://www.snowriver.com/mountain-info/mountain-report",
   "id": "snowriver",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 90,
+        "hold": 0,
+        "open": 10,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Ascender": "closed",
+      "Bear Creek": "closed",
+      "Birgantine": "open",
+      "Capstan": "closed",
+      "Cloudfront Double": "closed",
+      "Draw Stroke": "closed",
+      "East T": "closed",
+      "Maple Tow": "closed",
+      "Sugar Hills Conveyor": "closed",
+      "Voyageur Express": "closed"
+    }
   },
   "ll": [
     -89.899,
@@ -23,7 +34,7 @@
   ],
   "name": "Snowriver Mountain Resort",
   "timestamp": {
-    "lifts": 1787867166991,
+    "lifts": 1787868046337,
     "opening": 1787867165797,
     "trails": 1787868036333,
     "weather": 0,
