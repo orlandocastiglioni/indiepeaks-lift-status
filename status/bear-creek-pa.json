@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:30:59Z",
   "href": "https://www.bcmountainresort.com/activities/ski-snowboarding/ski-conditions/",
   "id": "bear-creek-pa",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A Lift (Opens when volume dictates)": "closed",
+      "B Lift": "closed",
+      "Carpet": "closed",
+      "E Lift": "closed",
+      "F Lift": "closed",
+      "SNOWTUBING LIFT": "closed"
+    }
   },
   "ll": [
     -75.6257642,
@@ -23,9 +30,9 @@
   ],
   "name": "Bear Creek Mountain Resort",
   "timestamp": {
-    "lifts": 1787790613262,
-    "opening": 1787787951802,
-    "trails": 1787789725796,
+    "lifts": 1787814936866,
+    "opening": 1787814556943,
+    "trails": 1787814936866,
     "weather": 0,
     "webcams": 0
   },

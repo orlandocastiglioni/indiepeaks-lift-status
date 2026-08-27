@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:30:59Z",
   "href": "https://bjorkliden.com/snorapport-fjallstatus/",
   "id": "bjorkliden",
   "lifts": {
+    "reportedAt": "2026-06-11T09:41:00.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Grytliften": "closed",
+      "Kitteldalsliften": "closed",
+      "K\u00e5ppasliften": "closed",
+      "Lappbergsliften": "closed",
+      "Rakkasliften": "closed"
+    }
   },
   "ll": [
     18.6792269,
@@ -23,9 +30,9 @@
   ],
   "name": "Bj\u00f6rkliden",
   "timestamp": {
-    "lifts": 1787790617550,
-    "opening": 1787787951802,
-    "trails": 1787789718265,
+    "lifts": 1787814928452,
+    "opening": 1787814556943,
+    "trails": 1787814928133,
     "weather": 0,
     "webcams": 0
   },

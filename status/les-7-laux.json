@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-08-27T07:15:14Z",
+  "fetchedAt": "2026-08-27T07:30:59Z",
   "href": "https://www.les7laux.com/hiver/",
   "id": "les-7-laux",
   "lifts": {
+    "reportedAt": "2026-08-27T06:01:00.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 33.3,
+        "hold": 0,
+        "open": 66.6,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "TSD Bouquetins": "closed",
+      "TSD Chamois": "open",
+      "TSF Pincerie": "open"
+    }
   },
   "ll": [
     5.9945,
@@ -23,9 +28,9 @@
   ],
   "name": "Les 7 Laux",
   "timestamp": {
-    "lifts": 1787814629282,
+    "lifts": 1787814927661,
     "opening": 1787814556947,
-    "trails": 1787814651818,
+    "trails": 1787814927661,
     "weather": 0,
     "webcams": 0
   },
