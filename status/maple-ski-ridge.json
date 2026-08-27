@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:15:14Z",
   "href": "https://www.mapleskiridge.com/test-slope-report",
   "id": "maple-ski-ridge",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 50,
+        "hold": 0,
+        "open": 50,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Double Chair Lift": "open",
+      "Handle Tow 1": "closed",
+      "Handle Tow 2": "closed",
+      "Triple Chair Lift": "open"
+    }
   },
   "ll": [
     -74.034,
@@ -23,9 +28,9 @@
   ],
   "name": "Maple Ski Ridge",
   "timestamp": {
-    "lifts": 1787790632893,
-    "opening": 1787787951803,
-    "trails": 1787789727090,
+    "lifts": 1787814632543,
+    "opening": 1787814556948,
+    "trails": 1787814632541,
     "weather": 0,
     "webcams": 0
   },

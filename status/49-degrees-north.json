@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:15:14Z",
   "href": "https://www.ski49n.com/mountain-info/trail-status",
   "id": "49-degrees-north",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Angel Peak #6": "closed",
+      "Gold Fever Conveyor #7": "closed",
+      "Grub stake #2": "closed",
+      "Northern Spirit #1": "closed",
+      "Payday #3": "closed",
+      "Silver Lode #4": "closed",
+      "Sunrise Quad #5": "closed"
+    }
   },
   "ll": [
     -117.564011,
@@ -23,11 +31,11 @@
   ],
   "name": "49 Degrees North",
   "timestamp": {
-    "lifts": 1787790617517,
-    "opening": 1787787951802,
-    "trails": 1787789726826,
-    "weather": 1787783461173,
-    "webcams": 1787790612495
+    "lifts": 1787814627902,
+    "opening": 1787814556942,
+    "trails": 1787814627902,
+    "weather": 0,
+    "webcams": 0
   },
   "trails": {
     "list": {
