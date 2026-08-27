@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/muttereralm/",
   "id": "muttereralm",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 80,
+        "hold": 0,
+        "open": 20,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A Muttereralmbahn": "open",
+      "B G\u00f6tznerbahn": "closed",
+      "C Pfriemesk\u00f6pfl": "closed",
+      "D Almbodenlift": "closed",
+      "E Zauberteppich": "closed"
+    }
   },
   "ll": [
     11.3778,
@@ -23,9 +29,9 @@
   ],
   "name": "Muttereralm (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1787778931387,
-    "opening": 1787775350202,
-    "trails": 1787778039002,
+    "lifts": 1787787958752,
+    "opening": 1787787951804,
+    "trails": 1787787958752,
     "weather": 0,
     "webcams": 0
   },

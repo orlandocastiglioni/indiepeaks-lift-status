@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "http://www.kingpine.com/snow-report-conditions",
   "id": "king-pine",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Bear Rug Carpet": "closed",
+      "Black Bear": "closed",
+      "Cubby Carpet": "closed",
+      "Pine Meadows Tubing Park": "closed",
+      "Polar Bear": "closed",
+      "Powder Bear": "closed"
+    }
   },
   "ll": [
     -71.088127,
@@ -23,11 +30,11 @@
   ],
   "name": "King Pine",
   "timestamp": {
-    "lifts": 1787778925871,
-    "opening": 1787775350201,
-    "trails": 1787778035726,
-    "weather": 1787778035247,
-    "webcams": 1787778921240
+    "lifts": 1787787956472,
+    "opening": 1787787951803,
+    "trails": 1787787956472,
+    "weather": 1787786131331,
+    "webcams": 1787787951803
   },
   "trails": {
     "list": [
@@ -138,23 +145,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-08-26",
-    "icon": [
-      "icon-cloud",
-      "icon-sunny"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=43.86063&lon=-71.088127",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 80
-    },
-    "text": "Mostly sunny, with a high near 80. Southwest wind around 0 mph."
   }
 }

@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.hunthollow.com/The_Mountain",
   "id": "hunt-hollow",
   "lifts": {
@@ -8,14 +8,18 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 0,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 100
       },
-      "scheduled": 0
+      "scheduled": 3
     },
-    "status": {}
+    "status": {
+      "Double Chair": "scheduled",
+      "Moving Carpet": "scheduled",
+      "Triple Chair": "scheduled"
+    }
   },
   "ll": [
     -77.470948,
@@ -23,9 +27,9 @@
   ],
   "name": "Hunt Hollow Ski Club",
   "timestamp": {
-    "lifts": 1787778931295,
-    "opening": 1787775350201,
-    "trails": 1787778045167,
+    "lifts": 1787787964619,
+    "opening": 1787787951803,
+    "trails": 1787787964619,
     "weather": 0,
     "webcams": 0
   },

@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://sunlightmtn.com/explore/mountain-status/",
   "id": "sunlight-mountain-resort",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Primo Chair": "closed",
+      "Segundo Chair": "closed",
+      "Tercero Chair": "closed"
+    }
   },
   "ll": [
     -107.3389,
@@ -23,9 +27,9 @@
   ],
   "name": "Sunlight Mountain Resort",
   "timestamp": {
-    "lifts": 1787778931426,
-    "opening": 1787775350204,
-    "trails": 1787778048227,
+    "lifts": 1787787966514,
+    "opening": 1787787951804,
+    "trails": 1787787966514,
     "weather": 0,
     "webcams": 0
   },

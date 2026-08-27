@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.bigrockmaine.com/trails/",
   "id": "big-rock",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Apollo": "closed",
+      "Mercury": "closed",
+      "Space Shuttle": "closed",
+      "Sunrise": "closed"
+    }
   },
   "ll": [
     -67.8214,
@@ -23,9 +28,9 @@
   ],
   "name": "BigRock Mountain",
   "timestamp": {
-    "lifts": 1787778921772,
-    "opening": 1787775350199,
-    "trails": 1787778037930,
+    "lifts": 1787787952832,
+    "opening": 1787787951802,
+    "trails": 1787787952832,
     "weather": 0,
     "webcams": 0
   },

@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.raggedmountainresort.com/mountain-report-cams/",
   "id": "ragged-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Barnyard Triple": "closed",
+      "Meadows Carpet": "closed",
+      "Spear Mountain Express": "closed",
+      "Summit Six Express": "closed",
+      "Uphill Route": "closed",
+      "Wanna Be Wild Carpet": "closed"
+    }
   },
   "ll": [
     -71.842003,
@@ -23,11 +30,11 @@
   ],
   "name": "Ragged Mountain",
   "timestamp": {
-    "lifts": 1787778931352,
-    "opening": 1787775350203,
-    "trails": 1787778042464,
-    "weather": 1787775353462,
-    "webcams": 1787778921240
+    "lifts": 1787787961322,
+    "opening": 1787787951804,
+    "trails": 1787787961322,
+    "weather": 1787783461188,
+    "webcams": 1787787951804
   },
   "trails": {
     "list": [
@@ -338,23 +345,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-08-26",
-    "icon": [
-      "icon-cloud",
-      "icon-sunny"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=43.486305&lon=-71.842003",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 81
-    },
-    "text": "Mostly sunny, with a high near 81. Southwest wind around 0 mph."
   }
 }

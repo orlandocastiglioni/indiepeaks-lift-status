@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://caberfaepeaks.com/snow-report/",
   "id": "caberfae-peaks",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "EAST PEAK TRIPLE CHAIR": "closed",
+      "GREEN MOUNTAIN FLYING CARPET": "closed",
+      "NORTH PEAK QUAD CHAIR": "closed",
+      "SOUTH PEAK TRIPLE CHAIR": "closed",
+      "VISTA 1561\u2019 TRIPLE CHAIR": "closed"
+    }
   },
   "ll": [
     -85.719765,
@@ -23,11 +29,11 @@
   ],
   "name": "Caberfae Peaks",
   "timestamp": {
-    "lifts": 1787778925818,
-    "opening": 1787775350199,
-    "trails": 1787778042424,
-    "weather": 1787778035518,
-    "webcams": 1787778921240
+    "lifts": 1787787957497,
+    "opening": 1787787951802,
+    "trails": 1787787957497,
+    "weather": 1787786131408,
+    "webcams": 1787787951802
   },
   "trails": {
     "list": {
@@ -65,23 +71,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Scattered Showers And Thunderstorms",
-    "date": "2026-08-26",
-    "icon": [
-      "basecloud",
-      "icon-thunder icon-sunny"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=44.245014&lon=-85.719765",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 77
-    },
-    "text": "Scattered showers and thunderstorms. Partly sunny, with a high near 77. West wind around 10 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
   }
 }

@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.hachimantai.co.jp/winter/shimokura/lift/",
   "id": "hachimantai-shimokura",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u7b2c1\u30c8\u30ea\u30d7\u30eb\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c2\u30da\u30a2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c3\u30da\u30a2\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     140.944,
@@ -23,9 +27,9 @@
   ],
   "name": "Hachimantai Resort Shimokura",
   "timestamp": {
-    "lifts": 1787778921826,
-    "opening": 1787775350200,
-    "trails": 1787778039589,
+    "lifts": 1787787958378,
+    "opening": 1787787951803,
+    "trails": 1787787958464,
     "weather": 0,
     "webcams": 0
   },

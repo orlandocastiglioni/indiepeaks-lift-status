@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.pomerelle.com/trail-map",
   "id": "pomerelle",
   "lifts": {
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 0,
+        "hold": 0,
+        "open": 100,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "EZ Rider": "open",
+      "Magic Carpet": "open",
+      "Triple 88": "open"
+    }
   },
   "ll": [
     -113.6077523,
@@ -23,9 +27,9 @@
   ],
   "name": "Pomerelle Mountain Resort",
   "timestamp": {
-    "lifts": 1787778931376,
-    "opening": 1787775350203,
-    "trails": 1787778048568,
+    "lifts": 1787787966085,
+    "opening": 1787787951804,
+    "trails": 1787787966085,
     "weather": 0,
     "webcams": 0
   },

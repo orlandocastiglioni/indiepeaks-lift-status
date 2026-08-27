@@ -1,21 +1,38 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://pila.it/tempo-reale/apertura-piste-impianti/",
   "id": "pila",
   "lifts": {
+    "reportedAt": "2026-05-04T06:00:00.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 15,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Aosta - Pila": "closed",
+      "Baby Gorraz": "closed",
+      "Baby Pila 1": "closed",
+      "Baby Pila 2": "closed",
+      "Chamol\u00e9": "closed",
+      "Couis - Platta de Grevon": "closed",
+      "Couis 2": "closed",
+      "Fun Park Chacard": "closed",
+      "Gorraz - Couis": "closed",
+      "Gorraz Gran Grimod": "closed",
+      "Grimod": "closed",
+      "Grimondet": "closed",
+      "La Nouva": "closed",
+      "Leiss\u00e9": "closed",
+      "Pila - Gorraz": "closed"
+    }
   },
   "ll": [
     7.2863,
@@ -23,9 +40,9 @@
   ],
   "name": "Pila",
   "timestamp": {
-    "lifts": 1787778931380,
-    "opening": 1787775350203,
-    "trails": 1787778039262,
+    "lifts": 1787787959010,
+    "opening": 1787787951804,
+    "trails": 1787787959010,
     "weather": 0,
     "webcams": 0
   },

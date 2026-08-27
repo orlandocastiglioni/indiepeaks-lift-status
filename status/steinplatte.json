@@ -1,21 +1,37 @@
 {
-  "fetchedAt": "2026-08-26T23:45:44Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.steinplatte.tirol/de/liftstatus.html",
   "id": "steinplatte",
   "lifts": {
+    "reportedAt": "2026-08-26T23:30:34.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 13,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 92.8,
+        "hold": 0,
+        "open": 7.1,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "15-EUB Gondelbahn Steinplatte (Waidring)": "open",
+      "4-SB M\u00f6sern": "closed",
+      "4-SL Ro\u00dfalm (Reit im Winkl)": "closed",
+      "4-SL Schwarzlofer": "closed",
+      "6-SB B\u00e4reck": "closed",
+      "6-SB Kammerk\u00f6r": "closed",
+      "6-SB Plattenkogel": "closed",
+      "6-SB Scheibelberg (Reit im Winkl)": "closed",
+      "8-EUB Winklmoosalmbahn (Reit im Winkl)": "closed",
+      "8-SB Kapellen": "closed",
+      "8-SB Steinplatte": "closed",
+      "Dorflift Waidring": "closed",
+      "Schlepplift Ro\u00dfalm (Reit im Winkl)": "closed",
+      "Schlepplift-Kurven-Lift (Reit im Winkl)": "closed"
+    }
   },
   "ll": [
     12.580133,
@@ -23,9 +39,9 @@
   ],
   "name": "Steinplatte",
   "timestamp": {
-    "lifts": 1787787061257,
-    "opening": 1787784340782,
-    "trails": 1787787886402,
+    "lifts": 1787787956573,
+    "opening": 1787787951804,
+    "trails": 1787787956251,
     "weather": 0,
     "webcams": 0
   },
