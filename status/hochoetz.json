@@ -1,21 +1,37 @@
 {
-  "fetchedAt": "2026-08-26T23:45:44Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.hochoetz.com/",
   "id": "hochoetz",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 14,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 93.3,
+        "hold": 0,
+        "open": 6.6,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "8 EUB Acherkogel": "open",
+      "H10 \u2013 SL Zirbenlift": "closed",
+      "H11 \u2013 SL \u00d6tzilift": "closed",
+      "H12 \u2013 SL Weselelift": "closed",
+      "H13 \u2013 SL WIDI-Lift": "closed",
+      "H14 \u2013 WIDI-Band": "closed",
+      "H15 \u2013 \u00d6tziband": "closed",
+      "H2 \u2013 8EUB Ochsengartenbahn": "closed",
+      "H3 \u2013 6SK Wetterkreuzbahn": "closed",
+      "H4 \u2013 6SK K\u00fchtailebahn": "closed",
+      "H5 \u2013 4SK Brunnenkopfbahn": "closed",
+      "H6 \u2013 2SB Mohrenkopfbahn": "closed",
+      "H7 \u2013 2SB Balbachbahn": "closed",
+      "H8 \u2013 2SB Acherkogelbahn II": "closed",
+      "H9 \u2013 SL Balbach Wiesenlift": "closed"
+    }
   },
   "ll": [
     10.8969,
@@ -23,9 +39,9 @@
   ],
   "name": "Hochoetz (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1787787061399,
-    "opening": 1787784340781,
-    "trails": 1787787883178,
+    "lifts": 1787787956692,
+    "opening": 1787787951803,
+    "trails": 1787787956692,
     "weather": 0,
     "webcams": 0
   },

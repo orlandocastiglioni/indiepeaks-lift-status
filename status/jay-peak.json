@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://jaypeakresort.com/skiing-riding/snow-report-maps/snow-report",
   "id": "jay-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Aerial Tram": "closed",
+      "Bonaventure Quad": "closed",
+      "Flyer Quad": "closed",
+      "Jet Triple": "closed",
+      "Metro Quad": "closed",
+      "Stateside Carpet": "closed",
+      "Taxi Quad": "closed",
+      "Tramside Carpet": "closed",
+      "Village Double": "closed"
+    }
   },
   "ll": [
     -72.501701,
@@ -23,11 +33,11 @@
   ],
   "name": "Jay Peak",
   "timestamp": {
-    "lifts": 1787778925866,
-    "opening": 1787775350201,
-    "trails": 1787778036201,
-    "weather": 1787778035255,
-    "webcams": 1787778921240
+    "lifts": 1787787956674,
+    "opening": 1787787951803,
+    "trails": 1787787956674,
+    "weather": 1787786131332,
+    "webcams": 1787787951803
   },
   "trails": {
     "list": [
@@ -503,23 +513,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Partly Sunny",
-    "date": "2026-08-26",
-    "icon": [
-      "icon-cloud",
-      "icon-sunny"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=44.928837&lon=-72.501701",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 70
-    },
-    "text": "Partly sunny, with a high near 70. Southwest wind around 3 mph."
   }
 }

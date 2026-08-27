@@ -1,21 +1,48 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/stubai-glacier/",
   "id": "stubai-glacier",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 23,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 88.4,
+        "hold": 0,
+        "open": 11.5,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "3S Eisgrat I": "open",
+      "3S Eisgrat II": "open",
+      "Daunferner I": "closed",
+      "Daunferner II": "closed",
+      "Daunjoch": "closed",
+      "Daunscharte": "closed",
+      "Eisjoch": "closed",
+      "Eisjoch SL": "closed",
+      "Fernau": "closed",
+      "Fernau SL": "closed",
+      "Gaiskarferner": "closed",
+      "Gamsgarten I": "closed",
+      "Gamsgarten II": "closed",
+      "Kitzlift": "closed",
+      "Murmele": "closed",
+      "Pfaffengrat": "closed",
+      "Rotadl": "closed",
+      "Schaufeljoch": "open",
+      "Schneekarussell": "closed",
+      "Wildspitz": "closed",
+      "Windachferner": "closed",
+      "Zauberteppich 1": "closed",
+      "Zauberteppich 2": "closed",
+      "Zauberteppich 3, 4": "closed",
+      "Zoo-Shuttle": "closed",
+      "\u00dcbungslift Gamsgarten": "closed"
+    }
   },
   "ll": [
     11.1006,
@@ -23,9 +50,9 @@
   ],
   "name": "Stubaier Gletscher (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1787778931406,
-    "opening": 1787775350204,
-    "trails": 1787778041523,
+    "lifts": 1787787960266,
+    "opening": 1787787951804,
+    "trails": 1787787960266,
     "weather": 0,
     "webcams": 0
   },

@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.tazawako-ski.com/",
   "id": "tazawako",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u304b\u3082\u3057\u304b\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed",
+      "\u304e\u3093\u308c\u3044\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed",
+      "\u304e\u3093\u308c\u3044\u7b2c1\u30ea\u30d5\u30c8": "closed",
+      "\u304e\u3093\u308c\u3044\u7b2c3\u30ea\u30d5\u30c8": "closed",
+      "\u6c34\u6ca2\u30ea\u30d5\u30c8": "closed",
+      "\u9ed2\u68ee\u5c71\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     140.770713,
@@ -23,9 +30,9 @@
   ],
   "name": "Tazawako Ski Resort",
   "timestamp": {
-    "lifts": 1787778931347,
-    "opening": 1787775350204,
-    "trails": 1787778036372,
+    "lifts": 1787787956935,
+    "opening": 1787787951804,
+    "trails": 1787787956935,
     "weather": 0,
     "webcams": 0
   },

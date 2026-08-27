@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-08-26T21:30:46Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://baldyresort.com/baldy-weather-cams/",
   "id": "baldy-mountain-resort",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 66.6,
+        "hold": 0,
+        "open": 33.3,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Eagle Chair": "open",
+      "Magic Carpet": "closed",
+      "Sugarlump Quad": "closed"
+    }
   },
   "ll": [
     -119.23944,
@@ -23,9 +27,9 @@
   ],
   "name": "Baldy Mountain Resort",
   "timestamp": {
-    "lifts": 1787778925798,
-    "opening": 1787775350199,
-    "trails": 1787778040389,
+    "lifts": 1787787958234,
+    "opening": 1787787951802,
+    "trails": 1787787958234,
     "weather": 0,
     "webcams": 0
   },

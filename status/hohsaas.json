@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-08-26T23:45:44Z",
+  "fetchedAt": "2026-08-27T00:00:09Z",
   "href": "https://www.hohsaas.ch",
   "id": "hohsaas",
   "lifts": {
+    "reportedAt": "2026-08-26T23:45:00.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 66.6,
+        "hold": 0,
+        "open": 33.3,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Bodu (Saas-Balen)": "closed",
+      "F\u00f6rderband Kinderland": "closed",
+      "F\u00f6rderband Pipo": "closed",
+      "Kreuzboden": "closed",
+      "Kreuzboden - Hohsaas": "open",
+      "Saas-Grund - Kreuzboden": "open",
+      "Sandiger Boden": "closed",
+      "Ziebel (Dorflift)": "closed",
+      "Zwischenstation Trift": "open"
+    }
   },
   "ll": [
     7.93867,
@@ -23,9 +34,9 @@
   ],
   "name": "Hohsaas",
   "timestamp": {
-    "lifts": 1787787061390,
-    "opening": 1787784340781,
-    "trails": 1787787881336,
+    "lifts": 1787787957997,
+    "opening": 1787787951803,
+    "trails": 1787787957997,
     "weather": 0,
     "webcams": 0
   },
@@ -108,7 +119,7 @@
         "status": "scheduled"
       }
     ],
-    "reportedAt": "2026-08-26T23:31:00.000Z",
+    "reportedAt": "2026-08-26T23:45:00.000Z",
     "stats": {
       "closed": 12,
       "hold": 0,
