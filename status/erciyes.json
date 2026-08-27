@@ -1,21 +1,40 @@
 {
-  "fetchedAt": "2026-08-27T07:15:14Z",
+  "fetchedAt": "2026-08-27T07:30:59Z",
   "href": "https://www.kayserierciyes.com.tr/pist-ve-teleferik-bilgisi",
   "id": "erciyes",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 16,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 88.8,
+        "hold": 0,
+        "open": 11.1,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Divan (Hisarc\u0131k Kap\u0131)": "closed",
+      "Hitit (Hac\u0131lar Kap\u0131)": "closed",
+      "Kani\u015f (Develi Kap\u0131)": "closed",
+      "Karakulak (Hac\u0131lar Kap\u0131)": "closed",
+      "Kart\u0131n (Develi Kap\u0131)": "closed",
+      "Keven (Hisarc\u0131k Kap\u0131)": "closed",
+      "K\u00fcltepe (Develi Kap\u0131)": "closed",
+      "Lifos Gondol (Hac\u0131lar Kap\u0131)": "open",
+      "Ottoman (Hisarc\u0131k Kap\u0131)": "closed",
+      "S\u0131rt (Hisarc\u0131k Kap\u0131)": "closed",
+      "T - Bar (Hisarc\u0131k Kap\u0131)": "closed",
+      "Tekir Gondol (Tekir Kap\u0131)": "open",
+      "Yal\u00e7\u0131n (Hisarc\u0131k Kap\u0131)": "closed",
+      "Y\u00fcr\u00fcyen Bant (Hac\u0131lar Kap\u0131)": "closed",
+      "Y\u00fcr\u00fcyen Bant (Tekir Kap\u0131)": "closed",
+      "Y\u00fcr\u00fcyen Bant1 (Hisarc\u0131k Kap\u0131)": "closed",
+      "Y\u00fcr\u00fcyen Bant2 (Hisarc\u0131k Kap\u0131)": "closed",
+      "Z\u00fcmr\u00fct (Tekir Kap\u0131)": "closed"
+    }
   },
   "ll": [
     35.4778,
@@ -23,9 +42,9 @@
   ],
   "name": "Erciyes",
   "timestamp": {
-    "lifts": 1787814629231,
+    "lifts": 1787814924911,
     "opening": 1787814556945,
-    "trails": 1787814652076,
+    "trails": 1787814924911,
     "weather": 0,
     "webcams": 0
   },

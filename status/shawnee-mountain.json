@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:30:59Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "B. Arrowhead - Quad": "closed",
+      "C. Tomahawk - Express": "closed",
+      "D. Tecumseh - Double": "closed",
+      "E. Lookout - Double": "closed",
+      "F. Bushkill - Double": "closed",
+      "G. Little Chief - Double": "closed",
+      "H. Little Chief - Carpet": "closed",
+      "I. Learning Center - Carpet": "closed",
+      "Skiwee Carpet": "closed"
+    }
   },
   "ll": [
     -75.078117,
@@ -23,11 +33,11 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1787790855016,
-    "opening": 1787787951804,
-    "trails": 1787789903625,
-    "weather": 1787783461166,
-    "webcams": 1787790622713
+    "lifts": 1787815167974,
+    "opening": 1787814556950,
+    "trails": 1787815167974,
+    "weather": 1787814927161,
+    "webcams": 1787814920966
   },
   "trails": {
     "list": [
@@ -188,5 +198,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Partly Cloudy",
+    "date": "2026-08-27",
+    "icon": [
+      "icon-cloud",
+      "icon-night"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=41.03688&lon=-75.078117",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 61
+    },
+    "text": "Partly cloudy, with a low around 61. Wind around 0 mph. New rainfall amounts less than a tenth of an inch possible."
   }
 }

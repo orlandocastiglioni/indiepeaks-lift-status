@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:30:59Z",
   "href": "https://www.huffhills.com/snowreport",
   "id": "huff-hills",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Blue Lift": "closed",
+      "Bunny Tow": "closed",
+      "Green Lift": "closed",
+      "Race Tow": "closed"
+    }
   },
   "ll": [
     -100.72876,
@@ -23,9 +28,9 @@
   ],
   "name": "Huff Hills Ski Area",
   "timestamp": {
-    "lifts": 1787790626775,
-    "opening": 1787787951803,
-    "trails": 1787789717416,
+    "lifts": 1787814927610,
+    "opening": 1787814556947,
+    "trails": 1787814927610,
     "weather": 0,
     "webcams": 0
   },

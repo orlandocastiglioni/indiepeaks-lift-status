@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:30:59Z",
   "href": "https://caberfaepeaks.com/snow-report/",
   "id": "caberfae-peaks",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "EAST PEAK TRIPLE CHAIR": "closed",
+      "GREEN MOUNTAIN FLYING CARPET": "closed",
+      "NORTH PEAK QUAD CHAIR": "closed",
+      "SOUTH PEAK TRIPLE CHAIR": "closed",
+      "VISTA 1561\u2019 TRIPLE CHAIR": "closed"
+    }
   },
   "ll": [
     -85.719765,
@@ -23,11 +29,11 @@
   ],
   "name": "Caberfae Peaks",
   "timestamp": {
-    "lifts": 1787790617565,
-    "opening": 1787787951802,
-    "trails": 1787789721465,
-    "weather": 1787786131408,
-    "webcams": 1787790612495
+    "lifts": 1787814933088,
+    "opening": 1787814556944,
+    "trails": 1787814933088,
+    "weather": 1787814926421,
+    "webcams": 1787814920965
   },
   "trails": {
     "list": {
@@ -65,5 +71,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Mostly Cloudy",
+    "date": "2026-08-27",
+    "icon": [
+      "icon-cloud",
+      "icon-night"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=44.245014&lon=-85.719765",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 58
+    },
+    "text": "Mostly cloudy. Low around 58, with temperatures rising to around 60 overnight. West wind around 5 mph."
   }
 }
