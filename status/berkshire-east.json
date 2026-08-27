@@ -1,22 +1,22 @@
 {
-  "fetchedAt": "2026-08-27T07:15:14Z",
+  "fetchedAt": "2026-08-27T14:30:56Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Summit Quad": "closed",
+      "Summit Quad": "open",
       "T-Bar Express Quad": "closed"
     }
   },
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1787814618785,
-    "opening": 1787814556943,
-    "trails": 1787814618785,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1787840144866,
+    "opening": 1787840137624,
+    "trails": 1787840144866,
+    "weather": 1787837471274,
+    "webcams": 1787840137624
   },
   "trails": {
     "list": [
@@ -221,5 +221,23 @@
       "open": 36,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Partly Sunny then Chance Showers And Thunderstorms",
+    "date": "2026-08-27",
+    "icon": [
+      "basecloud",
+      "icon-thunder icon-sunny"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 77
+    },
+    "text": "A chance of showers and thunderstorms between noon and 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 77. South wind 3 to 9 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
   }
 }
