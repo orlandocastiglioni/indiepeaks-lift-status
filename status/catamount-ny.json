@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:15:14Z",
   "href": "https://catamountski.com/winter/the-mountain/mountain-conditions",
   "id": "catamount-ny",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Catamount Quad": "closed",
+      "Glade Triple": "closed",
+      "Learning Area Carpet 1": "closed",
+      "Learning Area Carpet 2": "closed",
+      "Learning Area Carpet 3": "closed",
+      "Meadows Triple": "closed",
+      "Promenade Triple": "closed",
+      "Ridge Quad": "closed"
+    }
   },
   "ll": [
     -73.4805037,
@@ -23,9 +32,9 @@
   ],
   "name": "Catamount Mountain Resort",
   "timestamp": {
-    "lifts": 1787790617580,
-    "opening": 1787787951802,
-    "trails": 1787789717161,
+    "lifts": 1787814617830,
+    "opening": 1787814556944,
+    "trails": 1787814617829,
     "weather": 0,
     "webcams": 0
   },

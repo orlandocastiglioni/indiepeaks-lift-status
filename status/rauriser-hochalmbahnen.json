@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:15:14Z",
   "href": "https://www.hochalmbahnen.at/de/winter/skigebiet/anlagen-pisten",
   "id": "rauriser-hochalmbahnen",
   "lifts": {
+    "reportedAt": "2026-08-26T04:17:15.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 90,
+        "hold": 0,
+        "open": 10,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A Hochalmbahn": "open",
+      "B Kreuzbodenbahn": "closed",
+      "C Jackalmlift links": "closed",
+      "C Jackalmlift rechts": "closed",
+      "D Gipfelbahn": "closed",
+      "E Gratlift": "closed",
+      "F Waldalmbahn": "closed",
+      "G Kreuzbodenlift": "closed",
+      "H Schwazerlift links": "closed",
+      "H Schwazerlift rechts": "closed"
+    }
   },
   "ll": [
     12.991169,
@@ -23,9 +35,9 @@
   ],
   "name": "Rauriser Hochalmbahnen",
   "timestamp": {
-    "lifts": 1787790632828,
-    "opening": 1787787951804,
-    "trails": 1787789717933,
+    "lifts": 1787814618352,
+    "opening": 1787814556950,
+    "trails": 1787814618360,
     "weather": 0,
     "webcams": 0
   },

@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-08-27T00:45:36Z",
+  "fetchedAt": "2026-08-27T07:15:14Z",
   "href": "https://www.raggedmountainresort.com/mountain-report-cams/",
   "id": "ragged-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Barnyard Triple": "closed",
+      "Meadows Carpet": "closed",
+      "Spear Mountain Express": "closed",
+      "Summit Six Express": "closed",
+      "Uphill Route": "closed",
+      "Wanna Be Wild Carpet": "closed"
+    }
   },
   "ll": [
     -71.842003,
@@ -23,11 +30,11 @@
   ],
   "name": "Ragged Mountain",
   "timestamp": {
-    "lifts": 1787790632831,
-    "opening": 1787787951804,
-    "trails": 1787789722418,
-    "weather": 1787783461188,
-    "webcams": 1787790622713
+    "lifts": 1787814620925,
+    "opening": 1787814556950,
+    "trails": 1787814620925,
+    "weather": 0,
+    "webcams": 0
   },
   "trails": {
     "list": [
