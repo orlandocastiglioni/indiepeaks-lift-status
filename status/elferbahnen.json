@@ -1,26 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/elferbahnen/",
   "id": "elferbahnen",
   "lifts": {
     "stats": {
-      "closed": 3,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 75,
-        "hold": 0,
+        "closed": 25,
+        "hold": 25,
         "open": 25,
-        "scheduled": 0
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "8er-Einseilumlaufbahn": "open",
-      "Schlepplift 'Kr\u00f6\u00dfbach'": "closed",
-      "Schlepplift Elfer I 'Elferh\u00fctte'": "closed",
-      "Schlepplift II 'H\u00f6lltal'": "closed"
-    }
+    "status": {}
   },
   "ll": [
     11.3106,
@@ -28,9 +23,9 @@
   ],
   "name": "Elferbahnen Neustift (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1787787957789,
+    "lifts": 1787790617605,
     "opening": 1787787951802,
-    "trails": 1787787957789,
+    "trails": 1787789718538,
     "weather": 0,
     "webcams": 0
   },

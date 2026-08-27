@@ -1,25 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://hatleypointe.com/slope-report/",
   "id": "hatley-pointe",
   "lifts": {
     "stats": {
-      "closed": 3,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Summit Lift": "closed",
-      "Tennessee Walker": "closed",
-      "Way Out Tow": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -82.509,
@@ -27,9 +23,9 @@
   ],
   "name": "Hatley Pointe",
   "timestamp": {
-    "lifts": 1787787956497,
+    "lifts": 1787790626769,
     "opening": 1787787951803,
-    "trails": 1787787956497,
+    "trails": 1787789716389,
     "weather": 0,
     "webcams": 0
   },

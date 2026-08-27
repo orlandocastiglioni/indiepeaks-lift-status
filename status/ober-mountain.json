@@ -1,25 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://www.obermountain.com/slope-report",
   "id": "ober-mountain",
   "lifts": {
     "stats": {
-      "closed": 3,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Mighty Carpet": "closed",
-      "Ober Challenge (Quad)": "closed",
-      "Ober Easy": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -83.55778,
@@ -27,9 +23,9 @@
   ],
   "name": "Ober Mountain",
   "timestamp": {
-    "lifts": 1787787960195,
+    "lifts": 1787790632846,
     "opening": 1787787951804,
-    "trails": 1787787960195,
+    "trails": 1787789720873,
     "weather": 0,
     "webcams": 0
   },

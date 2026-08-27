@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://trollhaugen.com/snow-report/",
   "id": "trollhaugen",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 3": "closed",
-      "Chair 4": "closed",
-      "Mickebakken Rope": "closed",
-      "Minibakken Rope": "closed",
-      "Tomtebakken Rope": "closed",
-      "Valhalla Rope": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -92.6202444,
@@ -32,9 +23,9 @@
   ],
   "name": "Trollhaugen",
   "timestamp": {
-    "lifts": 1787787959320,
+    "lifts": 1787790632955,
     "opening": 1787787951805,
-    "trails": 1787787959320,
+    "trails": 1787789719658,
     "weather": 0,
     "webcams": 0
   },
