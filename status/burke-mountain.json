@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://www.skiburke.com/ski-ride/weather-conditions",
   "id": "burke-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "J-Bar": "closed",
-      "Magic Carpet": "closed",
-      "Mid-Burke Express": "closed",
-      "Sherburne Express": "closed",
-      "T-Bar": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.91745,
@@ -29,11 +23,11 @@
   ],
   "name": "Burke Mountain",
   "timestamp": {
-    "lifts": 1787787953603,
+    "lifts": 1787790617563,
     "opening": 1787787951802,
-    "trails": 1787787953603,
+    "trails": 1787789718118,
     "weather": 1787786131409,
-    "webcams": 1787787951802
+    "webcams": 1787790612495
   },
   "trails": {
     "list": [

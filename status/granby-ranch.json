@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://granbyranch.com/mountain-info/",
   "id": "granby-ranch",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 83.3,
-        "hold": 0,
-        "open": 16.6,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Conquest": "closed",
-      "Kicking Horse": "closed",
-      "Milestone": "closed",
-      "Pony Carpet (Ski School Only)": "closed",
-      "Quick Draw Express": "open",
-      "Stagecoach Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -105.9064,
@@ -30,9 +23,9 @@
   ],
   "name": "Granby Ranch",
   "timestamp": {
-    "lifts": 1787787962666,
+    "lifts": 1787790626772,
     "opening": 1787787951803,
-    "trails": 1787787962666,
+    "trails": 1787789723602,
     "weather": 0,
     "webcams": 0
   },

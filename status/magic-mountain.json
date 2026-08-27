@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://www.magicmtn.com/snow-report",
   "id": "magic-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Abracadabra Area Tow": "closed",
-      "Black Summit Quad": "closed",
-      "Green Mid-Mtn Chair": "closed",
-      "Learn-to-Ski Lift": "closed",
-      "Red Summit Chair": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.772644,
@@ -29,9 +23,9 @@
   ],
   "name": "Magic Mountain",
   "timestamp": {
-    "lifts": 1787787967225,
+    "lifts": 1787790632897,
     "opening": 1787787951803,
-    "trails": 1787787967225,
+    "trails": 1787789728927,
     "weather": 0,
     "webcams": 0
   },

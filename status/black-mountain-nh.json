@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://www.blackmt.com/conditions",
   "id": "black-mountain-nh",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Double Chair Summit": "closed",
-      "East Bowl Triple": "closed",
-      "Fluffy Cow Handle Tow": "closed",
-      "J-Bar": "closed",
-      "Platter Pull": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.1639,
@@ -29,9 +23,9 @@
   ],
   "name": "Black Mountain NH",
   "timestamp": {
-    "lifts": 1787787965850,
+    "lifts": 1787790617554,
     "opening": 1787787951802,
-    "trails": 1787787965850,
+    "trails": 1787789727645,
     "weather": 0,
     "webcams": 0
   },

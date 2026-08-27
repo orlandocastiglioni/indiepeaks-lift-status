@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://losttrail.com/snow-report/",
   "id": "lost-trail-powder-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 3": "closed",
-      "Chair 4": "closed",
-      "Chair 5": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -113.952,
@@ -29,9 +23,9 @@
   ],
   "name": "Lost Trail Powder Mountain",
   "timestamp": {
-    "lifts": 1787787964905,
-    "opening": 1787746799463,
-    "trails": 1787787951538,
+    "lifts": 1787790632902,
+    "opening": 1787790002232,
+    "trails": 1787790622439,
     "weather": 0,
     "webcams": 0
   }

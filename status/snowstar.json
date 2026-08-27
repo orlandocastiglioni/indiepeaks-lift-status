@@ -1,25 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://skisnowstar.com/weather.html",
   "id": "snowstar",
   "lifts": {
     "stats": {
-      "closed": 3,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Lifts": "closed",
-      "Terrain Park": "closed",
-      "Tubing Hill": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -90.74837,
@@ -27,9 +23,9 @@
   ],
   "name": "Snowstar",
   "timestamp": {
-    "lifts": 1787787956481,
-    "opening": 1787746799464,
-    "trails": 1787787951731,
+    "lifts": 1787790632784,
+    "opening": 1787790002232,
+    "trails": 1787790622626,
     "weather": 0,
     "webcams": 0
   }

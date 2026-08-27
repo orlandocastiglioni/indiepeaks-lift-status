@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T00:00:09Z",
+  "fetchedAt": "2026-08-27T00:45:36Z",
   "href": "https://whitepia.jp/operation/",
   "id": "whitepia-takasu",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "\u30a2\u30eb\u30d5\u30a1\u30af\u30ef\u30c3\u30c9": "closed",
-      "\u30a8\u30b3\u30fc\u307a\u30a2": "closed",
-      "\u30c7\u30eb\u30bf\u30da\u30a2": "closed",
-      "\u30d6\u30e9\u30dc\u30fc\u30af\u30ef\u30c3\u30c9": "closed",
-      "\u30ef\u30b7\u30c8\u30d4\u30a2\u5f80\u6765": "closed"
-    }
+    "status": {}
   },
   "ll": [
     136.9405,
@@ -29,9 +23,9 @@
   ],
   "name": "Whitepia Takasu",
   "timestamp": {
-    "lifts": 1787787958137,
+    "lifts": 1787790632945,
     "opening": 1787787951805,
-    "trails": 1787787958137,
+    "trails": 1787789718808,
     "weather": 0,
     "webcams": 0
   },
