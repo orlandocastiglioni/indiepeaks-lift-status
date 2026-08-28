@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-08-28T04:45:14Z",
+  "fetchedAt": "2026-08-28T20:45:31Z",
   "href": "https://www.missionridge.com/mountain-report/",
   "id": "mission-ridge",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "100 LAPS Rope Tow": "closed",
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 3": "closed",
-      "Chair 4": "closed",
-      "Ottoban Carpet": "closed",
-      "Pika Peak Rope Tow": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -120.3993,
@@ -31,9 +23,9 @@
   ],
   "name": "Mission Ridge",
   "timestamp": {
-    "lifts": 1787891463859,
-    "opening": 1787891463706,
-    "trails": 1787891455048,
+    "lifts": 1787949061379,
+    "opening": 1787946329687,
+    "trails": 1787948182178,
     "weather": 0,
     "webcams": 0
   },
