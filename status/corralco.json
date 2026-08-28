@@ -1,30 +1,30 @@
 {
-  "fetchedAt": "2026-08-28T13:30:20Z",
+  "fetchedAt": "2026-08-28T13:45:56Z",
   "href": "https://corralco.com",
   "id": "corralco",
   "lifts": {
-    "reportedAt": "2026-08-28T13:14:00.000Z",
+    "reportedAt": "2026-08-28T13:28:00.000Z",
     "stats": {
       "closed": 2,
-      "hold": 4,
-      "open": 2,
+      "hold": 2,
+      "open": 4,
       "percentage": {
         "closed": 25,
-        "hold": 50,
-        "open": 25,
+        "hold": 25,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Coloradito": "open",
-      "Cornisa": "hold",
+      "Cornisa": "open",
       "Cruce": "open",
       "Cumbre": "closed",
       "Escuelita": "hold",
       "Navidad": "hold",
       "Volc\u00e1n": "closed",
-      "Volc\u00e1n Express": "hold"
+      "Volc\u00e1n Express": "open"
     }
   },
   "ll": [
@@ -33,9 +33,9 @@
   ],
   "name": "Corralco Mountain Resort",
   "timestamp": {
-    "lifts": 1787922937501,
+    "lifts": 1787923828603,
     "opening": 1787921133215,
-    "trails": 1787922937501,
+    "trails": 1787923828603,
     "weather": 0,
     "webcams": 0
   },
@@ -192,7 +192,7 @@
         "status": "open"
       }
     ],
-    "reportedAt": "2026-08-28T13:14:00.000Z",
+    "reportedAt": "2026-08-28T13:28:00.000Z",
     "stats": {
       "closed": 0,
       "hold": 0,
