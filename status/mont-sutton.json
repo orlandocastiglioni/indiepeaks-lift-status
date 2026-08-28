@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-08-28T22:15:56Z",
+  "fetchedAt": "2026-08-28T22:30:34Z",
   "href": "https://montsutton.com/en/the-mountain/ski-conditions-2/open-skiable-domain/",
   "id": "mont-sutton",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "I": "closed",
+      "I West": "closed",
+      "II": "closed",
+      "II West": "closed",
+      "III": "closed",
+      "IV": "closed",
+      "IV West": "closed",
+      "V": "closed",
+      "VII": "closed"
+    }
   },
   "ll": [
     -72.558,
@@ -23,7 +33,7 @@
   ],
   "name": "Mont Sutton",
   "timestamp": {
-    "lifts": 1787954446393,
+    "lifts": 1787955369264,
     "opening": 1787954431857,
     "trails": 1787955321952,
     "weather": 0,
