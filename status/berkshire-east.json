@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-08-28T21:30:06Z",
+  "fetchedAt": "2026-08-29T13:15:36Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1787951767926,
-    "opening": 1787949940456,
-    "trails": 1787951767926,
-    "weather": 1787947254570,
-    "webcams": 1787951761414
+    "lifts": 1788008466563,
+    "opening": 1788007569708,
+    "trails": 1788008466563,
+    "weather": 1788002113486,
+    "webcams": 1788008460000
   },
   "trails": {
     "list": [
@@ -223,11 +223,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-08-28",
+    "conditions": "Sunny",
+    "date": "2026-08-29",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basenone",
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 77
+      "max": 72
     },
-    "text": "Mostly sunny, with a high near 77. West wind around 6 mph."
+    "text": "Sunny, with a high near 72. Northwest wind around 5 mph."
   }
 }
