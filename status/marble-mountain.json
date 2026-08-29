@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-08-29T17:15:06Z",
+  "fetchedAt": "2026-08-29T17:30:41Z",
   "href": "https://skimarble.com/terrain-status/",
   "id": "marble-mountain",
   "lifts": {
     "stats": {
-      "closed": 3,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
@@ -18,7 +18,8 @@
     "status": {
       "Black Mariah Quad": "closed",
       "Lightning Express": "closed",
-      "Magic Carpets": "closed"
+      "Magic Carpets": "closed",
+      "Newfie Bullet Quad": "closed"
     }
   },
   "ll": [
@@ -27,9 +28,9 @@
   ],
   "name": "Marble Mountain",
   "timestamp": {
-    "lifts": 1788022858712,
-    "opening": 1788020114017,
-    "trails": 1788022858712,
+    "lifts": 1788023729038,
+    "opening": 1788023715338,
+    "trails": 1788023729038,
     "weather": 0,
     "webcams": 0
   },
@@ -334,10 +335,20 @@
         "level": "black",
         "name": "Langins Lane",
         "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Broadway \u2013 Lower",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Broadway \u2013 Upper",
+        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 60,
+      "closed": 62,
       "hold": 0,
       "open": 0,
       "scheduled": 0
