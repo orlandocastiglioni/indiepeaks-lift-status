@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-30T03:45:34Z",
+  "fetchedAt": "2026-08-30T09:00:34Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1788060657102,
-    "opening": 1788058836487,
-    "trails": 1788060657111,
-    "weather": 1788057919244,
-    "webcams": 1788060646958
+    "lifts": 1788079564268,
+    "opening": 1788077752090,
+    "trails": 1788078660265,
+    "weather": 1788073265276,
+    "webcams": 1788079562486
   },
   "trails": {
     "list": [
@@ -103,11 +100,11 @@
     }
   },
   "weather": {
-    "conditions": "Partly Cloudy then Patchy Fog",
+    "conditions": "Patchy Fog",
     "date": "2026-08-30",
     "icon": [
       "basenone",
-      "icon-mist"
+      "icon-mist icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
