@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-30T21:45:19Z",
+  "fetchedAt": "2026-08-30T22:00:54Z",
   "href": "https://skimarble.com/terrain-status/",
   "id": "marble-mountain",
   "lifts": {
@@ -28,9 +28,9 @@
   ],
   "name": "Marble Mountain",
   "timestamp": {
-    "lifts": 1788125420381,
+    "lifts": 1788126340099,
     "opening": 1788125406905,
-    "trails": 1788125420381,
+    "trails": 1788126340099,
     "weather": 0,
     "webcams": 0
   },
@@ -335,10 +335,20 @@
         "level": "black",
         "name": "Langins Lane",
         "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Broadway \u2013 Lower",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Broadway \u2013 Upper",
+        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 60,
+      "closed": 62,
       "hold": 0,
       "open": 0,
       "scheduled": 0
