@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-08-30T05:30:06Z",
+  "fetchedAt": "2026-08-30T05:45:34Z",
   "href": "https://www.ejder3200.com/liftler",
   "id": "palandoken",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A L\u0130FT\u0130 [\u0130LK ADIM]": "closed",
+      "ALT HALI": "closed",
+      "B L\u0130FT\u0130 SULTAN TAHTI": "closed",
+      "C L\u0130FT\u0130 [KUZEY L\u0130FT\u0130]": "closed",
+      "DEDEMAN HALI": "closed",
+      "EJDER L\u0130FT\u0130": "closed",
+      "GONDOL 1": "closed",
+      "GONDOL 2": "closed",
+      "GONDOL HALI": "closed",
+      "VAD\u0130 L\u0130FT": "closed"
+    }
   },
   "ll": [
     41.27333,
@@ -23,9 +34,9 @@
   ],
   "name": "Ejder 3200 Paland\u00f6ken",
   "timestamp": {
-    "lifts": 1788066973564,
+    "lifts": 1788067882541,
     "opening": 1788066038453,
-    "trails": 1788067142650,
+    "trails": 1788067919728,
     "weather": 0,
     "webcams": 0
   },
