@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-29T22:30:44Z",
+  "fetchedAt": "2026-08-30T03:30:44Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1788041740498,
-    "opening": 1788041730719,
-    "trails": 1788041740189,
-    "weather": 1788041734633,
-    "webcams": 1788041730719
+    "lifts": 1788059748234,
+    "opening": 1788058836487,
+    "trails": 1788059756550,
+    "weather": 1788057919244,
+    "webcams": 1788059746610
   },
   "trails": {
     "list": [
@@ -116,8 +113,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 50
+      "max": 52
     },
-    "text": "Patchy fog after 4am. Partly cloudy, with a low around 50. Southwest wind 0 to 5 mph."
+    "text": "Patchy fog after 4am. Partly cloudy, with a low around 52. West wind around 5 mph."
   }
 }
