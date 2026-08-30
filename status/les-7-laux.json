@@ -1,25 +1,25 @@
 {
-  "fetchedAt": "2026-08-30T11:30:26Z",
+  "fetchedAt": "2026-08-30T15:15:39Z",
   "href": "https://www.les7laux.com/hiver/",
   "id": "les-7-laux",
   "lifts": {
-    "reportedAt": "2026-08-30T11:01:00.000Z",
+    "reportedAt": "2026-08-30T14:47:00.000Z",
     "stats": {
-      "closed": 1,
+      "closed": 3,
       "hold": 0,
-      "open": 2,
+      "open": 0,
       "percentage": {
-        "closed": 33.3,
+        "closed": 100,
         "hold": 0,
-        "open": 66.6,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "TSD Bouquetins": "closed",
-      "TSD Chamois": "open",
-      "TSF Pincerie": "open"
+      "TSD Chamois": "closed",
+      "TSF Pincerie": "closed"
     }
   },
   "ll": [
@@ -28,9 +28,9 @@
   ],
   "name": "Les 7 Laux",
   "timestamp": {
-    "lifts": 1788088541082,
-    "opening": 1788086754124,
-    "trails": 1788088541082,
+    "lifts": 1788102055038,
+    "opening": 1788100238766,
+    "trails": 1788102055038,
     "weather": 0,
     "webcams": 0
   },
@@ -44,18 +44,18 @@
         "grade": "verte",
         "level": "green",
         "name": "Wiz luge (Pleynet)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "name": "Domaine VTT de descente (Prapoutel)",
-        "status": "open"
+        "status": "closed"
       }
     ],
-    "reportedAt": "2026-08-30T11:01:00.000Z",
+    "reportedAt": "2026-08-30T14:47:00.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
-      "open": 3,
+      "open": 1,
       "scheduled": 0
     }
   }
