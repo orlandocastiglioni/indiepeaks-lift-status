@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-08-30T02:00:09Z",
+  "fetchedAt": "2026-08-30T03:00:31Z",
   "href": "https://www.ski-bigbear.com/conditions-trail-map",
   "id": "ski-big-bear",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Grizzly Chair": "closed",
-      "Little Bear Chair": "closed",
-      "Magic Carpet 1": "closed",
-      "Magic Carpet 2": "closed",
-      "SunKid Carpet": "closed",
-      "Thundercloud Chair 1": "closed",
-      "Thundercloud Chair 2": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.0250626,
@@ -31,9 +23,9 @@
   ],
   "name": "Ski Big Bear at Masthope Mountain",
   "timestamp": {
-    "lifts": 1788054349568,
+    "lifts": 1788057916755,
     "opening": 1788054344874,
-    "trails": 1788054349569,
+    "trails": 1788058825650,
     "weather": 0,
     "webcams": 0
   },
