@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-30T22:15:20Z",
+  "fetchedAt": "2026-08-31T00:30:51Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,17 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 2
+      "scheduled": 0
     },
-    "status": {
-      "Rangeley": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,80 +23,19 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1788127266644,
-    "opening": 1788125406906,
-    "trails": 1788127227653,
-    "weather": 1788127261193,
-    "webcams": 1788127257424
+    "lifts": 1788135329201,
+    "opening": 1788133528042,
+    "trails": 1788135329338,
+    "weather": 1788135323390,
+    "webcams": 1788135318245
   },
   "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Gee Whiz Highway",
-        "status": "scheduled"
-      },
-      {
-        "level": "green",
-        "name": "Lower Barr Hopper",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Sweet Meat Caddis",
-        "status": "scheduled"
-      },
-      {
-        "level": "green",
-        "name": "Upper Barr Hopper",
-        "status": "scheduled"
-      },
-      {
-        "level": "blue",
-        "name": "Green Weaver",
-        "status": "scheduled"
-      },
-      {
-        "level": "blue",
-        "name": "Don\u2019s Delight",
-        "status": "scheduled"
-      },
-      {
-        "level": "blue",
-        "name": "Lower Mr. Dullay",
-        "status": "scheduled"
-      },
-      {
-        "level": "blue",
-        "name": "Lower Mrs. Duley",
-        "status": "scheduled"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Mr. Dullay",
-        "status": "scheduled"
-      },
-      {
-        "level": "blue",
-        "name": "Upper Mrs. Duley",
-        "status": "scheduled"
-      },
-      {
-        "level": "black",
-        "name": "Rusty Usual",
-        "status": "scheduled"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Bronco",
-        "status": "scheduled"
-      }
-    ],
+    "list": {},
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
       "open": 0,
-      "scheduled": 11
+      "scheduled": 0
     }
   },
   "weather": {
