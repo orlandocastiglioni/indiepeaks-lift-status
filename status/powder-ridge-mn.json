@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-09-01T10:00:53Z",
+  "fetchedAt": "2026-09-01T10:15:19Z",
   "href": "https://powderridge.com/ski-ride/trail-map/",
   "id": "powder-ridge-mn",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beginner Hill Tow Rope": "closed",
+      "Gun Powder Chairlift": "closed",
+      "J-Bar": "closed",
+      "Powder Puff Chairlift": "closed",
+      "Quad Chairlift": "closed",
+      "Terrain Park Tow Rope": "closed"
+    }
   },
   "ll": [
     -94.298401,
@@ -23,9 +30,9 @@
   ],
   "name": "Powder Ridge Mountain Park & Resort",
   "timestamp": {
-    "lifts": 1788255919698,
-    "opening": 1788252315248,
-    "trails": 1788255056751,
+    "lifts": 1788256867967,
+    "opening": 1788256856061,
+    "trails": 1788256867966,
     "weather": 0,
     "webcams": 0
   },
