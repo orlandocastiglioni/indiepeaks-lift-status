@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-09-02T21:15:50Z",
+  "fetchedAt": "2026-09-02T21:30:04Z",
   "href": "https://www.yuzawa-nakazato.com/winter/",
   "id": "yuzawa-nakazato",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u7b2c1\u9ad8\u901f\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c3\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c4\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c5\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c6\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     138.849,
@@ -23,9 +30,9 @@
   ],
   "name": "Yuzawa Nakazato Snow Resort",
   "timestamp": {
-    "lifts": 1788382879658,
-    "opening": 1788380132546,
-    "trails": 1788381945294,
+    "lifts": 1788383759610,
+    "opening": 1788383753787,
+    "trails": 1788383759610,
     "weather": 0,
     "webcams": 0
   },
