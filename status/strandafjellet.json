@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-08-29T02:15:04Z",
+  "fetchedAt": "2026-09-02T12:30:34Z",
   "href": "https://www.strandafjellet.no/no/node/386",
   "id": "strandafjellet",
   "lifts": {
-    "reportedAt": "2026-04-21T08:29:40.000Z",
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Bandet": "closed",
-      "Egga fjelltrekk": "closed",
-      "Fursetheisa": "closed",
-      "Fursettrekket": "closed",
-      "Roaldsheisa": "closed",
-      "Roaldshorn fjelltrekk": "closed",
-      "Sn\u00f8kvit": "closed"
-    }
+    "status": {}
   },
   "ll": [
     6.844085,
@@ -32,9 +23,9 @@
   ],
   "name": "Strandafjellet",
   "timestamp": {
-    "lifts": 1787968862017,
-    "opening": 1787967056282,
-    "trails": 1787968861399,
+    "lifts": 1788351354160,
+    "opening": 1788351352650,
+    "trails": 1788350477700,
     "weather": 0,
     "webcams": 0
   },
