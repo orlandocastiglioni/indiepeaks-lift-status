@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-09-02T18:15:16Z",
+  "fetchedAt": "2026-09-03T14:45:59Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1788372027480,
-    "opening": 1788370218956,
-    "trails": 1788372027480,
-    "weather": 1788367570958,
-    "webcams": 1788372019673
+    "lifts": 1788445851561,
+    "opening": 1788444934118,
+    "trails": 1788445851561,
+    "weather": 1788444938479,
+    "webcams": 1788445844238
   },
   "trails": {
     "list": [
@@ -112,7 +112,7 @@
       {
         "level": "black",
         "name": "Back O' The Shack",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -216,18 +216,18 @@
       }
     ],
     "stats": {
-      "closed": 4,
+      "closed": 5,
       "hold": 0,
-      "open": 32,
+      "open": 31,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
-    "date": "2026-09-02",
+    "conditions": "Patchy Fog",
+    "date": "2026-09-03",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basecloud",
+      "icon-thunder icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 69
+      "max": 77
     },
-    "text": "Mostly cloudy, with a high near 69. Southeast wind around 5 mph."
+    "text": "Patchy fog and a chance of showers and thunderstorms before 9am, then patchy fog and a slight chance of showers and thunderstorms between 9am and 5pm. Partly sunny, with a high near 77. West wind around 6 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
