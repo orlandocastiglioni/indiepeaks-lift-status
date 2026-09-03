@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-03T15:00:51Z",
+  "fetchedAt": "2026-09-03T15:15:41Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1788446771703,
+    "lifts": 1788447662067,
     "opening": 1788444934118,
-    "trails": 1788446771703,
+    "trails": 1788447662067,
     "weather": 1788444938479,
-    "webcams": 1788446764418
+    "webcams": 1788447654608
   },
   "trails": {
     "list": [
@@ -132,22 +132,22 @@
       {
         "level": "black",
         "name": "Juggernaut",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
         "name": "Loamstar",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Long John",
         "status": "open"
       },
       {
         "level": "black",
-        "name": "Magic Carpet",
+        "name": "Long John",
         "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Magic Carpet",
+        "status": "open"
       },
       {
         "level": "black",
@@ -172,7 +172,7 @@
       {
         "level": "black",
         "name": "Rocky Road",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -216,9 +216,9 @@
       }
     ],
     "stats": {
-      "closed": 4,
+      "closed": 5,
       "hold": 0,
-      "open": 32,
+      "open": 31,
       "scheduled": 0
     }
   },
