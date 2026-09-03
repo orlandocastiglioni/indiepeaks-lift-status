@@ -46,6 +46,16 @@ object: `stats` with the same four states, and `list` — an array of
 or a plain `{name: status}` map when it doesn't. Trails-only resorts
 (e.g. calabogie, canaan-valley) have no `lifts` key at all.
 
+## Notes on the data set
+
+`docs/` carries the dated audits behind this feed:
+
+- `resort-parsing-review-2026-07.md` — a per-parser review of every source.
+- `new-resorts-2026-27-recon.md` — why the six resorts Indy added for 26/27 have
+  no parser yet, what each of their sites actually publishes, and the feed
+  regressions (`west-mountain` / `white-pass` gone; `dog-creek-lodge` publishing
+  under its roster id) found while wiring them.
+
 ## Credits & license
 
 Lift status is collected by [Liftie](https://github.com/pirxpilot/liftie)
