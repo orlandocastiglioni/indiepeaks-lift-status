@@ -65,6 +65,31 @@ their reports with JavaScript or sit behind Cloudflare are fetched through
 a headless-chromium tier (FlareSolverr / renderd — see
 [pi-setup/RESTORE.md](pi-setup/RESTORE.md)).
 
+## Multi-resort areas
+
+Three of the app's resorts are not one mountain but a group of separately-run
+resorts sharing one Indy Pass listing, and this feed publishes **one file per
+member**:
+
+| App resort | Members published here |
+|---|---|
+| Portes du Soleil | `abondance`, `avoriaz`, `champery`, `chatel`, `la-chapelle-dabondance`, `les-gets`, `morgins`, `pds-morzine`, `saint-jean-daulps`, `torgon` |
+| Innsbruck Ski & City Network | `axamer-lizum`, `elferbahnen`, `glungezer`, `hochoetz`, `kuehtai`, `muttereralm`, `nordkette`, `patscherkofel`, `rangger-koepfl`, `schlick-2000`, `serlesbahnen`, `stubai-glacier` |
+| Oberstdorf Kleinwalsertal Bergbahnen | `fellhorn-kanzelwand`, `heuberg`, `ifen`, `nebelhorn`, `soellereck`, `walmendingerhorn` |
+
+Since 2026-09-04 the app reads all 28 of these and totals them itself, listing
+each member with its own lift count. **These ids are named in the app's bundled
+roster**, so renaming or merging one silently blanks that member's row instead
+of failing loudly — treat them as a published interface. The parent resorts
+(`portes-du-soleil` and friends) have no file here and need none. The
+`(Portes du Soleil)` suffix in `_index.json` is a display name only; the app
+does not parse membership out of it.
+
+Missing, and worth a parser if the sources allow: **Montriond** and
+**Val-d'Illiez / Les Crosets / Champoussin**, the two Portes du Soleil
+destinations with no file. The app already shows a row for each, marked as
+unreported.
+
 ## Index
 
 `status/_index.json` lists every published resort id with its display name —
