@@ -1,6 +1,6 @@
 # Status recon — the resorts Indy added for 2026-27
 
-**Date: 2026-09-02, extended 2026-09-03.** Written while adding the 26/27 partners to the IndiePeaks
+**Date: 2026-09-02, extended 2026-09-03 and 2026-09-04.** Written while adding the 26/27 partners to the IndiePeaks
 app, so the in-season parser session is a short job rather than a fresh survey.
 
 Indy announced six new partners for 26/27: Frost Fire Park (ND), Kandatsu Snow
@@ -61,15 +61,53 @@ that is summer content today (`ruka.fi/en/skiresort/slopes`), Togari a course
 map (`togari.jp/winter/en/course_map/`). **King Pine needs nothing** — it is
 already published here and read by the app; only its Indy pass tier changed.
 
+## Third announcement — 2026-09-04
+
+Five more announced; four new resorts (Showdown MT, Powder Ridge CT,
+Heiligenblut-Großglockner AT, Engstligenalp CH) plus Jay Peak gaining
+cross-country. All four new ones are report-link-only in the app —
+`showdownmontana.com/grooming-report-trail-status`,
+`powderridgepark.com/trail-report/` (403s scripted clients, SafariView-exempt),
+`heiligenblut.at`'s ski-area page and `engstligenalp.ch/winter/betriebsinfo/`.
+None points at an aggregator this pipeline already parses, so unlike Mont
+Kanasuta and Eastman there is no cheap parser here; recheck in season.
+
+**Two things in this repo want a look:**
+
+- **`status/powder-ridge-mn.json` carries the wrong resort name.** Its payload
+  reads `"name": "Powder Ridge Mountain Park & Resort"`, which is the
+  **Connecticut** resort (`powderridgepark.com`, Middlefield CT) that joined the
+  pass this season. This file is the **Minnesota** one — its own `href` is
+  `powderridge.com/ski-ride/trail-map/`, which is correct — and Indy calls it
+  simply "Powder Ridge". Nothing is mis-scraped, but the name is now actively
+  confusing, because **there are two Powder Ridges on the pass**. Treat this as
+  a second `crystal-mountain` MI/WA pair: they are 1,800 km apart with different
+  hosts, so the app-side generator keeps them separate on the host match, but do
+  not add a CT parser under a name that collides.
+- **`jay-peak` publishes lifts only.** Jay Peak is now an alpine **+
+  cross-country** partner (Indy flipped `data-isalpinexc` on its existing card
+  rather than creating a "Jay Peak XC" resort). If Jay's site exposes nordic
+  trail status, adding it would be the difference between the app showing half
+  that resort's conditions and all of them.
+
 ## Feed regressions found while wiring this
 
 Reconciling `status-sources.json` against this repo turned up three entries that
 were fetching 404s. Fixed app-side in the same change; noted here because the
 first two are Pi-side facts, not app bugs.
 
+- **A caution learned 2026-09-04, before the entries below.** Checking whether a
+  file has gone needs the **repo tree**, and the filename the app's `apiURL`
+  actually names — which is a **liftie id, not a roster id**, for 82 of the
+  pipeline entries. `mountain-high` looked deleted (no
+  `status/mountain-high.json`, absent from `_index.json`, raw URL 404) and was
+  none of those things: its file is `status/mthigh.json`, healthy, 13 lifts and
+  50 trails. In the same session `raw.githubusercontent.com` also served one
+  stale 200 for a file that really was gone. Neither a single 404 nor a single
+  200 settles it; `git ls-tree` does.
 - **`west-mountain` and `white-pass` are gone from the feed.** Absent from
-  `status/`, from `_index.json` and from `_health.json`, and their raw URLs
-  404. Both were previously flagged in `docs/resort-parsing-review-2026-07.md`
+  `status/`, from `_index.json`, from `_health.json` and from `origin/main`'s
+  tree, and their raw URLs 404. Both were previously flagged in `docs/resort-parsing-review-2026-07.md`
   for republishing stale spring pages off-season (west-mountain showing 1 lift
   "open" in July; white-pass showing 8/8 lifts and 43/43 trails "open" in
   August), so this looks deliberate. The app entries have been demoted to
