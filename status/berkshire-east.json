@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-03T17:45:20Z",
+  "fetchedAt": "2026-09-04T15:00:49Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1788456635299,
-    "opening": 1788455746805,
-    "trails": 1788456635299,
-    "weather": 1788452150087,
-    "webcams": 1788456627216
+    "lifts": 1788533168593,
+    "opening": 1788531361126,
+    "trails": 1788533168593,
+    "weather": 1788530464158,
+    "webcams": 1788533161737
   },
   "trails": {
     "list": [
@@ -112,7 +112,7 @@
       {
         "level": "black",
         "name": "Back O' The Shack",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -172,7 +172,7 @@
       {
         "level": "black",
         "name": "Rocky Road",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -216,18 +216,18 @@
       }
     ],
     "stats": {
-      "closed": 3,
+      "closed": 1,
       "hold": 0,
-      "open": 33,
+      "open": 35,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Slight Chance Showers And Thunderstorms",
-    "date": "2026-09-03",
+    "conditions": "Sunny",
+    "date": "2026-09-04",
     "icon": [
-      "basecloud",
-      "icon-thunder icon-sunny"
+      "basenone",
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 77
+      "max": 76
     },
-    "text": "A slight chance of showers and thunderstorms between 2pm and 5pm. Mostly sunny, with a high near 77. West wind around 6 mph. Chance of precipitation is 20%."
+    "text": "Sunny, with a high near 76. Northwest wind around 7 mph."
   }
 }
