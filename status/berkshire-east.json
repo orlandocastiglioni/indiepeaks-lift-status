@@ -1,22 +1,22 @@
 {
-  "fetchedAt": "2026-09-05T15:45:28Z",
+  "fetchedAt": "2026-09-05T18:15:49Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
-      "open": 2,
+      "open": 1,
       "percentage": {
-        "closed": 0,
+        "closed": 50,
         "hold": 0,
-        "open": 100,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Summit Quad": "open",
+      "Summit Quad": "closed",
       "T-Bar Express Quad": "open"
     }
   },
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1788622261341,
-    "opening": 1788618658806,
-    "trails": 1788622261340,
-    "weather": 1788615962522,
-    "webcams": 1788622249753
+    "lifts": 1788631213233,
+    "opening": 1788630362642,
+    "trails": 1788631213233,
+    "weather": 1788624060241,
+    "webcams": 1788631211992
   },
   "trails": {
     "list": [
@@ -223,11 +223,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Sunny then Slight Chance Showers And Thunderstorms",
+    "conditions": "Scattered Rain Showers",
     "date": "2026-09-05",
     "icon": [
       "basecloud",
-      "icon-thunder icon-sunny"
+      "icon-showers icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -238,6 +238,6 @@
     "temperature": {
       "max": 71
     },
-    "text": "A slight chance of showers and thunderstorms between 2pm and 3pm, then a chance of showers and thunderstorms. Mostly sunny, with a high near 71. Northwest wind around 5 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Scattered rain showers after 2pm. Mostly cloudy, with a high near 71. North wind around 5 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
