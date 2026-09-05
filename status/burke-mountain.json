@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T07:15:14Z",
+  "fetchedAt": "2026-09-05T09:00:41Z",
   "href": "https://www.skiburke.com/ski-ride/weather-conditions",
   "id": "burke-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "J-Bar": "closed",
-      "Magic Carpet": "closed",
-      "Mid-Burke Express": "closed",
-      "Sherburne Express": "closed",
-      "T-Bar": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.91745,
@@ -29,11 +23,11 @@
   ],
   "name": "Burke Mountain",
   "timestamp": {
-    "lifts": 1787814645382,
-    "opening": 1787814556944,
-    "trails": 1787814645382,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1788598256424,
+    "opening": 1788597952291,
+    "trails": 1788598822130,
+    "weather": 1788593414942,
+    "webcams": 1788597952291
   },
   "trails": {
     "list": [
@@ -328,5 +322,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Patchy Fog",
+    "date": "2026-09-05",
+    "icon": [
+      "basecloud",
+      "icon-showers icon-moon"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=44.587898&lon=-71.91745",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 55
+    },
+    "text": "Patchy fog and a slight chance of rain showers. Cloudy, with a low around 55. North wind around 3 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
