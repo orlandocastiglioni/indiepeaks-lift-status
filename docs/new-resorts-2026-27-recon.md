@@ -133,18 +133,39 @@ first two are Pi-side facts, not app bugs.
   The file count hid the two reasons this is not a plain
   `Scripts/sync-status-sources.py` run:
 
-  - **Multi-area resorts.** `portes-du-soleil` publishes 10 files here
-    (avoriaz, chatel, pds-morzine, champery, les-gets, morgins, torgon,
-    abondance, la-chapelle-dabondance, saint-jean-daulps),
-    `innsbruck-ski-city-network` 12 (stubai-glacier, kuehtai, nordkette,
-    axamer-lizum, schlick-2000, patscherkofel, …) and
+  - **Multi-area resorts — RESOLVED APP-SIDE 2026-09-04; nothing to do here.**
+    `portes-du-soleil` publishes 10 files (avoriaz, chatel, pds-morzine,
+    champery, les-gets, morgins, torgon, abondance, la-chapelle-dabondance,
+    saint-jean-daulps), `innsbruck-ski-city-network` 12 (stubai-glacier,
+    kuehtai, nordkette, axamer-lizum, schlick-2000, patscherkofel, …) and
     `oberstdorf-kleinwalsertal-bergbahnen` 6 (nebelhorn, fellhorn-kanzelwand,
-    ifen, soellereck, walmendingerhorn, heuberg). The app's config takes one
-    `apiURL` per resort, so wiring any single sub-area would show Avoriaz's
-    lifts as the whole of Portes du Soleil. **This is the one thing that might
-    want a Pi-side answer**: publishing a combined file per parent resort would
-    let the app read them as-is, and is probably cheaper than extending the
-    app's schema to sum several sources.
+    ifen, soellereck, walmendingerhorn, heuberg).
+
+    This bullet originally proposed the Pi-side answer — publish a combined
+    file per parent so the app could read it unchanged — on the reasoning that
+    "the app's config takes one `apiURL` per resort". **That reasoning was
+    wrong, and the combined file was rejected.** The app's config takes one
+    `apiURL` per KEY, and nothing required a key to be a roster id; its status
+    service has always fetched by arbitrary string. So the app now authors the
+    membership of each area in its own roster (schema v9 `area` block) and
+    reads these 28 files as ordinary entries, one per member.
+
+    The combined file was also the worse product. Summing Portes du Soleil into
+    "8 of 208 lifts" answers a question nobody asked: the area exists precisely
+    so a passholder can choose WHICH of the twelve to ski, and that choice needs
+    per-member counts. The app's card lists the members with their own lifts and
+    says outright that it is only hearing from 10 of the 12.
+
+    **What this repo should keep doing:** publish these files exactly as it does
+    now, one per sub-area, under their existing ids. Two things would be
+    genuinely useful, in this order:
+    1. Parsers for **Montriond** and **Val-d'Illiez / Les Crosets /
+       Champoussin** — the two Portes du Soleil destinations with no file. The
+       app already has rows for them; adding a file plus a `statusID` in the
+       roster fills them in with no app change.
+    2. Do **not** rename or merge the existing member ids. The roster now names
+       them (`area.members[].statusID`), so an id change silently blanks a
+       member's row rather than erroring.
   - **Seven do not resolve by website host**, so the generator refuses them by
     design — the same guard that keeps Crystal MI and Crystal WA apart:
     `levi` (feed `levi.fi`, roster `levi.ski`), `corralco` (roster
