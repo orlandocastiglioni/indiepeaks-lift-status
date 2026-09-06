@@ -1,30 +1,23 @@
 {
-  "fetchedAt": "2026-09-06T21:15:53Z",
+  "fetchedAt": "2026-09-06T22:30:06Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "heuberg",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 2,
       "percentage": {
-        "closed": 77.7,
+        "closed": 0,
         "hold": 0,
-        "open": 22.2,
+        "open": 100,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Doppelsessellift Zaferna": "open",
-      "F\u00f6rderband Sch\u00fctzab\u00fchl": "closed",
-      "Heubergbahn": "open",
-      "Heubergmuldelift": "closed",
-      "Hubertuslift": "closed",
-      "Parsennbahn": "closed",
-      "Schl\u00f6\u00dflelift": "closed",
-      "Sch\u00f6ntallift": "closed",
-      "Skikuli Parsen": "closed"
+      "Heubergbahn": "open"
     }
   },
   "ll": [
@@ -32,10 +25,11 @@
     47.342
   ],
   "name": "Heuberg (Oberstdorf Kleinwalsertal)",
+  "open": false,
   "timestamp": {
-    "lifts": 1788728435914,
-    "opening": 1788724849812,
-    "trails": 1788728435914,
+    "lifts": 1788732939842,
+    "opening": 1788730693048,
+    "trails": 1788732939842,
     "weather": 0,
     "webcams": 0
   },
