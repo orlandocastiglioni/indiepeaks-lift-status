@@ -1,31 +1,42 @@
 {
-  "fetchedAt": "2026-09-06T21:30:06Z",
+  "fetchedAt": "2026-09-06T21:45:20Z",
   "href": "https://www.lutsen.com/mountain-info/mountain-report",
   "id": "lutsen-mountains",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 55.5,
+        "hold": 0,
+        "open": 11.1,
+        "scheduled": 33.3
       },
-      "scheduled": 0
+      "scheduled": 3
     },
-    "status": {}
+    "status": {
+      "Bridge Chair": "scheduled",
+      "Caribou Express": "closed",
+      "Conveyor": "closed",
+      "Mystery Mountain Chair": "closed",
+      "Raptor Express": "scheduled",
+      "Summit Express Gondola": "open",
+      "Timberwolf Chair": "closed",
+      "Ullr (Nordic)": "closed",
+      "Ullr Chair": "scheduled"
+    }
   },
   "ll": [
     -90.7135,
     47.654
   ],
   "name": "Lutsen Mountains",
+  "open": false,
   "timestamp": {
-    "lifts": 1788729363268,
-    "opening": 1788729360867,
-    "trails": 1788728432515,
+    "lifts": 1788730709362,
+    "opening": 1788730693049,
+    "trails": 1788730709362,
     "weather": 0,
     "webcams": 0
   },
