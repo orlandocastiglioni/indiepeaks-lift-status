@@ -46,6 +46,16 @@ object: `stats` with the same four states, and `list` — an array of
 or a plain `{name: status}` map when it doesn't. Trails-only resorts
 (e.g. calabogie, canaan-valley) have no `lifts` key at all.
 
+## Notes on the data set
+
+`docs/` carries the dated audits behind this feed:
+
+- `resort-parsing-review-2026-07.md` — a per-parser review of every source.
+- `new-resorts-2026-27-recon.md` — why the six resorts Indy added for 26/27 have
+  no parser yet, what each of their sites actually publishes, and the feed
+  regressions (`west-mountain` / `white-pass` gone; `dog-creek-lodge` publishing
+  under its roster id) found while wiring them.
+
 ## Credits & license
 
 Lift status is collected by [Liftie](https://github.com/pirxpilot/liftie)
@@ -54,6 +64,31 @@ originates from the linked resorts' public websites. Sites that render
 their reports with JavaScript or sit behind Cloudflare are fetched through
 a headless-chromium tier (FlareSolverr / renderd — see
 [pi-setup/RESTORE.md](pi-setup/RESTORE.md)).
+
+## Multi-resort areas
+
+Three of the app's resorts are not one mountain but a group of separately-run
+resorts sharing one Indy Pass listing, and this feed publishes **one file per
+member**:
+
+| App resort | Members published here |
+|---|---|
+| Portes du Soleil | `abondance`, `avoriaz`, `champery`, `chatel`, `la-chapelle-dabondance`, `les-gets`, `morgins`, `pds-morzine`, `saint-jean-daulps`, `torgon` |
+| Innsbruck Ski & City Network | `axamer-lizum`, `elferbahnen`, `glungezer`, `hochoetz`, `kuehtai`, `muttereralm`, `nordkette`, `patscherkofel`, `rangger-koepfl`, `schlick-2000`, `serlesbahnen`, `stubai-glacier` |
+| Oberstdorf Kleinwalsertal Bergbahnen | `fellhorn-kanzelwand`, `heuberg`, `ifen`, `nebelhorn`, `soellereck`, `walmendingerhorn` |
+
+Since 2026-09-04 the app reads all 28 of these and totals them itself, listing
+each member with its own lift count. **These ids are named in the app's bundled
+roster**, so renaming or merging one silently blanks that member's row instead
+of failing loudly — treat them as a published interface. The parent resorts
+(`portes-du-soleil` and friends) have no file here and need none. The
+`(Portes du Soleil)` suffix in `_index.json` is a display name only; the app
+does not parse membership out of it.
+
+Missing, and worth a parser if the sources allow: **Montriond** and
+**Val-d'Illiez / Les Crosets / Champoussin**, the two Portes du Soleil
+destinations with no file. The app already shows a row for each, marked as
+unreported.
 
 ## Index
 
