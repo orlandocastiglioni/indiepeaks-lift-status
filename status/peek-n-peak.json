@@ -1,31 +1,42 @@
 {
-  "fetchedAt": "2026-08-27T07:30:59Z",
+  "fetchedAt": "2026-09-06T21:45:20Z",
   "href": "https://www.pknpk.com/conditions-report/",
   "id": "peek-n-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chair 1": "closed",
+      "Chair 2": "closed",
+      "Chair 3": "closed",
+      "Chair 4": "closed",
+      "Chair 5": "closed",
+      "Chair 6": "closed",
+      "Chair 7": "closed",
+      "Chair 8": "closed",
+      "Magic Carpet": "closed"
+    }
   },
   "ll": [
     -79.73667,
     42.0625
   ],
   "name": "Peek'n Peak Resort",
+  "open": false,
   "timestamp": {
-    "lifts": 1787815011771,
-    "opening": 1787814556949,
-    "trails": 1787814716777,
+    "lifts": 1788730767091,
+    "opening": 1788730693050,
+    "trails": 1788730767091,
     "weather": 0,
     "webcams": 0
   },
