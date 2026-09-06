@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-05T20:15:26Z",
+  "fetchedAt": "2026-09-06T14:00:34Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1788638464871,
-    "opening": 1788638464782,
-    "trails": 1788638444988,
-    "weather": 1788632157340,
-    "webcams": 1788638464782
+    "lifts": 1788702359987,
+    "opening": 1788700543218,
+    "trails": 1788702359987,
+    "weather": 1788696066670,
+    "webcams": 1788702353469
   },
   "trails": {
     "list": [
@@ -192,7 +192,7 @@
       {
         "level": "doubleBlack",
         "name": "Hawleywood",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -216,18 +216,18 @@
       }
     ],
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 34,
+      "open": 35,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Scattered Rain Showers",
-    "date": "2026-09-05",
+    "conditions": "Chance Rain Showers then Partly Sunny",
+    "date": "2026-09-06",
     "icon": [
-      "basecloud",
-      "icon-showers icon-sunny"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 71
+      "max": 66
     },
-    "text": "Scattered rain showers after 2pm. Mostly cloudy, with a high near 71. North wind around 5 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "A chance of rain showers and patchy fog before 10am. Partly sunny, with a high near 66. North wind around 3 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
