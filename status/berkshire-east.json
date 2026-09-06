@@ -1,22 +1,22 @@
 {
-  "fetchedAt": "2026-09-06T14:15:49Z",
+  "fetchedAt": "2026-09-06T18:00:14Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 2,
       "percentage": {
-        "closed": 50,
+        "closed": 0,
         "hold": 0,
-        "open": 50,
+        "open": 100,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Summit Quad": "closed",
+      "Summit Quad": "open",
       "T-Bar Express Quad": "open"
     }
   },
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1788703252256,
-    "opening": 1788700543218,
-    "trails": 1788703252255,
-    "weather": 1788696066670,
-    "webcams": 1788703243914
+    "lifts": 1788716734094,
+    "opening": 1788713126709,
+    "trails": 1788716734094,
+    "weather": 1788712240313,
+    "webcams": 1788716727402
   },
   "trails": {
     "list": [
@@ -223,7 +223,7 @@
     }
   },
   "weather": {
-    "conditions": "Chance Rain Showers then Partly Sunny",
+    "conditions": "Mostly Sunny",
     "date": "2026-09-06",
     "icon": [
       "icon-cloud",
@@ -238,6 +238,6 @@
     "temperature": {
       "max": 66
     },
-    "text": "A chance of rain showers and patchy fog before 10am. Partly sunny, with a high near 66. North wind around 3 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Mostly sunny, with a high near 66. North wind around 3 mph."
   }
 }
