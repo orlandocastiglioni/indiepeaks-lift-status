@@ -90,6 +90,53 @@ Kanasuta and Eastman there is no cheap parser here; recheck in season.
   trail status, adding it would be the difference between the app showing half
   that resort's conditions and all of them.
 
+## Fourth announcement — 2026-09-05
+
+Five announced, four new resorts (Mt. Pisgah NY, Osceola Tug Hill XC NY, Ski
+Saint-Bruno QC, St. Johann in Tirol AT) plus Granby Ranch gaining cross-country.
+Two are report-link-only (`skisaintbruno.ca/en/sliding-conditions`,
+`bergbahnen-stjohann.at/de/lifte-und-pisten.html`); Mt. Pisgah and Osceola get
+nothing on purpose — neither publishes a snow report at all.
+
+`granby-ranch` was already live here, and like `jay-peak` its published file is
+**alpine-side only**, so the nordic half it gained for 26/27 is not represented.
+
+## Fifth announcement — 2026-09-06
+
+Six announced and **all six are new resorts** — the first batch this season with
+no existing-card flag flip hiding in it. Elm Creek Park Reserve (Maple Grove MN,
+alpine + XC from day one), Sleepy Hollow (Huntington VT, XC), Obertauern and
+Petzen (AT), Tschiertschen - Chur (CH) and Snow Resort The Cupid of Romance
+(Nagano JP).
+
+All six are report-link-only in the app, and **none of them has an upstream
+Liftie parser** — checked all 191 modules in `lib/resorts`. So this batch adds no
+pipeline work that can be done today; it is the Node ≥ 23.8 blocker again (the box
+runs 22.22), the same one holding up Mont Kanasuta and Eastman.
+
+**Three notes for whoever writes those parsers later:**
+
+- **`kijimadaira.info` is a trap.** OpenSkiMap still records it as the website for
+  the Japanese resort, and it is now a **parked domain serving gambling spam** —
+  title "Kijimadaira", body linking a 1xbet mirror. The real operator site is
+  `kijimadaira-ski.com`, whose ゲレンデ page carries リフト運行状況. The resort is
+  the former 木島平スキー場, renamed for the 2023 season under a naming-rights deal.
+- **`petzen.net` and Obertauern's lift page are fully JS-rendered.** Every URL on
+  petzen.net returns the same 3,867-character nav shell to a scripted client, so
+  a parser here needs to find the underlying XHR, not the HTML. Obertauern's
+  page is `/winter/liftanlagen.html` ("Offene Lifte & Pisten").
+- **Elm Creek is a Three Rivers Park District property**, like the already-live
+  `hyland-hills`. Its status lives on the district's shared activity board
+  (`threeriversparks.org/page/three-rivers-activity-status`) rather than a
+  per-resort page, which means one parser could plausibly cover both — worth
+  looking at first, since it is the cheapest of the six.
+
+**One thing in the app repo, not this one, worth knowing here:** Indy's card
+coordinate for Sleepy Hollow points at Hamilton County, **New York**, ~200 km from
+the Vermont resort. The app now ships the address from the resort's own site and
+warns on any US/CA pin that falls outside its state. If anything here ever starts
+consuming Indy's coordinates, do not trust them unchecked.
+
 ## Feed regressions found while wiring this
 
 Reconciling `status-sources.json` against this repo turned up three entries that
