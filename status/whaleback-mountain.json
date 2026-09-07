@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-09-07T01:15:46Z",
+  "fetchedAt": "2026-09-07T01:30:49Z",
   "href": "https://www.whaleback.com/trail-report",
   "id": "whaleback-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Handle Tow Learning": "closed",
+      "Magic Carpet": "closed",
+      "Spout Mega Tow": "closed",
+      "Summit Chair": "closed",
+      "T-Bar": "closed"
+    }
   },
   "ll": [
     -72.180225,
@@ -24,9 +30,9 @@
   "name": "Whaleback Mountain",
   "open": false,
   "timestamp": {
-    "lifts": 1788742858039,
-    "opening": 1788739257299,
-    "trails": 1788741981425,
+    "lifts": 1788743771749,
+    "opening": 1788743767512,
+    "trails": 1788743771749,
     "weather": 0,
     "webcams": 0
   },
