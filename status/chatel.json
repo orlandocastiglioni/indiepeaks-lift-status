@@ -1,19 +1,19 @@
 {
-  "fetchedAt": "2026-09-06T15:15:11Z",
+  "fetchedAt": "2026-09-07T07:45:56Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/chatel/",
   "id": "chatel",
   "lifts": {
     "stats": {
       "closed": 35,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
         "closed": 92.1,
         "hold": 0,
-        "open": 0,
-        "scheduled": 7.8
+        "open": 5.2,
+        "scheduled": 2.6
       },
-      "scheduled": 3
+      "scheduled": 1
     },
     "status": {
       "Tapis de pr\u00e9 la joux": "closed",
@@ -46,8 +46,8 @@
       "Tsd conche": "closed",
       "Tsd de cornebois": "closed",
       "Tsd de l'echo alpin": "closed",
-      "Tsd de pierre longue": "scheduled",
-      "Tsd de pr\u00e9 la joux": "scheduled",
+      "Tsd de pierre longue": "open",
+      "Tsd de pr\u00e9 la joux": "open",
       "Tsd des rochassons": "scheduled",
       "Tsd du linga": "closed",
       "Tsd gabelou": "closed",
@@ -61,10 +61,11 @@
     46.265
   ],
   "name": "Ch\u00e2tel (Portes du Soleil)",
+  "open": false,
   "timestamp": {
-    "lifts": 1788706885574,
-    "opening": 1788704153918,
-    "trails": 1788706885574,
+    "lifts": 1788766275327,
+    "opening": 1788763554198,
+    "trails": 1788766275327,
     "weather": 0,
     "webcams": 0
   },
