@@ -137,6 +137,44 @@ the Vermont resort. The app now ships the address from the resort's own site and
 warns on any US/CA pin that falls outside its state. If anything here ever starts
 consuming Indy's coordinates, do not trust them unchecked.
 
+## Sixth announcement — 2026-09-07
+
+Five, all new cards again: Orcières Merlette 1850 (FR), Spring Mountain
+Adventures (PA), Winter4Kids / the National Winter Activity Center (NJ), Nutt
+Hill (WI) and Veterans Memorial Recreation Area (NH). **No upstream Liftie
+parser for any of them** (all 191 modules in `lib/resorts` checked), so again no
+pipeline work that clears the Node ≥ 23.8 blocker on a box running 22.22.
+
+**But this batch contains the best parser target of the season.**
+`springmountainadventures.com/trail-map/` renders its status **server-side**, as
+plain HTML in the page body — not a JS widget, not an XHR:
+
+```
+A. Alpine - OPEN          F - Glacier - Closed      1. Terrain Tow Rope - Closed
+D. Hawk - Closed          3. Boulder - triple chairlift - OPEN
+E. Drifter - Closed       4. Rocktop - double chairlift - Closed
+```
+
+Both trails (letters) and lifts (numbers) in one document, each with an explicit
+OPEN/Closed. That is a selector away from a real feed, and it is the shape the app
+repo's `docs/status-sources.md` has been describing as the missing "HTML-selector
+source kind" since the July survey. If one parser gets written this off-season,
+this is the one.
+
+Two smaller notes:
+
+- **Veterans Memorial is volunteer-run** (the Franklin Outing Club) and posts
+  conditions on `skithevets.org/skiing-and-snowboarding` and Facebook. Indy links
+  no website for it at all — the site was found by name.
+- **Nutt Hill and Winter4Kids publish no conditions anywhere**, only hours, so
+  they get no app entry and would have nothing for a parser to read either.
+
+**And a repeat of the app-side coordinate problem, one batch later:** Indy's card
+for Nutt Hill points at Wagner, Charles Mix County, **South Dakota**, ~800 km from
+Plymouth, Wisconsin. The app now catches this automatically — a validator warns on
+any US/CA pin outside its own state — but the standing note holds: if anything in
+this repo ever consumes Indy's coordinates, do not trust them unchecked.
+
 ## Feed regressions found while wiring this
 
 Reconciling `status-sources.json` against this repo turned up three entries that
