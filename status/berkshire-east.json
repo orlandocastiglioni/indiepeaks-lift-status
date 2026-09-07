@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-06T21:30:06Z",
+  "fetchedAt": "2026-09-07T13:15:39Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
@@ -25,12 +25,13 @@
     42.62131426140839
   ],
   "name": "Berkshire East",
+  "open": false,
   "timestamp": {
-    "lifts": 1788729369379,
-    "opening": 1788729360866,
-    "trails": 1788729369379,
-    "weather": 1788727544685,
-    "webcams": 1788729360866
+    "lifts": 1788786048030,
+    "opening": 1788783359258,
+    "trails": 1788786048030,
+    "weather": 1788786044953,
+    "webcams": 1788786039677
   },
   "trails": {
     "list": [
@@ -207,7 +208,7 @@
       {
         "level": "doubleBlack",
         "name": "Fort Hill",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -216,18 +217,18 @@
       }
     ],
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
-      "open": 35,
+      "open": 36,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Partly Sunny",
-    "date": "2026-09-06",
+    "conditions": "Sunny",
+    "date": "2026-09-07",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basenone",
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +237,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 67
+      "max": 72
     },
-    "text": "Partly sunny, with a high near 67. Northwest wind around 5 mph."
+    "text": "Sunny, with a high near 72. Northwest wind around 10 mph, with gusts as high as 21 mph."
   }
 }
