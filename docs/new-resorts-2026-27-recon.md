@@ -175,6 +175,43 @@ Plymouth, Wisconsin. The app now catches this automatically — a validator warn
 any US/CA pin outside its own state — but the standing note holds: if anything in
 this repo ever consumes Indy's coordinates, do not trust them unchecked.
 
+## Full roster reconciliation — 2026-09-07
+
+The app repo reconciled its whole catalog against Indy's whole roster page for the
+first time, rather than announcement-by-announcement. Two findings matter here.
+
+**Eight resorts were on the pass with no app entry**, seven of them announced in
+spring 2026. Four now have report-link entries; **none has a Liftie parser**, and
+one of them cannot ever have a meaningful feed:
+
+- `pizol` (CH) — `pizol.com/en/winter/winter-sports-report/`
+- `whitecap-mountains-resort` (WI) — `whitecapresort.com/winter/snow-report`
+- `onikoube-ski-resort` (JP) — `onikoube.com/snow/ski-slope/`
+- `north-cascade-heli` (WA) — `heli-ski.com/weather-conditions`. A **heli
+  operator**: no lifts, no trails, nothing for this pipeline to scrape. Worth
+  knowing before someone tries.
+
+`camp-10-ski-area`, `carters-xc-ski-center`, `coffee-mill-ski-area` and
+`domaine-skiable-des-contamines` publish no conditions page at all and get nothing.
+
+**A second parked-domain trap, one day after kijimadaira.info.**
+`camp10skiarea.com` is a parked domain that redirects to `/lander`. Camp 10's only
+confirmed live presence is the Facebook page Indy itself links. Twice now the
+"better" website found by searching has been the wrong one — fetch and read before
+trusting any recorded URL, upstream or otherwise.
+
+**Nineteen resorts in the app are on no Indy card**, four of them confirmed
+departures by trade press (Lutsen, Granite Peak and Snowriver to Ikon; Mission
+Ridge dropping Indy). **This repo still publishes status files for several of
+them.** Nothing has been removed on either side — the app-side decision is the
+owner's, and the feed should not be pruned ahead of it. When it is settled, the
+Pi's resort list wants the same treatment so it stops fetching for resorts nobody
+reads.
+
+Also relevant to the feed: Indy has **consolidated Mt. Washington's two cards into
+one** (alpine + cross-country). The app's separate nordic entry, on the identical
+pin, is now a duplicate.
+
 ## Feed regressions found while wiring this
 
 Reconciling `status-sources.json` against this repo turned up three entries that
