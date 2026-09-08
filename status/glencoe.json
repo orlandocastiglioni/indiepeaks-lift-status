@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-09-08T17:00:31Z",
+  "fetchedAt": "2026-09-08T18:45:25Z",
   "href": "https://www.glencoemountain.co.uk/snow-report",
   "id": "glencoe",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 70,
+        "hold": 0,
+        "open": 30,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Access Chairlift": "open",
+      "Cliffhanger Chairlift": "closed",
+      "Coire Pollach Tow": "closed",
+      "Dry Slope Magic Carpet": "open",
+      "Main Basin T-Bar": "closed",
+      "Plateau Poma": "closed",
+      "Rannoch Chairlift": "closed",
+      "Sledging Magic Carpet": "open",
+      "Top Button Tow": "closed",
+      "Wall Tow": "closed"
+    }
   },
   "ll": [
     -4.8253,
@@ -24,9 +35,9 @@
   "name": "Glencoe Mountain",
   "open": false,
   "timestamp": {
-    "lifts": 1788885965530,
-    "opening": 1788885959535,
-    "trails": 1788885061042,
+    "lifts": 1788892262862,
+    "opening": 1788890460624,
+    "trails": 1788892262862,
     "weather": 0,
     "webcams": 0
   },
