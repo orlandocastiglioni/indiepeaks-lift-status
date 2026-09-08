@@ -233,39 +233,57 @@ Pruning is now unblocked and is deliberately **not** bundled into the Smugglers'
 registration below: it stops eleven scrapes per cycle and deletes fourteen `status/`
 files, which is a visible break for any other consumer of this public feed.
 
-## Seventh announcement — 2026-09-08: Smugglers' Notch, the first that needed no parser
+## Seventh announcement — 2026-09-08: Smugglers' Notch, the first with a JSON feed
 
 One resort: **Smugglers' Notch Resort** (Jeffersonville, VT), Indy slug
 `smugglers-notch-resort`.
 
-Every resort added this season so far needed a parser written from scratch, and several
-could not get one at all because the Pi runs Node 22.22 and the modules wanted Node
-≥ 23.8. This one is the opposite case: **upstream Liftie already ships a `smuggs`
-module** (`lib/resorts/smuggs`, selector `caption:contains("Lifts") ~ .facility-report_item`,
-`parse: { name: '0/0', status: '1/0' }`), and it targets exactly the page Indy links as
-"Conditions" — `smuggs.com/conditions/winter-report/`.
+Every resort added this season so far needed an HTML parser written from scratch, and
+several could not get one at all. This one is different twice over. Upstream Liftie
+already ships a `smuggs` module (`lib/resorts/smuggs`, selector
+`caption:contains("Lifts") ~ .facility-report_item`) that scrapes the report page Indy
+links as "Conditions" — but that scraper is **lifts only**, and the page it reads is
+rendered from data the site also serves as plain JSON.
 
-It still matches. Fetched 2026-09-08, the live page carries three `Lifts` captions
-(Morse, Sterling, Madonna) over 94 `.facility-report_item` rows — the same shape as the
-fixture upstream's own test runs against. No patch, no fixture, nothing to write.
+smuggs.com is WordPress; its theme (`bytesco`) registers a `custom/v1` REST namespace
+with two unauthenticated routes, one object per "facility" post:
 
-**What was missing was purely registration**, in two places, both changed here:
+| Route | Payload |
+|---|---|
+| `https://www.smuggs.com/wp-json/custom/v1/lifts` | 8 lifts: `title.rendered`, `facility_location`, `opening_hours`, `acf.open_status` (bool) |
+| `https://www.smuggs.com/wp-json/custom/v1/trails` | 106 trails: the same plus `acf.groomed_status`, `acf.snowmaking_status`, `acf.difficulty`, `acf.notes` |
 
-- `pi-setup/liftie.service` → `LIFTIE_RESORTS`, which limits what the local Liftie
-  instance will scrape at all.
-- `pi-setup/liftie-publish.py` → `RESORTS`, which decides what gets published to
-  `status/`.
+Cache headers are `public, max-age=60, s-maxage=3600` and the routes echo any `Origin`.
+Snow totals, the daily message and the report's own "last updated" live in an ACF
+options group that no route exposes — only the rendered HTML carries them.
 
-Until the Pi picks this up and writes `status/smuggs.json`, the app ships a
-**report-link** entry against the same conditions URL. Pointing an `apiURL` at a file
-that has never existed would have shipped a 404 and failed the app's own pre-ship gate,
-so the ordering is deliberate: register here first, let the timer publish, then let
-`Scripts/sync-status-sources.py` generate the live entry app-side.
+**Patch 0132** replaces upstream's module rather than registering it as-is: lifts route
+through `api` (JSON; `dataUrl` would HTML-parse the body, the skiwelt trap from 0007) and
+`trails.js` reads the second route with `"json": true`. Difficulty maps locally because
+the feed's "Extreme Expert" is not in the shared level map: Easy → green, Intermediate →
+blue, Advanced → black, Expert / Extreme Expert → doubleBlack, Terrain Park → terrainPark.
+`title.rendered` is entity-decoded (`&#8217;`) the way skiwelt's titles are.
 
-Its trail count is worth noting for whoever reads the first published payload: Indy
-publishes 78 trails and 8 lifts, the page groups them under three mountains, and
-OpenStreetMap maps 110 runs and 9 lifts. All three are counting different things; none
-is wrong.
+**Nordic Adventure Center rows are dropped.** Indy lists the resort as alpine with 78
+trails and no nordic card; the feed's 23 nordic trails would publish 106 and read as a
+mismatch against the app's bundled count. What ships is 83 (78 trails + 5 parks).
+
+Fixtures are the live off-season payload — every flag false — with a few hand-flipped to
+open, plus two nordic rows (one open) that the trails test asserts are absent. Verified
+2026-09-08 against the live routes through Liftie's own fetchers: 8 lifts, 83 trails,
+every level populated, no nordic leak; `make test` 382/382, `make lint` clean.
+
+Registration is the same two-place change as any other resort, both in this PR:
+`LIFTIE_RESORTS` in `pi-setup/liftie.service` and `RESORTS` in
+`pi-setup/liftie-publish.py`. Until the Pi applies the patch and publishes
+`status/smuggs.json`, the app ships a **report-link** entry against the winter report
+page; then `Scripts/sync-status-sources.py` generates the live entry app-side. Pointing an
+`apiURL` at a file that has never existed would ship a 404 and fail the app's pre-ship
+gate, so the ordering stands.
+
+Trail counts for whoever reads the first published payload: Indy 78, this feed 83 (parks
+included), OpenStreetMap 110 runs and 9 lifts. All three count different things; none is
+wrong.
 
 ## Feed regressions found while wiring this
 

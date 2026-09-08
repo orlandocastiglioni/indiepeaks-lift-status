@@ -55,8 +55,8 @@ or a plain `{name: status}` map when it doesn't. Trails-only resorts
   resorts Indy added for 26/27 have no parser yet, what each of their sites
   actually publishes, and the feed regressions (`west-mountain` / `white-pass`
   gone; `dog-creek-lodge` publishing under its roster id) found while wiring them.
-  Smugglers' Notch (2026-09-08) is the exception that needed none: upstream Liftie
-  already carries its parser, so only registration was missing.
+  Smugglers' Notch (2026-09-08) is the exception: its WordPress site serves lifts and
+  trails as JSON, so patch 0132 swaps upstream's lifts-only scraper for the feed.
 
 ## Credits & license
 
