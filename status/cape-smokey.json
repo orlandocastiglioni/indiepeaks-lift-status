@@ -1,22 +1,22 @@
 {
-  "fetchedAt": "2026-09-04T18:45:36Z",
+  "fetchedAt": "2026-09-08T12:30:54Z",
   "href": "https://www.capesmokey.ca/ski-runs",
   "id": "cape-smokey",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Gondola": "closed",
+      "Gondola": "open",
       "Magic Carpet": "closed"
     }
   },
@@ -25,10 +25,11 @@
     46.5939
   ],
   "name": "Cape Smokey",
+  "open": false,
   "timestamp": {
-    "lifts": 1788546620207,
-    "opening": 1788543944791,
-    "trails": 1788546619670,
+    "lifts": 1788869779269,
+    "opening": 1788868814526,
+    "trails": 1788869778773,
     "weather": 0,
     "webcams": 0
   },
