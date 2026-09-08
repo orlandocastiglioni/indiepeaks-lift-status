@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-08T09:00:14Z",
+  "fetchedAt": "2026-09-08T09:15:20Z",
   "href": "https://skimarble.com/terrain-status/",
   "id": "marble-mountain",
   "lifts": {
@@ -29,14 +29,69 @@
   "name": "Marble Mountain",
   "open": false,
   "timestamp": {
-    "lifts": 1788857175477,
+    "lifts": 1788858035544,
     "opening": 1788855360806,
-    "trails": 1788857175477,
+    "trails": 1788858035544,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
     "list": [
+      {
+        "level": "green",
+        "name": "Country Road",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Sleepy Hollow",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Steinbergs",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Bonavista",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Crocker\u2019s Run",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Humber View",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Autobahn",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Cabot Straight",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Corkscrew",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Drew\u2019s Drop",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Birchy Narrows",
+        "status": "closed"
+      },
       {
         "level": "black",
         "name": "Steinbergs",
@@ -89,7 +144,7 @@
       }
     ],
     "stats": {
-      "closed": 10,
+      "closed": 21,
       "hold": 0,
       "open": 0,
       "scheduled": 0
