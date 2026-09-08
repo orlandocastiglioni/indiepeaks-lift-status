@@ -63,7 +63,7 @@ RESORTS = [
     "palcall-tsumagoi", "pats-peak", "pitztaler-gletscher", "powderhorn",
     "ragged-mountain", "red-lodge-mountain", "rikert", "saddleback", "saskadena-six",
     "sasquatch-mountain", "shawnee-mountain", "ski-sawmill", "skiwelt",
-    "snow-ridge", "snowriver", "sundown-mountain", "swain",
+    "smuggs", "snow-ridge", "snowriver", "sundown-mountain", "swain",
     "takasu-snow-park", "togakushi", "washigatake", "waterville",
     "west-mountain", "wintergreen", "winterplace", "wisp",
 ]

@@ -212,6 +212,40 @@ Also relevant to the feed: Indy has **consolidated Mt. Washington's two cards in
 one** (alpine + cross-country). The app's separate nordic entry, on the identical
 pin, is now a duplicate.
 
+## Seventh announcement — 2026-09-08: Smugglers' Notch, the first that needed no parser
+
+One resort: **Smugglers' Notch Resort** (Jeffersonville, VT), Indy slug
+`smugglers-notch-resort`.
+
+Every resort added this season so far needed a parser written from scratch, and several
+could not get one at all because the Pi runs Node 22.22 and the modules wanted Node
+≥ 23.8. This one is the opposite case: **upstream Liftie already ships a `smuggs`
+module** (`lib/resorts/smuggs`, selector `caption:contains("Lifts") ~ .facility-report_item`,
+`parse: { name: '0/0', status: '1/0' }`), and it targets exactly the page Indy links as
+"Conditions" — `smuggs.com/conditions/winter-report/`.
+
+It still matches. Fetched 2026-09-08, the live page carries three `Lifts` captions
+(Morse, Sterling, Madonna) over 94 `.facility-report_item` rows — the same shape as the
+fixture upstream's own test runs against. No patch, no fixture, nothing to write.
+
+**What was missing was purely registration**, in two places, both changed here:
+
+- `pi-setup/liftie.service` → `LIFTIE_RESORTS`, which limits what the local Liftie
+  instance will scrape at all.
+- `pi-setup/liftie-publish.py` → `RESORTS`, which decides what gets published to
+  `status/`.
+
+Until the Pi picks this up and writes `status/smuggs.json`, the app ships a
+**report-link** entry against the same conditions URL. Pointing an `apiURL` at a file
+that has never existed would have shipped a 404 and failed the app's own pre-ship gate,
+so the ordering is deliberate: register here first, let the timer publish, then let
+`Scripts/sync-status-sources.py` generate the live entry app-side.
+
+Its trail count is worth noting for whoever reads the first published payload: Indy
+publishes 78 trails and 8 lifts, the page groups them under three mountains, and
+OpenStreetMap maps 110 runs and 9 lifts. All three are counting different things; none
+is wrong.
+
 ## Feed regressions found while wiring this
 
 Reconciling `status-sources.json` against this repo turned up three entries that
