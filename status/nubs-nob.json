@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-09-08T11:45:19Z",
+  "fetchedAt": "2026-09-08T12:00:11Z",
   "href": "https://www.nubsnob.com/conditions-tables/",
   "id": "nubs-nob",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Black Lift": "closed",
+      "Brown Lift": "closed",
+      "Gray Lift": "closed",
+      "Green Lift": "closed",
+      "JB Arena Rope Tow": "closed",
+      "Orange Lift": "closed",
+      "Purple Lift": "closed",
+      "Red Lift": "closed",
+      "Space Worm": "closed",
+      "Yellow Lift": "closed"
+    }
   },
   "ll": [
     -84.902163,
@@ -24,9 +35,9 @@
   "name": "Nub's Nob",
   "open": false,
   "timestamp": {
-    "lifts": 1788867055383,
+    "lifts": 1788867935463,
     "opening": 1788864353557,
-    "trails": 1788866155476,
+    "trails": 1788867935463,
     "weather": 0,
     "webcams": 0
   },
