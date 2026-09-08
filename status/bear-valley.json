@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-09-08T16:45:49Z",
+  "fetchedAt": "2026-09-08T17:00:31Z",
   "href": "https://www.bearvalley.com/lift-and-trail-status",
   "id": "bear-valley",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "CUB": "closed",
+      "GRIZZLY": "closed",
+      "KOALA": "closed",
+      "LIFT - LITTLE CUB CARPET": "closed",
+      "MOKELUMNE EXPRESS": "closed",
+      "PANDA": "closed",
+      "POLAR EXPRESS": "closed",
+      "POOH CHAIR": "closed",
+      "SUPER CUB": "closed"
+    }
   },
   "ll": [
     -120.0442661,
@@ -24,9 +34,9 @@
   "name": "Bear Valley",
   "open": false,
   "timestamp": {
-    "lifts": 1788885088955,
+    "lifts": 1788885976111,
     "opening": 1788884169064,
-    "trails": 1788884210395,
+    "trails": 1788885984385,
     "weather": 0,
     "webcams": 0
   },
