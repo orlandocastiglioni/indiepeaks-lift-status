@@ -212,6 +212,16 @@ Also relevant to the feed: Indy has **consolidated Mt. Washington's two cards in
 one** (alpine + cross-country). The app's separate nordic entry, on the identical
 pin, is now a duplicate.
 
+**Update 2026-09-08: the app-side decision was made.** IndiePeaks#184 removed all 19,
+so the app no longer reads status for `caberfae-peaks`, `cape-smokey`,
+`crystal-ridge-wi`, `granite-peak`, `little-switzerland-wi`, `lutsen-mountains`,
+`mission-ridge`, `mont-habitant`, `mount-washington-alpine-resort-nordic-centre-at-raven-lodge`,
+`nordic-mountain-wi` or `snowriver` — the eleven of the nineteen this feed publishes.
+Pruning them from `LIFTIE_RESORTS` and `RESORTS` is now unblocked, and is its own
+change: it stops eleven scrapes per cycle and deletes eleven `status/` files, which is
+a visible break for any other consumer of this public feed. Deliberately **not** bundled
+into the Smugglers' Notch registration below.
+
 ## Seventh announcement — 2026-09-08: Smugglers' Notch, the first that needed no parser
 
 One resort: **Smugglers' Notch Resort** (Jeffersonville, VT), Indy slug
