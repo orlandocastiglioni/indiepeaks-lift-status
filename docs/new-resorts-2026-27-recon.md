@@ -213,14 +213,25 @@ one** (alpine + cross-country). The app's separate nordic entry, on the identica
 pin, is now a duplicate.
 
 **Update 2026-09-08: the app-side decision was made.** IndiePeaks#184 removed all 19,
-so the app no longer reads status for `caberfae-peaks`, `cape-smokey`,
-`crystal-ridge-wi`, `granite-peak`, `little-switzerland-wi`, `lutsen-mountains`,
-`mission-ridge`, `mont-habitant`, `mount-washington-alpine-resort-nordic-centre-at-raven-lodge`,
-`nordic-mountain-wi` or `snowriver` — the eleven of the nineteen this feed publishes.
-Pruning them from `LIFTIE_RESORTS` and `RESORTS` is now unblocked, and is its own
-change: it stops eleven scrapes per cycle and deletes eleven `status/` files, which is
-a visible break for any other consumer of this public feed. Deliberately **not** bundled
-into the Smugglers' Notch registration below.
+taking 16 `status-sources.json` entries with them. Fourteen of those pointed at files in
+this feed. **Use the Liftie ids, not the app's** — four of them differ, which is exactly
+the kind of thing a grep-and-delete gets wrong:
+
+| still in `RESORTS` (11) | app id, where it differs |
+|---|---|
+| `caberfae-peaks`, `cape-smokey`, `granite-peak`, `lutsen-mountains`, `mission-ridge`, `mont-habitant`, `snowriver` | same |
+| `crystal-ridge` | `crystal-ridge-wi` |
+| `little-switzerland` | `little-switzerland-wi` |
+| `nordic-mountain` | `nordic-mountain-wi` |
+| `mt-washington-bc-xc` | `mount-washington-alpine-resort-nordic-centre-at-raven-lodge` |
+
+Three more — `blacktail-mountain`, `loge-glacier`, `methow-trails-xc` — have `status/`
+files that the app referenced but are **not** in `RESORTS`, so they are already stale and
+nothing is refreshing them. Worth resolving in the same pass.
+
+Pruning is now unblocked and is deliberately **not** bundled into the Smugglers' Notch
+registration below: it stops eleven scrapes per cycle and deletes fourteen `status/`
+files, which is a visible break for any other consumer of this public feed.
 
 ## Seventh announcement — 2026-09-08: Smugglers' Notch, the first that needed no parser
 
