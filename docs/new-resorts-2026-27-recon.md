@@ -90,6 +90,241 @@ Kanasuta and Eastman there is no cheap parser here; recheck in season.
   trail status, adding it would be the difference between the app showing half
   that resort's conditions and all of them.
 
+## Fourth announcement — 2026-09-05
+
+Five announced, four new resorts (Mt. Pisgah NY, Osceola Tug Hill XC NY, Ski
+Saint-Bruno QC, St. Johann in Tirol AT) plus Granby Ranch gaining cross-country.
+Two are report-link-only (`skisaintbruno.ca/en/sliding-conditions`,
+`bergbahnen-stjohann.at/de/lifte-und-pisten.html`); Mt. Pisgah and Osceola get
+nothing on purpose — neither publishes a snow report at all.
+
+`granby-ranch` was already live here, and like `jay-peak` its published file is
+**alpine-side only**, so the nordic half it gained for 26/27 is not represented.
+
+## Fifth announcement — 2026-09-06
+
+Six announced and **all six are new resorts** — the first batch this season with
+no existing-card flag flip hiding in it. Elm Creek Park Reserve (Maple Grove MN,
+alpine + XC from day one), Sleepy Hollow (Huntington VT, XC), Obertauern and
+Petzen (AT), Tschiertschen - Chur (CH) and Snow Resort The Cupid of Romance
+(Nagano JP).
+
+All six are report-link-only in the app, and **none of them has an upstream
+Liftie parser** — checked all 191 modules in `lib/resorts`. So this batch adds no
+pipeline work that can be done today; it is the Node ≥ 23.8 blocker again (the box
+runs 22.22), the same one holding up Mont Kanasuta and Eastman.
+
+**Three notes for whoever writes those parsers later:**
+
+- **`kijimadaira.info` is a trap.** OpenSkiMap still records it as the website for
+  the Japanese resort, and it is now a **parked domain serving gambling spam** —
+  title "Kijimadaira", body linking a 1xbet mirror. The real operator site is
+  `kijimadaira-ski.com`, whose ゲレンデ page carries リフト運行状況. The resort is
+  the former 木島平スキー場, renamed for the 2023 season under a naming-rights deal.
+- **`petzen.net` and Obertauern's lift page are fully JS-rendered.** Every URL on
+  petzen.net returns the same 3,867-character nav shell to a scripted client, so
+  a parser here needs to find the underlying XHR, not the HTML. Obertauern's
+  page is `/winter/liftanlagen.html` ("Offene Lifte & Pisten").
+- **Elm Creek is a Three Rivers Park District property**, like the already-live
+  `hyland-hills`. Its status lives on the district's shared activity board
+  (`threeriversparks.org/page/three-rivers-activity-status`) rather than a
+  per-resort page, which means one parser could plausibly cover both — worth
+  looking at first, since it is the cheapest of the six.
+
+**One thing in the app repo, not this one, worth knowing here:** Indy's card
+coordinate for Sleepy Hollow points at Hamilton County, **New York**, ~200 km from
+the Vermont resort. The app now ships the address from the resort's own site and
+warns on any US/CA pin that falls outside its state. If anything here ever starts
+consuming Indy's coordinates, do not trust them unchecked.
+
+## Sixth announcement — 2026-09-07
+
+Five, all new cards again: Orcières Merlette 1850 (FR), Spring Mountain
+Adventures (PA), Winter4Kids / the National Winter Activity Center (NJ), Nutt
+Hill (WI) and Veterans Memorial Recreation Area (NH). **No upstream Liftie
+parser for any of them** (all 191 modules in `lib/resorts` checked), so again no
+pipeline work that clears the Node ≥ 23.8 blocker on a box running 22.22.
+
+**But this batch contains the best parser target of the season.**
+`springmountainadventures.com/trail-map/` renders its status **server-side**, as
+plain HTML in the page body — not a JS widget, not an XHR:
+
+```
+A. Alpine - OPEN          F - Glacier - Closed      1. Terrain Tow Rope - Closed
+D. Hawk - Closed          3. Boulder - triple chairlift - OPEN
+E. Drifter - Closed       4. Rocktop - double chairlift - Closed
+```
+
+Both trails (letters) and lifts (numbers) in one document, each with an explicit
+OPEN/Closed. That is a selector away from a real feed, and it is the shape the app
+repo's `docs/status-sources.md` has been describing as the missing "HTML-selector
+source kind" since the July survey. If one parser gets written this off-season,
+this is the one.
+
+Two smaller notes:
+
+- **Veterans Memorial is volunteer-run** (the Franklin Outing Club) and posts
+  conditions on `skithevets.org/skiing-and-snowboarding` and Facebook. Indy links
+  no website for it at all — the site was found by name.
+- **Nutt Hill and Winter4Kids publish no conditions anywhere**, only hours, so
+  they get no app entry and would have nothing for a parser to read either.
+
+**And a repeat of the app-side coordinate problem, one batch later:** Indy's card
+for Nutt Hill points at Wagner, Charles Mix County, **South Dakota**, ~800 km from
+Plymouth, Wisconsin. The app now catches this automatically — a validator warns on
+any US/CA pin outside its own state — but the standing note holds: if anything in
+this repo ever consumes Indy's coordinates, do not trust them unchecked.
+
+## Full roster reconciliation — 2026-09-07
+
+The app repo reconciled its whole catalog against Indy's whole roster page for the
+first time, rather than announcement-by-announcement. Two findings matter here.
+
+**Eight resorts were on the pass with no app entry**, seven of them announced in
+spring 2026. Four now have report-link entries; **none has a Liftie parser**, and
+one of them cannot ever have a meaningful feed:
+
+- `pizol` (CH) — `pizol.com/en/winter/winter-sports-report/`
+- `whitecap-mountains-resort` (WI) — `whitecapresort.com/winter/snow-report`
+- `onikoube-ski-resort` (JP) — `onikoube.com/snow/ski-slope/`
+- `north-cascade-heli` (WA) — `heli-ski.com/weather-conditions`. A **heli
+  operator**: no lifts, no trails, nothing for this pipeline to scrape. Worth
+  knowing before someone tries.
+
+`camp-10-ski-area`, `carters-xc-ski-center`, `coffee-mill-ski-area` and
+`domaine-skiable-des-contamines` publish no conditions page at all and get nothing.
+
+**A second parked-domain trap, one day after kijimadaira.info.**
+`camp10skiarea.com` is a parked domain that redirects to `/lander`. Camp 10's only
+confirmed live presence is the Facebook page Indy itself links. Twice now the
+"better" website found by searching has been the wrong one — fetch and read before
+trusting any recorded URL, upstream or otherwise.
+
+**Nineteen resorts in the app are on no Indy card**, four of them confirmed
+departures by trade press (Lutsen, Granite Peak and Snowriver to Ikon; Mission
+Ridge dropping Indy). **This repo still publishes status files for several of
+them.** Nothing has been removed on either side — the app-side decision is the
+owner's, and the feed should not be pruned ahead of it. When it is settled, the
+Pi's resort list wants the same treatment so it stops fetching for resorts nobody
+reads.
+
+Also relevant to the feed: Indy has **consolidated Mt. Washington's two cards into
+one** (alpine + cross-country). The app's separate nordic entry, on the identical
+pin, is now a duplicate.
+
+**Update 2026-09-08: the app-side decision was made.** IndiePeaks#184 removed all 19,
+taking 16 `status-sources.json` entries with them. Fourteen of those pointed at files in
+this feed. **Use the Liftie ids, not the app's** — four of them differ, which is exactly
+the kind of thing a grep-and-delete gets wrong:
+
+| still in `RESORTS` (11) | app id, where it differs |
+|---|---|
+| `caberfae-peaks`, `cape-smokey`, `granite-peak`, `lutsen-mountains`, `mission-ridge`, `mont-habitant`, `snowriver` | same |
+| `crystal-ridge` | `crystal-ridge-wi` |
+| `little-switzerland` | `little-switzerland-wi` |
+| `nordic-mountain` | `nordic-mountain-wi` |
+| `mt-washington-bc-xc` | `mount-washington-alpine-resort-nordic-centre-at-raven-lodge` |
+
+Three more — `blacktail-mountain`, `loge-glacier`, `methow-trails-xc` — have `status/`
+files that the app referenced but are **not** in `RESORTS`, so they are already stale and
+nothing is refreshing them. Worth resolving in the same pass.
+
+Pruning is now unblocked and is deliberately **not** bundled into the Smugglers' Notch
+registration below: it stops scrapes per cycle and deletes `status/` files, which is a
+visible break for any other consumer of this public feed.
+
+**Update 2026-09-09: pruned — and the counts above were wrong, for an instructive
+reason.** Both the "eleven scrapes" and the "three already-stale files" were derived
+from `RESORTS` in `pi-setup/liftie-publish.py`. **That list was stale.** It carried 98
+ids; `status/_index.json`, which `liftie-publish.py` rewrites from `RESORTS` on every
+run, carried 250. The Pi had been running a roster nobody had committed back for two
+months, so a diff against the committed file under-reported the scrapes by more than
+half — and `blacktail-mountain`, `loge-glacier` and `methow-trails-xc` were not stale
+leftovers at all, they were being fetched every 15 minutes like everything else.
+
+Redone against `_index.json`, **sixteen** of IndiePeaks#184's nineteen departures had a
+Liftie scrape. `ani-ski-resort`, `meadowlark-ski-resort` and `valmorel-ski-resort` never
+had a parser, which is the whole difference between 19 and 16:
+
+| Liftie id | app id, where it differs |
+|---|---|
+| `caberfae-peaks`, `cape-smokey`, `granite-peak`, `lutsen-mountains`, `mission-ridge`, `mont-habitant`, `snowriver`, `loge-glacier`, `methow-trails-xc` | same |
+| `blacktail-mountain` | `blacktail-mountain-resort` |
+| `crystal-ridge` | `crystal-ridge-wi` |
+| `kiroro` | `kiroro-snow-world` |
+| `little-switzerland` | `little-switzerland-wi` |
+| `nordic-mountain` | `nordic-mountain-wi` |
+| `mt-washington-bc-xc` | `mount-washington-alpine-resort-nordic-centre-at-raven-lodge` |
+| `tangram-ski-circus` | same |
+
+All sixteen are out of both roster lists and their `status/` files are deleted, along
+with their `_index.json` / `_health.json` rows. The lists were rebuilt from
+`_index.json` in the same commit rather than edited in place, so they now describe the
+Pi: 236 ids (234 published + `smuggs` and `west-mountain`, both registered with nothing
+published yet).
+
+**One near-miss worth recording.** Matching the feed against the app by id alone flags
+`strandafjellet` as delisted — there is no `strandafjellet` in the roster. There is
+`stranda-ski-resort`, 0.5 km away, `websiteURL` `strandafjellet.no`: the same mountain
+under Indy's name for it. Pin distance caught it where both the id and the display name
+missed. Four other feed ids are in the same shape — on the pass, scraped, and simply not
+wired to a `status-sources.json` entry yet: `maiko-snow-resort` (app `maiko-resort`),
+`saddleback` (the app reads the resort's own richer API instead), `smuggs` (registered
+2026-09-08, first publish pending) and `strandafjellet`. **Not-in-the-app is not the same
+as not-on-the-pass** — check the pin before deleting anything.
+
+## Seventh announcement — 2026-09-08: Smugglers' Notch, the first with a JSON feed
+
+One resort: **Smugglers' Notch Resort** (Jeffersonville, VT), Indy slug
+`smugglers-notch-resort`.
+
+Every resort added this season so far needed an HTML parser written from scratch, and
+several could not get one at all. This one is different twice over. Upstream Liftie
+already ships a `smuggs` module (`lib/resorts/smuggs`, selector
+`caption:contains("Lifts") ~ .facility-report_item`) that scrapes the report page Indy
+links as "Conditions" — but that scraper is **lifts only**, and the page it reads is
+rendered from data the site also serves as plain JSON.
+
+smuggs.com is WordPress; its theme (`bytesco`) registers a `custom/v1` REST namespace
+with two unauthenticated routes, one object per "facility" post:
+
+| Route | Payload |
+|---|---|
+| `https://www.smuggs.com/wp-json/custom/v1/lifts` | 8 lifts: `title.rendered`, `facility_location`, `opening_hours`, `acf.open_status` (bool) |
+| `https://www.smuggs.com/wp-json/custom/v1/trails` | 106 trails: the same plus `acf.groomed_status`, `acf.snowmaking_status`, `acf.difficulty`, `acf.notes` |
+
+Cache headers are `public, max-age=60, s-maxage=3600` and the routes echo any `Origin`.
+Snow totals, the daily message and the report's own "last updated" live in an ACF
+options group that no route exposes — only the rendered HTML carries them.
+
+**Patch 0132** replaces upstream's module rather than registering it as-is: lifts route
+through `api` (JSON; `dataUrl` would HTML-parse the body, the skiwelt trap from 0007) and
+`trails.js` reads the second route with `"json": true`. Difficulty maps locally because
+the feed's "Extreme Expert" is not in the shared level map: Easy → green, Intermediate →
+blue, Advanced → black, Expert / Extreme Expert → doubleBlack, Terrain Park → terrainPark.
+`title.rendered` is entity-decoded (`&#8217;`) the way skiwelt's titles are.
+
+**Nordic Adventure Center rows are dropped.** Indy lists the resort as alpine with 78
+trails and no nordic card; the feed's 23 nordic trails would publish 106 and read as a
+mismatch against the app's bundled count. What ships is 83 (78 trails + 5 parks).
+
+Fixtures are the live off-season payload — every flag false — with a few hand-flipped to
+open, plus two nordic rows (one open) that the trails test asserts are absent. Verified
+2026-09-08 against the live routes through Liftie's own fetchers: 8 lifts, 83 trails,
+every level populated, no nordic leak; `make test` 382/382, `make lint` clean.
+
+Registration is the same two-place change as any other resort, both in this PR:
+`LIFTIE_RESORTS` in `pi-setup/liftie.service` and `RESORTS` in
+`pi-setup/liftie-publish.py`. Until the Pi applies the patch and publishes
+`status/smuggs.json`, the app ships a **report-link** entry against the winter report
+page; then `Scripts/sync-status-sources.py` generates the live entry app-side. Pointing an
+`apiURL` at a file that has never existed would ship a 404 and fail the app's pre-ship
+gate, so the ordering stands.
+
+Trail counts for whoever reads the first published payload: Indy 78, this feed 83 (parks
+included), OpenStreetMap 110 runs and 9 lifts. All three count different things; none is
+wrong.
+
 ## Feed regressions found while wiring this
 
 Reconciling `status-sources.json` against this repo turned up three entries that
