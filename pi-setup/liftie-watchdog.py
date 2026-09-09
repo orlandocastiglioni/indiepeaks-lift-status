@@ -3,21 +3,33 @@
 
 Alerts (via ntfy.sh, topic in NTFY_TOPIC env) when:
 1. the last publish run recorded in status/_health.json is older than 2 hours
-2. during ski season (Nov 15 - Apr 15), any resort that once had data has
+2. commits have piled up locally without reaching GitHub
+3. the last liftie-publish run exited non-zero
+4. during ski season (Nov 15 - Apr 15), any resort that once had data has
    been empty for 7+ consecutive days (parser-rot signal)
+
+Check 1 alone is not enough: _health.json is written by the scrape, before the
+push, so a push that fails leaves it looking perfectly fresh. That is exactly
+what happened 2026-09-02 to 2026-09-08 -- the remote moved ahead, every push
+was rejected as non-fast-forward, the feed froze for six days, and the watchdog
+reported "all healthy" every morning. Checks 2 and 3 watch the delivery half of
+the pipeline, which is the half that actually broke.
 """
 
 import json
 import os
+import subprocess
 import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-HEALTH = Path.home() / "lift-status-data" / "status" / "_health.json"
+REPO = Path.home() / "lift-status-data"
+HEALTH = REPO / "status" / "_health.json"
 NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "")
 STALE_HOURS = 2
 ROT_DAYS = 7
+PUBLISH_UNIT = "liftie-publish.service"
 
 
 def parse_ts(ts):
@@ -27,6 +39,36 @@ def parse_ts(ts):
 def in_season(now):
     m, d = now.month, now.day
     return (m == 11 and d >= 15) or m == 12 or m <= 3 or (m == 4 and d <= 15)
+
+
+def unpushed_commits():
+    """Commits on main that have not reached origin/main, or None if unknown.
+
+    Uses the local origin/main ref without fetching: a successful push is what
+    advances it, so a stalled push shows up here even with no network.
+    """
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(REPO), "rev-list", "--count", "origin/main..HEAD"],
+            capture_output=True, text=True, timeout=60, check=True,
+        )
+        return int(out.stdout.strip())
+    except (subprocess.SubprocessError, OSError, ValueError) as err:
+        print(f"WARN: could not count unpushed commits: {err}")
+        return None
+
+
+def publish_unit_failed():
+    """True when the last liftie-publish run exited non-zero."""
+    try:
+        out = subprocess.run(
+            ["systemctl", "show", "-p", "Result", "--value", PUBLISH_UNIT],
+            capture_output=True, text=True, timeout=60, check=True,
+        )
+        return out.stdout.strip() not in ("success", "")
+    except (subprocess.SubprocessError, OSError) as err:
+        print(f"WARN: could not read {PUBLISH_UNIT} result: {err}")
+        return False
 
 
 def alert(title, message):
@@ -56,6 +98,23 @@ def main():
                 f"Last publish run was {age_h:.1f}h ago (limit {STALE_HOURS}h). "
                 "Check liftie.service / liftie-publish.timer on the pi.",
             ))
+        behind = unpushed_commits()
+        if behind:
+            problems.append((
+                "Liftie publish is not reaching GitHub",
+                f"{behind} commit(s) are stuck on the pi and have not been pushed. "
+                "The scrape is running but the feed is frozen. Usually the remote "
+                "moved ahead and push is rejected: run 'git pull --no-rebase' in "
+                "~/lift-status-data, resolve any conflicts, and let the timer catch up.",
+            ))
+
+        if publish_unit_failed():
+            problems.append((
+                "Liftie publish service is failing",
+                f"The last {PUBLISH_UNIT} run exited non-zero. "
+                f"Check 'journalctl -u {PUBLISH_UNIT} -n 50' on the pi.",
+            ))
+
         if in_season(now):
             rotten = []
             for rid, entry in sorted((health.get("resorts") or {}).items()):
