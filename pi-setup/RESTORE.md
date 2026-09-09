@@ -185,3 +185,17 @@ PY
 is registered (its first run has not happened) and for a parser whose source has
 gone away. `published but unregistered` is always a bug: it means the lists are
 behind the Pi.
+
+## When publishing stalls
+
+`liftie-publish.py` pushes with a rebase-and-retry (up to 3 attempts), so a
+commit landing on `main` from anywhere else no longer wedges the pi. It does
+not auto-resolve a conflicting rebase: that means the remote changed or deleted
+the same status files, and picking a side unattended would revert someone. It
+aborts and leaves the commits unpushed for a human.
+
+`liftie-watchdog.py` alerts on both halves of the pipeline: `lastRun` in
+`_health.json` going stale (the scrape stopped) and commits sitting unpushed or
+the publish unit exiting non-zero (delivery stopped). Watching only the first
+is what let the 2026-09-02 outage run six days unnoticed -- `_health.json` is
+written before the push, so it stayed fresh the whole time.
