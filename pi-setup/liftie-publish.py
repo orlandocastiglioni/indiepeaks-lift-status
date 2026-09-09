@@ -102,6 +102,56 @@ def git(*args, check=True):
     )
 
 
+def reason(stderr):
+    """The line of git's push output that says why, not 'To <url>'."""
+    for line in stderr.splitlines():
+        if "rejected" in line or line.startswith("error:"):
+            return line.strip()
+    return stderr.splitlines()[0] if stderr else "no detail"
+
+
+def push(attempts=3):
+    """Push to origin/main, recovering from a remote that moved ahead.
+
+    A plain push is not enough: anything landing on main from elsewhere -- a
+    merged PR, a session on the laptop -- makes every subsequent push here a
+    non-fast-forward rejection, and this runs unattended every fifteen minutes.
+    Between 2026-09-02 and 2026-09-08 that froze the public feed for six days
+    while the scrape carried on committing locally.
+
+    On rejection, rebase the local status commits onto origin/main and retry.
+    They are generated data with no other consumer, so replaying them on top is
+    safe and keeps history linear. A rebase that conflicts is NOT resolved here:
+    a conflict means the remote deliberately changed or deleted the same status
+    files (as the 26/27 roster prune did), and picking a side automatically
+    would silently revert someone's intent. Abort, fail, let the watchdog page.
+    """
+    for attempt in range(1, attempts + 1):
+        try:
+            git("push", "origin", "main")
+            return True
+        except subprocess.CalledProcessError as err:
+            stderr = (err.stderr or "").strip()
+            if attempt == attempts:
+                log(f"ERROR: git push failed after {attempts} attempts: {stderr}")
+                return False
+            log(f"Push rejected (attempt {attempt}/{attempts}); "
+                f"rebasing onto origin/main and retrying. Remote said: "
+                f"{reason(stderr)}")
+            try:
+                git("fetch", "origin", "main")
+                git("rebase", "origin/main")
+            except subprocess.CalledProcessError as rebase_err:
+                git("rebase", "--abort", check=False)
+                log("ERROR: could not rebase onto origin/main, so the local "
+                    "commits stay unpushed and the feed is stalled. This "
+                    "usually means the remote changed or deleted the same "
+                    "status files. Resolve by hand in "
+                    f"{REPO}. Git said: {(rebase_err.stderr or '').strip()}")
+                return False
+    return False
+
+
 def counts(data):
     lifts = len((data.get("lifts") or {}).get("status") or {})
     trails_list = (data.get("trails") or {}).get("list")
@@ -226,10 +276,7 @@ def main():
         log("Files identical after serialization; nothing to commit.")
         return 0
     git("commit", "-m", f"lift status update {fetched_at}")
-    try:
-        git("push", "origin", "main")
-    except subprocess.CalledProcessError as err:
-        log(f"ERROR: git push failed: {err.stderr.strip()}")
+    if not push():
         return 1
     log(f"Published {len(changed)} file(s).")
     return 0
