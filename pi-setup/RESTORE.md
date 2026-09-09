@@ -72,6 +72,15 @@ git config user.name "Orlando Castiglioni"
 git config credential.helper "store --file /home/orlando/.git-credentials-liftie"
 ```
 
+The watchdog topic is the only thing guarding those notifications: anyone who
+knows it can read your alerts and push fake ones to your phone. It is therefore
+NOT committed -- `liftie-watchdog.service` ships a placeholder, and the real
+value is filled in on the pi only. After copying the unit into
+`/etc/systemd/system/`, replace `REPLACE-ME-SEE-RESTORE-MD` with the topic,
+then `systemctl daemon-reload`. Pick a long random one; ntfy.sh has no other
+access control. This file is in a public repo, so treat any topic that has ever
+appeared in its history as burned.
+
 Create `/home/orlando/.git-credentials-liftie` containing exactly one line —
 `https://orlandocastiglioni:<FINE-GRAINED-PAT>@github.com` — where the PAT is
 a GitHub fine-grained token with push access to `indiepeaks-lift-status`
@@ -135,7 +144,7 @@ sudo cp ~/lift-status-data/pi-setup/liftie.service \
 ```
 
 Edit `/etc/systemd/system/liftie-watchdog.service` and replace
-`NTFY_TOPIC=<your-private-ntfy-topic>` with the real topic (kept out of this
+`NTFY_TOPIC=<your-ntfy-topic>` with the real topic (kept out of this
 public repo; it's set in the watchdog unit on the running Pi — or pick any
 new random private string and subscribe your phone to it at ntfy.sh).
 

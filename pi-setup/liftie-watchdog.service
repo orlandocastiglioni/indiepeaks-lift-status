@@ -7,5 +7,5 @@ Wants=network-online.target
 Type=oneshot
 User=orlando
 Group=orlando
-Environment=NTFY_TOPIC=<your-private-ntfy-topic>
+Environment=NTFY_TOPIC=REPLACE-ME-SEE-RESTORE-MD
 ExecStart=/usr/bin/python3 /home/orlando/liftie-watchdog.py
