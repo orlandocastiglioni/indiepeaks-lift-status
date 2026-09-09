@@ -1,8 +1,8 @@
 # Rebuilding the Liftie pipeline from a blank SD card
 
 Everything needed to resurrect the self-hosted Liftie → IndiePeaks publish
-pipeline lives in this repo: this directory (units + scripts) and
-`../liftie-patches/` (every local commit on top of upstream Liftie).
+pipeline lives in this directory (units + scripts), plus the parser work in the
+liftie fork: https://github.com/orlandocastiglioni/liftie (see step 2).
 
 Target: Raspberry Pi, 64-bit Raspberry Pi OS (aarch64 — check with `uname -m`),
 user `orlando` with sudo. Adjust paths if the user differs.
@@ -37,30 +37,37 @@ sudo corepack enable && corepack prepare pnpm@10 --activate
 Liftie needs Node >= 23.8 (URLPattern). pnpm must be major 10 — 11 rejects
 upstream's lockfile.
 
-## 2. Liftie checkout + local patches
+## 2. Liftie checkout
+
+The parser work lives in the fork, which is the real history rather than an
+export of it:
 
 ```sh
-git clone https://github.com/pirxpilot/liftie ~/liftie
+git clone https://github.com/orlandocastiglioni/liftie ~/liftie
 cd ~/liftie
-git checkout 546d615        # upstream base the patches apply to (Release 4.3.5)
+git checkout main           # or pin: fdc44948, verified good 2026-09-08
+git remote add upstream https://github.com/pirxpilot/liftie
 git config user.email orlando@orlandocc.me
 git config user.name "Orlando Castiglioni"
-git am --keep-cr ~/lift-status-data/liftie-patches/*.patch
 make build                  # pnpm install + client asset build
 make test                   # should be all green
 ```
 
-`--keep-cr` matters: some test fixtures are scraped pages with CRLF lines,
-and plain `git am` would strip the CRs (verified: with the flag the result
-is byte-identical to the source tree).
+That is 151 local commits on top of upstream, plus upstream's own 4.3.6 merged
+in. Liftie needs Node >= 23.8 and pnpm major 10, as above.
 
-```sh
-```
+This repo used to carry the same commits a second time as `liftie-patches/`, a
+`git format-patch` export replayed with `git am`. That was dropped on
+2026-09-08. It was 25 MB against 1.5 MB of actual lift status -- 94% of a
+public repo -- almost all of it scraped third-party HTML test fixtures, and it
+republished API keys belonging to the resorts whose pages were captured. It had
+also silently drifted: 19 of the 151 commits were never committed here, and the
+smuggs patch was filed under the wrong sequence number, so the documented
+restore would have rebuilt a tree missing every 26/27 resort addition. The fork
+cannot drift like that, because it is the branch the pi actually runs.
 
-(Clone this data repo first if you haven't: step 3.)
-
-If upstream has moved and the patches no longer apply to `main`, applying
-them onto 546d615 as above always works; rebase at your leisure.
+Keep the fork pushed. `git push fork HEAD:main` after local parser work is what
+makes this section true; the pi's SD card is not a backup.
 
 ## 3. Data repo + push credential
 
