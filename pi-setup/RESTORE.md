@@ -160,3 +160,28 @@ systemctl list-timers 'liftie*'                            # both timers schedul
 
 The resort roster lives in TWO places that must stay in sync: the
 `LIFTIE_RESORTS` env in `liftie.service` and `RESORTS` in `liftie-publish.py`.
+
+If the two ever disagree with what the Pi is actually running, `status/_index.json`
+is the tiebreak: `liftie-publish.py` rewrites it from `RESORTS` on every run, so
+its key set *is* the roster of the last publish. Between 2026-07 and 2026-09 the
+committed lists drifted to 98 ids while the Pi ran 250 — copying them over at that
+point would have silently stopped 152 resorts. Check before you copy:
+
+```sh
+python3 - <<'PY'
+import json, re
+svc = set(re.search(r'LIFTIE_RESORTS=(\S+)',
+                    open('pi-setup/liftie.service').read()).group(1).split(','))
+pub = set(re.findall(r'"([^"]+)"', re.search(
+    r'RESORTS = \[(.*?)\n\]', open('pi-setup/liftie-publish.py').read(), re.S).group(1)))
+idx = set(json.load(open('status/_index.json'))['resorts'])
+print('service == publish:', svc == pub)
+print('registered but never published:', sorted(svc - idx))   # new/broken parsers
+print('published but unregistered:', sorted(idx - svc))        # MUST be empty
+PY
+```
+
+`registered but never published` is expected to be non-empty right after a resort
+is registered (its first run has not happened) and for a parser whose source has
+gone away. `published but unregistered` is always a bug: it means the lists are
+behind the Pi.

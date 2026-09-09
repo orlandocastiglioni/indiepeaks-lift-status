@@ -230,8 +230,48 @@ files that the app referenced but are **not** in `RESORTS`, so they are already 
 nothing is refreshing them. Worth resolving in the same pass.
 
 Pruning is now unblocked and is deliberately **not** bundled into the Smugglers' Notch
-registration below: it stops eleven scrapes per cycle and deletes fourteen `status/`
-files, which is a visible break for any other consumer of this public feed.
+registration below: it stops scrapes per cycle and deletes `status/` files, which is a
+visible break for any other consumer of this public feed.
+
+**Update 2026-09-09: pruned — and the counts above were wrong, for an instructive
+reason.** Both the "eleven scrapes" and the "three already-stale files" were derived
+from `RESORTS` in `pi-setup/liftie-publish.py`. **That list was stale.** It carried 98
+ids; `status/_index.json`, which `liftie-publish.py` rewrites from `RESORTS` on every
+run, carried 250. The Pi had been running a roster nobody had committed back for two
+months, so a diff against the committed file under-reported the scrapes by more than
+half — and `blacktail-mountain`, `loge-glacier` and `methow-trails-xc` were not stale
+leftovers at all, they were being fetched every 15 minutes like everything else.
+
+Redone against `_index.json`, **sixteen** of IndiePeaks#184's nineteen departures had a
+Liftie scrape. `ani-ski-resort`, `meadowlark-ski-resort` and `valmorel-ski-resort` never
+had a parser, which is the whole difference between 19 and 16:
+
+| Liftie id | app id, where it differs |
+|---|---|
+| `caberfae-peaks`, `cape-smokey`, `granite-peak`, `lutsen-mountains`, `mission-ridge`, `mont-habitant`, `snowriver`, `loge-glacier`, `methow-trails-xc` | same |
+| `blacktail-mountain` | `blacktail-mountain-resort` |
+| `crystal-ridge` | `crystal-ridge-wi` |
+| `kiroro` | `kiroro-snow-world` |
+| `little-switzerland` | `little-switzerland-wi` |
+| `nordic-mountain` | `nordic-mountain-wi` |
+| `mt-washington-bc-xc` | `mount-washington-alpine-resort-nordic-centre-at-raven-lodge` |
+| `tangram-ski-circus` | same |
+
+All sixteen are out of both roster lists and their `status/` files are deleted, along
+with their `_index.json` / `_health.json` rows. The lists were rebuilt from
+`_index.json` in the same commit rather than edited in place, so they now describe the
+Pi: 236 ids (234 published + `smuggs` and `west-mountain`, both registered with nothing
+published yet).
+
+**One near-miss worth recording.** Matching the feed against the app by id alone flags
+`strandafjellet` as delisted — there is no `strandafjellet` in the roster. There is
+`stranda-ski-resort`, 0.5 km away, `websiteURL` `strandafjellet.no`: the same mountain
+under Indy's name for it. Pin distance caught it where both the id and the display name
+missed. Four other feed ids are in the same shape — on the pass, scraped, and simply not
+wired to a `status-sources.json` entry yet: `maiko-snow-resort` (app `maiko-resort`),
+`saddleback` (the app reads the resort's own richer API instead), `smuggs` (registered
+2026-09-08, first publish pending) and `strandafjellet`. **Not-in-the-app is not the same
+as not-on-the-pass** — check the pin before deleting anything.
 
 ## Seventh announcement — 2026-09-08: Smugglers' Notch, the first with a JSON feed
 
