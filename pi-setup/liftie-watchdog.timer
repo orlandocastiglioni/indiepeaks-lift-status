@@ -1,9 +1,9 @@
 [Unit]
-Description=Run liftie-watchdog daily
+Description=Run liftie-watchdog hourly
 
 [Timer]
-OnCalendar=*-*-* 12:30:00
-RandomizedDelaySec=600
+OnCalendar=hourly
+RandomizedDelaySec=300
 Persistent=true
 
 [Install]

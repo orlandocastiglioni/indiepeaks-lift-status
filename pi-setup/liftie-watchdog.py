@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Daily watchdog for the Liftie publish pipeline.
+"""Hourly watchdog for the Liftie publish pipeline.
 
 Alerts (via ntfy.sh, topic in NTFY_TOPIC env) when:
 1. the last publish run recorded in status/_health.json is older than 2 hours
@@ -30,10 +30,15 @@ NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "")
 STALE_HOURS = 2
 ROT_DAYS = 7
 PUBLISH_UNIT = "liftie-publish.service"
+STATE = Path.home() / ".liftie-watchdog-state.json"
+REALERT_HOURS = 6
+
+
+TS_FMT = "%Y-%m-%dT%H:%M:%SZ"
 
 
 def parse_ts(ts):
-    return datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    return datetime.strptime(ts, TS_FMT).replace(tzinfo=timezone.utc)
 
 
 def in_season(now):
@@ -71,11 +76,11 @@ def publish_unit_failed():
         return False
 
 
-def alert(title, message):
+def alert(title, message, priority="high", tags="warning,ski"):
     req = urllib.request.Request(
         f"https://ntfy.sh/{NTFY_TOPIC}",
         data=message.encode(),
-        headers={"Title": title, "Priority": "high", "Tags": "warning,ski"},
+        headers={"Title": title, "Priority": priority, "Tags": tags},
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=30) as resp:
@@ -83,24 +88,77 @@ def alert(title, message):
     print(f"ALERT sent: {title}: {message}")
 
 
+def load_state():
+    try:
+        return json.loads(STATE.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def save_state(state):
+    try:
+        STATE.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n")
+    except OSError as err:
+        print(f"WARN: could not write {STATE}: {err}")
+
+
+def notify(problems, now):
+    """Send alerts, re-sending a still-broken thing only every REALERT_HOURS.
+
+    This runs hourly, so alerting unconditionally would have meant 144 identical
+    notifications during the six-day September outage -- which is how people
+    learn to swipe these away. Each distinct problem pages at most every six
+    hours, and says how long it has been going. When one clears, a single
+    low-priority all-clear closes the loop so silence is never ambiguous.
+    """
+    state = load_state()
+    active = {key: (title, message) for key, title, message in problems}
+
+    for key, (title, message) in sorted(active.items()):
+        since = state.get(key, {}).get("since")
+        last = state.get(key, {}).get("lastAlerted")
+        if since is None:
+            state[key] = {"since": now.strftime(TS_FMT)}
+        else:
+            hours_broken = (now - parse_ts(since)).total_seconds() / 3600
+            message += f" (ongoing for {hours_broken:.0f}h)"
+        if last and (now - parse_ts(last)).total_seconds() / 3600 < REALERT_HOURS:
+            print(f"suppressed (alerted <{REALERT_HOURS}h ago): {title}")
+            continue
+        alert(title, message)
+        state[key]["lastAlerted"] = now.strftime(TS_FMT)
+
+    for key in [k for k in state if k not in active]:
+        if state[key].get("lastAlerted"):
+            alert("Liftie pipeline recovered",
+                  f"{key}: resolved. The pipeline looks healthy again.",
+                  priority="low", tags="white_check_mark,ski")
+        del state[key]
+
+    save_state(state)
+
+
 def main():
     now = datetime.now(timezone.utc)
     problems = []
 
     if not HEALTH.exists():
-        problems.append(("Liftie publish health file missing", str(HEALTH)))
+        problems.append(("health-missing",
+                         "Liftie publish health file missing", str(HEALTH)))
     else:
         health = json.loads(HEALTH.read_text())
         age_h = (now - parse_ts(health["lastRun"])).total_seconds() / 3600
         if age_h > STALE_HOURS:
             problems.append((
-                "Liftie publish is stale",
+                "scrape-stale",
+                "Liftie scrape has stopped",
                 f"Last publish run was {age_h:.1f}h ago (limit {STALE_HOURS}h). "
                 "Check liftie.service / liftie-publish.timer on the pi.",
             ))
         behind = unpushed_commits()
         if behind:
             problems.append((
+                "push-stalled",
                 "Liftie publish is not reaching GitHub",
                 f"{behind} commit(s) are stuck on the pi and have not been pushed. "
                 "The scrape is running but the feed is frozen. Usually the remote "
@@ -110,6 +168,7 @@ def main():
 
         if publish_unit_failed():
             problems.append((
+                "publish-unit-failed",
                 "Liftie publish service is failing",
                 f"The last {PUBLISH_UNIT} run exited non-zero. "
                 f"Check 'journalctl -u {PUBLISH_UNIT} -n 50' on the pi.",
@@ -126,12 +185,12 @@ def main():
                     rotten.append(f"{rid} (empty {days}d)")
             if rotten:
                 problems.append((
+                    "parser-rot",
                     "Liftie parsers may have rotted",
                     "In-season resorts empty for 7+ days: " + ", ".join(rotten),
                 ))
 
-    for title, message in problems:
-        alert(title, message)
+    notify(problems, now)
     if not problems:
         print("watchdog: all healthy")
     return 0
