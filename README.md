@@ -58,6 +58,15 @@ or a plain `{name: status}` map when it doesn't. Trails-only resorts
   Smugglers' Notch (2026-09-08) is the exception: its WordPress site serves lifts and
   trails as JSON, so patch 0132 swaps upstream's lifts-only scraper for the feed.
 
+**2026-09-09 — sixteen resorts removed.** Indy did not renew them for 26/27, so
+scraping stopped and their `status/` files were deleted: `blacktail-mountain`,
+`caberfae-peaks`, `cape-smokey`, `crystal-ridge`, `granite-peak`, `kiroro`,
+`little-switzerland`, `loge-glacier`, `lutsen-mountains`, `methow-trails-xc`,
+`mission-ridge`, `mont-habitant`, `mt-washington-bc-xc`, `nordic-mountain`,
+`snowriver` and `tangram-ski-circus`. If you consume this feed, those ids now 404.
+`mt-washington-bc-xc` is the one that is not a departure: Indy merged Mt. Washington's
+alpine and cross-country cards, and `mt-washington-bc` covers it.
+
 ## Credits & license
 
 Lift status is collected by [Liftie](https://github.com/pirxpilot/liftie)
