@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-10T03:45:04Z",
+  "fetchedAt": "2026-09-10T14:00:54Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1789011058491,
-    "opening": 1789010148236,
-    "trails": 1789011048571,
-    "weather": 1789010151593,
-    "webcams": 1789011058391
+    "lifts": 1789047917971,
+    "opening": 1789045269949,
+    "trails": 1789047917971,
+    "weather": 1789040723464,
+    "webcams": 1789047910794
   },
   "trails": {
     "list": [
@@ -207,7 +207,7 @@
       {
         "level": "doubleBlack",
         "name": "Fort Hill",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "doubleBlack",
@@ -216,18 +216,18 @@
       }
     ],
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
-      "open": 36,
+      "open": 35,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Chance Rain Showers",
+    "conditions": "Slight Chance Rain Showers then Mostly Sunny",
     "date": "2026-09-10",
     "icon": [
-      "basecloud",
-      "icon-showers icon-sunny"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 66
+      "max": 78
     },
-    "text": "A chance of rain showers before 3am, then a chance of rain showers and patchy fog. Cloudy, with a low around 66. Southwest wind 9 to 14 mph, with gusts as high as 28 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "A slight chance of rain showers before 8am. Mostly sunny, with a high near 78. West wind 12 to 18 mph, with gusts as high as 32 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
