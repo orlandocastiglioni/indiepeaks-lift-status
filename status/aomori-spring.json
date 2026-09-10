@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-09-10T00:15:06Z",
+  "fetchedAt": "2026-09-10T00:30:34Z",
   "href": "https://aomorispring.com/ski/lift-course-status",
   "id": "aomori-spring",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Diamond": "closed",
+      "Gondola": "closed",
+      "Quad 1": "closed",
+      "Quad 2": "closed"
+    }
   },
   "ll": [
     140.27827,
@@ -23,9 +28,9 @@
   ],
   "name": "Aomori Spring Ski Resort",
   "timestamp": {
-    "lifts": 1788998426052,
-    "opening": 1788995713814,
-    "trails": 1788997546848,
+    "lifts": 1788999324002,
+    "opening": 1788999315133,
+    "trails": 1788999324001,
     "weather": 0,
     "webcams": 0
   },
