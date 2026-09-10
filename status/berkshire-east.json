@@ -1,37 +1,33 @@
 {
-  "fetchedAt": "2026-09-07T21:30:45Z",
+  "fetchedAt": "2026-09-10T03:30:56Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.87711354420584,
     42.62131426140839
   ],
   "name": "Berkshire East",
-  "open": false,
   "timestamp": {
-    "lifts": 1788815712841,
-    "opening": 1788815707717,
-    "trails": 1788815712841,
-    "weather": 1788808550473,
-    "webcams": 1788815707717
+    "lifts": 1789010153502,
+    "opening": 1789010148236,
+    "trails": 1789011048571,
+    "weather": 1789010151593,
+    "webcams": 1789010148236
   },
   "trails": {
     "list": [
@@ -224,11 +220,11 @@
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-09-07",
+    "conditions": "Chance Rain Showers",
+    "date": "2026-09-10",
     "icon": [
-      "basenone",
-      "icon-sun"
+      "basecloud",
+      "icon-showers icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -237,8 +233,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 72
+      "max": 66
     },
-    "text": "Sunny, with a high near 72. Northwest wind around 10 mph, with gusts as high as 21 mph."
+    "text": "A chance of rain showers before 3am, then a chance of rain showers and patchy fog. Cloudy, with a low around 66. Southwest wind 9 to 14 mph, with gusts as high as 28 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
