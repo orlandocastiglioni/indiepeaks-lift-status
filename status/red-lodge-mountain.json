@@ -1,42 +1,33 @@
 {
-  "fetchedAt": "2026-09-08T16:45:49Z",
+  "fetchedAt": "2026-09-11T16:15:11Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
     45.191021
   ],
   "name": "Red Lodge Mountain",
-  "open": false,
   "timestamp": {
-    "lifts": 1788885061873,
-    "opening": 1788884169068,
-    "trails": 1788885061873,
-    "weather": 1788878721602,
-    "webcams": 1788885049368
+    "lifts": 1789142464845,
+    "opening": 1789140662334,
+    "trails": 1789141535403,
+    "weather": 1789142464842,
+    "webcams": 1789142463039
   },
   "trails": {
     "list": [
@@ -402,23 +393,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Sunny",
-    "date": "2026-09-08",
-    "icon": [
-      "basenone",
-      "icon-sun"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=45.191021&lon=-109.335037",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 61
-    },
-    "text": "Sunny. High near 61, with temperatures falling to around 58 in the afternoon. East wind 6 to 14 mph."
   }
 }
