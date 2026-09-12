@@ -1,22 +1,22 @@
 {
-  "fetchedAt": "2026-09-12T13:30:24Z",
+  "fetchedAt": "2026-09-12T14:45:49Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 2,
       "percentage": {
-        "closed": 50,
+        "closed": 0,
         "hold": 0,
-        "open": 50,
+        "open": 100,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Summit Quad": "closed",
+      "Summit Quad": "open",
       "T-Bar Express Quad": "open"
     }
   },
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1789218963620,
-    "opening": 1789218955784,
-    "trails": 1789218963620,
-    "weather": 1789213540263,
-    "webcams": 1789218955784
+    "lifts": 1789223453654,
+    "opening": 1789223446647,
+    "trails": 1789223453654,
+    "weather": 1789220770387,
+    "webcams": 1789223446647
   },
   "trails": {
     "list": [
@@ -223,7 +223,7 @@
     }
   },
   "weather": {
-    "conditions": "Patchy Fog then Sunny",
+    "conditions": "Sunny",
     "date": "2026-09-12",
     "icon": [
       "basenone",
@@ -238,6 +238,6 @@
     "temperature": {
       "max": 74
     },
-    "text": "Patchy fog before 8am. Sunny, with a high near 74. Southeast wind 1 to 8 mph."
+    "text": "Sunny, with a high near 74. Southeast wind 2 to 8 mph."
   }
 }
