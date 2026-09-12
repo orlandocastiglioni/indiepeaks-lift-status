@@ -1,35 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T07:15:14Z",
+  "fetchedAt": "2026-09-12T21:30:47Z",
   "href": "http://www.mthigh.com/site/trails-and-conditions/conditions/alpine-grooming/@@alpine-grooming",
   "id": "mthigh",
   "lifts": {
     "stats": {
-      "closed": 13,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Blue Ridge Express": "closed",
-      "Competition": "closed",
-      "Conquest": "closed",
-      "Coyote": "closed",
-      "Discovery": "closed",
-      "Easy Rider": "closed",
-      "Exhibition": "closed",
-      "Mountain High Express": "closed",
-      "Moving Carpet East": "closed",
-      "Moving Carpet West Long": "closed",
-      "Moving Carpet West Short": "closed",
-      "Roadrunner": "closed",
-      "Snowflake": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -117.691544,
@@ -37,11 +23,11 @@
   ],
   "name": "Mountain High",
   "timestamp": {
-    "lifts": 1787814562290,
-    "opening": 1787814556948,
-    "trails": 1787814562288,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1789247729742,
+    "opening": 1789247714739,
+    "trails": 1789246818438,
+    "weather": 1789245047686,
+    "webcams": 1789247714739
   },
   "trails": {
     "list": [
@@ -302,5 +288,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Sunny",
+    "date": "2026-09-12",
+    "icon": [
+      "basenone",
+      "icon-sun"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=34.376888&lon=-117.691544",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 74
+    },
+    "text": "Sunny, with a high near 74. South southwest wind 5 to 15 mph, with gusts as high as 20 mph."
   }
 }
