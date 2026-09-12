@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-09-12T08:15:49Z",
+  "fetchedAt": "2026-09-12T08:30:49Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/innsbrucker-nordkettenbahnen/",
   "id": "nordkette",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 50,
+        "hold": 0,
+        "open": 50,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A Sektion I Hungerburg": "open",
+      "B Sektion II Seegrube": "open",
+      "C Sektion III Hafelekar": "open",
+      "D Seegrube": "closed",
+      "E Frau - Hitt - Warte": "closed",
+      "Zauberteppich": "closed"
+    }
   },
   "ll": [
     11.3792,
@@ -23,7 +30,7 @@
   ],
   "name": "Nordkette (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1789200076188,
+    "lifts": 1789200964243,
     "opening": 1789199119712,
     "trails": 1789200932000,
     "weather": 0,
