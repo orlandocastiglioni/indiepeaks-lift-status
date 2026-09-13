@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-09-13T19:45:34Z",
+  "fetchedAt": "2026-09-13T20:00:11Z",
   "href": "https://www.crystalmountain.com/ski/cams-conditions/mountain-report",
   "id": "crystal-mountain-mi",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Backyard Triple": "closed",
+      "Buck Quad": "closed",
+      "Crystal Clipper Quad": "closed",
+      "Loki Quad": "closed",
+      "Long Carpet": "closed",
+      "North Face Quad": "closed",
+      "Ridge Triple": "closed",
+      "Short Carpet": "closed"
+    }
   },
   "ll": [
     -85.99484,
@@ -23,7 +32,7 @@
   ],
   "name": "Crystal Mountain",
   "timestamp": {
-    "lifts": 1789327850779,
+    "lifts": 1789328739438,
     "opening": 1789327849156,
     "trails": 1789328728737,
     "weather": 0,
