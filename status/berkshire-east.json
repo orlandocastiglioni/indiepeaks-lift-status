@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-09-13T21:30:41Z",
+  "fetchedAt": "2026-09-14T14:30:38Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1789334117629,
-    "opening": 1789332341079,
-    "trails": 1789334117629,
-    "weather": 1789329623938,
-    "webcams": 1789334111430
+    "lifts": 1789395317696,
+    "opening": 1789394439075,
+    "trails": 1789395317695,
+    "weather": 1789390829768,
+    "webcams": 1789395310324
   },
   "trails": {
     "list": [
@@ -82,7 +82,7 @@
       {
         "level": "blue",
         "name": "Gronk",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -192,7 +192,7 @@
       {
         "level": "doubleBlack",
         "name": "Hawleywood",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "doubleBlack",
@@ -216,18 +216,18 @@
       }
     ],
     "stats": {
-      "closed": 1,
+      "closed": 3,
       "hold": 0,
-      "open": 35,
+      "open": 33,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Partly Sunny",
-    "date": "2026-09-13",
+    "conditions": "Sunny",
+    "date": "2026-09-14",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basenone",
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 72
+      "max": 70
     },
-    "text": "Partly sunny, with a high near 72. Southwest wind around 3 mph."
+    "text": "Sunny, with a high near 70. Northwest wind 10 to 14 mph, with gusts as high as 28 mph."
   }
 }
