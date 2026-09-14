@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-09-14T21:15:29Z",
+  "fetchedAt": "2026-09-14T21:30:53Z",
   "href": "https://www.mapleskiridge.com/test-slope-report",
   "id": "maple-ski-ridge",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 50,
+        "hold": 0,
+        "open": 50,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Double Chair Lift": "open",
+      "Handle Tow 1": "closed",
+      "Handle Tow 2": "closed",
+      "Triple Chair Lift": "open"
+    }
   },
   "ll": [
     -74.034,
@@ -23,18 +28,59 @@
   ],
   "name": "Maple Ski Ridge",
   "timestamp": {
-    "lifts": 1789419634926,
+    "lifts": 1789420557106,
     "opening": 1789418718769,
-    "trails": 1789419634926,
+    "trails": 1789420557105,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "blue",
+        "name": "Turkey Run",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Ridge Run",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Ash Dash",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "The Chute",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hickory Way",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Spruce Run",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Turtle Slope",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Bunny Hill",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
-      "open": 0,
+      "open": 6,
       "scheduled": 0
     }
   }
