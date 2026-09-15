@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-09-15T01:00:33Z",
+  "fetchedAt": "2026-09-15T01:30:14Z",
   "href": "https://www.donnerskiranch.com/liftstatus",
   "id": "donner-ski-ranch",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chair 1": "closed",
+      "Chair 2": "closed",
+      "Chair 3": "closed",
+      "Chair 4": "closed",
+      "Chair 5": "closed",
+      "Chair 6": "closed",
+      "Ski Moving Carpet": "closed",
+      "Tubing Hill": "closed"
+    }
   },
   "ll": [
     -120.330422,
@@ -23,9 +32,9 @@
   ],
   "name": "Donner Ski Ranch",
   "timestamp": {
-    "lifts": 1789434046046,
+    "lifts": 1789434942861,
     "opening": 1789433993354,
-    "trails": 1789433989964,
+    "trails": 1789434937226,
     "weather": 0,
     "webcams": 0
   }

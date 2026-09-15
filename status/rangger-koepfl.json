@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-09-15T01:00:33Z",
+  "fetchedAt": "2026-09-15T01:30:14Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/oberperfuss-rangger-koepfl/",
   "id": "rangger-koepfl",
   "lifts": {
+    "reportedAt": "2026-09-13T20:38:22.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Egghof Tellerlift": "closed",
+      "Peter-Anich-Bahn I": "closed",
+      "Peter-Anich-Bahn II": "closed",
+      "Peter-Anich-Bahn III": "closed",
+      "Zauberteppich Stiglreith": "closed"
+    }
   },
   "ll": [
     11.1583,
@@ -23,9 +30,9 @@
   ],
   "name": "Rangger Koepfl (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1789434046140,
+    "lifts": 1789434949831,
     "opening": 1789433993358,
-    "trails": 1789434053256,
+    "trails": 1789434949831,
     "weather": 0,
     "webcams": 0
   },

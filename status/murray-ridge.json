@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-09-15T01:00:33Z",
+  "fetchedAt": "2026-09-15T01:30:14Z",
   "href": "https://www.murrayridge.com/conditions",
   "id": "murray-ridge",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 50,
+        "hold": 0,
+        "open": 50,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Bunny Hill": "closed",
+      "T-Bar": "open"
+    }
   },
   "ll": [
     -124.21167,
@@ -23,9 +26,9 @@
   ],
   "name": "Murray Ridge Ski Area",
   "timestamp": {
-    "lifts": 1789434046102,
+    "lifts": 1789434950030,
     "opening": 1789433993357,
-    "trails": 1789434053330,
+    "trails": 1789434950030,
     "weather": 0,
     "webcams": 0
   },
