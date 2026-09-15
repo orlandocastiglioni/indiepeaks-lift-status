@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-15T01:00:33Z",
+  "fetchedAt": "2026-09-15T01:15:32Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
@@ -23,10 +23,37 @@
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 1789433997112,
+    "lifts": 1789434194393,
     "opening": 1789433993357,
-    "trails": 0,
-    "weather": 0,
-    "webcams": 0
+    "trails": 1789434088607,
+    "weather": 1789434077016,
+    "webcams": 1789434076751
+  },
+  "trails": {
+    "list": {},
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
+  },
+  "weather": {
+    "conditions": "Clear then Patchy Fog",
+    "date": "2026-09-15",
+    "icon": [
+      "basenone",
+      "icon-mist"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=43.180679&lon=-71.833412",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 43
+    },
+    "text": "Patchy fog after 2am. Clear, with a low around 43. Northwest wind 0 to 10 mph."
   }
 }
