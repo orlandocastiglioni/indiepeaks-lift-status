@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-09-15T01:46:04Z",
+  "fetchedAt": "2026-09-15T19:30:37Z",
   "href": "https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace",
   "id": "winterplace",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "#1 Double Chairlift": "closed",
-      "#10 Tubing Carpet": "closed",
-      "#11 Tubing Carpet": "closed",
-      "#12 Ski-Wee Carpet": "closed",
-      "#2 Triple Chairlift": "closed",
-      "#3 Triple Chairlift": "closed",
-      "#4 Triple Chairlift": "closed",
-      "#5 Double Chairlift": "closed",
-      "#6 Carpet Lift": "closed",
-      "#8 Quad Chairlift": "closed",
-      "#9 Quad Chairlift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -81.11824,
@@ -35,11 +23,11 @@
   ],
   "name": "Winterplace",
   "timestamp": {
-    "lifts": 1789435827853,
-    "opening": 1789433993359,
-    "trails": 1789435827853,
-    "weather": 1789434077423,
-    "webcams": 1789435818472
+    "lifts": 1789499725754,
+    "opening": 1789497026349,
+    "trails": 1789498876346,
+    "weather": 1789497031126,
+    "webcams": 1789499718308
   },
   "trails": {
     "list": [
@@ -192,11 +180,11 @@
     }
   },
   "weather": {
-    "conditions": "Partly Cloudy",
+    "conditions": "Mostly Sunny",
     "date": "2026-09-15",
     "icon": [
       "icon-cloud",
-      "icon-night"
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=37.59594&lon=-81.11824",
@@ -205,8 +193,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 55
+      "max": 77
     },
-    "text": "Partly cloudy, with a low around 55. East wind 5 to 12 mph."
+    "text": "Mostly sunny, with a high near 77. South wind around 5 mph."
   }
 }
