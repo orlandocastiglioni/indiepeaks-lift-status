@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-09-15T01:00:33Z",
+  "fetchedAt": "2026-09-15T01:30:14Z",
   "href": "https://www.chestnutmtn.com/slope-report/",
   "id": "chestnut-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Apache Quad": "closed",
+      "Blackhawk Triple": "closed",
+      "Bunny Carpet Conveyor Belt": "closed",
+      "Far Side Triple": "closed",
+      "Rookie's Ridge I Triple": "closed",
+      "Rookie's Ridge II Triple": "closed",
+      "Village Quad": "closed"
+    }
   },
   "ll": [
     -90.393738,
@@ -23,9 +31,9 @@
   ],
   "name": "Chestnut Mountain Resort",
   "timestamp": {
-    "lifts": 1789434046037,
+    "lifts": 1789434943436,
     "opening": 1789433993354,
-    "trails": 1789434054491,
+    "trails": 1789434943435,
     "weather": 0,
     "webcams": 0
   },
