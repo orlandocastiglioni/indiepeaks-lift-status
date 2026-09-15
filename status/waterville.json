@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-09-15T01:00:33Z",
+  "fetchedAt": "2026-09-15T01:46:04Z",
   "href": "http://www.waterville.com/snow-report-maps",
   "id": "waterville",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Exhibition T-Bar": "closed",
+      "Green Peak Triple": "closed",
+      "High Country": "closed",
+      "Lower Meadows": "closed",
+      "Lower Pasture Carpet": "closed",
+      "Northside": "closed",
+      "Sunny Side": "closed",
+      "Tecumseh Express": "closed",
+      "Upper Pasture Carpet": "closed",
+      "Valley Run Quad": "closed"
+    }
   },
   "ll": [
     -71.519989,
@@ -23,11 +34,11 @@
   ],
   "name": "Waterville Valley",
   "timestamp": {
-    "lifts": 1789434046989,
+    "lifts": 1789435825037,
     "opening": 1789433993359,
-    "trails": 1789434057789,
-    "weather": 0,
-    "webcams": 0
+    "trails": 1789435825037,
+    "weather": 1789434077756,
+    "webcams": 1789435818472
   },
   "trails": {
     "list": [
@@ -373,5 +384,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Mostly Clear",
+    "date": "2026-09-15",
+    "icon": [
+      "basenone",
+      "icon-moon"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=43.961613&lon=-71.519989",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 35
+    },
+    "text": "Mostly clear, with a low around 35. North wind 0 to 5 mph."
   }
 }

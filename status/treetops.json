@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-09-15T01:30:14Z",
+  "fetchedAt": "2026-09-15T01:46:04Z",
   "href": "https://www.treetops.com/live/",
   "id": "treetops",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chair #1": "closed",
+      "Chair #3": "closed",
+      "Chair #4": "closed",
+      "Magic Carpet": "closed"
+    }
   },
   "ll": [
     -84.5915,
@@ -23,9 +28,9 @@
   ],
   "name": "Treetops Resort",
   "timestamp": {
-    "lifts": 1789434949453,
+    "lifts": 1789435831627,
     "opening": 1789433993359,
-    "trails": 1789434052852,
+    "trails": 1789435831627,
     "weather": 0,
     "webcams": 0
   },
