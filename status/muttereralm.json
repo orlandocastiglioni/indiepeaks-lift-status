@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-09-12T08:30:49Z",
+  "fetchedAt": "2026-09-16T10:15:39Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/muttereralm/",
   "id": "muttereralm",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 80,
-        "hold": 0,
-        "open": 20,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "A Muttereralmbahn": "open",
-      "B G\u00f6tznerbahn": "closed",
-      "C Pfriemesk\u00f6pfl": "closed",
-      "D Almbodenlift": "closed",
-      "E Zauberteppich": "closed"
-    }
+    "status": {}
   },
   "ll": [
     11.3778,
@@ -29,77 +23,16 @@
   ],
   "name": "Muttereralm (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1789200964962,
-    "opening": 1789199119711,
-    "trails": 1789200933890,
+    "lifts": 1789552881912,
+    "opening": 1789550168241,
+    "trails": 1789552881912,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": [
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1 Familienabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "11 Skiweg Axamer Lizum",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1a Familienabfahrt (Tal)",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "2 FIS- Abfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "3 Pfriemesabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "3a Umfahrung Primesk\u00f6pfl",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "4 Rennstrecke",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "5 G\u00f6tznerabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "5a G\u00f6tznerabfahrt (Tal)",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "6 Almbodenabfahrt",
-        "status": "closed"
-      }
-    ],
+    "list": {},
     "stats": {
-      "closed": 10,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "scheduled": 0

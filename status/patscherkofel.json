@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-09-12T08:30:49Z",
+  "fetchedAt": "2026-09-16T10:15:39Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/patscherkofelbahn/",
   "id": "patscherkofel",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
-      "open": 2,
+      "open": 0,
       "percentage": {
-        "closed": 71.4,
-        "hold": 0,
-        "open": 28.5,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "A Patscherkofelbahn Sektion I": "open",
-      "A Patscherkofelbahn Sektion II": "open",
-      "B \u00dcbungslift Patscherkofel": "closed",
-      "C Heiligwasserlift": "closed",
-      "D Zauberteppich": "closed",
-      "E Kinderlift": "closed",
-      "F \u00dcbungslift Igls": "closed"
-    }
+    "status": {}
   },
   "ll": [
     11.4056,
@@ -31,89 +23,16 @@
   ],
   "name": "Patscherkofel (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1789200964210,
-    "opening": 1789199119712,
-    "trails": 1789200933964,
+    "lifts": 1789552883193,
+    "opening": 1789550168241,
+    "trails": 1789552883193,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": [
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "1 Olympiaabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "10 Kinderlift",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "11 \u00dcbungswiese Igls",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "2 Weltcuphang",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "3 Familienabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "4 Rennstrecke",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "5 Olympiaabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "5 \u00dcbungshang Patscherkofel",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "6 Familienabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "black",
-        "level": "doubleBlack",
-        "name": "7 Olympiaabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "8 Heiligwasserpisten",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "9 Heiligwasserpisten",
-        "status": "closed"
-      }
-    ],
+    "list": {},
     "stats": {
-      "closed": 12,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "scheduled": 0
