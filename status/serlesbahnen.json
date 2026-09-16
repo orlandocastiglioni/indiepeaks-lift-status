@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-09-16T10:15:39Z",
+  "fetchedAt": "2026-09-16T11:15:22Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/serlesbahnen/",
   "id": "serlesbahnen",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 80,
+        "hold": 0,
+        "open": 20,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Gondelbahn": "open",
+      "Kinderland Talstation": "closed",
+      "SL L\u00e4rchenlift": "closed",
+      "SL Ochsenh\u00fctte": "closed",
+      "SL Waldrasteck": "closed"
+    }
   },
   "ll": [
     11.3839,
@@ -23,16 +29,59 @@
   ],
   "name": "Serlesbahnen Mieders (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1789552881842,
-    "opening": 1789552869785,
-    "trails": 1789552881842,
+    "lifts": 1789556482139,
+    "opening": 1789556471639,
+    "trails": 1789556482139,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "1 Waldrasteck",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "4 Ochsenschuss",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "2 Talabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "6 L\u00e4rchenschuss",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "5 Besserbrunnen",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "3 Schneeboden",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "7 Kinderland",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "scheduled": 0

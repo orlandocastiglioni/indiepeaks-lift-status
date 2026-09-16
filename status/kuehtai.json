@@ -1,21 +1,34 @@
 {
-  "fetchedAt": "2026-09-16T10:15:39Z",
+  "fetchedAt": "2026-09-16T11:15:22Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/kuehtai/",
   "id": "kuehtai",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 11,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 91.6,
+        "hold": 0,
+        "open": 8.3,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Alpenrosenlift": "closed",
+      "DreiSeenBahn": "open",
+      "GaisKogelBahn": "closed",
+      "HochAlterBahn": "closed",
+      "HoheMutBahn": "closed",
+      "KaiserBahn": "closed",
+      "K\u00fchTeppich": "closed",
+      "Schwarzmooslift": "closed",
+      "Sonnenlift": "closed",
+      "StartBahn": "closed",
+      "Wiesbergbahn": "closed",
+      "Wunderteppich": "closed"
+    }
   },
   "ll": [
     11.0161,
@@ -23,16 +36,233 @@
   ],
   "name": "Kuehtai (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1789552883243,
-    "opening": 1789550168240,
-    "trails": 1789552883243,
+    "lifts": 1789556481470,
+    "opening": 1789554620447,
+    "trails": 1789556481470,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "1 Hochalter",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "10 Wiesberg",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "11 Alpenrosen",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "12 Alpenrosen",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "13 Alpenrosen",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "13 HoheMut",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "14 Alpenrosen",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "14 HoheMut",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "16 Kaiserbahn",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "2 Hochalter",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "3 Hochalter",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "4 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "4a Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "5 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "6 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "7 Wiesberg",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "8 Wiesberg",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "9 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "10 Dreiseen",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "K\u00fchteppich \u00dcbungshang",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "KPark",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "17 Schwarzmoos-Skiweg",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Skiweg Kaiser-Max-H\u00fctte",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Sonnenlift-Skiweg",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Sonnenlift-\u00dcbungshang",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "StartBahn-Skiweg",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "StartBahn-\u00dcbungshang Ost",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "StartBahn-\u00dcbungshang West",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Wiesberg-Skiweg",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "Wiesberg-Skiweg",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Wunderteppich-\u00dcbungshang",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Skiweg Loisl\u00b4s Schirm",
+        "status": "closed"
+      },
+      {
+        "name": "1 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "15 Kaiserbahn",
+        "status": "closed"
+      },
+      {
+        "name": "2 Hohe Mut",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "18 Schwarzmoos",
+        "status": "closed"
+      },
+      {
+        "name": "new object by k\u00c3\u00bchtai",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 37,
       "hold": 0,
       "open": 0,
       "scheduled": 0
