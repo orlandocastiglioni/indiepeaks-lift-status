@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-09-16T06:15:37Z",
+  "fetchedAt": "2026-09-16T08:15:42Z",
   "href": "https://www.boltonvalley.com/winter/trail-maps-snow-reports/snow-reports/",
   "id": "bolton-valley",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Mid Mountain": "closed",
+      "Mighty Mite": "closed",
+      "Snowflake": "closed",
+      "Timberline": "closed",
+      "Vista": "closed",
+      "Wilderness": "closed"
+    }
   },
   "ll": [
     -72.84948,
@@ -23,11 +30,11 @@
   ],
   "name": "Bolton Valley",
   "timestamp": {
-    "lifts": 1789538438448,
-    "opening": 1789538433494,
-    "trails": 1789537513034,
-    "weather": 1789535758271,
-    "webcams": 1789538433494
+    "lifts": 1789545642467,
+    "opening": 1789542935106,
+    "trails": 1789545642464,
+    "weather": 1789543840171,
+    "webcams": 1789545636981
   },
   "trails": {
     "list": [
@@ -395,11 +402,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy then Slight Chance Rain Showers",
+    "conditions": "Slight Chance Rain Showers",
     "date": "2026-09-16",
     "icon": [
       "basecloud",
-      "icon-showers icon-sunny"
+      "icon-showers icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.421673&lon=-72.84948",
@@ -408,8 +415,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 54
+      "max": 56
     },
-    "text": "A slight chance of rain showers after 4am. Mostly cloudy, with a low around 54. Southwest wind around 12 mph. Chance of precipitation is 20%."
+    "text": "A slight chance of rain showers between 4am and 5am. Mostly cloudy, with a low around 56. Southwest wind around 12 mph. Chance of precipitation is 20%."
   }
 }
