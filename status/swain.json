@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-09-16T15:45:12Z",
+  "fetchedAt": "2026-09-16T19:15:09Z",
   "href": "https://swain.com/trail-report/",
   "id": "swain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Double Chair": "closed",
-      "Magic Carpet": "closed",
-      "Quad 1": "closed",
-      "Quad 2": "closed",
-      "Quad 3": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -77.8586,
@@ -29,9 +23,9 @@
   ],
   "name": "Swain",
   "timestamp": {
-    "lifts": 1789572657408,
-    "opening": 1789569926129,
-    "trails": 1789572646528,
+    "lifts": 1789585233554,
+    "opening": 1789582540793,
+    "trails": 1789584342339,
     "weather": 0,
     "webcams": 0
   },
