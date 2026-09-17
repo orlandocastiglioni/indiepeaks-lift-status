@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-17T08:00:53Z",
+  "fetchedAt": "2026-09-17T08:15:11Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
@@ -25,8 +25,35 @@
   "timestamp": {
     "lifts": 1789632032344,
     "opening": 1789632028772,
-    "trails": 0,
-    "weather": 0,
-    "webcams": 0
+    "trails": 1789632144690,
+    "weather": 1789632087322,
+    "webcams": 1789632087003
+  },
+  "trails": {
+    "list": {},
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
+  },
+  "weather": {
+    "conditions": "Mostly Cloudy",
+    "date": "2026-09-17",
+    "icon": [
+      "icon-cloud",
+      "icon-night"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=43.180679&lon=-71.833412",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 59
+    },
+    "text": "Mostly cloudy, with a low around 59. Northwest wind around 0 mph."
   }
 }
