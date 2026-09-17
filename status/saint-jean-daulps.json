@@ -1,37 +1,21 @@
 {
-  "fetchedAt": "2026-09-15T01:00:33Z",
+  "fetchedAt": "2026-09-17T13:15:08Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/saint-jean-daulps/",
   "id": "saint-jean-daulps",
   "lifts": {
     "stats": {
-      "closed": 15,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cabri": "closed",
-      "Ecole 1": "closed",
-      "Ecole 2": "closed",
-      "Le torchon": "closed",
-      "Les etangs": "closed",
-      "Les follys": "closed",
-      "Tc grande terche": "closed",
-      "Tk d'esserailloux": "closed",
-      "Tk de la bray": "closed",
-      "Tk de la terchette": "closed",
-      "Tk du lac": "closed",
-      "Tk lanches": "closed",
-      "Ts de graydon": "closed",
-      "Ts des tetes": "closed",
-      "Ts du chargeau": "closed"
-    }
+    "status": {}
   },
   "ll": [
     6.6483,
@@ -39,9 +23,9 @@
   ],
   "name": "Saint-Jean d'Aulps (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1789434050995,
-    "opening": 1789433993358,
-    "trails": 1789434050995,
+    "lifts": 1789650057960,
+    "opening": 1789648263192,
+    "trails": 1789649114748,
     "weather": 0,
     "webcams": 0
   },
