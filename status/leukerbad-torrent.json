@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-09-17T13:31:01Z",
+  "fetchedAt": "2026-09-17T13:45:36Z",
   "href": "https://leukerbad.ch",
   "id": "leukerbad-torrent",
   "lifts": {
-    "reportedAt": "2026-09-17T13:01:00.000Z",
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
-      "open": 3,
+      "open": 0,
       "percentage": {
-        "closed": 57.1,
-        "hold": 0,
-        "open": 42.8,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "A Leukerbad - Rinderh\u00fctte": "open",
-      "B Flaschen - Torrentalp": "open",
-      "C Torrentalp - Rinderh\u00fctte": "open",
-      "D Schwalbennest": "closed",
-      "E Kumme": "closed",
-      "F Rinderhalde": "closed",
-      "I Rinderh\u00fctte Kinderland": "closed"
-    }
+    "status": {}
   },
   "ll": [
     7.629,
@@ -32,9 +23,9 @@
   ],
   "name": "Leukerbad Torrent",
   "timestamp": {
-    "lifts": 1789650921203,
-    "opening": 1789648263190,
-    "trails": 1789650921203,
+    "lifts": 1789651868740,
+    "opening": 1789651864586,
+    "trails": 1789652724385,
     "weather": 0,
     "webcams": 0
   },
@@ -208,7 +199,7 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-09-17T13:01:00.000Z",
+    "reportedAt": "2026-09-17T13:31:00.000Z",
     "stats": {
       "closed": 30,
       "hold": 0,
