@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T07:15:14Z",
+  "fetchedAt": "2026-09-18T12:00:48Z",
   "href": "https://www.ski49n.com/mountain-info/trail-status",
   "id": "49-degrees-north",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Angel Peak #6": "closed",
-      "Gold Fever Conveyor #7": "closed",
-      "Grub stake #2": "closed",
-      "Northern Spirit #1": "closed",
-      "Payday #3": "closed",
-      "Silver Lode #4": "closed",
-      "Sunrise Quad #5": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -117.564011,
@@ -31,11 +23,11 @@
   ],
   "name": "49 Degrees North",
   "timestamp": {
-    "lifts": 1787814627902,
-    "opening": 1787814556942,
-    "trails": 1787814627902,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1789731937409,
+    "opening": 1789729270257,
+    "trails": 1789731056831,
+    "weather": 1789725633148,
+    "webcams": 1789731921315
   },
   "trails": {
     "list": {
@@ -133,5 +125,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Mostly Clear",
+    "date": "2026-09-18",
+    "icon": [
+      "basenone",
+      "icon-moon"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=48.302353&lon=-117.564011",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 43
+    },
+    "text": "Mostly clear, with a low around 43. North wind around 3 mph."
   }
 }
