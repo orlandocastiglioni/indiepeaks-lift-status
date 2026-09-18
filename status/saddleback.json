@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-08-31T00:30:51Z",
+  "fetchedAt": "2026-09-18T13:15:52Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Rangeley": "closed",
+      "South Branch": "closed"
+    }
   },
   "ll": [
     -70.632965,
@@ -23,27 +26,88 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1788135329201,
-    "opening": 1788133528042,
-    "trails": 1788135329338,
-    "weather": 1788135323390,
-    "webcams": 1788135318245
+    "lifts": 1789736442239,
+    "opening": 1789733761474,
+    "trails": 1789736442232,
+    "weather": 1789736437553,
+    "webcams": 1789736432749
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "Gee Whiz Highway",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Barr Hopper",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Sweet Meat Caddis",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Barr Hopper",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Green Weaver",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Don\u2019s Delight",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Mr. Dullay",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Mrs. Duley",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Mr. Dullay",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Mrs. Duley",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Rusty Usual",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Bronco",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 12,
       "hold": 0,
       "open": 0,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Showers And Thunderstorms Likely then Patchy Fog",
-    "date": "2026-08-31",
+    "conditions": "Sunny",
+    "date": "2026-09-18",
     "icon": [
       "basenone",
-      "icon-mist"
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -52,8 +116,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 46
+      "max": 62
     },
-    "text": "Showers and thunderstorms likely before 11pm, then patchy fog. Partly cloudy, with a low around 46. West wind 0 to 5 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "text": "Sunny, with a high near 62. Northwest wind 5 to 15 mph, with gusts as high as 30 mph."
   }
 }
