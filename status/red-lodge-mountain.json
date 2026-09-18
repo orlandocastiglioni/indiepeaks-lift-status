@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-09-18T01:45:26Z",
+  "fetchedAt": "2026-09-18T13:45:08Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1789695071672,
-    "opening": 1789692347617,
-    "trails": 1789695071672,
-    "weather": 1789687869202,
-    "webcams": 1789695058354
+    "lifts": 1789738234459,
+    "opening": 1789737363159,
+    "trails": 1789737377473,
+    "weather": 1789736437552,
+    "webcams": 1789738233239
   },
   "trails": {
     "list": [
@@ -403,8 +395,8 @@
     }
   },
   "weather": {
-    "conditions": "Showers And Thunderstorms Likely",
-    "date": "2026-09-17",
+    "conditions": "Chance Showers And Thunderstorms",
+    "date": "2026-09-18",
     "icon": [
       "basecloud",
       "icon-thunder icon-sunny"
@@ -416,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 66
+      "max": 63
     },
-    "text": "A slight chance of rain showers before 3pm, then showers and thunderstorms likely. Mostly cloudy. High near 66, with temperatures falling to around 64 in the afternoon. South southeast wind around 13 mph. Chance of precipitation is 60%."
+    "text": "Isolated rain showers before noon, then a chance of showers and thunderstorms. Partly sunny. High near 63, with temperatures falling to around 59 in the afternoon. South wind 3 to 8 mph. Chance of precipitation is 70%."
   }
 }
