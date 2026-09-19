@@ -1,17 +1,17 @@
 {
-  "fetchedAt": "2026-09-17T11:15:45Z",
+  "fetchedAt": "2026-09-19T07:15:53Z",
   "href": "https://www.rtc-krvavec.si/krvavec-live-en",
   "id": "krvavec",
   "lifts": {
-    "reportedAt": "2026-09-17T11:47:00.000Z",
+    "reportedAt": "2026-09-19T07:56:00.000Z",
     "stats": {
-      "closed": 13,
+      "closed": 10,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 100,
+        "closed": 76.9,
         "hold": 0,
-        "open": 0,
+        "open": 23,
         "scheduled": 0
       },
       "scheduled": 0
@@ -21,15 +21,15 @@
       "Dvosede\u017enica Njivice 1": "closed",
       "Dvosede\u017enica Njivice 2": "closed",
       "Enosede\u017enica Gospinca": "closed",
-      "Kro\u017ena kabinska \u017ei\u010dnica": "closed",
+      "Kro\u017ena kabinska \u017ei\u010dnica": "open",
       "Otro\u0161ki trak Gospinca": "closed",
       "Otro\u0161ki trak Kri\u0161ka Planina": "closed",
       "Vle\u010dnica Kr\u017ei\u0161\u010de A": "closed",
       "Vle\u010dnica Kr\u017ei\u0161\u010de B": "closed",
       "Vle\u010dnica Lu\u017ea": "closed",
-      "\u0160estsede\u017enica OTP banka Zvoh": "closed",
+      "\u0160estsede\u017enica OTP banka Zvoh": "open",
       "\u0160estsede\u017enica Vrh Krvavca": "closed",
-      "\u0160tirisede\u017enica Tiha dolina": "closed"
+      "\u0160tirisede\u017enica Tiha dolina": "open"
     }
   },
   "ll": [
@@ -38,9 +38,9 @@
   ],
   "name": "Krvavec",
   "timestamp": {
-    "lifts": 1789642846473,
-    "opening": 1789639270305,
-    "trails": 1789642846482,
+    "lifts": 1789801226815,
+    "opening": 1789797642271,
+    "trails": 1789801226811,
     "weather": 0,
     "webcams": 0
   },
@@ -172,7 +172,7 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-09-17T11:47:00.000Z",
+    "reportedAt": "2026-09-19T07:56:00.000Z",
     "stats": {
       "closed": 25,
       "hold": 0,
