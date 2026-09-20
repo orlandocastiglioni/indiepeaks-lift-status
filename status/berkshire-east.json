@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-09-19T21:30:33Z",
+  "fetchedAt": "2026-09-20T13:30:16Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1789852539006,
-    "opening": 1789850720217,
-    "trails": 1789852539006,
-    "weather": 1789846253891,
-    "webcams": 1789852531368
+    "lifts": 1789910160631,
+    "opening": 1789908337070,
+    "trails": 1789910160631,
+    "weather": 1789910158810,
+    "webcams": 1789910157290
   },
   "trails": {
     "list": [
@@ -97,7 +97,7 @@
       {
         "level": "blue",
         "name": "Sleeping Jakes",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -207,7 +207,7 @@
       {
         "level": "doubleBlack",
         "name": "Fort Hill",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "doubleBlack",
@@ -223,11 +223,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-09-19",
+    "conditions": "Rain",
+    "date": "2026-09-20",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basecloud",
+      "icon-rainy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 63
+      "max": 52
     },
-    "text": "Mostly sunny, with a high near 63. Southeast wind around 1 mph."
+    "text": "A chance of rain before 10am, then rain and patchy fog. Cloudy, with a high near 52. East wind around 5 mph. Chance of precipitation is 100%. New rainfall amounts between a half and three quarters of an inch possible."
   }
 }
