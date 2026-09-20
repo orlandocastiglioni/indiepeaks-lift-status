@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-09-20T19:15:16Z",
+  "fetchedAt": "2026-09-20T19:45:08Z",
   "href": "https://www.steinplatte.tirol/de/liftstatus.html",
   "id": "steinplatte",
   "lifts": {
-    "reportedAt": "2026-09-20T19:00:12.000Z",
+    "reportedAt": "2026-09-20T19:30:12.000Z",
     "stats": {
-      "closed": 13,
+      "closed": 14,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 92.8,
+        "closed": 100,
         "hold": 0,
-        "open": 7.1,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "15-EUB Gondelbahn Steinplatte (Waidring)": "open",
+      "15-EUB Gondelbahn Steinplatte (Waidring)": "closed",
       "4-SB M\u00f6sern": "closed",
       "4-SL Ro\u00dfalm (Reit im Winkl)": "closed",
       "4-SL Schwarzlofer": "closed",
@@ -39,9 +39,9 @@
   ],
   "name": "Steinplatte",
   "timestamp": {
-    "lifts": 1789930877435,
+    "lifts": 1789932629593,
     "opening": 1789929033699,
-    "trails": 1789930877441,
+    "trails": 1789932629602,
     "weather": 0,
     "webcams": 0
   },
@@ -184,7 +184,7 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-09-20T19:00:12.000Z",
+    "reportedAt": "2026-09-20T19:30:12.000Z",
     "stats": {
       "closed": 23,
       "hold": 0,
