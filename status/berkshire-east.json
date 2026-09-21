@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-21T14:30:11Z",
+  "fetchedAt": "2026-09-21T15:15:08Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1790000173357,
+    "lifts": 1790002855767,
     "opening": 1790000167507,
-    "trails": 1790000173357,
-    "weather": 1789994739129,
-    "webcams": 1790000167507
+    "trails": 1790002855767,
+    "weather": 1790002852895,
+    "webcams": 1790002848857
   },
   "trails": {
     "list": [
@@ -202,7 +202,7 @@
       {
         "level": "doubleBlack",
         "name": "Schist",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -212,18 +212,18 @@
       {
         "level": "doubleBlack",
         "name": "Too Easy",
-        "status": "closed"
+        "status": "open"
       }
     ],
     "stats": {
-      "closed": 3,
+      "closed": 1,
       "hold": 0,
-      "open": 33,
+      "open": 35,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Patchy Fog then Mostly Sunny",
+    "conditions": "Partly Sunny",
     "date": "2026-09-21",
     "icon": [
       "icon-cloud",
@@ -238,6 +238,6 @@
     "temperature": {
       "max": 62
     },
-    "text": "Patchy fog before 9am. Mostly sunny, with a high near 62. North wind around 6 mph."
+    "text": "Partly sunny, with a high near 62. North wind around 6 mph."
   }
 }
