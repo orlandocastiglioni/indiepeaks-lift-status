@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-09-20T17:30:25Z",
+  "fetchedAt": "2026-09-21T14:30:11Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 50,
         "hold": 0,
-        "open": 0,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
+      "T-Bar Express Quad": "open"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1789924549240,
-    "opening": 1789924541930,
-    "trails": 1789924549240,
-    "weather": 1789918254124,
-    "webcams": 1789924541930
+    "lifts": 1790000173357,
+    "opening": 1790000167507,
+    "trails": 1790000173357,
+    "weather": 1789994739129,
+    "webcams": 1790000167507
   },
   "trails": {
     "list": [
@@ -223,11 +223,11 @@
     }
   },
   "weather": {
-    "conditions": "Rain",
-    "date": "2026-09-20",
+    "conditions": "Patchy Fog then Mostly Sunny",
+    "date": "2026-09-21",
     "icon": [
-      "basecloud",
-      "icon-rainy"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +236,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 52
+      "max": 62
     },
-    "text": "Rain and patchy fog. Cloudy, with a high near 52. East wind around 5 mph. Chance of precipitation is 100%. New rainfall amounts between a quarter and half of an inch possible."
+    "text": "Patchy fog before 9am. Mostly sunny, with a high near 62. North wind around 6 mph."
   }
 }
