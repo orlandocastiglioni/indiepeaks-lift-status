@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-09-21T01:30:38Z",
+  "fetchedAt": "2026-09-21T17:15:16Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Rangeley": "closed",
-      "South Branch": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1789953361026,
-    "opening": 1789953351795,
-    "trails": 1789953361018,
-    "weather": 1789949745819,
-    "webcams": 1789953351795
+    "lifts": 1790010024971,
+    "opening": 1790008221137,
+    "trails": 1790009152968,
+    "weather": 1790002853486,
+    "webcams": 1790010012432
   },
   "trails": {
     "list": [
@@ -103,11 +100,11 @@
     }
   },
   "weather": {
-    "conditions": "Areas Of Fog",
+    "conditions": "Mostly Sunny",
     "date": "2026-09-21",
     "icon": [
-      "basecloud",
-      "icon-showers icon-sunny"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -116,8 +113,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 40
+      "max": 58
     },
-    "text": "Areas of fog and a chance of rain showers. Mostly cloudy, with a low around 40. Northwest wind 0 to 5 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Mostly sunny, with a high near 58. North wind 5 to 10 mph."
   }
 }
