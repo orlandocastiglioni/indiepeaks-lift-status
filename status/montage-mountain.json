@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-09-15T01:30:14Z",
+  "fetchedAt": "2026-09-24T16:00:23Z",
   "href": "https://www.montagemountainresorts.com/trails/",
   "id": "montage-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 8,
       "hold": 0,
-      "open": 3,
+      "open": 0,
       "percentage": {
-        "closed": 62.5,
+        "closed": 100,
         "hold": 0,
-        "open": 37.5,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
@@ -20,9 +20,9 @@
       "Learning Area (Magic Carpet)": "closed",
       "Long Haul": "closed",
       "Magic Carpet": "closed",
-      "Phoebe Snow": "open",
-      "Short Haul": "open",
-      "Shuttle": "open",
+      "Phoebe Snow": "closed",
+      "Short Haul": "closed",
+      "Shuttle": "closed",
       "The Yard \u2013 Rope Tow": "closed"
     }
   },
@@ -32,9 +32,9 @@
   ],
   "name": "Montage Mountain",
   "timestamp": {
-    "lifts": 1789434949991,
-    "opening": 1789433993357,
-    "trails": 1789434949991,
+    "lifts": 1790264746385,
+    "opening": 1790262926567,
+    "trails": 1790264746385,
     "weather": 0,
     "webcams": 0
   },
@@ -62,12 +62,12 @@
       {
         "level": "green",
         "name": "Limited (Bunny)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "green",
         "name": "Mainline",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -82,7 +82,7 @@
       {
         "level": "blue",
         "name": "Doc\u2019s Way",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -142,7 +142,7 @@
       {
         "level": "black",
         "name": "Cannonball",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -167,7 +167,7 @@
       {
         "level": "doubleBlack",
         "name": "Boomer",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "doubleBlack",
@@ -177,13 +177,13 @@
       {
         "level": "doubleBlack",
         "name": "White Lightning",
-        "status": "open"
+        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 22,
+      "closed": 28,
       "hold": 0,
-      "open": 6,
+      "open": 0,
       "scheduled": 0
     }
   }
