@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-09-24T03:45:52Z",
+  "fetchedAt": "2026-09-24T12:00:45Z",
   "href": "https://mt-holiday.com/snow-sports/",
   "id": "mt-holiday",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Blue Chairlift": "closed",
-      "Double tow": "closed",
-      "Tube Towlift": "closed",
-      "Tucker\u2019s Tow": "closed",
-      "Yellow Chairlift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -85.5145,
@@ -29,9 +23,9 @@
   ],
   "name": "Mt. Holiday",
   "timestamp": {
-    "lifts": 1790220637469,
-    "opening": 1790218842468,
-    "trails": 1790220637468,
+    "lifts": 1790250364833,
+    "opening": 1790250362776,
+    "trails": 1790249447692,
     "weather": 0,
     "webcams": 0
   },
