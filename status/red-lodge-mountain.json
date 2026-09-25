@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-09-23T02:45:31Z",
+  "fetchedAt": "2026-09-25T07:45:08Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1790130629481,
-    "opening": 1790127043427,
-    "trails": 1790130629481,
-    "weather": 1790129718219,
-    "webcams": 1790130624378
+    "lifts": 1790321442609,
+    "opening": 1790319634703,
+    "trails": 1790320558396,
+    "weather": 1790315167790,
+    "webcams": 1790321435240
   },
   "trails": {
     "list": [
@@ -403,11 +395,11 @@
     }
   },
   "weather": {
-    "conditions": "Showers And Thunderstorms Likely",
-    "date": "2026-09-23",
+    "conditions": "Mostly Clear",
+    "date": "2026-09-25",
     "icon": [
-      "basecloud",
-      "icon-thunder icon-night"
+      "basenone",
+      "icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=45.191021&lon=-109.335037",
@@ -416,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 49
+      "max": 52
     },
-    "text": "Showers and thunderstorms likely. Mostly cloudy, with a low around 49. West southwest wind around 7 mph. Chance of precipitation is 60%."
+    "text": "Mostly clear, with a low around 52. Southwest wind 8 to 12 mph."
   }
 }
