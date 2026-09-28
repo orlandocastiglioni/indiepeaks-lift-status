@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-15T01:15:32Z",
+  "fetchedAt": "2026-09-28T12:15:53Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/avoriaz1800/",
   "id": "avoriaz",
   "lifts": {
@@ -59,9 +59,9 @@
   ],
   "name": "Avoriaz (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1789434040127,
-    "opening": 1789433993352,
-    "trails": 1789434040126,
+    "lifts": 1790596881384,
+    "opening": 1790596870105,
+    "trails": 1790596881384,
     "weather": 0,
     "webcams": 0
   },
@@ -347,7 +347,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Bleue du lac",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "grade": "bleue",
@@ -371,7 +371,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Bleue snowpark",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "rouge",
@@ -447,10 +447,10 @@
       }
     ],
     "stats": {
-      "closed": 28,
+      "closed": 27,
       "hold": 0,
-      "open": 0,
-      "scheduled": 38
+      "open": 2,
+      "scheduled": 37
     }
   }
 }
