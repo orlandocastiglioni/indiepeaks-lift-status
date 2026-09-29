@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-09-05T09:15:16Z",
+  "fetchedAt": "2026-09-29T13:45:28Z",
   "href": "https://www.skiburke.com/ski-ride/weather-conditions",
   "id": "burke-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "J-Bar": "closed",
-      "Magic Carpet": "closed",
-      "Mid-Burke Express": "closed",
-      "Sherburne Express": "closed",
-      "T-Bar": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.91745,
@@ -29,11 +23,11 @@
   ],
   "name": "Burke Mountain",
   "timestamp": {
-    "lifts": 1788598858334,
-    "opening": 1788597952291,
-    "trails": 1788598822130,
-    "weather": 1788593414942,
-    "webcams": 1788598852526
+    "lifts": 1790688674715,
+    "opening": 1790686819003,
+    "trails": 1790687746404,
+    "weather": 1790688674049,
+    "webcams": 1790688669482
   },
   "trails": {
     "list": [
@@ -330,11 +324,11 @@
     }
   },
   "weather": {
-    "conditions": "Patchy Fog",
-    "date": "2026-09-05",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-09-29",
     "icon": [
-      "basecloud",
-      "icon-showers icon-moon"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.587898&lon=-71.91745",
@@ -343,8 +337,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 55
+      "max": 58
     },
-    "text": "Patchy fog and a slight chance of rain showers. Cloudy, with a low around 55. North wind around 3 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Mostly cloudy, with a high near 58. North wind around 6 mph."
   }
 }
