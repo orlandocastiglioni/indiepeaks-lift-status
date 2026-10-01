@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-10-01T12:45:08Z",
+  "fetchedAt": "2026-10-01T13:00:46Z",
   "href": "https://skitenney.propapps.io/snow-report/",
   "id": "tenney-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Eclipse Triple Chairlift": "closed",
+      "Hornet Double Chairlift": "closed",
+      "Platter Pull": "closed",
+      "Towpro": "closed"
+    }
   },
   "ll": [
     -71.7645874,
@@ -23,9 +28,9 @@
   ],
   "name": "Tenney Mountain",
   "timestamp": {
-    "lifts": 1790857870783,
+    "lifts": 1790858726319,
     "opening": 1790857868819,
-    "trails": 1790856955390,
+    "trails": 1790858726319,
     "weather": 0,
     "webcams": 0
   },
