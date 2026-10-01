@@ -1,26 +1,21 @@
 {
-  "fetchedAt": "2026-09-29T23:00:53Z",
+  "fetchedAt": "2026-10-01T00:45:39Z",
   "href": "https://skimarble.com/terrain-status/",
   "id": "marble-mountain",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Black Mariah Quad": "closed",
-      "Lightning Express": "closed",
-      "Magic Carpets": "closed",
-      "Newfie Bullet Quad": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -57.82722,
@@ -28,9 +23,9 @@
   ],
   "name": "Marble Mountain",
   "timestamp": {
-    "lifts": 1790721961045,
-    "opening": 1790720148545,
-    "trails": 1790721961044,
+    "lifts": 1790814658941,
+    "opening": 1790811916838,
+    "trails": 1790813749875,
     "weather": 0,
     "webcams": 0
   },
