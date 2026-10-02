@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-10-02T19:00:15Z",
+  "fetchedAt": "2026-10-02T19:15:45Z",
   "href": "https://www.smuggs.com/conditions/winter-report/",
   "id": "smuggs",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Madonna I Lift": "closed",
+      "Madonna II Lift": "closed",
+      "Mogul Mouse\u2019s Magic Lift": "closed",
+      "Morse Highlands Lift": "closed",
+      "Sir Henry\u2019s Glider Lift": "closed",
+      "Sterling Lift": "closed",
+      "Sterling T-Bar Lift": "closed",
+      "Village Lift": "closed"
+    }
   },
   "ll": [
     -72.78833,
@@ -23,11 +32,11 @@
   ],
   "name": "Smugglers' Notch",
   "timestamp": {
-    "lifts": 1790966774435,
+    "lifts": 1790967628526,
     "opening": 1790966752652,
-    "trails": 1790965847876,
-    "weather": 1790959554032,
-    "webcams": 1790966752652
+    "trails": 1790967629438,
+    "weather": 1790967628877,
+    "webcams": 1790967623345
   },
   "trails": {
     "list": [
@@ -455,7 +464,7 @@
     }
   },
   "weather": {
-    "conditions": "Rain Showers",
+    "conditions": "Chance Rain Showers",
     "date": "2026-10-02",
     "icon": [
       "basecloud",
@@ -470,6 +479,6 @@
     "temperature": {
       "max": 63
     },
-    "text": "Rain showers before 5pm. Cloudy. High near 63, with temperatures falling to around 57 in the afternoon. West wind 8 to 12 mph, with gusts as high as 23 mph. Chance of precipitation is 100%. New rainfall amounts between a quarter and half of an inch possible."
+    "text": "A chance of rain showers before 5pm. Cloudy, with a high near 63. Northwest wind around 9 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
