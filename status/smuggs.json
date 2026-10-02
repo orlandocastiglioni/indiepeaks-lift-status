@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-09-09T01:37:39Z",
+  "fetchedAt": "2026-10-02T19:00:15Z",
   "href": "https://www.smuggs.com/conditions/winter-report/",
   "id": "smuggs",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Madonna I Lift": "closed",
-      "Madonna II Lift": "closed",
-      "Mogul Mouse\u2019s Magic Lift": "closed",
-      "Morse Highlands Lift": "closed",
-      "Sir Henry\u2019s Glider Lift": "closed",
-      "Sterling Lift": "closed",
-      "Sterling T-Bar Lift": "closed",
-      "Village Lift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.78833,
@@ -32,11 +23,11 @@
   ],
   "name": "Smugglers' Notch",
   "timestamp": {
-    "lifts": 1788917829667,
-    "opening": 1788917826176,
-    "trails": 1788917832322,
-    "weather": 1788917846942,
-    "webcams": 1788917846408
+    "lifts": 1790966774435,
+    "opening": 1790966752652,
+    "trails": 1790965847876,
+    "weather": 1790959554032,
+    "webcams": 1790966752652
   },
   "trails": {
     "list": [
@@ -464,11 +455,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
-    "date": "2026-09-09",
+    "conditions": "Rain Showers",
+    "date": "2026-10-02",
     "icon": [
-      "icon-cloud",
-      "icon-night"
+      "basecloud",
+      "icon-showers icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.589092&lon=-72.78833",
@@ -477,8 +468,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 52
+      "max": 63
     },
-    "text": "Mostly cloudy, with a low around 52. Southeast wind 2 to 8 mph."
+    "text": "Rain showers before 5pm. Cloudy. High near 63, with temperatures falling to around 57 in the afternoon. West wind 8 to 12 mph, with gusts as high as 23 mph. Chance of precipitation is 100%. New rainfall amounts between a quarter and half of an inch possible."
   }
 }
