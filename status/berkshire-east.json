@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-10-03T19:45:30Z",
+  "fetchedAt": "2026-10-03T21:31:03Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 2,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 50,
+        "closed": 100,
         "hold": 0,
-        "open": 50,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Summit Quad": "closed",
-      "T-Bar Express Quad": "open"
+      "T-Bar Express Quad": "closed"
     }
   },
   "ll": [
@@ -26,11 +26,11 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1791055860514,
-    "opening": 1791054933595,
-    "trails": 1791055860514,
-    "weather": 1791052265737,
-    "webcams": 1791055853491
+    "lifts": 1791062182935,
+    "opening": 1791059434898,
+    "trails": 1791062182935,
+    "weather": 1791060355383,
+    "webcams": 1791062174957
   },
   "trails": {
     "list": [
@@ -238,6 +238,6 @@
     "temperature": {
       "max": 64
     },
-    "text": "Sunny, with a high near 64. North wind around 5 mph."
+    "text": "Sunny, with a high near 64. Northeast wind around 5 mph."
   }
 }
