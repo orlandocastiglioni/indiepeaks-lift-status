@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-10-03T16:30:39Z",
+  "fetchedAt": "2026-10-03T16:45:39Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Rangeley": "closed",
+      "South Branch": "closed"
+    }
   },
   "ll": [
     -70.632965,
@@ -23,11 +26,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1791044172824,
+    "lifts": 1791045050427,
     "opening": 1791043210622,
     "trails": 1791045020494,
     "weather": 1791044174420,
-    "webcams": 1791044170888
+    "webcams": 1791045041032
   },
   "trails": {
     "list": [
