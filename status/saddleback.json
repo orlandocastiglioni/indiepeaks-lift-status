@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-10-03T16:45:39Z",
+  "fetchedAt": "2026-10-04T04:45:45Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Rangeley": "closed",
-      "South Branch": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -26,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1791045050427,
-    "opening": 1791043210622,
-    "trails": 1791045020494,
-    "weather": 1791044174420,
-    "webcams": 1791045041032
+    "lifts": 1791088226114,
+    "opening": 1791084663123,
+    "trails": 1791087343510,
+    "weather": 1791084666698,
+    "webcams": 1791088224209
   },
   "trails": {
     "list": [
@@ -103,11 +100,11 @@
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-10-03",
+    "conditions": "Mostly Clear then Areas Of Frost",
+    "date": "2026-10-04",
     "icon": [
       "basenone",
-      "icon-sun"
+      "icon-mist"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -116,8 +113,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 57
+      "max": 31
     },
-    "text": "Sunny, with a high near 57. Northwest wind 5 to 10 mph."
+    "text": "Areas of frost and patchy fog after 3am. Mostly clear, with a low around 31. Northeast wind 0 to 5 mph."
   }
 }
