@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-10-05T12:30:23Z",
+  "fetchedAt": "2026-10-05T21:46:00Z",
   "href": "https://www.mohawkmtn.com/snow-report/",
   "id": "mohawk-mountain",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Arrowhead Triple Chair": "closed",
-      "Boulder Summit Triple Chair": "closed",
-      "Deer Run Triple Chair": "closed",
-      "Mohawk Triple Chair": "closed",
-      "Nutmeg Triple Chair": "closed",
-      "Robin's Nest": "closed",
-      "Runway": "closed",
-      "The Glider": "closed",
-      "The Rooster": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -73.3119,
@@ -33,9 +23,9 @@
   ],
   "name": "Mohawk Mountain",
   "timestamp": {
-    "lifts": 1791202557995,
-    "opening": 1791199827216,
-    "trails": 1791202539208,
+    "lifts": 1791235819603,
+    "opening": 1791235817881,
+    "trails": 1791234975598,
     "weather": 0,
     "webcams": 0
   },
