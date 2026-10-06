@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-10-06T07:30:39Z",
+  "fetchedAt": "2026-10-06T07:45:16Z",
   "href": "https://westmountain.com/trail-conditions/",
   "id": "west-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 83.3,
+        "hold": 0,
+        "open": 16.6,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Apex Triple Chairlift": "open",
+      "Face Quad Chairlift": "closed",
+      "Learning Area Rope Tow for Kiddie TP access": "closed",
+      "Learning Area Surface Lift": "closed",
+      "Tubing Park Surface Lift": "closed",
+      "West Express Triple Chairlift": "closed"
+    }
   },
   "ll": [
     -73.6866,
@@ -23,9 +30,9 @@
   ],
   "name": "West Mountain",
   "timestamp": {
-    "lifts": 1791270954024,
-    "opening": 1791267367510,
-    "trails": 1791270046332,
+    "lifts": 1791271856370,
+    "opening": 1791271848502,
+    "trails": 1791271856370,
     "weather": 0,
     "webcams": 0
   },
