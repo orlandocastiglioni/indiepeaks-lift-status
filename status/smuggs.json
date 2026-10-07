@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "https://www.smuggs.com/conditions/winter-report/",
   "id": "smuggs",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Madonna I Lift": "closed",
+      "Madonna II Lift": "closed",
+      "Mogul Mouse\u2019s Magic Lift": "closed",
+      "Morse Highlands Lift": "closed",
+      "Sir Henry\u2019s Glider Lift": "closed",
+      "Sterling Lift": "closed",
+      "Sterling T-Bar Lift": "closed",
+      "Village Lift": "closed"
+    }
   },
   "ll": [
     -72.78833,
@@ -23,11 +32,11 @@
   ],
   "name": "Smugglers' Notch",
   "timestamp": {
-    "lifts": 1791334827878,
+    "lifts": 1791335768896,
     "opening": 1791333057122,
     "trails": 1791335750701,
     "weather": 1791333061457,
-    "webcams": 1791334827449
+    "webcams": 1791335766952
   },
   "trails": {
     "list": [

@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "https://bousquetmountain.com/lift-trail-status/",
   "id": "bousquet",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beginner area carpet": "closed",
+      "Tube town carpet": "closed",
+      "yellow chair": "closed"
+    }
   },
   "ll": [
     -73.2788,
@@ -23,9 +27,9 @@
   ],
   "name": "Bousquet Mountain",
   "timestamp": {
-    "lifts": 1791334827513,
+    "lifts": 1791335755006,
     "opening": 1791333057118,
-    "trails": 1791333953558,
+    "trails": 1791335755006,
     "weather": 0,
     "webcams": 0
   },

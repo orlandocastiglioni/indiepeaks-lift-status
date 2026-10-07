@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "https://www.skichinapeak.com/conditions",
   "id": "chinapeak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Boulder Carpet": "closed",
+      "Chair 1": "closed",
+      "Chair 2": "closed",
+      "Chair 4": "closed",
+      "Chair 5": "closed",
+      "Chair 6": "closed",
+      "Chair 7": "closed",
+      "Juniper Carpet": "closed",
+      "Kids Carpet": "closed"
+    }
   },
   "ll": [
     -119.161705,
@@ -23,11 +33,11 @@
   ],
   "name": "China Peak",
   "timestamp": {
-    "lifts": 1791334827573,
+    "lifts": 1791335751030,
     "opening": 1791333057119,
-    "trails": 1791333945216,
+    "trails": 1791335751030,
     "weather": 1791333061435,
-    "webcams": 1791334827448
+    "webcams": 1791335747243
   },
   "trails": {
     "list": [

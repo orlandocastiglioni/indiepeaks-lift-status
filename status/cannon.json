@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "https://www.cannonmt.com/trails-lifts",
   "id": "cannon",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Brookside Triple": "closed",
+      "Cannonball Quad Chair": "closed",
+      "Eagle Cliff Triple Chair": "closed",
+      "Huckerbrook Handle Tow": "closed",
+      "Mittersill Double": "closed",
+      "Peabody Express Quad": "closed",
+      "Tuckerbrook Quad": "closed",
+      "Valar T-Bar": "closed",
+      "Zoomer Triple": "closed"
+    }
   },
   "ll": [
     -71.698418,
@@ -23,11 +33,11 @@
   ],
   "name": "Cannon",
   "timestamp": {
-    "lifts": 1791334827556,
+    "lifts": 1791335752636,
     "opening": 1791333057119,
-    "trails": 1791333948971,
+    "trails": 1791335752636,
     "weather": 1791333061433,
-    "webcams": 1791334827448
+    "webcams": 1791335747243
   },
   "trails": {
     "list": [

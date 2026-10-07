@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "https://www.greekpeak.net/ski-ride/current-conditions/",
   "id": "greek-peak",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Boardwalk": "closed",
+      "Lift 1": "closed",
+      "Lift 2": "closed",
+      "Lift 3": "closed",
+      "Lift 4": "closed",
+      "Lift 5": "closed",
+      "Magic Carpet": "closed",
+      "Visions": "closed"
+    }
   },
   "ll": [
     -76.136,
@@ -23,9 +32,9 @@
   ],
   "name": "Greek Peak",
   "timestamp": {
-    "lifts": 1791334827632,
+    "lifts": 1791335753967,
     "opening": 1791333057120,
-    "trails": 1791333951579,
+    "trails": 1791335753967,
     "weather": 0,
     "webcams": 0
   },

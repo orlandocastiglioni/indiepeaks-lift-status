@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "https://www.silvermt.com/mountain-info/trail-status",
   "id": "silver-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chair 1": "closed",
+      "Chair 2": "closed",
+      "Chair 3": "closed",
+      "Chair 4": "closed",
+      "Chair 5": "closed",
+      "Prospector Adventure Lift": "closed"
+    }
   },
   "ll": [
     -116.1262,
@@ -23,7 +30,7 @@
   ],
   "name": "Silver Mountain Resort",
   "timestamp": {
-    "lifts": 1791334827866,
+    "lifts": 1791335767858,
     "opening": 1791333057122,
     "trails": 1791335751198,
     "weather": 0,

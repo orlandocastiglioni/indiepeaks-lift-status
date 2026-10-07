@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "https://cataloochee.com/the-mountain/snow-report/",
   "id": "cataloochee",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beginners Luck (Conveyor)": "closed",
+      "Easy Way (Triple)": "closed",
+      "Omigosh (Quad)": "closed",
+      "Rock Island Line (Quad)": "closed",
+      "Wolf Creek ( Conveyor)": "closed"
+    }
   },
   "ll": [
     -83.090027,
@@ -23,11 +29,11 @@
   ],
   "name": "Cataloochee",
   "timestamp": {
-    "lifts": 1791334827560,
+    "lifts": 1791335751484,
     "opening": 1791333057119,
-    "trails": 1791333946064,
+    "trails": 1791335751484,
     "weather": 1791333061433,
-    "webcams": 1791334827448
+    "webcams": 1791335747243
   },
   "trails": {
     "list": [

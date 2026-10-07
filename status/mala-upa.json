@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "https://www.skimu.cz/zima/vleky-a-sjezdovky",
   "id": "mala-upa",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "D\u011btsk\u00fd park Pomezky - zast\u0159e\u0161en\u00fd p\u00e1s": "closed",
+      "D\u011btsk\u00fd park U Kostela - d\u011btsk\u00fd vlek": "closed",
+      "H\u00fdbnerka": "closed",
+      "Kolbenka": "closed",
+      "Pomezky": "closed",
+      "Rennerovka": "closed",
+      "Trautenberk": "closed",
+      "U Kostela 1000": "closed",
+      "U Kostela 400": "closed"
+    }
   },
   "ll": [
     15.819956,
@@ -23,9 +33,9 @@
   ],
   "name": "Mal\u00e1 \u00dapa",
   "timestamp": {
-    "lifts": 1791334827733,
+    "lifts": 1791335751624,
     "opening": 1791333057121,
-    "trails": 1791333946121,
+    "trails": 1791335751624,
     "weather": 0,
     "webcams": 0
   },

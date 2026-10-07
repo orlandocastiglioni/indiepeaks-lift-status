@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-10-07T01:15:46Z",
+  "fetchedAt": "2026-10-07T01:30:34Z",
   "href": "http://www.kingpine.com/snow-report-conditions",
   "id": "king-pine",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Bear Rug Carpet": "closed",
+      "Black Bear": "closed",
+      "Cubby Carpet": "closed",
+      "Pine Meadows Tubing Park": "closed",
+      "Polar Bear": "closed",
+      "Powder Bear": "closed"
+    }
   },
   "ll": [
     -71.088127,
@@ -23,11 +30,11 @@
   ],
   "name": "King Pine",
   "timestamp": {
-    "lifts": 1791334827690,
+    "lifts": 1791335749845,
     "opening": 1791333057120,
-    "trails": 1791333942843,
+    "trails": 1791335749845,
     "weather": 1791333061438,
-    "webcams": 1791334827448
+    "webcams": 1791335747244
   },
   "trails": {
     "list": [
