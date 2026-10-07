@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-10-05T18:15:24Z",
+  "fetchedAt": "2026-10-07T01:15:46Z",
   "href": "https://dodgeridge.com/lift-status/",
   "id": "dodge-ridge",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Chair 1 - Triple Nugget": "closed",
-      "Chair 3 - Motherlode": "closed",
-      "Chair 4 - Comstock": "closed",
-      "Chair 5 - Gold Rush": "closed",
-      "Chair 6 - Clementine": "closed",
-      "Chair 7 - Prospector": "closed",
-      "Chair 8 - Boulder Creek": "closed",
-      "Conveyer 1 River's Otter Run": "closed",
-      "Conveyor 2": "closed",
-      "Conveyor 3 The Highway": "closed",
-      "TBar - 643": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -119.9558639,
@@ -35,9 +23,9 @@
   ],
   "name": "Dodge Ridge",
   "timestamp": {
-    "lifts": 1791223239578,
-    "opening": 1791223234795,
-    "trails": 1791223240126,
+    "lifts": 1791334827586,
+    "opening": 1791333057119,
+    "trails": 1791333943836,
     "weather": 0,
     "webcams": 0
   },

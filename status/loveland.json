@@ -1,32 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T07:15:14Z",
+  "fetchedAt": "2026-10-07T01:15:46Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
     "stats": {
-      "closed": 10,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Chet's Dream": "closed",
-      "Lift 2": "closed",
-      "Lift 3": "closed",
-      "Lift 4": "closed",
-      "Lift 6": "closed",
-      "Lift 7": "closed",
-      "Lift 8": "closed",
-      "Lift 9": "closed",
-      "PTARMIGAN LIFT": "closed",
-      "Rainbow Magic Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -105.89595,
@@ -34,11 +23,11 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1787814628386,
-    "opening": 1787814556948,
-    "trails": 1787814628385,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1791334827729,
+    "opening": 1791333057121,
+    "trails": 1791333947517,
+    "weather": 1791333061439,
+    "webcams": 1791334827448
   },
   "trails": {
     "list": [
@@ -529,5 +518,23 @@
       "open": 0,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Chance Rain Showers then Mostly Cloudy",
+    "date": "2026-10-07",
+    "icon": [
+      "icon-cloud",
+      "icon-sunny"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=39.679993&lon=-105.89595",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 38
+    },
+    "text": "A chance of rain showers before midnight. Mostly cloudy, with a low around 38. South southeast wind around 8 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }

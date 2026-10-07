@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-09-17T08:30:28Z",
+  "fetchedAt": "2026-10-07T01:15:46Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "B. Arrowhead - Quad": "closed",
-      "C. Tomahawk - Express": "closed",
-      "D. Tecumseh - Double": "closed",
-      "E. Lookout - Double": "closed",
-      "F. Bushkill - Double": "closed",
-      "G. Little Chief - Double": "closed",
-      "H. Little Chief - Carpet": "closed",
-      "I. Learning Center - Carpet": "closed",
-      "Skiwee Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.078117,
@@ -33,11 +23,11 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1789633061383,
-    "opening": 1789632028775,
-    "trails": 1789633061383,
-    "weather": 1789632087338,
-    "webcams": 1789632918231
+    "lifts": 1791334878754,
+    "opening": 1791333057122,
+    "trails": 1791334093671,
+    "weather": 1791333062113,
+    "webcams": 1791334827449
   },
   "trails": {
     "list": [
@@ -200,11 +190,11 @@
     }
   },
   "weather": {
-    "conditions": "Patchy Fog",
-    "date": "2026-09-17",
+    "conditions": "Clear then Areas Of Frost",
+    "date": "2026-10-07",
     "icon": [
       "basenone",
-      "icon-mist icon-night"
+      "icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=41.03688&lon=-75.078117",
@@ -213,8 +203,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 64
+      "max": 36
     },
-    "text": "Patchy fog after 4am. Mostly cloudy, with a low around 64. South wind around 0 mph."
+    "text": "Areas of frost after 2am. Clear, with a low around 36. West wind 0 to 5 mph."
   }
 }

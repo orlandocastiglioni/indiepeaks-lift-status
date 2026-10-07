@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-08-27T07:15:14Z",
+  "fetchedAt": "2026-10-07T01:15:46Z",
   "href": "https://www.skichinapeak.com/conditions",
   "id": "chinapeak",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Boulder Carpet": "closed",
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 4": "closed",
-      "Chair 5": "closed",
-      "Chair 6": "closed",
-      "Chair 7": "closed",
-      "Juniper Carpet": "closed",
-      "Kids Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -119.161705,
@@ -33,11 +23,11 @@
   ],
   "name": "China Peak",
   "timestamp": {
-    "lifts": 1787814618600,
-    "opening": 1787814556945,
-    "trails": 1787814618600,
-    "weather": 0,
-    "webcams": 0
+    "lifts": 1791334827573,
+    "opening": 1791333057119,
+    "trails": 1791333945216,
+    "weather": 1791333061435,
+    "webcams": 1791334827448
   },
   "trails": {
     "list": [
@@ -318,5 +308,23 @@
       "open": 1,
       "scheduled": 0
     }
+  },
+  "weather": {
+    "conditions": "Sunny",
+    "date": "2026-10-06",
+    "icon": [
+      "basenone",
+      "icon-sun"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=37.228348&lon=-119.161705",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 71
+    },
+    "text": "Sunny. High near 71, with temperatures falling to around 67 in the afternoon. West wind around 5 mph."
   }
 }

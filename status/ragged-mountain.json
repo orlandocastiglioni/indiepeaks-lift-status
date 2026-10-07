@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-09-01T19:15:11Z",
+  "fetchedAt": "2026-10-07T01:15:46Z",
   "href": "https://www.raggedmountainresort.com/mountain-report-cams/",
   "id": "ragged-mountain",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Barnyard Triple": "closed",
-      "Meadows Carpet": "closed",
-      "Spear Mountain Express": "closed",
-      "Summit Six Express": "closed",
-      "Uphill Route": "closed",
-      "Wanna Be Wild Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.842003,
@@ -30,11 +23,11 @@
   ],
   "name": "Ragged Mountain",
   "timestamp": {
-    "lifts": 1788289267146,
-    "opening": 1788289256930,
-    "trails": 1788289267146,
-    "weather": 1788282958508,
-    "webcams": 1788289256930
+    "lifts": 1791334827837,
+    "opening": 1791333057122,
+    "trails": 1791333950104,
+    "weather": 1791333062109,
+    "webcams": 1791334827449
   },
   "trails": {
     "list": [
@@ -347,11 +340,11 @@
     }
   },
   "weather": {
-    "conditions": "Rain Showers Likely",
-    "date": "2026-09-01",
+    "conditions": "Mostly Clear then Areas Of Frost",
+    "date": "2026-10-07",
     "icon": [
-      "basecloud",
-      "icon-showers icon-sunny"
+      "basenone",
+      "icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.486305&lon=-71.842003",
@@ -360,8 +353,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 69
+      "max": 33
     },
-    "text": "Rain showers likely between 7am and 1pm, then rain between 1pm and 2pm, then rain showers likely. Cloudy, with a high near 69. East wind 0 to 5 mph. Chance of precipitation is 80%. New rainfall amounts between a quarter and half of an inch possible."
+    "text": "Areas of frost after 1am. Mostly clear, with a low around 33. West wind 0 to 5 mph."
   }
 }

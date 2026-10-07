@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-10-06T07:45:16Z",
+  "fetchedAt": "2026-10-07T01:15:46Z",
   "href": "https://jaypeakresort.com/skiing-riding/snow-report-maps/snow-report",
   "id": "jay-peak",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Aerial Tram": "closed",
-      "Bonaventure Quad": "closed",
-      "Flyer Quad": "closed",
-      "Jet Triple": "closed",
-      "Metro Quad": "closed",
-      "Stateside Carpet": "closed",
-      "Taxi Quad": "closed",
-      "Tramside Carpet": "closed",
-      "Village Double": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.501701,
@@ -33,11 +23,11 @@
   ],
   "name": "Jay Peak",
   "timestamp": {
-    "lifts": 1791271853692,
-    "opening": 1791271848500,
-    "trails": 1791271853691,
-    "weather": 1791270943219,
-    "webcams": 1791271848500
+    "lifts": 1791334827678,
+    "opening": 1791333057120,
+    "trails": 1791333943228,
+    "weather": 1791333061438,
+    "webcams": 1791334827448
   },
   "trails": {
     "list": [
@@ -515,11 +505,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
-    "date": "2026-10-06",
+    "conditions": "Partly Cloudy",
+    "date": "2026-10-07",
     "icon": [
       "icon-cloud",
-      "icon-windy icon-night"
+      "icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.928837&lon=-72.501701",
@@ -530,6 +520,6 @@
     "temperature": {
       "max": 33
     },
-    "text": "Mostly cloudy, with a low around 33. West wind around 29 mph, with gusts as high as 43 mph."
+    "text": "Partly cloudy, with a low around 33. West wind 12 to 15 mph."
   }
 }

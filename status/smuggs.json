@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-10-02T19:15:45Z",
+  "fetchedAt": "2026-10-07T01:15:46Z",
   "href": "https://www.smuggs.com/conditions/winter-report/",
   "id": "smuggs",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Madonna I Lift": "closed",
-      "Madonna II Lift": "closed",
-      "Mogul Mouse\u2019s Magic Lift": "closed",
-      "Morse Highlands Lift": "closed",
-      "Sir Henry\u2019s Glider Lift": "closed",
-      "Sterling Lift": "closed",
-      "Sterling T-Bar Lift": "closed",
-      "Village Lift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.78833,
@@ -32,11 +23,11 @@
   ],
   "name": "Smugglers' Notch",
   "timestamp": {
-    "lifts": 1790967628526,
-    "opening": 1790966752652,
-    "trails": 1790967629438,
-    "weather": 1790967628877,
-    "webcams": 1790967623345
+    "lifts": 1791334827878,
+    "opening": 1791333057122,
+    "trails": 1791335750701,
+    "weather": 1791333061457,
+    "webcams": 1791334827449
   },
   "trails": {
     "list": [
@@ -464,11 +455,11 @@
     }
   },
   "weather": {
-    "conditions": "Chance Rain Showers",
-    "date": "2026-10-02",
+    "conditions": "Patchy Frost",
+    "date": "2026-10-07",
     "icon": [
-      "basecloud",
-      "icon-showers icon-sunny"
+      "basenone",
+      "icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.589092&lon=-72.78833",
@@ -477,8 +468,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 63
+      "max": 32
     },
-    "text": "A chance of rain showers before 5pm. Cloudy, with a high near 63. Northwest wind around 9 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Patchy frost between 11pm and 4am. Mostly clear, with a low around 32. West wind 5 to 12 mph."
   }
 }
