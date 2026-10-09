@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-10-09T13:00:08Z",
   "href": "http://www.kingpine.com/snow-report-conditions",
   "id": "king-pine",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Bear Rug Carpet": "closed",
-      "Black Bear": "closed",
-      "Cubby Carpet": "closed",
-      "Pine Meadows Tubing Park": "closed",
-      "Polar Bear": "closed",
-      "Powder Bear": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -71.088127,
@@ -30,11 +23,11 @@
   ],
   "name": "King Pine",
   "timestamp": {
-    "lifts": 1791335749845,
-    "opening": 1791333057120,
-    "trails": 1791335749845,
-    "weather": 1791333061438,
-    "webcams": 1791335747244
+    "lifts": 1791549944211,
+    "opening": 1791549048136,
+    "trails": 1791549052431,
+    "weather": 1791549942396,
+    "webcams": 1791549938492
   },
   "trails": {
     "list": [
@@ -147,11 +140,11 @@
     }
   },
   "weather": {
-    "conditions": "Widespread Frost",
-    "date": "2026-10-07",
+    "conditions": "Sunny",
+    "date": "2026-10-09",
     "icon": [
       "basenone",
-      "icon-moon"
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.86063&lon=-71.088127",
@@ -160,8 +153,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 29
+      "max": 61
     },
-    "text": "Widespread frost after 11pm. Mostly clear, with a low around 29. Southwest wind 0 to 5 mph."
+    "text": "Sunny, with a high near 61. West wind 5 to 15 mph, with gusts as high as 30 mph."
   }
 }
