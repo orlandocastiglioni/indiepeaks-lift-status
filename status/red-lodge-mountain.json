@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-10-11T16:30:33Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1791335762397,
-    "opening": 1791333057122,
-    "trails": 1791335762397,
-    "weather": 1791333062111,
-    "webcams": 1791335757006
+    "lifts": 1791735364018,
+    "opening": 1791735361480,
+    "trails": 1791734454535,
+    "weather": 1791729935018,
+    "webcams": 1791735361480
   },
   "trails": {
     "list": [
@@ -403,11 +395,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Clear",
-    "date": "2026-10-07",
+    "conditions": "Areas Of Fog",
+    "date": "2026-10-11",
     "icon": [
-      "basenone",
-      "icon-moon"
+      "basecloud",
+      "icon-snowy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=45.191021&lon=-109.335037",
@@ -416,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 48
+      "max": 33
     },
-    "text": "Mostly clear. Low around 48, with temperatures rising to around 50 overnight. West northwest wind around 7 mph."
+    "text": "Snow likely and areas of fog before 9am, then areas of fog and rain and snow. Cloudy, with a high near 33. North wind 6 to 10 mph. Chance of precipitation is 100%. New snow accumulation of 1 to 2 inches possible."
   }
 }
