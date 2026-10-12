@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-10-12T08:45:21Z",
+  "fetchedAt": "2026-10-12T20:45:11Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1791793863123,
-    "opening": 1791792962837,
-    "trails": 1791793842822,
-    "weather": 1791792028836,
-    "webcams": 1791793862994
+    "lifts": 1791837037009,
+    "opening": 1791835264498,
+    "trails": 1791836138710,
+    "weather": 1791830769693,
+    "webcams": 1791837035184
   },
   "trails": {
     "list": [
@@ -403,7 +395,7 @@
     }
   },
   "weather": {
-    "conditions": "Chance Light Snow",
+    "conditions": "Patchy Fog",
     "date": "2026-10-12",
     "icon": [
       "basecloud",
@@ -416,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 27
+      "max": 34
     },
-    "text": "A chance of snow before 3am. Mostly cloudy, with a low around 27. West wind 8 to 12 mph. Chance of precipitation is 30%. New snow accumulation of less than half an inch possible."
+    "text": "Patchy fog and a slight chance of snow. Mostly cloudy, with a high near 34. East wind around 6 mph. Chance of precipitation is 20%."
   }
 }
