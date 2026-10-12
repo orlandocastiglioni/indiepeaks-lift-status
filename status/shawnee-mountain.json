@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-10-12T02:30:16Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "B. Arrowhead - Quad": "closed",
-      "C. Tomahawk - Express": "closed",
-      "D. Tecumseh - Double": "closed",
-      "E. Lookout - Double": "closed",
-      "F. Bushkill - Double": "closed",
-      "G. Little Chief - Double": "closed",
-      "H. Little Chief - Carpet": "closed",
-      "I. Learning Center - Carpet": "closed",
-      "Skiwee Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.078117,
@@ -33,11 +23,11 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1791335910800,
-    "opening": 1791333057122,
-    "trails": 1791335910800,
-    "weather": 1791333062113,
-    "webcams": 1791335766952
+    "lifts": 1791771535567,
+    "opening": 1791769523276,
+    "trails": 1791770600166,
+    "weather": 1791767746212,
+    "webcams": 1791771324069
   },
   "trails": {
     "list": [
@@ -200,11 +190,11 @@
     }
   },
   "weather": {
-    "conditions": "Clear then Areas Of Frost",
-    "date": "2026-10-07",
+    "conditions": "Showers And Thunderstorms",
+    "date": "2026-10-12",
     "icon": [
-      "basenone",
-      "icon-moon"
+      "basecloud",
+      "icon-thunder"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=41.03688&lon=-75.078117",
@@ -213,8 +203,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 36
+      "max": 52
     },
-    "text": "Areas of frost after 2am. Clear, with a low around 36. West wind 0 to 5 mph."
+    "text": "Rain showers before 8pm, then showers and thunderstorms between 8pm and 2am. Cloudy, with a low around 52. Northeast wind around 5 mph. Chance of precipitation is 90%. New rainfall amounts between three quarters and one inch possible."
   }
 }
