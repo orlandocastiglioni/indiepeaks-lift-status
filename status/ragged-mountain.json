@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-11T00:30:03Z",
+  "fetchedAt": "2026-10-13T20:00:46Z",
   "href": "https://www.raggedmountainresort.com/mountain-report-cams/",
   "id": "ragged-mountain",
   "lifts": {
@@ -30,11 +30,11 @@
   ],
   "name": "Ragged Mountain",
   "timestamp": {
-    "lifts": 1791677742459,
-    "opening": 1791676860941,
-    "trails": 1791677742459,
-    "weather": 1791674174843,
-    "webcams": 1791677731457
+    "lifts": 1791920776382,
+    "opening": 1791918054217,
+    "trails": 1791920776382,
+    "weather": 1791917167958,
+    "webcams": 1791920765002
   },
   "trails": {
     "list": [
@@ -124,13 +124,8 @@
         "status": "closed"
       },
       {
-        "level": "blue",
+        "level": "terrainPark",
         "name": "Wild Ride",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Wild Side",
         "status": "closed"
       },
       {
@@ -340,18 +335,18 @@
       }
     ],
     "stats": {
-      "closed": 60,
+      "closed": 59,
       "hold": 0,
       "open": 0,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Partly Cloudy then Areas Of Frost",
-    "date": "2026-10-11",
+    "conditions": "Rain",
+    "date": "2026-10-13",
     "icon": [
-      "icon-cloud",
-      "icon-night"
+      "basecloud",
+      "icon-rainy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.486305&lon=-71.842003",
@@ -360,8 +355,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 33
+      "max": 47
     },
-    "text": "Areas of frost after 3am. Partly cloudy, with a low around 33. Northwest wind around 0 mph."
+    "text": "Rain and patchy fog. Cloudy, with a high near 47. East wind around 5 mph. Chance of precipitation is 100%. New rainfall amounts between a quarter and half of an inch possible."
   }
 }
