@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-10-14T09:45:21Z",
   "href": "https://www.ski49n.com/mountain-info/trail-status",
   "id": "49-degrees-north",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Angel Peak #6": "closed",
-      "Gold Fever Conveyor #7": "closed",
-      "Grub stake #2": "closed",
-      "Northern Spirit #1": "closed",
-      "Payday #3": "closed",
-      "Silver Lode #4": "closed",
-      "Sunrise Quad #5": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -117.564011,
@@ -31,11 +23,11 @@
   ],
   "name": "49 Degrees North",
   "timestamp": {
-    "lifts": 1791335755830,
-    "opening": 1791333057117,
-    "trails": 1791335755830,
-    "weather": 1791333061426,
-    "webcams": 1791335747243
+    "lifts": 1791970258000,
+    "opening": 1791969321661,
+    "trails": 1791969337793,
+    "weather": 1791963915474,
+    "webcams": 1791970241993
   },
   "trails": {
     "list": {
@@ -135,11 +127,11 @@
     }
   },
   "weather": {
-    "conditions": "Partly Sunny",
-    "date": "2026-10-06",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-10-14",
     "icon": [
       "icon-cloud",
-      "icon-sunny"
+      "icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=48.302353&lon=-117.564011",
@@ -148,8 +140,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 66
+      "max": 33
     },
-    "text": "Partly sunny. High near 66, with temperatures falling to around 64 in the afternoon. West wind around 1 mph."
+    "text": "Mostly cloudy, with a low around 33. Southwest wind around 1 mph."
   }
 }
