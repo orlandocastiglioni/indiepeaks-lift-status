@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-10-11T12:15:25Z",
+  "fetchedAt": "2026-10-14T05:30:58Z",
   "href": "https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus",
   "id": "pitztaler-gletscher",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 10,
       "hold": 0,
-      "open": 3,
+      "open": 2,
       "percentage": {
-        "closed": 75,
+        "closed": 83.3,
         "hold": 0,
-        "open": 25,
+        "open": 16.6,
         "scheduled": 0
       },
       "scheduled": 0
@@ -18,7 +18,7 @@
     "status": {
       "Dorflift Mandarfen": "closed",
       "Gletscherexpress": "open",
-      "Gletscherseebahn": "open",
+      "Gletscherseebahn": "closed",
       "Grubenkopf": "closed",
       "Hirschtal": "closed",
       "Mittagskogel": "closed",
@@ -36,9 +36,9 @@
   ],
   "name": "Pitztaler Gletscher",
   "timestamp": {
-    "lifts": 1791720043786,
-    "opening": 1791717355468,
-    "trails": 1791720043786,
+    "lifts": 1791954952988,
+    "opening": 1791954016264,
+    "trails": 1791954952988,
     "weather": 0,
     "webcams": 0
   },
@@ -72,7 +72,7 @@
       {
         "level": "green",
         "name": "25 Gletschersee",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -196,9 +196,9 @@
       }
     ],
     "stats": {
-      "closed": 27,
+      "closed": 28,
       "hold": 0,
-      "open": 3,
+      "open": 2,
       "scheduled": 0
     }
   }
