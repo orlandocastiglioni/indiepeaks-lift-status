@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-10-15T20:31:03Z",
   "href": "https://www.boltonvalley.com/winter/trail-maps-snow-reports/snow-reports/",
   "id": "bolton-valley",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Mid Mountain": "closed",
-      "Mighty Mite": "closed",
-      "Snowflake": "closed",
-      "Timberline": "closed",
-      "Vista": "closed",
-      "Wilderness": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.84948,
@@ -30,11 +23,11 @@
   ],
   "name": "Bolton Valley",
   "timestamp": {
-    "lifts": 1791335749997,
-    "opening": 1791333057118,
-    "trails": 1791335750008,
-    "weather": 1791333061430,
-    "webcams": 1791335747243
+    "lifts": 1792095340499,
+    "opening": 1792091757568,
+    "trails": 1792094464863,
+    "weather": 1792095343760,
+    "webcams": 1792095339558
   },
   "trails": {
     "list": [
@@ -402,11 +395,11 @@
     }
   },
   "weather": {
-    "conditions": "Patchy Frost",
-    "date": "2026-10-07",
+    "conditions": "Sunny",
+    "date": "2026-10-15",
     "icon": [
       "basenone",
-      "icon-moon"
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.421673&lon=-72.84948",
@@ -415,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 33
+      "max": 47
     },
-    "text": "Patchy frost between 10pm and 4am. Mostly clear, with a low around 33. West wind 5 to 14 mph."
+    "text": "Sunny, with a high near 47. Northwest wind around 7 mph."
   }
 }
