@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-10-15T21:15:18Z",
   "href": "https://www.canaanresort.com/trail-report",
   "id": "canaan-valley",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "\"A\" Lift": "closed",
-      "\"B\" Lift": "closed",
-      "\"C\" Lift": "closed",
-      "Magic Carpet": "closed",
-      "Tubing Lift": "closed",
-      "Tubing Lift 2": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -79.4379,
@@ -30,9 +23,9 @@
   ],
   "name": "Canaan Valley",
   "timestamp": {
-    "lifts": 1791335749790,
-    "opening": 1791333057119,
-    "trails": 1791335749790,
+    "lifts": 1792098051326,
+    "opening": 1792096270253,
+    "trails": 1792097135108,
     "weather": 0,
     "webcams": 0
   },
