@@ -1,30 +1,30 @@
 {
-  "fetchedAt": "2026-10-10T15:15:52Z",
+  "fetchedAt": "2026-10-16T14:31:03Z",
   "href": "https://www.kaunertaler-gletscher.at/kaunertaler-gletscher/nowbox.html",
   "id": "kaunertaler-gletscher",
   "lifts": {
-    "reportedAt": "2026-07-07T14:15:00.000Z",
+    "reportedAt": "2026-10-16T14:11:00.000Z",
     "stats": {
-      "closed": 9,
+      "closed": 7,
       "hold": 0,
-      "open": 1,
+      "open": 3,
       "percentage": {
-        "closed": 90,
+        "closed": 70,
         "hold": 0,
-        "open": 10,
+        "open": 30,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Dorflift in Feichten": "closed",
-      "Falginjochbahn": "closed",
-      "Fernerlift": "closed",
-      "Karlesjochbahn": "open",
+      "Falginjochbahn": "open",
+      "Fernerlift": "open",
+      "Karlesjochbahn": "closed",
       "N\u00f6rderjoch": "closed",
       "Ochsenalmbahn I": "closed",
       "Ochsenalmbahn II": "closed",
-      "Sonnenlift": "closed",
+      "Sonnenlift": "open",
       "Wei\u00dfseejochbahn": "closed",
       "Zauberteppich": "closed"
     }
@@ -35,9 +35,9 @@
   ],
   "name": "Kaunertaler Gletscher",
   "timestamp": {
-    "lifts": 1791644437734,
-    "opening": 1791643560281,
-    "trails": 1791644437734,
+    "lifts": 1792160176678,
+    "opening": 1792158359897,
+    "trails": 1792160176678,
     "weather": 0,
     "webcams": 0
   },
@@ -119,7 +119,7 @@
         "grade": "Leicht",
         "level": "blue",
         "name": "Wei\u00dfseeclassic",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "Schwer",
@@ -131,13 +131,13 @@
         "grade": "Leicht",
         "level": "blue",
         "name": "Ferner Ost",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "Leicht",
         "level": "blue",
         "name": "S\u00fcdtirolerweg",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "Leicht",
@@ -206,11 +206,11 @@
         "status": "open"
       }
     ],
-    "reportedAt": "2026-07-07T14:15:00.000Z",
+    "reportedAt": "2026-10-16T14:11:00.000Z",
     "stats": {
-      "closed": 25,
+      "closed": 22,
       "hold": 0,
-      "open": 2,
+      "open": 5,
       "scheduled": 0
     }
   }
