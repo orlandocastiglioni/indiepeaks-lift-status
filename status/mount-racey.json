@@ -1,26 +1,21 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-10-18T18:01:03Z",
   "href": "https://yubari-resort.co.jp/weather_traffic/",
   "id": "mount-racey",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "\u30b7\u30e3\u30c8\u30eb\uff16\u30b4\u30f3\u30c9\u30e9": "closed",
-      "\u30b9\u30a6\u30a3\u30f3\u30ac\u30fc\u30ba2\u30ea\u30d5\u30c8": "closed",
-      "\u30c0\u30f3\u30b5\u30fc\u30ba\uff14\u30ea\u30d5\u30c8": "closed",
-      "\u30d3\u30ae\u30ca\u30fc\u30ba\uff14\u30ea\u30d5\u30c8": "closed"
-    }
+    "status": {}
   },
   "ll": [
     141.98,
@@ -28,9 +23,9 @@
   ],
   "name": "Mount Racey",
   "timestamp": {
-    "lifts": 1791335759917,
-    "opening": 1791333816282,
-    "trails": 1791335756836,
+    "lifts": 1792345535860,
+    "opening": 1792327512796,
+    "trails": 1792345520235,
     "weather": 0,
     "webcams": 0
   }
