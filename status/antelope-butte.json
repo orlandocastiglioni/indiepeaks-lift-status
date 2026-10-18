@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-18T07:45:56Z",
+  "fetchedAt": "2026-10-18T08:00:27Z",
   "href": "https://www.skiantelopebutte.com/weather-reports",
   "id": "antelope-butte",
   "lifts": {
@@ -8,18 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 3
+      "scheduled": 0
     },
-    "status": {
-      "Park Double Chair": "scheduled",
-      "Pole'r Express Conveyor": "scheduled",
-      "Summit Double Chair": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -107.5182,
@@ -27,7 +23,7 @@
   ],
   "name": "Antelope Butte",
   "timestamp": {
-    "lifts": 1792308667597,
+    "lifts": 1792309563070,
     "opening": 1792307728071,
     "trails": 1792308670456,
     "weather": 0,
