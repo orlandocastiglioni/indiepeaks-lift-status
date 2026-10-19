@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-19T06:00:28Z",
+  "fetchedAt": "2026-10-19T13:30:45Z",
   "href": "https://www.hochzeiger.com/de/liftstatus-hochzeiger.html",
   "id": "hochzeiger",
   "lifts": {
@@ -33,16 +33,137 @@
   ],
   "name": "Hochzeiger",
   "timestamp": {
-    "lifts": 1792388728159,
-    "opening": 1792387854026,
-    "trails": 1792388728135,
+    "lifts": 1792415769399,
+    "opening": 1792415764632,
+    "trails": 1792415769406,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "1 Familien-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "1a Familien-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "1b Familien-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "1c Tal-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "2 FIS-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "2a Tal-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "2b Tal-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "6 Zollberg-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "6a Zollberg-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "7 Sechszeiger-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "8 Kalbenalm-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "9 Niederj\u00f6chl-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "9a Niederj\u00f6chl-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "10 Panorama-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "10a Panorama-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "11 Zirben-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "3 Benni Raich-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "4 Rotmoos-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "5 Kanonenrohr",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "12 Zirbenfall-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "12a Zirbenfall-Abfahrt",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "A Buckelpiste",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "B Hochzeigerloch",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "C Narrenkopf",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 24,
       "hold": 0,
       "open": 0,
       "scheduled": 0
