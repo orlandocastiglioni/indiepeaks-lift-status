@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-10-19T11:30:26Z",
+  "fetchedAt": "2026-10-19T15:00:36Z",
   "href": "https://www.les7laux.com/hiver/",
   "id": "les-7-laux",
   "lifts": {
-    "reportedAt": "2026-10-19T11:01:00.000Z",
+    "reportedAt": "2026-10-19T14:35:00.000Z",
     "stats": {
       "closed": 2,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
         "closed": 66.6,
         "hold": 0,
-        "open": 33.3,
-        "scheduled": 0
+        "open": 0,
+        "scheduled": 33.3
       },
-      "scheduled": 0
+      "scheduled": 1
     },
     "status": {
-      "TSD Bouquetins": "open",
+      "TSD Bouquetins": "scheduled",
       "TSD Chamois": "closed",
       "TSF Pincerie": "closed"
     }
@@ -28,9 +28,9 @@
   ],
   "name": "Les 7 Laux",
   "timestamp": {
-    "lifts": 1792408530767,
-    "opening": 1792407652435,
-    "trails": 1792408530767,
+    "lifts": 1792421113267,
+    "opening": 1792420216077,
+    "trails": 1792421113267,
     "weather": 0,
     "webcams": 0
   },
@@ -48,15 +48,15 @@
       },
       {
         "name": "Domaine VTT de descente (Prapoutel)",
-        "status": "open"
+        "status": "scheduled"
       }
     ],
-    "reportedAt": "2026-10-19T11:01:00.000Z",
+    "reportedAt": "2026-10-19T14:35:00.000Z",
     "stats": {
       "closed": 2,
       "hold": 0,
-      "open": 1,
-      "scheduled": 0
+      "open": 0,
+      "scheduled": 1
     }
   }
 }
