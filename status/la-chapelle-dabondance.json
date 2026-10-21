@@ -1,21 +1,31 @@
 {
-  "fetchedAt": "2026-10-21T00:45:53Z",
+  "fetchedAt": "2026-10-21T01:00:03Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/la-chapelle-dabondance/",
   "id": "la-chapelle-dabondance",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Tc la panthiaz": "closed",
+      "Tk la combe": "closed",
+      "Tk le bambi": "closed",
+      "Tk le dahu": "closed",
+      "Tk les pres 1": "closed",
+      "Tk les pres 2": "closed",
+      "Ts de braitaz": "closed",
+      "Ts les fontaines": "closed",
+      "Tsd cret-beni": "closed"
+    }
   },
   "ll": [
     6.7906,
@@ -23,9 +33,9 @@
   ],
   "name": "La Chapelle d'Abondance (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1792542660614,
+    "lifts": 1792543571492,
     "opening": 1792542644642,
-    "trails": 1792541755016,
+    "trails": 1792543571492,
     "weather": 0,
     "webcams": 0
   },
