@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-10-22T20:15:39Z",
+  "fetchedAt": "2026-10-22T20:45:33Z",
   "href": "https://www.buffaloskicenter.com/trail-conditions/",
   "id": "buffalo-ski-center",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Buffalo T": "closed",
-      "Magic Carpet": "closed",
-      "Mitey Mite": "closed",
-      "Multi Star": "closed",
-      "Old Sitz T": "closed",
-      "Sitzmarker Chair": "closed",
-      "Tamarack Chair": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -78.6912,
@@ -31,9 +23,9 @@
   ],
   "name": "Buffalo Ski Center",
   "timestamp": {
-    "lifts": 1792699261430,
-    "opening": 1792697459431,
-    "trails": 1792699261430,
+    "lifts": 1792701065996,
+    "opening": 1792701061540,
+    "trails": 1792700153609,
     "weather": 0,
     "webcams": 0
   },
