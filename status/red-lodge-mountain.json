@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-10-20T11:15:58Z",
+  "fetchedAt": "2026-10-23T20:00:37Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1792494073232,
-    "opening": 1792493168708,
-    "trails": 1792494073232,
-    "weather": 1792494063192,
-    "webcams": 1792494058841
+    "lifts": 1792784744349,
+    "opening": 1792782962226,
+    "trails": 1792783880425,
+    "weather": 1792780266317,
+    "webcams": 1792784742501
   },
   "trails": {
     "list": [
@@ -403,11 +395,11 @@
     }
   },
   "weather": {
-    "conditions": "Partly Cloudy",
-    "date": "2026-10-20",
+    "conditions": "Chance Rain Showers",
+    "date": "2026-10-23",
     "icon": [
-      "icon-cloud",
-      "icon-night"
+      "basecloud",
+      "icon-showers icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=45.191021&lon=-109.335037",
@@ -416,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 43
+      "max": 51
     },
-    "text": "Partly cloudy. Low around 43, with temperatures rising to around 46 overnight. West southwest wind around 6 mph."
+    "text": "A chance of rain showers after 1pm. Partly sunny. High near 51, with temperatures falling to around 43 in the afternoon. West southwest wind 12 to 23 mph. Chance of precipitation is 70%."
   }
 }
