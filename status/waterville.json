@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-10-22T11:30:31Z",
+  "fetchedAt": "2026-10-23T01:17:42Z",
   "href": "http://www.waterville.com/snow-report-maps",
   "id": "waterville",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Exhibition T-Bar": "closed",
+      "Green Peak Triple": "closed",
+      "High Country": "closed",
+      "Lower Meadows": "closed",
+      "Lower Pasture Carpet": "closed",
+      "Northside": "closed",
+      "Sunny Side": "closed",
+      "Tecumseh Express": "closed",
+      "Upper Pasture Carpet": "closed",
+      "Valley Run Quad": "closed"
+    }
   },
   "ll": [
     -71.519989,
@@ -23,28 +34,355 @@
   ],
   "name": "Waterville Valley",
   "timestamp": {
-    "lifts": 1792668318336,
-    "opening": 1792668314439,
-    "trails": 0,
-    "weather": 1792668349478,
-    "webcams": 1792668344645
+    "lifts": 1792718239609,
+    "opening": 1792718228411,
+    "trails": 1792718239609,
+    "weather": 0,
+    "webcams": 0
   },
-  "weather": {
-    "conditions": "Sunny",
-    "date": "2026-10-22",
-    "icon": [
-      "basenone",
-      "icon-sun"
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Baseway",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bourbon Street",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Chandler's Way",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Kinderpark",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Leroy's Loop",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Revelation",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Rock Island",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Stemtation",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "The Pasture",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Valley Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "And Tyler Too",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bail Out",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Calvert's Crossing",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Exhibition",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Governor's Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Grimes Way",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hassle",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Higher Ground",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Old Tecumseh",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Periphery",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Stillness",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Tippy",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower White Caps",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Main Street",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Mean Jean's Ravine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "No Grit",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Oblivion",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Old Tecumseh",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Palmer's Way",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Periphery",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Pianoman",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Ruthie's Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Scramble",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sidewinder",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Siegel Street",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "South Street",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Stillness",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sun Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Tangent",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Terry's Trail",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Tippecanoe",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Tree Line",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Bobby's Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Valley Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "White Caps",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Ciao",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Clean Shaven",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Gema",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Sel's Choice",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Pfosi's Pfolly",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Preston's Path",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Psyched",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Psyched Out",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Ruffled Feathers",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Boneyard",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Chute",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Tommy's World Cup Run",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Sel's Choice",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Utter Abandon",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Lower Bobby's Run",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "True Grit",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Wayne Wong Way",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Boardercross Course",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Exhibition Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "FunRun",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Pasture",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Stillness",
+        "status": "closed"
+      }
     ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=43.961613&lon=-71.519989",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 56
-    },
-    "text": "Sunny, with a high near 56. North wind 5 to 15 mph, with gusts as high as 25 mph."
+    "stats": {
+      "closed": 67,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

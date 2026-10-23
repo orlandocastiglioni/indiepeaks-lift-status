@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-09T13:00:08Z",
+  "fetchedAt": "2026-10-23T01:17:42Z",
   "href": "https://www.lochlomond.ca/conditions/",
   "id": "loch-lomond",
   "ll": [
@@ -9,15 +9,116 @@
   "name": "Loch Lomond",
   "timestamp": {
     "lifts": 0,
-    "opening": 1791549048136,
-    "trails": 1791550280728,
+    "opening": 1792718228409,
+    "trails": 1792718240516,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "Upper Sunbowl",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Sunbowl",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Cliff",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Mullet",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Pine Glades",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Sunbowl",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Chicken",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Kitzbuel",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Maple",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Maple",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Zipper",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Birch",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Old Joe\u2019s",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Giant",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Jolly Giant",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Devil\u2019s Dive",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Devil\u2019s Playground",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 20,
       "hold": 0,
       "open": 0,
       "scheduled": 0

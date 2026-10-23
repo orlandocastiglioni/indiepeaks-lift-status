@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-10-22T11:30:31Z",
+  "fetchedAt": "2026-10-23T01:17:42Z",
   "href": "http://www.kingpine.com/snow-report-conditions",
   "id": "king-pine",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Bear Rug Carpet": "closed",
+      "Black Bear": "closed",
+      "Cubby Carpet": "closed",
+      "Pine Meadows Tubing Park": "closed",
+      "Polar Bear": "closed",
+      "Powder Bear": "closed"
+    }
   },
   "ll": [
     -71.088127,
@@ -23,18 +30,128 @@
   ],
   "name": "King Pine",
   "timestamp": {
-    "lifts": 1792668321301,
-    "opening": 1792668314436,
-    "trails": 0,
-    "weather": 1792668346575,
-    "webcams": 1792668344645
+    "lifts": 1792718237319,
+    "opening": 1792718228409,
+    "trails": 1792718237319,
+    "weather": 1792718260605,
+    "webcams": 1792718258962
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Crooked Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "East Slope",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Knotty Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Pine Spills",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Pokey Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Scotch Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Slow Pokey Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "King Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Pine Board",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Pine Cone",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Red Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "West Slope",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "White Pine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Jack Pine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Pine Slalom",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Pine Brule",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Pitch Pine",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "East Slope",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Twisted Pine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Pokey Glades",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 20,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   },
   "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-10-22",
+    "conditions": "Clear",
+    "date": "2026-10-23",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basenone",
+      "icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.86063&lon=-71.088127",
@@ -43,8 +160,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 62
+      "max": 33
     },
-    "text": "Mostly sunny, with a high near 62. North wind 0 to 10 mph."
+    "text": "Clear, with a low around 33. North wind 5 to 10 mph."
   }
 }
