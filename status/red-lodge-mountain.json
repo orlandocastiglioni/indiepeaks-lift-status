@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-10-23T20:15:44Z",
+  "fetchedAt": "2026-10-23T23:45:38Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1792785657303,
-    "opening": 1792782962226,
-    "trails": 1792785657303,
-    "weather": 1792780266317,
-    "webcams": 1792785642830
+    "lifts": 1792798274905,
+    "opening": 1792795535435,
+    "trails": 1792797329647,
+    "weather": 1792796420246,
+    "webcams": 1792798256085
   },
   "trails": {
     "list": [
@@ -416,8 +408,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 51
+      "max": 53
     },
-    "text": "A chance of rain showers after 1pm. Partly sunny. High near 51, with temperatures falling to around 43 in the afternoon. West southwest wind 12 to 23 mph. Chance of precipitation is 70%."
+    "text": "A chance of rain showers. Mostly cloudy. High near 53, with temperatures falling to around 44 in the afternoon. West wind 18 to 23 mph. Chance of precipitation is 50%."
   }
 }
