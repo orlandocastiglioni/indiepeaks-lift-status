@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-10-22T22:45:17Z",
+  "fetchedAt": "2026-10-23T17:30:36Z",
   "href": "https://www.hochalmbahnen.at/de/winter/skigebiet/anlagen-pisten",
   "id": "rauriser-hochalmbahnen",
   "lifts": {
-    "reportedAt": "2026-10-22T22:17:16.000Z",
+    "reportedAt": "2026-10-23T17:08:37.000Z",
     "stats": {
-      "closed": 10,
+      "closed": 9,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 90,
         "hold": 0,
-        "open": 0,
+        "open": 10,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "A Hochalmbahn": "closed",
+      "A Hochalmbahn": "open",
       "B Kreuzbodenbahn": "closed",
       "C Jackalmlift links": "closed",
       "C Jackalmlift rechts": "closed",
@@ -35,20 +35,14 @@
   ],
   "name": "Rauriser Hochalmbahnen",
   "timestamp": {
-    "lifts": 1792708221663,
-    "opening": 1792705543806,
-    "trails": 1792708221657,
+    "lifts": 1792775776076,
+    "opening": 1792773958893,
+    "trails": 1792775775315,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
     "list": [
-      {
-        "grade": "blau",
-        "level": "blue",
-        "name": "3 Gipfelbahn - Hochkar",
-        "status": "closed"
-      },
       {
         "grade": "blau",
         "level": "blue",
@@ -132,6 +126,12 @@
         "status": "closed"
       },
       {
+        "grade": "blau",
+        "level": "blue",
+        "name": "3 Gipfelbahn - Hochkar",
+        "status": "closed"
+      },
+      {
         "grade": "Winterwandern",
         "name": "Winterwanderweg Hochb\u00fchel-Heimalm",
         "status": "closed"
@@ -174,7 +174,7 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-10-22T22:17:16.000Z",
+    "reportedAt": "2026-10-23T17:08:37.000Z",
     "stats": {
       "closed": 22,
       "hold": 0,
