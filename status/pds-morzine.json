@@ -1,21 +1,42 @@
 {
-  "fetchedAt": "2026-10-23T01:45:33Z",
+  "fetchedAt": "2026-10-23T02:00:18Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/morzine/",
   "id": "pds-morzine",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 20,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Tapis de l'aiglon": "closed",
+      "Tapis de nabor": "closed",
+      "Tapis viking": "closed",
+      "Tc du pleney": "closed",
+      "Tk bouchet": "closed",
+      "Tk du poireau 1": "closed",
+      "Tk du poireau 2": "closed",
+      "Tk mas verjus": "closed",
+      "Tph de nyon": "closed",
+      "Ts de la crusaz": "closed",
+      "Ts de nabor": "closed",
+      "Ts des fys": "closed",
+      "Ts des mouilles": "closed",
+      "Ts des raverettes": "closed",
+      "Ts du pr\u00e9 favre": "closed",
+      "Ts les t\u00eates": "closed",
+      "Ts pointe de nyon": "closed",
+      "Tsd belv\u00e9d\u00e8re": "closed",
+      "Tsd chamossi\u00e8re": "closed",
+      "Tsd les troncs": "closed"
+    }
   },
   "ll": [
     6.7089,
@@ -23,9 +44,9 @@
   ],
   "name": "Morzine (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1792719062999,
+    "lifts": 1792719954108,
     "opening": 1792718228410,
-    "trails": 1792718244277,
+    "trails": 1792719954108,
     "weather": 0,
     "webcams": 0
   },
