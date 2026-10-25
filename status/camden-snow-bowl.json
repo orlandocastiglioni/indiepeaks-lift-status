@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-10-25T15:00:21Z",
+  "fetchedAt": "2026-10-25T15:15:38Z",
   "href": "https://camdensnowbowl.com/current-conditions/",
   "id": "camden-snow-bowl",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Double": "closed",
+      "Slipway": "closed",
+      "Triple": "closed"
+    }
   },
   "ll": [
     -69.1314,
@@ -23,9 +27,9 @@
   ],
   "name": "Camden Snow Bowl",
   "timestamp": {
-    "lifts": 1792939838279,
+    "lifts": 1792940441064,
     "opening": 1792938637340,
-    "trails": 1792938649790,
+    "trails": 1792940441064,
     "weather": 0,
     "webcams": 0
   },
