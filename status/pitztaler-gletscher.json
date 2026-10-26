@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-10-25T11:30:51Z",
+  "fetchedAt": "2026-10-26T06:15:07Z",
   "href": "https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus",
   "id": "pitztaler-gletscher",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 7,
       "hold": 0,
-      "open": 4,
+      "open": 5,
       "percentage": {
-        "closed": 66.6,
+        "closed": 58.3,
         "hold": 0,
-        "open": 33.3,
+        "open": 41.6,
         "scheduled": 0
       },
       "scheduled": 0
@@ -27,7 +27,7 @@
       "Rifflseebahn": "closed",
       "Schlepplift Brunnenkogel": "open",
       "Sunna Alm Bahn": "closed",
-      "Wildspitzbahn": "closed"
+      "Wildspitzbahn": "open"
     }
   },
   "ll": [
@@ -36,9 +36,9 @@
   ],
   "name": "Pitztaler Gletscher",
   "timestamp": {
-    "lifts": 1792926921096,
-    "opening": 1792926053318,
-    "trails": 1792926921096,
+    "lifts": 1792994451997,
+    "opening": 1792991762102,
+    "trails": 1792994451997,
     "weather": 0,
     "webcams": 0
   },
@@ -47,7 +47,7 @@
       {
         "level": "green",
         "name": "20 Mittagskogel",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -77,7 +77,7 @@
       {
         "level": "black",
         "name": "26 Wildspitz",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -87,7 +87,7 @@
       {
         "level": "blue",
         "name": "29 Downhill",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -196,9 +196,9 @@
       }
     ],
     "stats": {
-      "closed": 27,
+      "closed": 24,
       "hold": 0,
-      "open": 3,
+      "open": 6,
       "scheduled": 0
     }
   }
