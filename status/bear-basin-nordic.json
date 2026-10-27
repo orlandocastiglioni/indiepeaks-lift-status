@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-27T19:29:45Z",
+  "fetchedAt": "2026-10-27T19:45:23Z",
   "href": "https://payettelakesskiclub.org/",
   "id": "bear-basin-nordic",
   "ll": [
@@ -10,16 +10,103 @@
   "timestamp": {
     "lifts": 0,
     "opening": 1793129321341,
-    "trails": 1793129348397,
+    "trails": 1793129427528,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "blue",
+        "name": "Polar Express",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Lyle's Loop",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Just Right",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Jim Beckwourth",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "George Drouillard",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Fur Rendezvous",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Big Bear",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Francois Payette",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Ed's Meadows",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Flying Squirrel",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Moon Ridge",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Camas",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Ursa Minor",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Moon Ridge Cutoff",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Mack's Loop",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Caitlin's Climb",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Scott's Loop",
+        "status": "open"
+      }
+    ],
+    "reportedAt": "2026-03-18T04:30:23.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
-      "open": 0,
+      "open": 16,
       "scheduled": 0
     }
   }
