@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-09-22T08:30:56Z",
+  "fetchedAt": "2026-10-27T19:29:00Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/serlesbahnen/",
   "id": "serlesbahnen",
   "lifts": {
+    "reportedAt": "2026-08-27T14:44:27.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 80,
+        "hold": 0,
+        "open": 20,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Gondelbahn": "open",
+      "Kinderland Talstation": "closed",
+      "SL L\u00e4rchenlift": "closed",
+      "SL Ochsenh\u00fctte": "closed",
+      "SL Waldrasteck": "closed"
+    }
   },
   "ll": [
     11.3839,
@@ -23,16 +30,25 @@
   ],
   "name": "Serlesbahnen Mieders (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1790064982564,
-    "opening": 1790064971996,
-    "trails": 1790064982564,
+    "lifts": 1793129335677,
+    "opening": 1793129321345,
+    "trails": 1793129335677,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": {
+      "1 Waldrasteck": "closed",
+      "2 Talabfahrt": "closed",
+      "3 Schneeboden": "closed",
+      "4 Ochsenschuss": "closed",
+      "5 Besserbrunnen": "closed",
+      "6 L\u00e4rchenschuss": "closed",
+      "7 Kinderland": "closed"
+    },
+    "reportedAt": "2026-08-27T14:44:27.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "scheduled": 0

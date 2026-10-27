@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-25T19:45:30Z",
+  "fetchedAt": "2026-10-27T19:29:00Z",
   "href": "https://www.manningpark.com/weather-webcams-and-trail-status/",
   "id": "manning-park-xc",
   "ll": [
@@ -9,17 +9,84 @@
   "name": "Manning Park Nordic",
   "timestamp": {
     "lifts": 0,
-    "opening": 1790363750387,
-    "trails": 1790364639325,
+    "opening": 1793129321344,
+    "trails": 1793129355786,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "black",
+        "name": "Blackwall Peak Trail",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Cascade Lookout Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Beaver Pond Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Little Muddy Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Volunteer Camp Loop",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Graduation Hill on Little Muddy",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lightning Lake Connector",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lone Duck Trail",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Campground Loop",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Mini Campground Loop",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "South Gibson Trail",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "North Gibson Trail",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Strawberry Flats Loop",
+        "status": "open"
+      }
+    ],
+    "reportedAt": "2026-04-02T12:29:54.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
-      "open": 0,
+      "open": 5,
       "scheduled": 0
     }
   }

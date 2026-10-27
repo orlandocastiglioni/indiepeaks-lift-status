@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-09-22T08:30:56Z",
+  "fetchedAt": "2026-10-27T19:29:00Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/innsbrucker-nordkettenbahnen/",
   "id": "nordkette",
   "lifts": {
+    "reportedAt": "2026-10-27T18:18:14.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A Sektion I Hungerburg": "closed",
+      "B Sektion II Seegrube": "closed",
+      "C Sektion III Hafelekar": "closed",
+      "D Seegrube": "closed",
+      "E Frau - Hitt - Warte": "closed",
+      "Zauberteppich": "closed"
+    }
   },
   "ll": [
     11.3792,
@@ -23,16 +31,60 @@
   ],
   "name": "Nordkette (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1790064982651,
-    "opening": 1790064971995,
-    "trails": 1790064982651,
+    "lifts": 1793129335711,
+    "opening": 1793129321344,
+    "trails": 1793129335710,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "name": "1 Osthang",
+        "status": "closed"
+      },
+      {
+        "name": "2 Zweier Abfahrt",
+        "status": "closed"
+      },
+      {
+        "name": "3 Tobel",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "4 \u00dcbungslift",
+        "status": "closed"
+      },
+      {
+        "name": "5 Karrinne",
+        "status": "closed"
+      },
+      {
+        "name": "6 Langes Tal",
+        "status": "closed"
+      },
+      {
+        "name": "6 Seilbahnrinne",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "7 Kurzes Tal",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "8 Kasermandel - Talele",
+        "status": "closed"
+      }
+    ],
+    "reportedAt": "2026-10-27T18:18:14.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "scheduled": 0

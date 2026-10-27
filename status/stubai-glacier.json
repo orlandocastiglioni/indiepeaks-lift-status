@@ -1,21 +1,48 @@
 {
-  "fetchedAt": "2026-09-22T08:30:56Z",
+  "fetchedAt": "2026-10-27T19:29:00Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/stubai-glacier/",
   "id": "stubai-glacier",
   "lifts": {
+    "reportedAt": "2026-10-27T15:31:19.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 13,
       "hold": 0,
-      "open": 0,
+      "open": 12,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 52,
+        "hold": 0,
+        "open": 48,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "3S Eisgratbahn I": "open",
+      "3S Eisgratbahn II": "open",
+      "Daunjoch": "closed",
+      "Eisjoch": "open",
+      "Fernau": "closed",
+      "Gamsgarten I": "open",
+      "Gamsgarten II": "open",
+      "Murmele": "closed",
+      "Pfaffengrat": "closed",
+      "Rotadl": "open",
+      "Schaufeljoch": "open",
+      "Schlepplift Daunferner I": "open",
+      "Schlepplift Daunferner II": "open",
+      "Schlepplift Daunscharte": "closed",
+      "Schlepplift Fernau": "closed",
+      "Schlepplift Gaiskarferner": "open",
+      "Schlepplift Windachferner": "closed",
+      "Schneekarussell": "closed",
+      "Snowpark-Lift": "open",
+      "Tellerlift Kitzlift": "closed",
+      "Wildspitz": "closed",
+      "Zauberteppich 1": "closed",
+      "Zauberteppich 3, 4": "closed",
+      "Zauberteppich Eisgrat": "open",
+      "\u00dcbungslift Gamsgarten": "closed"
+    }
   },
   "ll": [
     11.1006,
@@ -23,18 +50,229 @@
   ],
   "name": "Stubaier Gletscher (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1790064982532,
-    "opening": 1790064971997,
-    "trails": 1790064982531,
+    "lifts": 1793129335935,
+    "opening": 1793129321346,
+    "trails": 1793129334770,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "5 Eisjoch",
+        "status": "open"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "4 Schaufelschuss",
+        "status": "open"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "2 Steilhang",
+        "status": "open"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "19 Obere Silberschneid",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "22 Gamsgarten",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "17 Zufahrt Fernau",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "21 Falwesuna",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "12 Gaiskarferner",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "13 Sonnenhang",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "10 Windachferner Nord",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "7 Daunferner",
+        "status": "open"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "6 Skiweg Eisgrat",
+        "status": "open"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "14 Fernauferner",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "16 Pfaffenschneid",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "23 Big Family Schuss",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "26 Daunfernerschuss",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "9 Kogelferner",
+        "status": "closed"
+      },
+      {
+        "grade": "skiroute",
+        "name": "40 Fernau Mauer",
+        "status": "closed"
+      },
+      {
+        "grade": "skiroute",
+        "name": "35 Wilde Grube",
+        "status": "closed"
+      },
+      {
+        "grade": "skiroute",
+        "name": "37 Steile Zunge",
+        "status": "closed"
+      },
+      {
+        "grade": "skiroute",
+        "name": "39 Kanonenrohr",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "27 Daunhill",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "24 Skiweg Murmele",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "28 Skiweg Mutterberg",
+        "status": "closed"
+      },
+      {
+        "grade": "skiroute",
+        "name": "34 Fernau",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "15 Fernauschuss",
+        "status": "closed"
+      },
+      {
+        "grade": "skiroute",
+        "name": "36 Schartenschuss",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "3 Seeschuss",
+        "status": "closed"
+      },
+      {
+        "grade": "skiroute",
+        "name": "38 Bildst\u00f6ckljoch",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "1 Seeblick",
+        "status": "open"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "11 Windachferner S\u00fcd",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "18 B\u00f6dele Schuss",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "20 Untere Silberschneid",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "25 S\u00fcd-Ost Tangente",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "8 Daunenhang",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "29 Rotadl",
+        "status": "open"
+      }
+    ],
+    "reportedAt": "2026-10-27T15:31:19.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 29,
       "hold": 0,
-      "open": 0,
+      "open": 7,
       "scheduled": 0
     }
   }

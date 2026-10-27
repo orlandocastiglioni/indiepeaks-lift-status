@@ -1,21 +1,35 @@
 {
-  "fetchedAt": "2026-09-22T08:30:56Z",
+  "fetchedAt": "2026-10-27T19:29:00Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/kuehtai/",
   "id": "kuehtai",
   "lifts": {
+    "reportedAt": "2026-09-24T10:54:33.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 12,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Alpenrosenlift": "closed",
+      "DreiSeenBahn": "closed",
+      "GaisKogelBahn": "closed",
+      "HochAlterBahn": "closed",
+      "HoheMutBahn": "closed",
+      "KaiserBahn": "closed",
+      "K\u00fchTeppich": "closed",
+      "Schwarzmooslift": "closed",
+      "Sonnenlift": "closed",
+      "StartBahn": "closed",
+      "Wiesbergbahn": "closed",
+      "Wunderteppich": "closed"
+    }
   },
   "ll": [
     11.0161,
@@ -23,16 +37,50 @@
   ],
   "name": "Kuehtai (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1790064982758,
-    "opening": 1790064971994,
-    "trails": 1790064982758,
+    "lifts": 1793129336201,
+    "opening": 1793129321343,
+    "trails": 1793129336201,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": {
+      "1 Hochalter": "closed",
+      "10 Dreiseen": "closed",
+      "11 Alpenrosen": "closed",
+      "12 Alpenrosen": "closed",
+      "13 Alpenrosen": "closed",
+      "13 HoheMut": "closed",
+      "14 HoheMut": "closed",
+      "15 Kaiserbahn": "closed",
+      "16 Kaiserbahn": "closed",
+      "17 Schwarzmoos-Skiweg": "closed",
+      "18 Schwarzmoos": "closed",
+      "2 Hochalter": "closed",
+      "2 Hohe Mut": "closed",
+      "3 Hochalter": "closed",
+      "4 Gaiskogel": "closed",
+      "4a Gaiskogel": "closed",
+      "5 Gaiskogel": "closed",
+      "6 Gaiskogel": "closed",
+      "7 Wiesberg": "closed",
+      "8 Wiesberg": "closed",
+      "9 Gaiskogel": "closed",
+      "KPark": "closed",
+      "K\u00fchteppich \u00dcbungshang": "closed",
+      "Rennstrecke": "closed",
+      "Skiweg Loisl\u00b4s Schirm": "closed",
+      "Sonnenlift-Skiweg": "closed",
+      "Sonnenlift-\u00dcbungshang": "closed",
+      "StartBahn-Skiweg": "closed",
+      "StartBahn-\u00dcbungshang Hab": "closed",
+      "StartBahn-\u00dcbungshang SL": "closed",
+      "Wiesberg-Park": "closed",
+      "Wunderteppich-\u00dcbungshang": "closed"
+    },
+    "reportedAt": "2026-09-24T10:54:33.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 32,
       "hold": 0,
       "open": 0,
       "scheduled": 0
