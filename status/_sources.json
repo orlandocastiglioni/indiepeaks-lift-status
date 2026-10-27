@@ -1,0 +1,6229 @@
+{
+  "schemaVersion": 1,
+  "notes": "Two entry kinds. LIVE API (apiURL + paths, optional liftList/trailList per-facility detail lists): verified public JSON endpoints fetched directly by the app; every entry must pass Scripts/validate-status-sources.py before shipping. REPORT LINK ONLY (reportURL, no apiURL): the resort's own snow-report/conditions page, opened in SafariView from the Conditions link card; discovered+verified by Scripts/find-report-pages.py. Lift/trail status for 185 resorts comes from the SELF-HOSTED Liftie pipeline (BSD-3, github.com/pirxpilot/liftie): a Raspberry Pi runs Liftie locally and publishes each resort's API JSON (plus top-level fetchedAt, bumped only when the lifts payload changes) to github.com/orlandocastiglioni/indiepeaks-lift-status every 15 min; the app reads raw.githubusercontent.com (no bot wall, CDN-backed). Hosted liftie.info itself is Cloudflare-challenged for app clients since 2026-07-07 -- never point apiURL back at it. Pipeline entries carry only the paths their payload actually has: nordic centres publish no lifts (omit liftsOpen/liftsTotal/liftList -- a permanently-zero lift counter reads as a closed mountain), and resorts whose page lists no difficulty publish trails.list as a {name: status} map, so their trailList is a bare path with no nameKey/statusKey/levelKey. middlebury-snowbowl, tyrol-basin and pine-mountain have Pi-side parsers but are deliberately not enabled -- do not add entries until a status file exists. The pipeline entries are GENERATED -- run Scripts/sync-status-sources.py to rebuild them from the live feed (it reads the feed's own _index.json/_health.json, resolves roster ids, and carries reportURL/fallbackTotals across), then Scripts/validate-status-sources.py to gate. Hand-edit only the report-link-only entries and the two native-API ones (saddleback-mountain, pebble-creek-ski-area), which the generator will not touch. Full contract: docs/status-sources.md. fallbackTotals inventory: bundled Indy stats cross-checked with OpenSkiMap (data (c) OpenStreetMap contributors, ODbL). 2026-09-02: the six 26/27 roster additions are report-link-only or absent -- no public JSON API exists for any of them (Scripts/find-status-apis.py: 0 verified, 0 leads, kandatsu blocked) and none has a parseable lift/trail source, so skeetawk, scotts-cobble-nordic-center and pyha-ski-resort carry the conditions URL Indy's own resort page links, and frost-fire-park, ski-land and kandatsu-snow-resort carry NO entry (they fall back to websiteURL -- Ski Land's own site sends people to Facebook for lift status and kandatsu.com 403s every scripted client). Recon: indiepeaks-lift-status/docs/new-resorts-2026-27-recon.md. Also fixed three entries that were fetching 404s: dog-creek-lodge-nordic-center now points at the roster-id filename the feed actually publishes, and west-mountain + white-pass were demoted to report-link-only after disappearing from the feed entirely. 2026-09-03 (second 26/27 announcement): five more report-link entries -- eastman-cross-country, kendall-mountain-ski-area, mont-kanasuta, ruka-ski-resort, togari-onsen-snow-resort -- each the URL Indy's own resort page links as \"Conditions\". Two of them point at aggregators the Liftie pipeline ALREADY parses for other resorts and are therefore the batch's live-status candidates: mont-kanasuta -> maneige.ski (same host as mont-habitant/vallee-bleue, fetched Pi-side via flaresolverr -- it 403s every scripted client including a browser UA, which is why it is report-link-only in the app and why that 403 is NOT a dead link) and eastman-cross-country -> nordic-pulse.com (same aggregator as rikert, manning-park-xc and the other Nordic Pulse areas). king-pine needed no status change: it was already live on the pipeline before it was promoted from Allied to a full partner. 2026-09-04 (third 26/27 announcement): four more report-link entries -- engstligenalp, powder-ridge-ct, showdown-montana, skigebiet-heiligenblut-grossglockner. powderridgepark.com 403s scripted clients (SafariView-exempt, like pats-peak and maneige.ski). jay-peak-resort needed no change: it is already live on the pipeline, and its 26/27 change was gaining cross-country (type alpine-xc + indyXC) rather than a new entry -- its pipeline file publishes lifts only, so the XC trails are not represented yet. NOTE the roster now has TWO Powder Ridges: powder-ridge-mn (Kimball MN, powderridge.com, live on the pipeline as status/powder-ridge-mn.json) and powder-ridge-ct (Middlefield CT, powderridgepark.com, report-link only). The hosts differ, so sync-status-sources.py's host match keeps them apart -- do not hand-wire either to the other's file. This is the crystal-mountain MI/WA trap with a second pair. 2026-09-05 (fourth 26/27 announcement): two more report-link entries -- ski-saint-bruno and st-johann-in-tirol, each the URL Indy's own resort page links as \"Conditions\". mt-pisgah and osceola-tug-hill-xc-ski-center get NO entry on purpose: Indy links no conditions page for either, and neither site has one (the Village of Saranac Lake's Mt Pisgah page publishes hours only; uxcski.com has about/hours/directions/trail-map and no snow report), so both correctly fall back to websiteURL. granby-ranch needed no change -- it is already live on the pipeline, and its 26/27 news was gaining cross-country (type alpine-xc + indyXC) rather than a new entry, so like jay-peak its published file is alpine-side only.",
+  "sources": {
+    "49-degrees-north": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/49-degrees-north.json",
+      "reportURL": "https://www.ski49n.com/mountain-info/expanded-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "abondance": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/abondance.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "amihari-onsen-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/amihari-onsen.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "andes-tower-hills": {
+      "reportURL": "https://www.andestowerhills.com/downhill-conditions"
+    },
+    "antelope-butte": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/antelope-butte.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "aomori-spring-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/aomori-spring.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "apex-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/apex-mountain-resort.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "arctic-valley": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/arctic-valley.json",
+      "reportURL": "https://arcticvalley.org/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "avoriaz": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/avoriaz.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "axamer-lizum": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/axamer-lizum.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "baldy-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/baldy-mountain-resort.json",
+      "reportURL": "https://baldyresort.com/baldy-weather-cams",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "baqueiraberet": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/baqueira-beret.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "bear-creek-pa": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bear-creek-pa.json",
+      "reportURL": "https://www.bcmountainresort.com/activities/ski-snowboarding/ski-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "bear-valley-adventure-company": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bear-valley-adventure-company.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "bear-valley-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bear-valley.json",
+      "reportURL": "https://www.bearvalley.com/conditions-updates",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "beaver-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/beaver-mountain.json",
+      "reportURL": "https://www.skithebeav.com/mountain/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "bergbahnen-hohsaas": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hohsaas.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "berkshire-east-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/berkshire-east.json",
+      "reportURL": "https://berkshireeast.com/winter/mountain-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "bethel-village-trails": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bethel-village-trails.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "big-moose": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/big-moose.json",
+      "reportURL": "https://skibigmoose.com/trail-report-1",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "big-powderhorn": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/big-powderhorn.json",
+      "reportURL": "https://bigpowderhorn.net/conditions-and-trail-map",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "big-rock-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/big-rock.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "big-white-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/big-white.json",
+      "reportURL": "https://www.bigwhite.com/mountain-conditions/daily-snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "bjorkliden": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bjorkliden.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "black-jack-cross-country-ski-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/black-jack.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "black-mountain-nh": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/black-mountain-nh.json",
+      "reportURL": "https://www.blackmt.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "black-mountain-of-maine": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/black-mountain-me.json",
+      "reportURL": "https://skiblackmountain.org/mountain-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "blue-knob-all-season-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/blue-knob.json",
+      "reportURL": "https://blueknob.com/trail-map-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "bolton-valley-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bolton-valley.json",
+      "reportURL": "https://www.boltonvalley.com/winter/trail-maps-snow-reports/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "bousquet-mountain-0": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bousquet.json",
+      "reportURL": "https://bousquetmountain.com/lift-trail-status",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "brundage-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/brundage.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "bryce-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bryce-resort.json",
+      "reportURL": "https://bryceresort.com/mountain-info/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "buffalo-ski-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/buffalo-ski-center.json",
+      "reportURL": "https://www.buffaloskicenter.com/trail-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "burke-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/burke-mountain.json",
+      "reportURL": "https://www.skiburke.com/ski-ride/weather-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "calabogie-peaks-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/calabogie.json",
+      "reportURL": "https://calabogie.com/trail-status",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "caledonia-nordic-ski-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/caledonia-nordic.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "camden-snow-bowl": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/camden-snow-bowl.json",
+      "reportURL": "https://camdensnowbowl.com/current-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "camp-fortune": {
+      "reportURL": "https://campfortune.com/en/conditions"
+    },
+    "canaan-valley": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/canaan-valley.json",
+      "reportURL": "https://www.canaanresort.com/trail-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "canmore-ski-village": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/canmore-ski-village.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "cannon-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/cannon.json",
+      "reportURL": "https://www.cannonmt.com/notch-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "castle-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/castle-mountain.json",
+      "reportURL": "https://www.skicastle.ca/snowreport",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "cataloochee-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/cataloochee.json",
+      "reportURL": "https://cataloochee.com/the-mountain/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "catamount-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/catamount-ny.json",
+      "reportURL": "https://catamountski.com/winter/the-mountain/mountain-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "catamount-outdoor-family-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/catamount-outdoor.json",
+      "reportURL": "https://catamountoutdoor.org/maps-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "cazenovia-ski-club": {
+      "reportURL": "https://skicaz.com/conditions-report"
+    },
+    "centre-vorlage": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/centre-vorlage.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "champery": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/champery.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "chatel": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/chatel.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "cherry-peak": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/cherry-peak.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "chestnut-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/chestnut-mountain.json",
+      "reportURL": "https://www.chestnutmtn.com/weather",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "china-peak": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/chinapeak.json",
+      "reportURL": "https://www.skichinapeak.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "christie-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/christie-mountain.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "cooper-spur-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/cooper-spur.json",
+      "reportURL": "https://cooperspur.com/conditions-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "corralco-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/corralco.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "crosscut-mountain-sports-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/crosscut-mountain-sports-center.json",
+      "reportURL": "https://www.crosscutmt.org/grooming-and-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "crystal-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/crystal-mountain-mi.json",
+      "reportURL": "https://www.crystalmountain.com/ski/cams-conditions/mountain-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "cupid-valley": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/cupid-valley.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "destination-owls-head": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/owlshead.json",
+      "reportURL": "https://owlshead.com/en/ski-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "dodge-ridge": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/dodge-ridge.json",
+      "reportURL": "https://summer.dodgeridge.com/weather",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "dog-creek-lodge-nordic-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/dog-creek-lodge-nordic-center.json",
+      "reportURL": "https://www.dogcreeklodge.com/ski-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "donner-ski-ranch": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/donner-ski-ranch.json",
+      "reportURL": "https://www.donnerskiranch.com/liftstatus",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "dynaland": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/dynaland.json",
+      "reportURL": "https://www.dynaland.co.jp/condition",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "eagle-point": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/eagle-point.json",
+      "reportURL": "https://www.eaglepointresort.com/mountain-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "eaglecrest": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/eaglecrest.json",
+      "reportURL": "https://skieaglecrest.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "eastman-cross-country": {
+      "reportURL": "https://nordic-pulse.com/ski-areas/US/NH/Eastman-Cross-Country"
+    },
+    "echo-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/echo-mountain.json",
+      "reportURL": "https://echomtn.com/mountain-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "elferbahnen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/elferbahnen.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "elm-creek-park-reserve": {
+      "reportURL": "https://www.threeriversparks.org/page/three-rivers-activity-status"
+    },
+    "engstligenalp": {
+      "reportURL": "https://engstligenalp.ch/winter/betriebsinfo/"
+    },
+    "fellhorn-kanzelwand": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/fellhorn-kanzelwand.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "fort-kent-outdoor-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/fort-kent-outdoor-center.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "franconia-village-xc-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/franconia-village-xc.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "garnet-hill-xc": {
+      "reportURL": "https://www.garnet-hill.com/outdoor-center/winter-sports/trail-conditions"
+    },
+    "geto-kogen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/geto-kogen.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "glencoe-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/glencoe.json",
+      "reportURL": "https://www.glencoemountain.co.uk/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "glenshee-ski-centre": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/glenshee.json",
+      "reportURL": "https://www.ski-glenshee.co.uk/Glenshee-Lift-Status",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "glungezer": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/glungezer.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "granby-ranch": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/granby-ranch.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "great-bear-ski-valley": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/great-bear.json",
+      "reportURL": "https://www.greatbearpark.com/trail-status",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "great-glen-trails-outdoor-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/great-glen-trails.json",
+      "reportURL": "https://greatglentrails.com/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "greek-peak-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/greek-peak.json",
+      "reportURL": "https://www.greekpeak.net/ski-ride/current-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "hardwood-ski-and-bike": {
+      "reportURL": "https://hardwoodskiandbike.ca/trail-conditions"
+    },
+    "hatley-pointe": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hatley-pointe.json",
+      "reportURL": "https://hatleypointe.com/slope-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "haymaker-nordic-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/haymaker-nordic-center.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "heuberg": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/heuberg.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "high-point-xc-ski-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/high-point-xc.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "hirugano-kogen-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hirugano-kogen.json",
+      "reportURL": "https://www.hiruganokogen.com/condition",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "hochoetz": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hochoetz.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "hochzeiger-bergbahnen-pitztal-ag": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hochzeiger.json",
+      "reportURL": "https://www.hochzeiger.com/de/liftstatus-hochzeiger.html",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "hockley-valley-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hockley-valley.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "hodaigi-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hodaigi.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "homestake-lodge": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/homestake-lodge.json",
+      "reportURL": "https://www.homestakelodge.com/weather",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "hoodoo": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hoodoo.json",
+      "reportURL": "http://skihoodoo.com/the-mountain/mountain-lift-status",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "howelsen-hill": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/howelsen-hill.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "hudson-bay-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hudson-bay-mountain.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "huff-hills-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/huff-hills.json",
+      "reportURL": "https://www.huffhills.com/snowreport",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "hunt-hollow-ski-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hunt-hollow.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "hurricane-ridge": {
+      "reportURL": "https://www.olympicnationalparks.com/plan/weather"
+    },
+    "hyland-hills": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hyland-hills.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "ifen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/ifen.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "innsbruck-ski-city-network": {
+      "reportURL": "https://www.ski-plus-city.com/en/home/live-info/weather"
+    },
+    "jackson-xc": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/jackson-xc.json",
+      "reportURL": "https://www.jacksonxc.org/trail-report/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "jay-peak-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/jay-peak.json",
+      "reportURL": "https://jaypeakresort.com/skiing-riding/snow-report-maps/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "kamui-ski-links": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/kamui-ski-links.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "kaunertaler-gletscher": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/kaunertaler-gletscher.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "kendall-mountain-ski-area": {
+      "reportURL": "https://www.skikendall.com/hours-events"
+    },
+    "kimberley-nordic-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/kimberley-nordic.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "king-pine": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/king-pine.json",
+      "reportURL": "https://www.kingpine.com/the-mountain/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "kuehtai": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/kuehtai.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "la-chapelle-dabondance": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/la-chapelle-dabondance.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "leavenworth-winter-sports-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/leavenworth-ski-hill.json",
+      "reportURL": "https://skileavenworth.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "les-7-laux": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/les-7-laux.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "les-gets": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/les-gets.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "leukerbad-torrent-ski-resort-gemmi-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/leukerbad-torrent.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "levi-finland": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/levi.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "loch-lomond": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/loch-lomond.json",
+      "reportURL": "https://www.lochlomond.ca/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "lost-trail-powder-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/lost-trail-powder-mountain.json",
+      "reportURL": "https://losttrail.com/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "lost-valley": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/lost-valley.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "loup-loup-ski-bowl": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/loup-loup.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "loveland-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/loveland.json",
+      "reportURL": "https://skiloveland.com/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "magic-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/magic-mountain.json",
+      "reportURL": "https://www.magicmtn.com/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "maiko-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/maiko-snow-resort.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "mala-upa": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mala-upa.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "manning-park": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/manning-park.json",
+      "reportURL": "https://manningpark.com/weather-webcams-trail-stats/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "manning-park-xc": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/manning-park-xc.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "maple-ski-ridge": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/maple-ski-ridge.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "maplelag-resort": {
+      "reportURL": "https://www.maplelag.com/trails/trail-reports"
+    },
+    "marble-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/marble-mountain.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "marquette-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/marquette-mountain.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "massanutten-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/massanutten.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "massif-du-sud": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/massif-du-sud.json",
+      "reportURL": "https://massifdusud.net/fr/ouvertures",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mcintyre-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mcintyre.json",
+      "reportURL": "https://www.mcintyreskiarea.com/mountain-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "middlebury-snowbowl": {
+      "reportURL": "https://middleburysnowbowl.com/conditions"
+    },
+    "minocqua-winter-park": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/minocqua-winter-park.json",
+      "reportURL": "https://minocquawinterpark.org/park/ski/grooming-report-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mohawk-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mohawk-mountain.json",
+      "reportURL": "https://www.mohawkmtn.com/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mont-edouard": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mont-edouard.json",
+      "reportURL": "https://www.montedouard.com/conditionsreel",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "mont-kanasuta": {
+      "reportURL": "https://maneige.ski/stations/centre-plein-air-mont-kanasuta/"
+    },
+    "mont-rigaud": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mont-rigaud.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "mont-ripley-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mont-ripley.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mont-sutton": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mont-sutton.json",
+      "reportURL": "https://montsutton.com/en/the-mountain/ski-conditions-2",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "montage-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/montage-mountain.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "montana-snowbowl": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/montana-snowbowl.json",
+      "reportURL": "http://www.montanasnowbowl.com/report.php",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "morgins": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/morgins.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mount-kato": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mount-kato.json",
+      "reportURL": "https://www.mountkato.com/pages/public/mountain/snow-report/index.html",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mount-racey-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mount-racey.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "mountain-high": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mthigh.json",
+      "reportURL": "https://www.mthigh.com/site/trails-and-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mt-abram": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mt-abram.json",
+      "reportURL": "https://www.mtabram.com/winter/mountain-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mt-holiday-mi": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mt-holiday.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mt-hood-meadows": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mthood.json",
+      "reportURL": "https://www.skihood.com",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "mt-la-crosse": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mt-la-crosse.json",
+      "reportURL": "https://mtlacrosse.com/trail-map-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "mt-shasta": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mt-shasta.json",
+      "reportURL": "https://www.skipark.com/winter/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "mt-washington": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mt-washington-bc.json",
+      "reportURL": "https://www.mountwashington.ca/the-mountain/conditions-terrain.html",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "muica-snow-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/muica-snow-resort.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "murray-ridge-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/murray-ridge.json",
+      "reportURL": "https://www.murrayridge.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "muttereralm": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/muttereralm.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "nayoro-piyashiri-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/nayoro-piyashiri.json",
+      "reportURL": "https://www.nayoro.co.jp/piyashiri/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "nebelhorn": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/nebelhorn.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "nelson-nordic-ski-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/nelson-nordic.json",
+      "reportURL": "https://nelsonnordicski.ca/conditions-weather",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "nickel-plate-cross-country-ski-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/nickel-plate-nordic.json",
+      "reportURL": "https://nickelplatenordic.org/trail-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "ninox-snow-park": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/ninox-snow-park.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "nordkette": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/nordkette.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "norefjell-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/norefjell.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "north-cascade-heli": {
+      "reportURL": "https://heli-ski.com/weather-conditions"
+    },
+    "nubs-nob-0": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/nubs-nob.json",
+      "reportURL": "https://www.nubsnob.com/conditions-new",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "ober-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/ober-mountain.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "oberstdorf-kleinwalsertal-bergbahnen": {
+      "reportURL": "https://www.ok-bergbahnen.com/service/wetter"
+    },
+    "obertauern": {
+      "reportURL": "https://www.obertauern.com/winter/liftanlagen.html"
+    },
+    "okunakayama-kogen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/okunakayama.json",
+      "reportURL": "https://www.okunakayamakogen.jp/winter-season/lift-status",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "onikoube-ski-resort": {
+      "reportURL": "https://www.onikoube.com/snow/ski-slope/"
+    },
+    "orcieres-merlette-1850": {
+      "reportURL": "https://www.orcieres.com/en/live/resort-openings/"
+    },
+    "palcall-tsumagoi-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/palcall-tsumagoi.json",
+      "reportURL": "https://palcallresort.com/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "pass-powderkeg": {
+      "reportURL": "https://www.passpowderkeg.com/home/snow-report"
+    },
+    "pats-peak": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/pats-peak.json",
+      "reportURL": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "patscherkofel": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/patscherkofel.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "pds-morzine": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/pds-morzine.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "pebble-creek-ski-area": {
+      "apiURL": "https://pebblecreekskiarea.com/umbraco/api/WeatherApi/SnowReport",
+      "reportURL": "https://pebblecreekskiarea.com/snow-report/",
+      "paths": {
+        "trailsOpen": "TrailsOpen",
+        "surface": "SurfaceConditionPrimary",
+        "snowReport": "Comments"
+      },
+      "fallbackTotals": {
+        "trailsTotal": 51
+      }
+    },
+    "peek-n-peak": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/peek-n-peak.json",
+      "reportURL": "https://www.pknpk.com/conditions-report/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "petzen": {
+      "reportURL": "https://www.petzen.net/en/winterbetrieb/pisten-lifte"
+    },
+    "phoenix-mountain": {
+      "reportURL": "https://skiphoenix.ca/index.php/mountain-conditions/"
+    },
+    "pila": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/pila.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "pitztaler-gletscherbahn": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/pitztaler-gletscher.json",
+      "reportURL": "https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "pizol": {
+      "reportURL": "https://pizol.com/en/winter/winter-sports-report/"
+    },
+    "plain-valley-ski-trails": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/plain-valley-ski-trails.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "pomerelle-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/pomerelle.json",
+      "reportURL": "https://www.pomerelle.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "portes-du-soleil": {
+      "reportURL": "https://www.portesdusoleil.com/meteo-enneigement-portes-du-soleil"
+    },
+    "powder-ridge-ct": {
+      "reportURL": "https://powderridgepark.com/trail-report/"
+    },
+    "powder-ridge-mn": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/powder-ridge-mn.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "powderhorn": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/powderhorn.json",
+      "reportURL": "https://www.powderhorn.com/explore/conditions/mountain-report.html",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "pyha-ski-resort": {
+      "reportURL": "https://www.pyha.fi/en/skiresort/slopes"
+    },
+    "quarry-road-trails": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/quarry-road-trails.json",
+      "reportURL": "https://quarryroad.org/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "ragged-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/ragged-mountain.json",
+      "reportURL": "https://www.raggedmountainresort.com/mountain-report-cams",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "rangeley-lakes-trail-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/rangeley-lakes-trail-center.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "rangger-koepfl": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/rangger-koepfl.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "rauriser-hochalmbahnen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/rauriser-hochalmbahnen.json",
+      "reportURL": "https://www.hochalmbahnen.at/en/winter/information/weather",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "red-lodge-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/red-lodge-mountain.json",
+      "reportURL": "https://www.redlodgemountain.com/mountain/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "rikert-nordic-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/rikert.json",
+      "reportURL": "https://rikertoutdoor.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "riksgransen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/riksgransen.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "ruka-ski-resort": {
+      "reportURL": "https://www.ruka.fi/en/skiresort/slopes"
+    },
+    "saddleback-mountain": {
+      "apiURL": "https://saddlebackapi.netlify.app/.netlify/functions/getAll",
+      "reportURL": "https://www.saddlebackmaine.com/mountain-report/",
+      "paths": {
+        "liftsOpen": "data.liftStatus.openLifts",
+        "liftsTotal": "data.liftStatus.totalLifts",
+        "trailsOpen": "data.trailStatus.openTrails",
+        "trailsTotal": "data.trailStatus.totalTrails"
+      },
+      "fallbackTotals": {
+        "liftsTotal": 6,
+        "trailsTotal": 68
+      },
+      "liftList": {
+        "path": "data.lifts",
+        "nameKey": "name",
+        "statusKey": "openingStatus"
+      },
+      "trailList": {
+        "paths": [
+          "data.trailsSorted.greenCircle",
+          "data.trailsSorted.blueSquare",
+          "data.trailsSorted.blackDiamond",
+          "data.trailsSorted.doubleBlackDiamond",
+          "data.trailsSorted.terrainParks"
+        ],
+        "nameKey": "name",
+        "statusKey": "openingStatus",
+        "levelKey": "trailLevel"
+      }
+    },
+    "saint-jean-daulps": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/saint-jean-daulps.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "saskadena-six-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/saskadena-six.json",
+      "reportURL": "https://www.saskadenasix.com/winter/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "sasquatch-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/sasquatch-mountain.json",
+      "reportURL": "https://sasquatchmountain.ca/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "schlick-2000": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/schlick-2000.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "schuss-mountain-at-shanty-creek": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/schuss-mountain.json",
+      "reportURL": "https://www.shantycreek.com/ski/conditions-cams",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "scotts-cobble-nordic-center": {
+      "reportURL": "https://www.scottscobblenordic.com/trail-map-conditions"
+    },
+    "serlesbahnen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/serlesbahnen.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "shames-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/shames-mountain.json",
+      "reportURL": "https://mymountaincoop.ca/shames-mountain/our-mountain/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "shawnee-mountain-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/shawnee-mountain.json",
+      "reportURL": "https://www.shawneemt.com/snow-report/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "shimokura": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/hachimantai-shimokura.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "showdown-montana": {
+      "reportURL": "https://www.showdownmontana.com/grooming-report-trail-status"
+    },
+    "silver-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/silver-mountain.json",
+      "reportURL": "https://www.silvermt.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "skeetawk": {
+      "reportURL": "https://skeetawk.com/snow-report"
+    },
+    "ski-big-bear": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/ski-big-bear.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "ski-bluewood": {
+      "reportURL": "https://bluewood.com/conditions"
+    },
+    "ski-saint-bruno": {
+      "reportURL": "https://skisaintbruno.ca/en/sliding-conditions"
+    },
+    "ski-sawmill": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/ski-sawmill.json",
+      "reportURL": "https://skisawmill.com/ski-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "ski-vallee-bleue": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/vallee-bleue.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "skigebiet-heiligenblut-grossglockner": {
+      "reportURL": "https://heiligenblut.at/en/winter/skigebiet-grossglockner-heiligenblut/"
+    },
+    "skiwelt": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/skiwelt.json",
+      "reportURL": "https://www.skiwelt.at/de/wetter.html",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "sleepy-hollow": {
+      "reportURL": "https://skisleepyhollow.com/snow-conditions-trail-cam/"
+    },
+    "smokey-mountain-ski-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/smokey-mountain.json",
+      "reportURL": "http://skismokey.ca/general-information/current-local-conditions/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "smugglers-notch-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/smuggs.json",
+      "reportURL": "https://www.smuggs.com/conditions/winter-report/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "snow-king-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/snow-king.json",
+      "reportURL": "https://www.snowkingmountain.com/mountain/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "snow-resort-the-cupid-of-romance": {
+      "reportURL": "https://kijimadaira-ski.com/gelande/"
+    },
+    "snow-ridge": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/snow-ridge.json",
+      "reportURL": "https://snowridge.com/trail-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "snowstar": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/snowstar.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
+    },
+    "soellereck": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/soellereck.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "sovereign-lake-nordic-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/sovereign-lake.json",
+      "reportURL": "https://sovereignlake.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "spirit-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/spirit-mountain.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "spring-mountain-adventures": {
+      "reportURL": "https://springmountainadventures.com/trail-map/"
+    },
+    "st-johann-in-tirol": {
+      "reportURL": "https://www.bergbahnen-stjohann.at/de/lifte-und-pisten.html"
+    },
+    "steamboat-ski-touring-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/steamboat-ski-touring-center.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "steinplatte": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/steinplatte.json",
+      "reportURL": "https://www.steinplatte.tirol/de/wetterbericht.html",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "stoten-i-salen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/stoten.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "stranda-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/strandafjellet.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "stubai-glacier": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/stubai-glacier.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "sunburst-ski-area": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/sunburst.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "sundown-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/sundown-mountain.json",
+      "reportURL": "https://sundownmtn.com/the-mountain/snow-report-trail-map",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "sunlight-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/sunlight-mountain-resort.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "swain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/swain.json",
+      "reportURL": "https://swain.com/trail-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "takasu-snow-park": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/takasu-snow-park.json",
+      "reportURL": "https://www.takasu.gr.jp/condition",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "tamarack-mountain-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/tamarack-resort.json",
+      "reportURL": "https://tamarackidaho.com/the-mountain/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "tazawako": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/tazawako.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "telemark-nordic-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/telemark-nordic.json",
+      "reportURL": "https://telemarknordic.com/current-trail-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "tenney-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/tenney-mountain.json",
+      "reportURL": "https://skitenney.com/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "terry-peak": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/terry-peak.json",
+      "reportURL": "https://www.terrypeak.com/the-mountain/weather-snow",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "the-krvavec-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/krvavec.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "the-loppet": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/the-loppet.json",
+      "reportURL": "https://loppet.org/trailheads-trails/trails-and-conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "thrill-hills": {
+      "reportURL": "https://skithrillhills.com/weather"
+    },
+    "titus-mountain": {
+      "reportURL": "https://www.titusmountain.com/conditions"
+    },
+    "togakushi-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/togakushi.json",
+      "reportURL": "https://www.togakusi.com/ski/snow-hub",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "togari-onsen-snow-resort": {
+      "reportURL": "https://togari.jp/winter/en/course_map/"
+    },
+    "torgon": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/torgon.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "trapp-family-lodge": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/trapp-family-lodge.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "treetops-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/treetops.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "trollhaugen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/trollhaugen.json",
+      "reportURL": "https://trollhaugen.com/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "tschiertschen-chur": {
+      "reportURL": "https://www.tschiertschen.ch/de/wintersportbericht"
+    },
+    "turpin-meadow-ranch": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/turpin-meadow-ranch.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "tussey-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/tussey-mountain.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "tyrol-basin-ski-and-snowboard": {
+      "reportURL": "https://tyrolbasin.com/slope-report"
+    },
+    "val-direne": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/val-direne.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "veterans-memorial-recreation-area": {
+      "reportURL": "https://www.skithevets.org/skiing-and-snowboarding"
+    },
+    "walmendingerhorn": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/walmendingerhorn.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "washigatake-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/washigatake.json",
+      "reportURL": "https://ski.washigatake.jp/condition",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list"
+      }
+    },
+    "waterville-valley-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/waterville.json",
+      "reportURL": "https://www.waterville.com",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "west-mountain": {
+      "reportURL": "https://westmountain.com/trail-conditions"
+    },
+    "whaleback-mountain": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/whaleback-mountain.json",
+      "reportURL": "https://www.whaleback.com/trail-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "white-grass-ski-touring": {
+      "reportURL": "http://whitegrass.com/daily-report"
+    },
+    "white-pass": {
+      "reportURL": "https://www.skiwhitepass.com/the-mountain/snow-report"
+    },
+    "white-pine-touring-nordic-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/white-pine-touring.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "whitecap-mountains-resort": {
+      "reportURL": "https://whitecapresort.com/winter/snow-report"
+    },
+    "whitehorse-nordic-centre": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/whitehorse-nordic.json",
+      "reportURL": "https://www.whitehorsenordiccentre.ca/trail-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "whitepia-takasu": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/whitepia-takasu.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "williams-lake-cross-country-ski-club": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/williams-lake-xc.json",
+      "reportURL": "https://www.williamslakecrosscountryskiclub.ca/weather",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "wintergreen": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/wintergreen.json",
+      "reportURL": "https://www.wintergreenresort.com/mountain-report-cams",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "winterplace-ski-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/winterplace.json",
+      "reportURL": "https://www.winterplace.com/mountain/snow-report",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "wisp": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/wisp.json",
+      "reportURL": "https://www.wispresort.com/mountain-report-cams",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "woodstock-nordic-center": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/woodstock-nordic-center.json",
+      "reportURL": "https://www.woodstockinn.com/do/things-to-do/woodstock-nordic-center/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
+    "yuzawa-nakazato-snow-resort": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/yuzawa-nakazato.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    }
+  }
+}
