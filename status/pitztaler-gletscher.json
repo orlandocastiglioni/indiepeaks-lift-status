@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-10-27T15:15:53Z",
+  "fetchedAt": "2026-10-28T08:15:56Z",
   "href": "https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus",
   "id": "pitztaler-gletscher",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 7,
       "hold": 0,
-      "open": 6,
+      "open": 5,
       "percentage": {
-        "closed": 50,
+        "closed": 58.3,
         "hold": 0,
-        "open": 50,
+        "open": 41.6,
         "scheduled": 0
       },
       "scheduled": 0
@@ -22,7 +22,7 @@
       "Grubenkopf": "closed",
       "Hirschtal": "closed",
       "Mittagskogel": "open",
-      "Mittelbergbahn": "open",
+      "Mittelbergbahn": "closed",
       "Muttenkopf": "closed",
       "Rifflseebahn": "closed",
       "Schlepplift Brunnenkogel": "open",
@@ -36,9 +36,9 @@
   ],
   "name": "Pitztaler Gletscher",
   "timestamp": {
-    "lifts": 1793113274363,
-    "opening": 1793113266582,
-    "trails": 1793113274363,
+    "lifts": 1793174416793,
+    "opening": 1793171738262,
+    "trails": 1793174416793,
     "weather": 0,
     "webcams": 0
   },
@@ -107,7 +107,7 @@
       {
         "level": "blue",
         "name": "36 Mittelberg",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "green",
@@ -196,9 +196,9 @@
       }
     ],
     "stats": {
-      "closed": 23,
+      "closed": 24,
       "hold": 0,
-      "open": 7,
+      "open": 6,
       "scheduled": 0
     }
   }
