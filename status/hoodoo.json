@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-10-23T10:00:06Z",
+  "fetchedAt": "2026-10-28T04:00:50Z",
   "href": "https://skihoodoo.com/the-mountain/mountain-lift-status/",
   "id": "hoodoo",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 16.6,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 83.3
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 5
+      "scheduled": 0
     },
-    "status": {
-      "BIG GREEN MACHINE": "scheduled",
-      "EASY RIDER": "scheduled",
-      "ED": "scheduled",
-      "HAROLD'S MAGIC CARPET": "scheduled",
-      "HODAG": "closed",
-      "MANZANITA": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -121.871513,
@@ -30,11 +23,11 @@
   ],
   "name": "Hoodoo",
   "timestamp": {
-    "lifts": 1792748730228,
-    "opening": 1792747865972,
-    "trails": 1792748730228,
-    "weather": 1792741577402,
-    "webcams": 1792748716391
+    "lifts": 1793159173583,
+    "opening": 1793155572759,
+    "trails": 1793160034011,
+    "weather": 1793151966680,
+    "webcams": 1793159134344
   },
   "trails": {
     "list": [
@@ -257,11 +250,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
-    "date": "2026-10-23",
+    "conditions": "Rain And Snow",
+    "date": "2026-10-28",
     "icon": [
-      "icon-cloud",
-      "icon-night"
+      "basecloud",
+      "icon-snowy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.408646&lon=-121.871513",
@@ -272,6 +265,6 @@
     "temperature": {
       "max": 29
     },
-    "text": "Mostly cloudy, with a low around 29. West northwest wind around 20 mph, with gusts as high as 31 mph."
+    "text": "Rain and snow. Mostly cloudy. Low around 29, with temperatures rising to around 32 overnight. West southwest wind 9 to 20 mph, with gusts as high as 33 mph. Chance of precipitation is 90%. New snow accumulation of 1 to 2 inches possible."
   }
 }
