@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-10-28T04:00:50Z",
+  "fetchedAt": "2026-10-28T04:15:08Z",
   "href": "https://skihoodoo.com/the-mountain/mountain-lift-status/",
   "id": "hoodoo",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 16.6,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 83.3
       },
-      "scheduled": 0
+      "scheduled": 5
     },
-    "status": {}
+    "status": {
+      "BIG GREEN MACHINE": "scheduled",
+      "EASY RIDER": "scheduled",
+      "ED": "scheduled",
+      "HAROLD'S MAGIC CARPET": "scheduled",
+      "HODAG": "closed",
+      "MANZANITA": "scheduled"
+    }
   },
   "ll": [
     -121.871513,
@@ -23,11 +30,11 @@
   ],
   "name": "Hoodoo",
   "timestamp": {
-    "lifts": 1793159173583,
-    "opening": 1793155572759,
+    "lifts": 1793160054816,
+    "opening": 1793160054762,
     "trails": 1793160034011,
-    "weather": 1793151966680,
-    "webcams": 1793159134344
+    "weather": 1793160059613,
+    "webcams": 1793160054762
   },
   "trails": {
     "list": [
@@ -250,7 +257,7 @@
     }
   },
   "weather": {
-    "conditions": "Rain And Snow",
+    "conditions": "Light Snow",
     "date": "2026-10-28",
     "icon": [
       "basecloud",
@@ -265,6 +272,6 @@
     "temperature": {
       "max": 29
     },
-    "text": "Rain and snow. Mostly cloudy. Low around 29, with temperatures rising to around 32 overnight. West southwest wind 9 to 20 mph, with gusts as high as 33 mph. Chance of precipitation is 90%. New snow accumulation of 1 to 2 inches possible."
+    "text": "Snow. Mostly cloudy. Low around 29, with temperatures rising to around 32 overnight. West southwest wind around 20 mph, with gusts as high as 33 mph. Chance of precipitation is 90%. New snow accumulation of 1 to 2 inches possible."
   }
 }
