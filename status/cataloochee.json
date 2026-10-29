@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-10-29T23:15:21Z",
+  "fetchedAt": "2026-10-29T23:45:33Z",
   "href": "https://cataloochee.com/the-mountain/snow-report/",
   "id": "cataloochee",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Beginners Luck (Conveyor)": "closed",
-      "Easy Way (Triple)": "closed",
-      "Omigosh (Quad)": "closed",
-      "Rock Island Line (Quad)": "closed",
-      "Wolf Creek ( Conveyor)": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -83.090027,
@@ -29,11 +23,11 @@
   ],
   "name": "Cataloochee",
   "timestamp": {
-    "lifts": 1793314841947,
-    "opening": 1793312170961,
-    "trails": 1793314841947,
-    "weather": 1793309411778,
-    "webcams": 1793314832222
+    "lifts": 1793316680701,
+    "opening": 1793316662546,
+    "trails": 1793315740235,
+    "weather": 1793316667829,
+    "webcams": 1793316662546
   },
   "trails": {
     "list": [
@@ -136,11 +130,11 @@
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-10-29",
+    "conditions": "Mostly Clear",
+    "date": "2026-10-30",
     "icon": [
       "basenone",
-      "icon-sun"
+      "icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=35.562656&lon=-83.090027",
@@ -149,8 +143,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 64
+      "max": 46
     },
-    "text": "Sunny, with a high near 64. North northeast wind around 5 mph."
+    "text": "Mostly clear, with a low around 46. North northwest wind around 5 mph."
   }
 }
