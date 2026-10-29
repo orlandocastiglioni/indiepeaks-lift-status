@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-10-28T08:00:06Z",
+  "fetchedAt": "2026-10-29T14:15:44Z",
   "href": "https://skihoodoo.com/the-mountain/mountain-lift-status/",
   "id": "hoodoo",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 16.6,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 83.3
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 5
+      "scheduled": 0
     },
-    "status": {
-      "BIG GREEN MACHINE": "scheduled",
-      "EASY RIDER": "scheduled",
-      "ED": "scheduled",
-      "HAROLD'S MAGIC CARPET": "scheduled",
-      "HODAG": "closed",
-      "MANZANITA": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -121.871513,
@@ -30,11 +23,11 @@
   ],
   "name": "Hoodoo",
   "timestamp": {
-    "lifts": 1793173562143,
-    "opening": 1793171738261,
-    "trails": 1793173500769,
-    "weather": 1793168122048,
-    "webcams": 1793173548961
+    "lifts": 1793282434916,
+    "opening": 1793279761567,
+    "trails": 1793281553868,
+    "weather": 1793276174769,
+    "webcams": 1793282432298
   },
   "trails": {
     "list": [
@@ -257,11 +250,11 @@
     }
   },
   "weather": {
-    "conditions": "Light Snow",
-    "date": "2026-10-28",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-10-29",
     "icon": [
-      "basecloud",
-      "icon-snowy"
+      "icon-cloud",
+      "icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.408646&lon=-121.871513",
@@ -270,8 +263,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 29
+      "max": 26
     },
-    "text": "Snow. Mostly cloudy. Low around 29, with temperatures rising to around 32 overnight. West southwest wind around 20 mph, with gusts as high as 33 mph. Chance of precipitation is 90%. New snow accumulation of 1 to 2 inches possible."
+    "text": "Mostly cloudy. Low around 26, with temperatures rising to around 29 overnight. Southwest wind around 3 mph."
   }
 }
