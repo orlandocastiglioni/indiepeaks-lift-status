@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-10-29T08:45:33Z",
+  "fetchedAt": "2026-10-29T09:00:39Z",
   "href": "https://www.mountwashington.ca/the-mountain/snow-report/",
   "id": "mt-washington-bc",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Boomerang Quad": "closed",
+      "Eagle Quad": "closed",
+      "Hawk 6 Pack": "closed",
+      "Lower Carpet": "closed",
+      "Mid Carpet": "closed",
+      "Sunrise Quad": "closed",
+      "Training Carpet": "closed",
+      "Tube Carpet": "closed",
+      "Upper Carpet": "closed",
+      "Whiskey Jack": "closed"
+    }
   },
   "ll": [
     -125.29861,
@@ -23,9 +34,9 @@
   ],
   "name": "Mt. Washington Alpine Resort",
   "timestamp": {
-    "lifts": 1793262649424,
+    "lifts": 1793263554102,
     "opening": 1793261765737,
-    "trails": 1793261783846,
+    "trails": 1793263554102,
     "weather": 0,
     "webcams": 0
   },
