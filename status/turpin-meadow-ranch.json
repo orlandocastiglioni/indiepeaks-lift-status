@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-30T03:45:31Z",
+  "fetchedAt": "2026-10-30T04:00:34Z",
   "href": "https://turpinmeadowranch.com/",
   "id": "turpin-meadow-ranch",
   "ll": [
@@ -10,16 +10,53 @@
   "timestamp": {
     "lifts": 0,
     "opening": 1793329226210,
-    "trails": 1793331051007,
+    "trails": 1793331960635,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "Summer Homes Loop",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Pasture Loop",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Riverside Loop",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Willows Loop",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Mule Loop",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Mule to Lower Connector",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Way Back 40",
+        "status": "open"
+      }
+    ],
+    "reportedAt": "2026-03-15T17:55:54.306Z",
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 0,
+      "open": 7,
       "scheduled": 0
     }
   }
