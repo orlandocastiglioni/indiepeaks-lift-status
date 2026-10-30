@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-10-22T16:00:18Z",
+  "fetchedAt": "2026-10-30T20:01:03Z",
   "href": "https://spiritmt.com/current-conditions/",
   "id": "spirit-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Big Air Chair": "closed",
-      "Highline Chair": "closed",
-      "Lone Oak Tow Rope": "closed",
-      "Prospector Carpet": "closed",
-      "Spirit Express II": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -92.2181,
@@ -29,9 +23,9 @@
   ],
   "name": "Spirit Mountain",
   "timestamp": {
-    "lifts": 1792683978815,
-    "opening": 1792683972596,
-    "trails": 1792683933502,
+    "lifts": 1793389557179,
+    "opening": 1793388664813,
+    "trails": 1793388674098,
     "weather": 0,
     "webcams": 0
   },
