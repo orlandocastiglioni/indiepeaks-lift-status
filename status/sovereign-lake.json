@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-30T01:30:53Z",
+  "fetchedAt": "2026-10-30T01:45:53Z",
   "href": "https://sovereignlake.com/",
   "id": "sovereign-lake",
   "ll": [
@@ -10,7 +10,7 @@
   "timestamp": {
     "lifts": 0,
     "opening": 1793321114191,
-    "trails": 1793322943390,
+    "trails": 1793323886954,
     "weather": 0,
     "webcams": 0
   },
@@ -223,6 +223,11 @@
       },
       {
         "level": "blue",
+        "name": "Prince's View",
+        "status": "hold"
+      },
+      {
+        "level": "blue",
         "name": "Abermore",
         "status": "hold"
       },
@@ -264,64 +269,64 @@
       {
         "level": "black",
         "name": "Alder Trail",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Powder Queen",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Upper Kennedy",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Lower Kennedy 2",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Lower Kennedy",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Beth's Trail",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Coyote Caper 1",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Coyote Caper",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Passmore Connector",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Mystery Express",
-        "status": "open"
+        "status": "hold"
       },
       {
         "level": "black",
         "name": "Mystery BC",
-        "status": "open"
+        "status": "hold"
       }
     ],
     "reportedAt": "2023-12-17T20:41:22.252Z",
     "stats": {
       "closed": 0,
-      "hold": 49,
-      "open": 11,
+      "hold": 61,
+      "open": 0,
       "scheduled": 0
     }
   }
