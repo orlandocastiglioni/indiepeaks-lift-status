@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-11-02T02:30:53Z",
+  "fetchedAt": "2026-11-02T02:45:38Z",
   "href": "https://www.nayoro.co.jp/piyashiri/",
   "id": "nayoro-piyashiri",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u7b2c1\u30da\u30a2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c2\u30da\u30a2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c3\u30da\u30a2\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     142.4841,
@@ -23,9 +27,9 @@
   ],
   "name": "Nayoro Piyashiri",
   "timestamp": {
-    "lifts": 1793585783124,
+    "lifts": 1793586665727,
     "opening": 1793584867315,
-    "trails": 1793584873259,
+    "trails": 1793586665727,
     "weather": 0,
     "webcams": 0
   },
