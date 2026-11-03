@@ -1,24 +1,21 @@
 {
-  "fetchedAt": "2026-11-01T21:30:44Z",
+  "fetchedAt": "2026-11-03T17:45:11Z",
   "href": "https://berkshireeast.com/winter/mountain-conditions",
   "id": "berkshire-east",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Summit Quad": "closed",
-      "T-Bar Express Quad": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -72.87711354420584,
@@ -26,208 +23,27 @@
   ],
   "name": "Berkshire East",
   "timestamp": {
-    "lifts": 1793567763330,
-    "opening": 1793565061816,
-    "trails": 1793567763330,
-    "weather": 1793563266313,
-    "webcams": 1793567761531
+    "lifts": 1793727062400,
+    "opening": 1793727054766,
+    "trails": 1793727062400,
+    "weather": 1793720756146,
+    "webcams": 1793727054766
   },
   "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Sugar Line",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Skills Progression Park",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Sugarcube",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Tackleberry",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Blend Connector",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Blue Pulaski",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Cat N' Mouse",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Mousetrap",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Chin Strap",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Gronk",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Harold's Blend",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Powder Blue",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Sleeping Jakes",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Sugar and Spice",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Trillium",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Back O' The Shack",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Barndrop",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Billy Badger",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Billy's World",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Juggernaut",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Loamstar",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Long John",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Magic Carpet",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "New Blend",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Old Blend",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Passes",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Pony Keg",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Rocky Road",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Thunder Cliffs",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Wine Tree",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Cliff Claven",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Hawleywood",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Keg Stand",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Schist",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Fort Hill",
-        "status": "open"
-      },
-      {
-        "level": "doubleBlack",
-        "name": "Too Easy",
-        "status": "open"
-      }
-    ],
+    "list": {},
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 36,
+      "open": 0,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-11-01",
+    "conditions": "Partly Sunny",
+    "date": "2026-11-03",
     "icon": [
-      "basenone",
-      "icon-sun"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=42.62131426140839&lon=-72.87711354420584",
@@ -236,8 +52,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 57
+      "max": 67
     },
-    "text": "Sunny. High near 57, with temperatures falling to around 51 in the afternoon. West wind around 6 mph."
+    "text": "Partly sunny. High near 67, with temperatures falling to around 61 in the afternoon. Southwest wind 0 to 3 mph."
   }
 }
