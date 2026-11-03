@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-11-03T04:00:53Z",
+  "fetchedAt": "2026-11-03T04:30:56Z",
   "href": "https://echomtn.com/mountain-conditions",
   "id": "echo-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Hot Laps Special Triple Chair": "closed",
+      "Magic Vista Conveyor": "closed",
+      "Stairway to Shreddin Conveyor": "closed"
+    }
   },
   "ll": [
     -105.5225,
@@ -23,16 +27,29 @@
   ],
   "name": "Echo Mountain",
   "timestamp": {
-    "lifts": 1793677671834,
+    "lifts": 1793679362073,
     "opening": 1793677535755,
-    "trails": 1793677671834,
+    "trails": 1793679362073,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": {
+      "Full Send - Lower": "closed",
+      "Full Send - Upper": "closed",
+      "Gold Digger": "closed",
+      "Hollywood - Lower": "closed",
+      "Hollywood - Middle": "closed",
+      "Hollywood - Upper": "closed",
+      "Lucky's Loop": "closed",
+      "The Glades": "closed",
+      "Traveler's Traverse - Lower": "closed",
+      "Traveler's Traverse - Middle": "closed",
+      "Traveler's Traverse - Upper": "closed",
+      "Yard Sale": "closed"
+    },
     "stats": {
-      "closed": 0,
+      "closed": 12,
       "hold": 0,
       "open": 0,
       "scheduled": 0
