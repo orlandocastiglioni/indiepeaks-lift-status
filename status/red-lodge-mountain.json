@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-10-29T22:45:26Z",
+  "fetchedAt": "2026-11-04T16:15:56Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cole Creek": "closed",
-      "Grizzly Peak": "closed",
-      "Magic Carpet": "closed",
-      "Palisades": "closed",
-      "The Stache Express": "closed",
-      "Triple Chair": "closed",
-      "Willow Creek": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -109.335037,
@@ -31,11 +23,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1793313055121,
-    "opening": 1793312170964,
-    "trails": 1793313055121,
-    "weather": 1793307675179,
-    "webcams": 1793313041279
+    "lifts": 1793808024423,
+    "opening": 1793805369200,
+    "trails": 1793808940562,
+    "weather": 1793801762188,
+    "webcams": 1793808020297
   },
   "trails": {
     "list": [
@@ -403,11 +395,11 @@
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-10-29",
+    "conditions": "Mostly Sunny",
+    "date": "2026-11-04",
     "icon": [
-      "basenone",
-      "icon-sun"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=45.191021&lon=-109.335037",
@@ -418,6 +410,6 @@
     "temperature": {
       "max": 45
     },
-    "text": "Sunny. High near 45, with temperatures falling to around 43 in the afternoon. Southeast wind 5 to 9 mph."
+    "text": "Mostly sunny. High near 45, with temperatures falling to around 39 in the afternoon. East southeast wind 1 to 5 mph."
   }
 }
