@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-04T19:15:56Z",
+  "fetchedAt": "2026-11-04T19:30:11Z",
   "href": "https://sovereignlake.com/",
   "id": "sovereign-lake",
   "ll": [
@@ -10,7 +10,7 @@
   "timestamp": {
     "lifts": 0,
     "opening": 1793817915695,
-    "trails": 1793818844630,
+    "trails": 1793819795226,
     "weather": 0,
     "webcams": 0
   },
@@ -333,11 +333,6 @@
       },
       {
         "level": "green",
-        "name": "Trapline",
-        "status": "closed"
-      },
-      {
-        "level": "green",
         "name": "Trapline Cut-Off",
         "status": "closed"
       },
@@ -350,11 +345,21 @@
         "level": "blue",
         "name": "Ridgeline",
         "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Trapline",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Trapline (Short)",
+        "status": "closed"
       }
     ],
     "reportedAt": "2026-11-04T16:58:22.000Z",
     "stats": {
-      "closed": 7,
+      "closed": 8,
       "hold": 60,
       "open": 0,
       "scheduled": 0
