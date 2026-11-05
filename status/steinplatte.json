@@ -1,9 +1,9 @@
 {
-  "fetchedAt": "2026-11-05T14:01:03Z",
+  "fetchedAt": "2026-11-05T14:15:13Z",
   "href": "https://www.steinplatte.tirol/de/liftstatus.html",
   "id": "steinplatte",
   "lifts": {
-    "reportedAt": "2026-11-05T13:30:40.000Z",
+    "reportedAt": "2026-11-05T14:00:40.000Z",
     "stats": {
       "closed": 14,
       "hold": 0,
@@ -39,9 +39,9 @@
   ],
   "name": "Steinplatte",
   "timestamp": {
-    "lifts": 1793886327704,
+    "lifts": 1793887279531,
     "opening": 1793885411841,
-    "trails": 1793886327709,
+    "trails": 1793887279526,
     "weather": 0,
     "webcams": 0
   },
@@ -176,7 +176,7 @@
         "grade": "blau",
         "level": "blue",
         "name": "Kurvenlift (Nr. 20)",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "Skiroute",
@@ -184,12 +184,12 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-11-05T13:30:40.000Z",
+    "reportedAt": "2026-11-05T14:00:40.000Z",
     "stats": {
-      "closed": 22,
+      "closed": 23,
       "hold": 0,
       "open": 0,
-      "scheduled": 1
+      "scheduled": 0
     }
   }
 }
