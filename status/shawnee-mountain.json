@@ -1,31 +1,21 @@
 {
-  "fetchedAt": "2026-10-12T02:45:18Z",
+  "fetchedAt": "2026-11-07T09:01:15Z",
   "href": "https://shawneemt.com/snow-report/",
   "id": "shawnee-mountain",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "B. Arrowhead - Quad": "closed",
-      "C. Tomahawk - Express": "closed",
-      "D. Tecumseh - Double": "closed",
-      "E. Lookout - Double": "closed",
-      "F. Bushkill - Double": "closed",
-      "G. Little Chief - Double": "closed",
-      "H. Little Chief - Carpet": "closed",
-      "I. Learning Center - Carpet": "closed",
-      "Skiwee Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -75.078117,
@@ -33,11 +23,11 @@
   ],
   "name": "Shawnee Mountain",
   "timestamp": {
-    "lifts": 1791772371273,
-    "opening": 1791769523276,
-    "trails": 1791772371273,
-    "weather": 1791767746212,
-    "webcams": 1791772224452
+    "lifts": 1794042041763,
+    "opening": 1794042034833,
+    "trails": 1794042090066,
+    "weather": 0,
+    "webcams": 0
   },
   "trails": {
     "list": [
@@ -198,23 +188,5 @@
       "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Showers And Thunderstorms",
-    "date": "2026-10-12",
-    "icon": [
-      "basecloud",
-      "icon-thunder"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=41.03688&lon=-75.078117",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 52
-    },
-    "text": "Rain showers before 8pm, then showers and thunderstorms between 8pm and 2am. Cloudy, with a low around 52. Northeast wind around 5 mph. Chance of precipitation is 90%. New rainfall amounts between three quarters and one inch possible."
   }
 }
