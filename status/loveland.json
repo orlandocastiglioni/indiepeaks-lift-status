@@ -1,22 +1,22 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-11-07T13:15:54Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
     "stats": {
-      "closed": 10,
+      "closed": 9,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 90,
         "hold": 0,
-        "open": 0,
+        "open": 10,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Chet's Dream": "closed",
+      "Chet's Dream": "open",
       "Lift 2": "closed",
       "Lift 3": "closed",
       "Lift 4": "closed",
@@ -34,11 +34,11 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1791335752009,
-    "opening": 1791333057121,
-    "trails": 1791335752009,
-    "weather": 1791333061439,
-    "webcams": 1791335747244
+    "lifts": 1794056423386,
+    "opening": 1794053734233,
+    "trails": 1794056423386,
+    "weather": 1794050163047,
+    "webcams": 1794056416073
   },
   "trails": {
     "list": [
@@ -55,17 +55,17 @@
       {
         "level": "green",
         "name": "Catwalk",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Mambo",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Home Run",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -524,18 +524,18 @@
       }
     ],
     "stats": {
-      "closed": 96,
+      "closed": 93,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Chance Rain Showers then Mostly Cloudy",
-    "date": "2026-10-07",
+    "conditions": "Mostly Clear",
+    "date": "2026-11-07",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basenone",
+      "icon-moon"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=39.679993&lon=-105.89595",
@@ -544,8 +544,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 38
+      "max": 22
     },
-    "text": "A chance of rain showers before midnight. Mostly cloudy, with a low around 38. South southeast wind around 8 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "text": "Mostly clear, with a low around 22. West northwest wind around 8 mph."
   }
 }
