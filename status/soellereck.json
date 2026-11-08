@@ -1,29 +1,21 @@
 {
-  "fetchedAt": "2026-11-08T21:30:26Z",
+  "fetchedAt": "2026-11-08T21:45:44Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "soellereck",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "H\u00f6llwieslift": "closed",
-      "Ochsenh\u00f6flelift": "closed",
-      "Schrattenwangbahn": "closed",
-      "S\u00f6llereckbahn": "closed",
-      "S\u00f6llis Winterwelt 1": "closed",
-      "S\u00f6llis Winterwelt 2": "closed",
-      "Wannenk\u00f6pflelift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     10.254,
@@ -31,9 +23,9 @@
   ],
   "name": "S\u00f6llereck (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1794172536826,
-    "opening": 1794168951047,
-    "trails": 1794172536825,
+    "lifts": 1794173439537,
+    "opening": 1794173434799,
+    "trails": 1794174350256,
     "weather": 0,
     "webcams": 0
   },
