@@ -1,21 +1,35 @@
 {
-  "fetchedAt": "2026-11-08T21:45:44Z",
+  "fetchedAt": "2026-11-08T22:00:46Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "fellhorn-kanzelwand",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 13,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Bierenwangbahn": "closed",
+      "Fellhorn-Gipfelbahn": "closed",
+      "Fellhornbahn I": "closed",
+      "Fellhornbahn II": "closed",
+      "Ideallift": "closed",
+      "Kanzelwandbahn": "closed",
+      "Kesslerlift": "closed",
+      "M\u00f6serbahn": "closed",
+      "Scheidtobel": "closed",
+      "Schwandlift": "closed",
+      "See-Eck Bahn": "closed",
+      "Zweil\u00e4nderbahn": "closed",
+      "Zwerenalpbahn": "closed"
+    }
   },
   "ll": [
     10.199,
@@ -23,9 +37,9 @@
   ],
   "name": "Fellhorn / Kanzelwand (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1794173439537,
-    "opening": 1794170732554,
-    "trails": 1794172536825,
+    "lifts": 1794174350256,
+    "opening": 1794174345235,
+    "trails": 1794174350255,
     "weather": 0,
     "webcams": 0
   },
