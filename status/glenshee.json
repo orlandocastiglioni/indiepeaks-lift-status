@@ -1,21 +1,45 @@
 {
-  "fetchedAt": "2026-11-09T00:45:02Z",
+  "fetchedAt": "2026-11-09T01:00:27Z",
   "href": "https://www.ski-glenshee.co.uk/Glenshee-Lift-Status",
   "id": "glenshee",
   "lifts": {
+    "reportedAt": "2026-10-30T15:28:00.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 22,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Baddoch Chairlift": "closed",
+      "Beag Poma": "closed",
+      "Bucharts Access Poma": "closed",
+      "Bucharts T-bar": "closed",
+      "Caenlochan Poma": "closed",
+      "Cairnwell Chairlift": "closed",
+      "Cairnwell T-bar": "closed",
+      "Carn Aosda T-bar": "closed",
+      "Claybokie Poma": "closed",
+      "Cluny Poma 1": "closed",
+      "Cluny Poma 2": "closed",
+      "Coire Fionn Poma 1": "closed",
+      "Coire Fionn Poma 2": "closed",
+      "Dink Dink Poma": "closed",
+      "Glas Maol Poma": "closed",
+      "Meall O Dhar Poma": "closed",
+      "Plastic Slope Poma": "closed",
+      "Rope Tow": "closed",
+      "Sunnyside Chairlift": "closed",
+      "Sunnyside Poma 1": "closed",
+      "Sunnyside Poma 2": "closed",
+      "Tom Dearg Poma": "closed"
+    }
   },
   "ll": [
     -3.4152,
@@ -23,9 +47,9 @@
   ],
   "name": "Glenshee Ski Centre",
   "timestamp": {
-    "lifts": 1794184247283,
+    "lifts": 1794185117006,
     "opening": 1794171642652,
-    "trails": 1794184231904,
+    "trails": 1794185112384,
     "weather": 0,
     "webcams": 0
   }
