@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-11-09T05:30:47Z",
+  "fetchedAt": "2026-11-09T05:45:32Z",
   "href": "https://www.redlodgemountain.com/mountain/snow-report/",
   "id": "red-lodge-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Cole Creek": "closed",
+      "Grizzly Peak": "closed",
+      "Magic Carpet": "closed",
+      "Palisades": "closed",
+      "The Stache Express": "closed",
+      "Triple Chair": "closed",
+      "Willow Creek": "closed"
+    }
   },
   "ll": [
     -109.335037,
@@ -23,11 +31,11 @@
   ],
   "name": "Red Lodge Mountain",
   "timestamp": {
-    "lifts": 1794201316524,
-    "opening": 1794197752527,
-    "trails": 1794200446018,
+    "lifts": 1794202268143,
+    "opening": 1794202255265,
+    "trails": 1794202268143,
     "weather": 1794197757218,
-    "webcams": 1794201314512
+    "webcams": 1794202255265
   },
   "trails": {
     "list": [
