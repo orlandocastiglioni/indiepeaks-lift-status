@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-11-10T08:30:24Z",
+  "fetchedAt": "2026-11-10T09:01:02Z",
   "href": "https://sasquatchmountain.ca/snow-report/",
   "id": "sasquatch-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A- Yeti Cruiser Quad": "closed",
+      "B- Whistlepunk Double": "closed",
+      "D- Sasquatch Triple": "closed",
+      "Littlefoot Carpet Lift": "closed"
+    }
   },
   "ll": [
     -121.93556496672508,
@@ -23,9 +28,9 @@
   ],
   "name": "Sasquatch Mountain",
   "timestamp": {
-    "lifts": 1794298589912,
-    "opening": 1794296733947,
-    "trails": 1794297639147,
+    "lifts": 1794300351818,
+    "opening": 1794300345231,
+    "trails": 1794300351818,
     "weather": 0,
     "webcams": 0
   },
