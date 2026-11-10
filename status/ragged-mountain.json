@@ -1,27 +1,27 @@
 {
-  "fetchedAt": "2026-11-10T20:00:54Z",
+  "fetchedAt": "2026-11-10T20:15:39Z",
   "href": "https://www.raggedmountainresort.com/mountain-report-cams/",
   "id": "ragged-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
-      "open": 6,
+      "open": 0,
       "percentage": {
-        "closed": 0,
+        "closed": 100,
         "hold": 0,
-        "open": 100,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Barnyard Triple": "open",
-      "Meadows Carpet": "open",
-      "Spear Mountain Express": "open",
-      "Summit Six Express": "open",
-      "Uphill Route": "open",
-      "Wanna Be Wild Carpet": "open"
+      "Barnyard Triple": "closed",
+      "Meadows Carpet": "closed",
+      "Spear Mountain Express": "closed",
+      "Summit Six Express": "closed",
+      "Uphill Route": "closed",
+      "Wanna Be Wild Carpet": "closed"
     }
   },
   "ll": [
@@ -30,11 +30,11 @@
   ],
   "name": "Ragged Mountain",
   "timestamp": {
-    "lifts": 1794339955671,
+    "lifts": 1794340873630,
     "opening": 1794339942681,
-    "trails": 1794339955670,
+    "trails": 1794340873630,
     "weather": 1794339948388,
-    "webcams": 1794339942681
+    "webcams": 1794340863215
   },
   "trails": {
     "list": [
@@ -226,7 +226,7 @@
       {
         "level": "green",
         "name": "Cardigan",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "green",
@@ -311,7 +311,7 @@
       {
         "level": "green",
         "name": "Barnyard",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "terrainPark",
@@ -330,9 +330,9 @@
       }
     ],
     "stats": {
-      "closed": 56,
+      "closed": 58,
       "hold": 0,
-      "open": 2,
+      "open": 0,
       "scheduled": 0
     }
   },
