@@ -1,33 +1,21 @@
 {
-  "fetchedAt": "2026-10-27T15:30:48Z",
+  "fetchedAt": "2026-11-10T16:45:24Z",
   "href": "https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace",
   "id": "winterplace",
   "lifts": {
     "stats": {
-      "closed": 11,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "#1 Double Chairlift": "closed",
-      "#10 Tubing Carpet": "closed",
-      "#11 Tubing Carpet": "closed",
-      "#12 Ski-Wee Carpet": "closed",
-      "#2 Triple Chairlift": "closed",
-      "#3 Triple Chairlift": "closed",
-      "#4 Triple Chairlift": "closed",
-      "#5 Double Chairlift": "closed",
-      "#6 Carpet Lift": "closed",
-      "#8 Quad Chairlift": "closed",
-      "#9 Quad Chairlift": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -81.11824,
@@ -35,11 +23,11 @@
   ],
   "name": "Winterplace",
   "timestamp": {
-    "lifts": 1793114164734,
-    "opening": 1793113266583,
-    "trails": 1793114164732,
-    "weather": 1793107830227,
-    "webcams": 1793114157264
+    "lifts": 1794328243247,
+    "opening": 1794328235943,
+    "trails": 1794327324534,
+    "weather": 1794324617631,
+    "webcams": 1794328235943
   },
   "trails": {
     "list": [
@@ -193,7 +181,7 @@
   },
   "weather": {
     "conditions": "Sunny",
-    "date": "2026-10-27",
+    "date": "2026-11-10",
     "icon": [
       "basenone",
       "icon-sun"
@@ -205,8 +193,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 64
+      "max": 59
     },
-    "text": "Sunny, with a high near 64. Southeast wind around 6 mph."
+    "text": "Sunny. High near 59, with temperatures falling to around 54 in the afternoon. West wind 7 to 10 mph."
   }
 }
