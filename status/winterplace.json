@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-11-10T17:15:43Z",
+  "fetchedAt": "2026-11-10T17:30:28Z",
   "href": "https://winterplace.com/real-time-snow-report-mountain-conditions-winterplace",
   "id": "winterplace",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 11,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "#1 Double Chairlift": "closed",
+      "#10 Tubing Carpet": "closed",
+      "#11 Tubing Carpet": "closed",
+      "#12 Ski-Wee Carpet": "closed",
+      "#2 Triple Chairlift": "closed",
+      "#3 Triple Chairlift": "closed",
+      "#4 Triple Chairlift": "closed",
+      "#5 Double Chairlift": "closed",
+      "#6 Carpet Lift": "closed",
+      "#8 Quad Chairlift": "closed",
+      "#9 Quad Chairlift": "closed"
+    }
   },
   "ll": [
     -81.11824,
@@ -23,11 +35,11 @@
   ],
   "name": "Winterplace",
   "timestamp": {
-    "lifts": 1794330055237,
+    "lifts": 1794330947597,
     "opening": 1794328235943,
     "trails": 1794330940196,
     "weather": 1794324617631,
-    "webcams": 1794330047152
+    "webcams": 1794330947477
   },
   "trails": {
     "list": [
