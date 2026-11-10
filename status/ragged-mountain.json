@@ -1,27 +1,27 @@
 {
-  "fetchedAt": "2026-10-30T20:30:31Z",
+  "fetchedAt": "2026-11-10T20:00:54Z",
   "href": "https://www.raggedmountainresort.com/mountain-report-cams/",
   "id": "ragged-mountain",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
-      "open": 0,
+      "open": 6,
       "percentage": {
-        "closed": 100,
+        "closed": 0,
         "hold": 0,
-        "open": 0,
+        "open": 100,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Barnyard Triple": "closed",
-      "Meadows Carpet": "closed",
-      "Spear Mountain Express": "closed",
-      "Summit Six Express": "closed",
-      "Uphill Route": "closed",
-      "Wanna Be Wild Carpet": "closed"
+      "Barnyard Triple": "open",
+      "Meadows Carpet": "open",
+      "Spear Mountain Express": "open",
+      "Summit Six Express": "open",
+      "Uphill Route": "open",
+      "Wanna Be Wild Carpet": "open"
     }
   },
   "ll": [
@@ -30,11 +30,11 @@
   ],
   "name": "Ragged Mountain",
   "timestamp": {
-    "lifts": 1793391348803,
-    "opening": 1793388664812,
-    "trails": 1793391348803,
-    "weather": 1793385958119,
-    "webcams": 1793391335335
+    "lifts": 1794339955671,
+    "opening": 1794339942681,
+    "trails": 1794339955670,
+    "weather": 1794339948388,
+    "webcams": 1794339942681
   },
   "trails": {
     "list": [
@@ -226,7 +226,7 @@
       {
         "level": "green",
         "name": "Cardigan",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -311,7 +311,7 @@
       {
         "level": "green",
         "name": "Barnyard",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "terrainPark",
@@ -330,15 +330,15 @@
       }
     ],
     "stats": {
-      "closed": 58,
+      "closed": 56,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Partly Sunny",
-    "date": "2026-10-30",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-11-10",
     "icon": [
       "icon-cloud",
       "icon-sunny"
@@ -350,8 +350,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 61
+      "max": 51
     },
-    "text": "Partly sunny. High near 61, with temperatures falling to around 53 in the afternoon. Northwest wind around 15 mph, with gusts as high as 25 mph."
+    "text": "Mostly cloudy, with a high near 51. West wind 5 to 10 mph."
   }
 }
