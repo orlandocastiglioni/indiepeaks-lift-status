@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-11T17:30:09Z",
+  "fetchedAt": "2026-11-11T17:45:53Z",
   "href": "https://steamboatsprings.net/131/Howelsen-Hill-Ski-Area",
   "id": "howelsen-hill",
   "ll": [
@@ -10,14 +10,66 @@
   "timestamp": {
     "lifts": 0,
     "opening": 1794416419142,
-    "trails": 1794417347452,
+    "trails": 1794418238108,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "black",
+        "name": "Blackmere Drive",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Rodeo Loop",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Connector 9",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bluffs Loop",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Connector 7",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Howelsen Meadows",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hakan Spar",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Onyx Mine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Ricky's Ridge",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Emerald Meadows",
+        "status": "closed"
+      }
+    ],
+    "reportedAt": "2021-01-08T15:36:05.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "scheduled": 0

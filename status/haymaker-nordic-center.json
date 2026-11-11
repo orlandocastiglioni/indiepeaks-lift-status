@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-11T17:30:09Z",
+  "fetchedAt": "2026-11-11T17:45:53Z",
   "href": "https://nordicski.net/haymaker-nordic-center/",
   "id": "haymaker-nordic-center",
   "ll": [
@@ -10,16 +10,48 @@
   "timestamp": {
     "lifts": 0,
     "opening": 1794416419142,
-    "trails": 1794417346017,
+    "trails": 1794418237755,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "The Range",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Yampa View",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Rabbit Ears Loop",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Yampa View Cutoff",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Fox Trail",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Unnamed",
+        "status": "open"
+      }
+    ],
+    "reportedAt": "2026-01-27T14:18:36.044Z",
     "stats": {
       "closed": 0,
       "hold": 0,
-      "open": 0,
+      "open": 6,
       "scheduled": 0
     }
   }
