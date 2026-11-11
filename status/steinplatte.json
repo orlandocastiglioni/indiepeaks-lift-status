@@ -1,17 +1,17 @@
 {
-  "fetchedAt": "2026-11-11T12:45:46Z",
+  "fetchedAt": "2026-11-11T13:15:37Z",
   "href": "https://www.steinplatte.tirol/de/liftstatus.html",
   "id": "steinplatte",
   "lifts": {
-    "reportedAt": "2026-11-11T12:30:40.000Z",
+    "reportedAt": "2026-11-11T13:00:41.000Z",
     "stats": {
-      "closed": 10,
+      "closed": 14,
       "hold": 0,
-      "open": 4,
+      "open": 0,
       "percentage": {
-        "closed": 71.4,
+        "closed": 100,
         "hold": 0,
-        "open": 28.5,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
@@ -21,15 +21,15 @@
       "4-SB M\u00f6sern": "closed",
       "4-SL Ro\u00dfalm (Reit im Winkl)": "closed",
       "4-SL Schwarzlofer": "closed",
-      "6-SB B\u00e4reck": "open",
+      "6-SB B\u00e4reck": "closed",
       "6-SB Kammerk\u00f6r": "closed",
       "6-SB Plattenkogel": "closed",
       "6-SB Scheibelberg (Reit im Winkl)": "closed",
-      "8-EUB Winklmoosalmbahn (Reit im Winkl)": "open",
-      "8-SB Kapellen": "open",
+      "8-EUB Winklmoosalmbahn (Reit im Winkl)": "closed",
+      "8-SB Kapellen": "closed",
       "8-SB Steinplatte": "closed",
       "Dorflift Waidring": "closed",
-      "Schlepplift Ro\u00dfalm (Reit im Winkl)": "open",
+      "Schlepplift Ro\u00dfalm (Reit im Winkl)": "closed",
       "Schlepplift-Kurven-Lift (Reit im Winkl)": "closed"
     }
   },
@@ -39,9 +39,9 @@
   ],
   "name": "Steinplatte",
   "timestamp": {
-    "lifts": 1794400254003,
+    "lifts": 1794402064026,
     "opening": 1794399367504,
-    "trails": 1794400254006,
+    "trails": 1794402064022,
     "weather": 0,
     "webcams": 0
   },
@@ -63,7 +63,7 @@
         "grade": "rot",
         "level": "black",
         "name": "Kammerk\u00f6r (Nr. 3)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "blau",
@@ -81,7 +81,7 @@
         "grade": "rot",
         "level": "black",
         "name": "L\u00e4rchenabfahrt (Nr. 6)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "rot",
@@ -116,7 +116,7 @@
         "grade": "rot",
         "level": "black",
         "name": "Gr\u00fcnboden (Nr. 10)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "rot",
@@ -140,7 +140,7 @@
         "grade": "blau",
         "level": "blue",
         "name": "Schwarzlofer (Nr. 14)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "blau",
@@ -164,7 +164,7 @@
         "grade": "blau",
         "level": "blue",
         "name": "Skiweg Schwarzlofer (Nr. 18)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "blau",
@@ -176,7 +176,7 @@
         "grade": "blau",
         "level": "blue",
         "name": "Kurvenlift (Nr. 20)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "Skiroute",
@@ -184,11 +184,11 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-11-11T12:30:40.000Z",
+    "reportedAt": "2026-11-11T13:00:41.000Z",
     "stats": {
-      "closed": 17,
+      "closed": 23,
       "hold": 0,
-      "open": 6,
+      "open": 0,
       "scheduled": 0
     }
   }
