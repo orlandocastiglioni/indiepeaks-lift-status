@@ -1,23 +1,21 @@
 {
-  "fetchedAt": "2026-11-07T09:30:54Z",
+  "fetchedAt": "2026-11-13T19:15:30Z",
   "href": "https://maneige.ski/stations/parc-regional-de-val-direne/",
   "id": "val-direne",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Lifts (day): 0/2 open": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -67.571411,
@@ -25,9 +23,9 @@
   ],
   "name": "Val d'Ir\u00e8ne",
   "timestamp": {
-    "lifts": 1794042987874,
-    "opening": 1794042034834,
-    "trails": 1794042987874,
+    "lifts": 1794596540371,
+    "opening": 1794592866012,
+    "trails": 1794595591992,
     "weather": 0,
     "webcams": 0
   },
