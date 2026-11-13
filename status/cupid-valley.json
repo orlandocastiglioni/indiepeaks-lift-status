@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-11-13T09:00:09Z",
+  "fetchedAt": "2026-11-13T09:15:27Z",
   "href": "https://www.yukidaruma-kogen.com/winter.html",
   "id": "cupid-valley",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u7b2c1\u30af\u30ef\u30c3\u30c9": "closed",
+      "\u7b2c2\u30af\u30ef\u30c3\u30c9": "closed",
+      "\u7b2c3\u30da\u30a2": "closed"
+    }
   },
   "ll": [
     138.4849,
@@ -23,9 +27,9 @@
   ],
   "name": "Cupid Valley",
   "timestamp": {
-    "lifts": 1794559557950,
-    "opening": 1794517261729,
-    "trails": 1794559541587,
+    "lifts": 1794560418941,
+    "opening": 1794560462531,
+    "trails": 1794560411977,
     "weather": 0,
     "webcams": 0
   }
