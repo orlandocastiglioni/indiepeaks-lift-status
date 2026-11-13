@@ -1,33 +1,33 @@
 {
-  "fetchedAt": "2026-11-10T08:15:47Z",
+  "fetchedAt": "2026-11-13T08:45:39Z",
   "href": "https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus",
   "id": "pitztaler-gletscher",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 12,
       "hold": 0,
-      "open": 6,
+      "open": 0,
       "percentage": {
-        "closed": 50,
+        "closed": 100,
         "hold": 0,
-        "open": 50,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Dorflift Mandarfen": "closed",
-      "Gletscherexpress": "open",
-      "Gletscherseebahn": "open",
+      "Gletscherexpress": "closed",
+      "Gletscherseebahn": "closed",
       "Grubenkopf": "closed",
       "Hirschtal": "closed",
-      "Mittagskogel": "open",
-      "Mittelbergbahn": "open",
+      "Mittagskogel": "closed",
+      "Mittelbergbahn": "closed",
       "Muttenkopf": "closed",
       "Rifflseebahn": "closed",
-      "Schlepplift Brunnenkogel": "open",
+      "Schlepplift Brunnenkogel": "closed",
       "Sunna Alm Bahn": "closed",
-      "Wildspitzbahn": "open"
+      "Wildspitzbahn": "closed"
     }
   },
   "ll": [
@@ -36,9 +36,9 @@
   ],
   "name": "Pitztaler Gletscher",
   "timestamp": {
-    "lifts": 1794297639689,
-    "opening": 1794296733946,
-    "trails": 1794297639689,
+    "lifts": 1794558648142,
+    "opening": 1794556810094,
+    "trails": 1794558648142,
     "weather": 0,
     "webcams": 0
   },
