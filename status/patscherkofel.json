@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-11-13T05:15:27Z",
+  "fetchedAt": "2026-11-13T05:30:45Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/patscherkofelbahn/",
   "id": "patscherkofel",
   "lifts": {
+    "reportedAt": "2026-11-03T08:31:51.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A Patscherkofelbahn Sektion I": "closed",
+      "A Patscherkofelbahn Sektion II": "closed",
+      "B \u00dcbungslift Patscherkofel": "closed",
+      "C Heiligwasserlift": "closed",
+      "D Zauberteppich": "closed",
+      "E Kinderlift": "closed",
+      "F \u00dcbungslift Igls": "closed"
+    }
   },
   "ll": [
     11.4056,
@@ -23,9 +32,9 @@
   ],
   "name": "Patscherkofel (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1794546154292,
+    "lifts": 1794546939330,
     "opening": 1794543339881,
-    "trails": 1794545137278,
+    "trails": 1794546939330,
     "weather": 0,
     "webcams": 0
   },

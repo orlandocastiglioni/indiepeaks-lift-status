@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-11-13T05:15:27Z",
+  "fetchedAt": "2026-11-13T05:30:45Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/schlick-2000-skiing-centre/",
   "id": "schlick-2000",
   "lifts": {
+    "reportedAt": "2026-10-19T06:07:23.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "4er Panoramabahn": "closed",
+      "4er Sennjochbahn": "closed",
+      "6er Zirmachbahn": "closed",
+      "BIG Ron's Tellerlift": "closed",
+      "EUB Galtbergbahn (10er Gondel)": "closed",
+      "EUB Kreuzjochbahn I (6er Gondel)": "closed",
+      "EUB Kreuzjochbahn II (6er Gondel)": "closed",
+      "SL Schanzlin": "closed",
+      "SL Schlickerboden": "closed",
+      "Zauberteppich 1-4*": "closed"
+    }
   },
   "ll": [
     11.3506,
@@ -23,9 +35,9 @@
   ],
   "name": "Schlick 2000 (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1794546154272,
+    "lifts": 1794546939387,
     "opening": 1794543339882,
-    "trails": 1794545137227,
+    "trails": 1794546939387,
     "weather": 0,
     "webcams": 0
   },

@@ -1,21 +1,32 @@
 {
-  "fetchedAt": "2026-11-13T05:15:27Z",
+  "fetchedAt": "2026-11-13T05:30:45Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/axamer-lizum/",
   "id": "axamer-lizum",
   "lifts": {
+    "reportedAt": "2026-10-28T19:13:18.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 9,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Birgitzk\u00f6pfl": "closed",
+      "G\u00f6tzner Grube": "closed",
+      "Hoadlbahn I": "closed",
+      "Hoadlbahn II": "closed",
+      "Karleiten": "closed",
+      "Kaserwald I": "closed",
+      "Olympiabahn": "closed",
+      "Pleisen": "closed",
+      "Talbodenlift": "closed"
+    }
   },
   "ll": [
     11.3038,
@@ -23,9 +34,9 @@
   ],
   "name": "Axamer Lizum (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1794546154294,
+    "lifts": 1794546939418,
     "opening": 1794543339878,
-    "trails": 1794545137172,
+    "trails": 1794546939418,
     "weather": 0,
     "webcams": 0
   },

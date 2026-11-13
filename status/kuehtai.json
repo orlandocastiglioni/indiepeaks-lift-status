@@ -1,21 +1,35 @@
 {
-  "fetchedAt": "2026-11-13T05:15:27Z",
+  "fetchedAt": "2026-11-13T05:30:45Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/kuehtai/",
   "id": "kuehtai",
   "lifts": {
+    "reportedAt": "2026-09-24T10:54:33.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 12,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Alpenrosenlift": "closed",
+      "DreiSeenBahn": "closed",
+      "GaisKogelBahn": "closed",
+      "HochAlterBahn": "closed",
+      "HoheMutBahn": "closed",
+      "KaiserBahn": "closed",
+      "K\u00fchTeppich": "closed",
+      "Schwarzmooslift": "closed",
+      "Sonnenlift": "closed",
+      "StartBahn": "closed",
+      "Wiesbergbahn": "closed",
+      "Wunderteppich": "closed"
+    }
   },
   "ll": [
     11.0161,
@@ -23,9 +37,9 @@
   ],
   "name": "Kuehtai (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1794546154287,
+    "lifts": 1794546939656,
     "opening": 1794543339880,
-    "trails": 1794545137516,
+    "trails": 1794546939656,
     "weather": 0,
     "webcams": 0
   },
