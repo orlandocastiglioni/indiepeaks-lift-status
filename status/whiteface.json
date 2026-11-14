@@ -1,21 +1,34 @@
 {
-  "fetchedAt": "2026-11-14T16:30:01Z",
+  "fetchedAt": "2026-11-14T16:45:59Z",
   "href": "https://whiteface.com/mountain/conditions/",
   "id": "whiteface",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 12,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Cloudsplitter Gondola": "closed",
+      "Cloudsplitter Gondola Ride | Winter": "closed",
+      "Coyote Carpet": "closed",
+      "Cub Carpet": "closed",
+      "Face Lift": "closed",
+      "Falcon Flyer": "closed",
+      "Freeway": "closed",
+      "Little Whiteface": "closed",
+      "Lookout Mountain": "closed",
+      "Summit Quad": "closed",
+      "The Notch": "closed",
+      "Warhorse": "closed"
+    }
   },
   "ll": [
     -73.870613,
@@ -23,11 +36,11 @@
   ],
   "name": "Whiteface",
   "timestamp": {
-    "lifts": 1794673126774,
+    "lifts": 1794673958075,
     "opening": 1794672072004,
-    "trails": 1794672228096,
-    "weather": 1794666611711,
-    "webcams": 1794672932580
+    "trails": 1794673958075,
+    "weather": 1794673822880,
+    "webcams": 1794673822255
   },
   "trails": {
     "list": [
