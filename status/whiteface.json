@@ -1,34 +1,21 @@
 {
-  "fetchedAt": "2026-11-14T03:46:40Z",
+  "fetchedAt": "2026-11-14T16:30:01Z",
   "href": "https://whiteface.com/mountain/conditions/",
   "id": "whiteface",
   "lifts": {
     "stats": {
-      "closed": 12,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Cloudsplitter Gondola": "closed",
-      "Cloudsplitter Gondola Ride | Winter": "closed",
-      "Coyote Carpet": "closed",
-      "Cub Carpet": "closed",
-      "Face Lift": "closed",
-      "Falcon Flyer": "closed",
-      "Freeway": "closed",
-      "Little Whiteface": "closed",
-      "Lookout Mountain": "closed",
-      "Summit Quad": "closed",
-      "The Notch": "closed",
-      "Warhorse": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -73.870613,
@@ -36,11 +23,11 @@
   ],
   "name": "Whiteface",
   "timestamp": {
-    "lifts": 1794627926933,
-    "opening": 1794627805335,
-    "trails": 1794627926933,
-    "weather": 1794627826644,
-    "webcams": 1794627825686
+    "lifts": 1794673126774,
+    "opening": 1794672072004,
+    "trails": 1794672228096,
+    "weather": 1794666611711,
+    "webcams": 1794672932580
   },
   "trails": {
     "list": [
@@ -553,7 +540,7 @@
     }
   },
   "weather": {
-    "conditions": "Cloudy then Chance Snow Showers",
+    "conditions": "Rain And Snow Showers",
     "date": "2026-11-14",
     "icon": [
       "basecloud",
@@ -566,8 +553,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 30
+      "max": 37
     },
-    "text": "A chance of snow showers after 1am. Cloudy, with a low around 30. West wind around 6 mph. Chance of precipitation is 30%."
+    "text": "A chance of snow showers before 10am, then rain and snow showers. Mostly cloudy, with a high near 37. West wind around 7 mph. Chance of precipitation is 90%. New snow accumulation of less than half an inch possible."
   }
 }
