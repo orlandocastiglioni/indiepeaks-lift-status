@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-15T01:15:17Z",
+  "fetchedAt": "2026-11-15T21:00:22Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,21 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 6
+      "scheduled": 0
     },
-    "status": {
-      "Cupsuptic": "scheduled",
-      "Kennebago": "scheduled",
-      "Molly Chunkamunk": "scheduled",
-      "Rangeley": "scheduled",
-      "Sandy": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -30,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1794704437133,
-    "opening": 1794704425428,
-    "trails": 1794704437123,
-    "weather": 1794699037100,
-    "webcams": 1794704425428
+    "lifts": 1794775531144,
+    "opening": 1794772817253,
+    "trails": 1794774642007,
+    "weather": 1794768345609,
+    "webcams": 1794775528999
   },
   "trails": {
     "list": [
@@ -594,7 +587,7 @@
     }
   },
   "weather": {
-    "conditions": "Chance Snow Showers then Chance Light Snow",
+    "conditions": "Slight Chance Snow Showers",
     "date": "2026-11-15",
     "icon": [
       "basecloud",
@@ -607,8 +600,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 28
+      "max": 35
     },
-    "text": "A chance of snow showers before 7pm, then a chance of snow. Mostly cloudy, with a low around 28. Northwest wind 0 to 5 mph. Chance of precipitation is 50%. New snow accumulation of less than half an inch possible."
+    "text": "A slight chance of snow showers before 3pm. Cloudy, with a high near 35. Northwest wind around 10 mph, with gusts as high as 25 mph. Chance of precipitation is 20%."
   }
 }
