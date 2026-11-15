@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-15T00:30:07Z",
+  "fetchedAt": "2026-11-15T01:00:14Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,21 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 6
+      "scheduled": 0
     },
-    "status": {
-      "Cupsuptic": "scheduled",
-      "Kennebago": "scheduled",
-      "Molly Chunkamunk": "scheduled",
-      "Rangeley": "scheduled",
-      "Sandy": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -30,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1794701768297,
+    "lifts": 1794703537324,
     "opening": 1794700822948,
-    "trails": 1794701768310,
+    "trails": 1794703548936,
     "weather": 1794699037100,
-    "webcams": 1794701753828
+    "webcams": 1794703534827
   },
   "trails": {
     "list": [
