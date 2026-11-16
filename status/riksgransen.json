@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-11-16T15:00:14Z",
+  "fetchedAt": "2026-11-16T16:45:42Z",
   "href": "https://riksgransen.se/fjallstatus-snorapport/",
   "id": "riksgransen",
   "lifts": {
+    "reportedAt": "2026-09-30T14:28:00.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Katterj\u00e5kksliften": "closed",
+      "Nedre stolliften": "closed",
+      "Nordalsliften": "closed",
+      "Solliften": "closed",
+      "Vinkelliften": "closed",
+      "\u00d6vre stolliften": "closed"
+    }
   },
   "ll": [
     18.1222,
@@ -23,9 +31,9 @@
   ],
   "name": "Riksgr\u00e4nsen",
   "timestamp": {
-    "lifts": 1794840327119,
-    "opening": 1794839448705,
-    "trails": 1794839457541,
+    "lifts": 1794846660744,
+    "opening": 1794846652628,
+    "trails": 1794846660760,
     "weather": 0,
     "webcams": 0
   },
