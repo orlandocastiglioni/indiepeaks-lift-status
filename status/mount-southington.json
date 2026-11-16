@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-11-16T00:30:57Z",
+  "fetchedAt": "2026-11-16T00:45:37Z",
   "href": "https://mountsouthington.com/trails-and-conditions",
   "id": "mount-southington",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Avalanche Double - To Summit": "closed",
+      "Glacier Conveyor": "closed",
+      "Northstar Triple Chair (Beginner Area)": "closed",
+      "Snowball Conveyor": "closed",
+      "Snowflake Carpet (Beginner Area)": "closed",
+      "Stardust Triple Chair - To Summit": "closed",
+      "Thunderbolt Triple: (Available to run if needed)": "closed",
+      "Whoopee Handle Tow": "closed"
+    }
   },
   "ll": [
     -72.9256,
@@ -23,9 +32,9 @@
   ],
   "name": "Mount Southington",
   "timestamp": {
-    "lifts": 1794788160486,
+    "lifts": 1794789067203,
     "opening": 1794788158659,
-    "trails": 1794787264930,
+    "trails": 1794789067203,
     "weather": 0,
     "webcams": 0
   },
