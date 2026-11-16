@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-11-16T10:30:57Z",
+  "fetchedAt": "2026-11-16T15:15:04Z",
   "href": "https://bogusbasin.org/your-mountain/trails-grooming/",
   "id": "bogusbasin",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Deer Point Express": "closed",
+      "Morning Star Express": "closed"
+    }
   },
   "ll": [
     -116.104,
@@ -23,9 +26,9 @@
   ],
   "name": "Bogus Basin",
   "timestamp": {
-    "lifts": 1794824162121,
+    "lifts": 1794841227907,
     "opening": 1794800617528,
-    "trails": 1794824155866,
+    "trails": 1794841219247,
     "weather": 1794628013434,
     "webcams": 1794628007290
   },
