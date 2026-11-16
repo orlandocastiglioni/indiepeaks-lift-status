@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-11-14T19:15:36Z",
+  "fetchedAt": "2026-11-16T19:00:57Z",
   "href": "https://www.willamettepass.ski/weather-conditions-webcams/lifts-trails/",
   "id": "willamette-pass",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Eagle Peak Accelerator": "closed",
-      "Midway": "closed",
-      "Peak 2": "closed",
-      "Sleepy Hollow": "closed",
-      "The Magic Carpet (Conveyor)": "closed",
-      "Twilight": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -122.03541,
@@ -30,9 +23,9 @@
   ],
   "name": "Willamette Pass Resort",
   "timestamp": {
-    "lifts": 1794682841578,
-    "opening": 1794681057631,
-    "trails": 1794682841578,
+    "lifts": 1794854752181,
+    "opening": 1794854748386,
+    "trails": 1794855673136,
     "weather": 0,
     "webcams": 0
   },
