@@ -1,21 +1,38 @@
 {
-  "fetchedAt": "2026-11-16T03:30:51Z",
+  "fetchedAt": "2026-11-16T03:45:17Z",
   "href": "https://www.alpinco.com/en/oppdal/snow-report",
   "id": "oppdal",
   "lifts": {
+    "reportedAt": "2026-10-05T11:53:18.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 15,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "A. H\u00e5kerekspressen": "closed",
+      "B. Langheisen": "closed",
+      "C. Kortheisen": "closed",
+      "D. Sk\u00e5lheisen": "closed",
+      "F1. Vangsliaekspressen midten": "closed",
+      "F2. Vangsliaekspressen toppen": "closed",
+      "H. \u00c5dalsheisen": "closed",
+      "I. Tverrheisen": "closed",
+      "J. Hovdenekspressen": "closed",
+      "K. Sletvoldheisen": "closed",
+      "L. Barneheisen": "closed",
+      "M. St\u00f8len 1": "closed",
+      "N. St\u00f8len 3": "closed",
+      "O. Fjellheisen": "closed",
+      "P. Rulleb\u00e5nd i St\u00f8len": "closed"
+    }
   },
   "ll": [
     9.64958,
@@ -23,7 +40,7 @@
   ],
   "name": "Oppdal",
   "timestamp": {
-    "lifts": 1794798970154,
+    "lifts": 1794799863213,
     "opening": 1794797125896,
     "trails": 1794799827680,
     "weather": 0,
