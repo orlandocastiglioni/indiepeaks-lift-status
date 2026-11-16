@@ -1,32 +1,21 @@
 {
-  "fetchedAt": "2026-11-14T03:46:40Z",
+  "fetchedAt": "2026-11-16T22:00:32Z",
   "href": "https://www.beechmountainresort.com/mountain/winter-trail-map/",
   "id": "beech-mountain",
   "lifts": {
     "stats": {
-      "closed": 10,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "1 - Quad Chair": "closed",
-      "10 - Tow Rope": "closed",
-      "2 - Carpet Conveyor": "closed",
-      "3 - Double Chair": "closed",
-      "4 - Double Chair": "closed",
-      "5 - Quad Chair": "closed",
-      "6 - Quad Chair": "closed",
-      "7 - Quad Chair": "closed",
-      "8 - Carpet Conveyor": "closed",
-      "9 - Tubing Carpet Conveyor": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -81.87797,
@@ -34,9 +23,9 @@
   ],
   "name": "Beech Mountain",
   "timestamp": {
-    "lifts": 1794627997354,
-    "opening": 1794627805329,
-    "trails": 1794627997353,
+    "lifts": 1794865559132,
+    "opening": 1794862864008,
+    "trails": 1794864659140,
     "weather": 0,
     "webcams": 0
   },
