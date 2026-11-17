@@ -1772,6 +1772,35 @@
         "path": "lifts.status"
       }
     },
+    "dartmouth-skiway": {
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/dartmouth-skiway.json",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
+    },
     "destination-owls-head": {
       "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/owlshead.json",
       "reportURL": "https://owlshead.com/en/ski-conditions",
@@ -3830,7 +3859,34 @@
       }
     },
     "middlebury-snowbowl": {
-      "reportURL": "https://middleburysnowbowl.com/conditions"
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/middlebury-snowbowl.json",
+      "reportURL": "https://middleburysnowbowl.com/conditions",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
     },
     "minocqua-winter-park": {
       "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/minocqua-winter-park.json",
@@ -7324,7 +7380,34 @@
       }
     },
     "tschiertschen-chur": {
-      "reportURL": "https://www.tschiertschen.ch/de/wintersportbericht"
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/tschiertschen-chur.json",
+      "reportURL": "https://www.tschiertschen.ch/de/wintersportbericht",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
     },
     "turpin-meadow-ranch": {
       "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/turpin-meadow-ranch.json",
