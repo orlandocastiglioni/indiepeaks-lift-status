@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-08-06T18:30:38Z",
-  "href": "https://ski.montrigaud.com/home",
+  "fetchedAt": "2026-11-17T13:30:12Z",
+  "href": "https://montrigaud.com/conditions/",
   "id": "mont-rigaud",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Doppelmayr": "closed",
+      "Poma Express": "closed",
+      "Tapis Emmegi": "closed",
+      "Tapis Sunkid": "closed"
+    }
   },
   "ll": [
     -74.336,
@@ -23,9 +28,9 @@
   ],
   "name": "Ski Mont Rigaud",
   "timestamp": {
-    "lifts": 1786040152741,
-    "opening": 1786021935777,
-    "trails": 1786040141850,
+    "lifts": 1794921563418,
+    "opening": 1794921389853,
+    "trails": 1794921560463,
     "weather": 0,
     "webcams": 0
   }

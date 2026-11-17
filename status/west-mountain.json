@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-11-07T09:01:15Z",
+  "fetchedAt": "2026-11-17T13:30:12Z",
   "href": "https://westmountain.com/trail-conditions/",
   "id": "west-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Apex Triple Chairlift": "closed",
+      "Face Quad Chairlift": "closed",
+      "Learning Area Rope Tow for Kiddie TP access": "closed",
+      "Learning Area Surface Lift": "closed",
+      "Tubing Park Surface Lift": "closed",
+      "West Express Triple Chairlift": "closed"
+    }
   },
   "ll": [
     -73.6866,
@@ -23,10 +30,200 @@
   ],
   "name": "West Mountain",
   "timestamp": {
-    "lifts": 1794042060955,
-    "opening": 1794042034834,
-    "trails": 0,
+    "lifts": 1794921561834,
+    "opening": 1794921389856,
+    "trails": 1794921561834,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "green",
+        "name": "Melon Patch (North)-Learning Area",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Melon Patch (South)-Learning Area",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "The Race Face (South)",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "The North Face",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "The North Face Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Gnarwall",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Gnarwall North",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Cure",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Holy Makerel",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Middle Holy Makerel",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Holy Makerel",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "The Frolic",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "The Meadows",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Crossover",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Shortcut",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Slip Thru",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Coy Dog",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "The Alley",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Chute",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Turtle Back",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Inchworm",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Northwest Passage",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bannister",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Mach",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Midway",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Evergreen Pass",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Gleason's Road",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Front Yard",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Connection",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "AOA",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Go-Go",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Northwest Glades",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Hot Glades",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Voltage Glades",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Insanity Glades",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Liability Glades",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 35,
+      "hold": 0,
+      "open": 1,
+      "scheduled": 0
+    }
   }
 }
