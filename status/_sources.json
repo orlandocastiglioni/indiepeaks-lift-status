@@ -857,24 +857,7 @@
       "reportURL": "https://bluehillsboston.com/conditions/"
     },
     "blue-knob-all-season-resort": {
-      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/blue-knob.json",
-      "reportURL": "https://blueknob.com/trail-map-conditions",
-      "paths": {
-        "lastUpdated": "fetchedAt",
-        "trailsOpen": "trails.stats.open",
-        "trailsTotal": [
-          "trails.stats.open",
-          "trails.stats.hold",
-          "trails.stats.scheduled",
-          "trails.stats.closed"
-        ]
-      },
-      "trailList": {
-        "path": "trails.list",
-        "nameKey": "name",
-        "statusKey": "status",
-        "levelKey": "level"
-      }
+      "reportURL": "https://blueknob.com/trail-map-conditions"
     },
     "bogus-basin": {
       "reportURL": "https://bogusbasin.org/your-mountain/trails-grooming/"
@@ -5894,34 +5877,7 @@
       }
     },
     "snow-king-mountain-resort": {
-      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/snow-king.json",
-      "reportURL": "https://www.snowkingmountain.com/mountain/conditions",
-      "paths": {
-        "lastUpdated": "fetchedAt",
-        "liftsOpen": "lifts.stats.open",
-        "liftsTotal": [
-          "lifts.stats.open",
-          "lifts.stats.hold",
-          "lifts.stats.scheduled",
-          "lifts.stats.closed"
-        ],
-        "trailsOpen": "trails.stats.open",
-        "trailsTotal": [
-          "trails.stats.open",
-          "trails.stats.hold",
-          "trails.stats.scheduled",
-          "trails.stats.closed"
-        ]
-      },
-      "liftList": {
-        "path": "lifts.status"
-      },
-      "trailList": {
-        "path": "trails.list",
-        "nameKey": "name",
-        "statusKey": "status",
-        "levelKey": "level"
-      }
+      "reportURL": "https://www.snowkingmountain.com/mountain/conditions"
     },
     "snow-resort-the-cupid-of-romance": {
       "reportURL": "https://kijimadaira-ski.com/gelande/"
