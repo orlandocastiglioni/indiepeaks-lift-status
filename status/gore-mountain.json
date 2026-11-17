@@ -1,37 +1,21 @@
 {
-  "fetchedAt": "2026-11-14T03:46:40Z",
+  "fetchedAt": "2026-11-17T12:15:09Z",
   "href": "https://goremountain.com/the-mountain/conditions/",
   "id": "gore-mountain",
   "lifts": {
     "stats": {
-      "closed": 15,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Adirondack Express II": "closed",
-      "Bear Cub Quad": "closed",
-      "Burnt Ridge Quad": "closed",
-      "Greenway Conveyor": "closed",
-      "High Peaks Quad": "closed",
-      "Hudson Chair": "closed",
-      "J-Bar": "closed",
-      "North Quad": "closed",
-      "Northwoods Gondola": "closed",
-      "Straight Brook Quad": "closed",
-      "Sunway Chair": "closed",
-      "The Snow Train": "closed",
-      "Topridge Quad": "closed",
-      "Uphill at The Ski Bowl": "closed",
-      "Village Chair": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -74.007172,
@@ -39,11 +23,11 @@
   ],
   "name": "Gore Mountain",
   "timestamp": {
-    "lifts": 1794627963401,
-    "opening": 1794627805330,
-    "trails": 1794627963400,
-    "weather": 1794627906172,
-    "webcams": 1794627905701
+    "lifts": 1794916952564,
+    "opening": 1794916285864,
+    "trails": 1794916342739,
+    "weather": 1794915951464,
+    "webcams": 1794916846337
   },
   "trails": {
     "list": [
@@ -631,11 +615,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
-    "date": "2026-11-14",
+    "conditions": "Mostly Sunny",
+    "date": "2026-11-17",
     "icon": [
       "icon-cloud",
-      "icon-night"
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.672653&lon=-74.007172",
@@ -644,8 +628,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 28
+      "max": 50
     },
-    "text": "Mostly cloudy, with a low around 28. Northwest wind around 8 mph."
+    "text": "Mostly sunny. High near 50, with temperatures falling to around 44 in the afternoon. West wind around 9 mph."
   }
 }
