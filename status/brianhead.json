@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-14T03:46:40Z",
+  "fetchedAt": "2026-11-17T13:45:55Z",
   "href": "https://www.brianhead.com/weather-conditions-webcams/",
   "id": "brianhead",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 7,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 87.5,
         "hold": 0,
-        "open": 0,
+        "open": 12.5,
         "scheduled": 0
       },
       "scheduled": 0
@@ -19,7 +19,7 @@
       "Alpen Glow, Chair 8": "closed",
       "Blackfoot, Chair 3": "closed",
       "Giant Steps Express, Chair 2": "closed",
-      "Navajo Express, Chair 4": "closed",
+      "Navajo Express, Chair 4": "open",
       "Pioneer, Chair 6": "closed",
       "Roulette, Chair 5": "closed",
       "The Dunes, Chair 7": "closed",
@@ -32,11 +32,11 @@
   ],
   "name": "Brian Head",
   "timestamp": {
-    "lifts": 1794627997156,
-    "opening": 1794627805329,
-    "trails": 1794627997156,
-    "weather": 1794627996501,
-    "webcams": 1794627995832
+    "lifts": 1794922235313,
+    "opening": 1794921389850,
+    "trails": 1794922235313,
+    "weather": 1794922227392,
+    "webcams": 1794922221777
   },
   "trails": {
     "list": [
@@ -223,27 +223,27 @@
       {
         "level": "blue",
         "name": "Brave",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Fremont",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Golden Gulch",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "The Strip",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Paradise",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -407,15 +407,15 @@
       }
     ],
     "stats": {
-      "closed": 73,
+      "closed": 68,
       "hold": 0,
-      "open": 0,
+      "open": 5,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Snow Showers",
-    "date": "2026-11-14",
+    "conditions": "Light Snow",
+    "date": "2026-11-17",
     "icon": [
       "basecloud",
       "icon-snowy"
@@ -427,8 +427,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 25
+      "max": 27
     },
-    "text": "Snow showers and a slight chance of thunderstorms before 5am, then snow. Cloudy. Low around 25, with temperatures rising to around 28 overnight. South southwest wind 21 to 25 mph, with gusts as high as 38 mph. Chance of precipitation is 100%. New snow accumulation of 6 to 10 inches possible."
+    "text": "Snow before 5am, then snow showers and a slight chance of thunderstorms. Cloudy. Low around 27, with temperatures rising to around 32 overnight. South wind around 36 mph, with gusts as high as 51 mph. Chance of precipitation is 100%. New snow accumulation of 4 to 8 inches possible."
   }
 }
