@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-17T06:00:54Z",
+  "fetchedAt": "2026-11-17T11:00:39Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -8,21 +8,14 @@
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 0,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 100
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 6
+      "scheduled": 0
     },
-    "status": {
-      "Cupsuptic": "scheduled",
-      "Kennebago": "scheduled",
-      "Molly Chunkamunk": "scheduled",
-      "Rangeley": "scheduled",
-      "Sandy": "scheduled",
-      "South Branch": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -70.632965,
@@ -30,11 +23,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1794894348581,
-    "opening": 1794892506102,
-    "trails": 1794894348589,
-    "weather": 1794888048042,
-    "webcams": 1794894337928
+    "lifts": 1794912364718,
+    "opening": 1794912362173,
+    "trails": 1794913223580,
+    "weather": 1794911416725,
+    "webcams": 1794912362173
   },
   "trails": {
     "list": [
@@ -609,6 +602,6 @@
     "temperature": {
       "max": 25
     },
-    "text": "Mostly clear. Low around 25, with temperatures rising to around 31 overnight. West wind around 5 mph."
+    "text": "Mostly clear, with a low around 25. West wind around 5 mph."
   }
 }
