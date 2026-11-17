@@ -1,21 +1,37 @@
 {
-  "fetchedAt": "2026-11-17T12:15:09Z",
+  "fetchedAt": "2026-11-17T12:30:17Z",
   "href": "https://goremountain.com/the-mountain/conditions/",
   "id": "gore-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 15,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Adirondack Express II": "closed",
+      "Bear Cub Quad": "closed",
+      "Burnt Ridge Quad": "closed",
+      "Greenway Conveyor": "closed",
+      "High Peaks Quad": "closed",
+      "Hudson Chair": "closed",
+      "J-Bar": "closed",
+      "North Quad": "closed",
+      "Northwoods Gondola": "closed",
+      "Straight Brook Quad": "closed",
+      "Sunway Chair": "closed",
+      "The Snow Train": "closed",
+      "Topridge Quad": "closed",
+      "Uphill at The Ski Bowl": "closed",
+      "Village Chair": "closed"
+    }
   },
   "ll": [
     -74.007172,
@@ -23,11 +39,11 @@
   ],
   "name": "Gore Mountain",
   "timestamp": {
-    "lifts": 1794916952564,
+    "lifts": 1794917792696,
     "opening": 1794916285864,
-    "trails": 1794916342739,
+    "trails": 1794917792696,
     "weather": 1794915951464,
-    "webcams": 1794916846337
+    "webcams": 1794917717074
   },
   "trails": {
     "list": [
