@@ -1,31 +1,31 @@
 {
-  "fetchedAt": "2026-11-17T18:45:39Z",
+  "fetchedAt": "2026-11-17T19:00:07Z",
   "href": "https://bogusbasin.org/your-mountain/trails-grooming/",
   "id": "bogusbasin",
   "lifts": {
     "stats": {
-      "closed": 2,
+      "closed": 10,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 20,
+        "closed": 100,
         "hold": 0,
         "open": 0,
-        "scheduled": 80
+        "scheduled": 0
       },
-      "scheduled": 8
+      "scheduled": 0
     },
     "status": {
-      "Bitterroot Chair": "scheduled",
-      "Coach Chairlift": "scheduled",
+      "Bitterroot Chair": "closed",
+      "Coach Chairlift": "closed",
       "Deer Point Express": "closed",
-      "Discovery Carpet": "scheduled",
-      "Easy Rider Carpet": "scheduled",
-      "Explorer Carpet": "scheduled",
+      "Discovery Carpet": "closed",
+      "Easy Rider Carpet": "closed",
+      "Explorer Carpet": "closed",
       "Morning Star Express": "closed",
-      "Pine Creek Express": "scheduled",
-      "Showcase Chair": "scheduled",
-      "Superior Express": "scheduled"
+      "Pine Creek Express": "closed",
+      "Showcase Chair": "closed",
+      "Superior Express": "closed"
     }
   },
   "ll": [
@@ -34,9 +34,9 @@
   ],
   "name": "Bogus Basin",
   "timestamp": {
-    "lifts": 1794940217305,
+    "lifts": 1794941159530,
     "opening": 1794921389850,
-    "trails": 1794940208092,
+    "trails": 1794941148952,
     "weather": 0,
     "webcams": 0
   }
