@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-11-13T09:15:27Z",
+  "fetchedAt": "2026-11-17T07:31:04Z",
   "href": "https://www.muikamachi.com/ski/",
   "id": "muica-snow-resort",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "\u30b9\u30ce\u30fc\u30a8\u30b9\u30ab\u30ec\u30fc\u30bf\u30fc": "closed",
-      "\u7b2c1\u30af\u30ef\u30c3\u30c9": "closed",
-      "\u7b2c1\u30da\u30a2": "closed",
-      "\u7b2c2\u30da\u30a2": "closed",
-      "\u7b2c3\u30da\u30a2": "closed"
-    }
+    "status": {}
   },
   "ll": [
     138.8447925,
@@ -29,9 +23,9 @@
   ],
   "name": "Muica Snow Resort",
   "timestamp": {
-    "lifts": 1794560418451,
-    "opening": 1794560462531,
-    "trails": 1794560412388,
+    "lifts": 1794899818014,
+    "opening": 1794887021729,
+    "trails": 1794899751850,
     "weather": 0,
     "webcams": 0
   }
