@@ -5071,10 +5071,23 @@
           "lifts.stats.hold",
           "lifts.stats.scheduled",
           "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
         ]
       },
       "liftList": {
         "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
       }
     },
     "purgatory-resort": {
