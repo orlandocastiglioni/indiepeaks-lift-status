@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-09-02T23:00:59Z",
-  "href": "https://www.powderhorn.com/explore/conditions/mountain-report.html",
+  "fetchedAt": "2026-11-17T12:45:47Z",
+  "href": "https://www.powderhorn.com/conditions/",
   "id": "powderhorn",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 5,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Discovery Conveyor": "closed",
+      "Easy Rider": "closed",
+      "Explorer Conveyor": "closed",
+      "Flat Top Flyer": "closed",
+      "Wild West Express": "closed"
+    }
   },
   "ll": [
     -108.1506,
@@ -23,10 +29,295 @@
   ],
   "name": "Powderhorn",
   "timestamp": {
-    "lifts": 1788389159276,
-    "opening": 1788376199989,
-    "trails": 1788389156549,
+    "lifts": 1794918934249,
+    "opening": 1794918852875,
+    "trails": 1794918934249,
     "weather": 0,
     "webcams": 0
+  },
+  "trails": {
+    "list": [
+      {
+        "level": "blue",
+        "name": "Midway Traverse",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Racer's Edge",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Yoo Hoo",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Quickdraw",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Maverick",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Maverick",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Cannonball",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bill's Run",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bronco",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Kiddie Keg",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Looky Looky",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Equalizer",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Middle Dude",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Dude",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Whistle Pig",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Harold's Way",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Wonderbump",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Powderkeg",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Racer's Glade",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Showdown",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Equalizer",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Wonderbump",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Peace Park",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Peace Park",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Bear Claw",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Second Thoughts",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Thunder Mountain Glade",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Thunderbird Glade",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Thunderbird Glade",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Mudslide",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Snowcloud",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Middle Snowcloud",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Red Eye",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Tenderfoot",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Cow Camp",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Diversion",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hooker",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Hooligan",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Sweet Misery",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Mad Dog Glade",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Sven's Bend",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Hooligan",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Snowcloud",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Sweet Misery",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Way Out",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Whistle Pup",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "E\u2013Z",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Dude",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Stagecoach",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Greenhorn",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Magic Forest",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Peacemaker",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Peacemaker",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bottom's Up",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "E\u2013Z Terrain Park",
+        "status": "closed"
+      }
+    ],
+    "stats": {
+      "closed": 55,
+      "hold": 0,
+      "open": 0,
+      "scheduled": 0
+    }
   }
 }

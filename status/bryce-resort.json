@@ -1,27 +1,21 @@
 {
-  "fetchedAt": "2026-11-13T16:15:17Z",
+  "fetchedAt": "2026-11-17T12:45:47Z",
   "href": "https://bryceresort.com/mountain-info/conditions",
   "id": "bryce-resort",
   "lifts": {
     "stats": {
-      "closed": 4,
+      "closed": 0,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "percentage": {
-        "closed": 80,
-        "hold": 0,
-        "open": 20,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Bunny Slope Carpet": "closed",
-      "Lift 3": "closed",
-      "Lift One": "closed",
-      "Lift Two": "open",
-      "Little Nip Carpet": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -78.76583,
@@ -29,77 +23,16 @@
   ],
   "name": "Bryce Resort",
   "timestamp": {
-    "lifts": 1794585627943,
-    "opening": 1794584729621,
-    "trails": 1794585627943,
+    "lifts": 1794918933949,
+    "opening": 1794918852872,
+    "trails": 1794918933949,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "Bunny Slope",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Little Nip",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Red Eye",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Speak Easy",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Locher Bowl",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bootlegger",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Revenuer's Run",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "White Lightning",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Prost",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "80 Proof",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Hangover",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Randy's Remedy",
-        "status": "closed"
-      }
-    ],
+    "list": {},
     "stats": {
-      "closed": 12,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "scheduled": 0

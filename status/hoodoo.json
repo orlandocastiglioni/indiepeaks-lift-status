@@ -1,28 +1,21 @@
 {
-  "fetchedAt": "2026-11-09T11:30:27Z",
+  "fetchedAt": "2026-11-17T12:45:47Z",
   "href": "https://skihoodoo.com/the-mountain/mountain-lift-status/",
   "id": "hoodoo",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 16.6,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 83.3
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
-      "scheduled": 5
+      "scheduled": 0
     },
-    "status": {
-      "BIG GREEN MACHINE": "scheduled",
-      "EASY RIDER": "scheduled",
-      "ED": "scheduled",
-      "HAROLD'S MAGIC CARPET": "scheduled",
-      "HODAG": "closed",
-      "MANZANITA": "scheduled"
-    }
+    "status": {}
   },
   "ll": [
     -121.871513,
@@ -30,248 +23,19 @@
   ],
   "name": "Hoodoo",
   "timestamp": {
-    "lifts": 1794222940459,
-    "opening": 1794221148763,
-    "trails": 1794222940459,
-    "weather": 1794215738597,
-    "webcams": 1794222929718
+    "lifts": 1794918867949,
+    "opening": 1794918852873,
+    "trails": 1794918867949,
+    "weather": 0,
+    "webcams": 0
   },
   "trails": {
-    "list": [
-      {
-        "level": "green",
-        "name": "OVER EASY, LOWER (Below top of Manzanita)",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "HESITATION",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "THREE CREEKS",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "BLUE VALLEY",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "FRANK'S FLIGHT",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "BIG DIPPER, LOWER (TOP OF THE WALL to BLUE VALLEY)",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "HEADWALL",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "TOP OF THE WALL",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "POWDER VALLEY 1",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "POWDER VALLEY 2",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "POWDER VALLEY 3",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "POWDER VALLEY ROAD",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "HOME RUN",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "RV ROW",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "OVER EASY, UPPER (Hoodoo Summit to RED ROAD)",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "IMPOSSIBLE DREAM, UPPER (Hoodoo Summit to OVER EASY)",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "MAMBO",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "DIVE",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "GRANDSTAND",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "FACE",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "OVER EASY, MIDDLE (RED ROAD to top of Manzanita)",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "BIG DIPPER, UPPER (RED ROAD to TOP OF THE WALL)",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "SCHUSS CHUTE",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "RED ROAD",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "MIDWAY FLATS",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "CHUCK'S BACKSIDE",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "CRATER",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "ART'S ALLEY",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "GRIPPER",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "ANGEL'S FLIGHT",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "DOOBA'S DESCENT",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "SLALOM COURSE",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "RED VALLEY",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "MIDWAY VALLEY",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "CATCHLINE",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "TINY TREAT",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "LEAP OF FAITH",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "HODAG'S HORN",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "DANTE'S VISION",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "IMPOSSIBLE DREAM, LOWER (below OVER EASY)",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "RABBIT RUN",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "HODAG'S TAIL",
-        "status": "closed"
-      }
-    ],
+    "list": {},
     "stats": {
-      "closed": 12,
+      "closed": 0,
       "hold": 0,
-      "open": 30,
+      "open": 0,
       "scheduled": 0
     }
-  },
-  "weather": {
-    "conditions": "Cloudy",
-    "date": "2026-11-09",
-    "icon": [
-      "icon-cloud",
-      "icon-night"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=44.408646&lon=-121.871513",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 35
-    },
-    "text": "Cloudy. Low around 35, with temperatures rising to around 39 overnight. Southwest wind 3 to 7 mph."
   }
 }
