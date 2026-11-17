@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-14T03:46:40Z",
+  "fetchedAt": "2026-11-17T20:00:19Z",
   "href": "https://www.purgatory.ski/mountain/weather-conditions-webcams/",
   "id": "purgatory",
   "lifts": {
@@ -36,11 +36,11 @@
   ],
   "name": "Purgatory",
   "timestamp": {
-    "lifts": 1794627997321,
-    "opening": 1794627805333,
-    "trails": 1794627997320,
+    "lifts": 1794944781618,
+    "opening": 1794942922149,
+    "trails": 1794944781618,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1794943853088
   },
   "trails": {
     "list": [
@@ -287,6 +287,41 @@
       {
         "level": "black",
         "name": "Li\u2019l Toot",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Virgil\u2019s Traverse",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Ferryman",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Charon",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Dark Wood",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Redemption",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Abandon Hope",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Treachery",
         "status": "closed"
       },
       {
@@ -583,7 +618,7 @@
       }
     ],
     "stats": {
-      "closed": 107,
+      "closed": 114,
       "hold": 0,
       "open": 0,
       "scheduled": 0
