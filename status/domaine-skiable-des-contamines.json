@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-11-18T16:15:19Z",
+  "fetchedAt": "2026-11-18T16:30:39Z",
   "href": "https://www.lescontamines.net/ouverture.html",
   "id": "domaine-skiable-des-contamines",
   "lifts": {
     "stats": {
-      "closed": 26,
+      "closed": 25,
       "hold": 0,
       "open": 0,
       "percentage": {
@@ -16,7 +16,6 @@
       "scheduled": 0
     },
     "status": {
-      "COL SIGNAL": "closed",
       "TC DE LA GORGE": "closed",
       "TC DE LA RUELLE": "closed",
       "TC DE MONTJOIE LAY": "closed",
@@ -50,11 +49,11 @@
   ],
   "name": "Domaine Skiable des Contamines",
   "timestamp": {
-    "lifts": 1795017659431,
+    "lifts": 1795018537342,
     "opening": 1795015838939,
-    "trails": 1795017659431,
+    "trails": 1795018537341,
     "weather": 0,
-    "webcams": 1795017650331
+    "webcams": 1795018531235
   },
   "trails": {
     "list": [
@@ -194,6 +193,12 @@
         "grade": "noire",
         "level": "doubleBlack",
         "name": "TOBOGAN",
+        "status": "closed"
+      },
+      {
+        "grade": "verte",
+        "level": "green",
+        "name": "COL SIGNAL",
         "status": "closed"
       },
       {
@@ -354,7 +359,7 @@
       }
     ],
     "stats": {
-      "closed": 49,
+      "closed": 50,
       "hold": 0,
       "open": 0,
       "scheduled": 0
