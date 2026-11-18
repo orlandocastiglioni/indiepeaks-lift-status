@@ -1,10 +1,10 @@
 {
-  "fetchedAt": "2026-11-17T22:00:47Z",
+  "fetchedAt": "2026-11-18T16:15:19Z",
   "href": "https://www.lescontamines.net/ouverture.html",
   "id": "domaine-skiable-des-contamines",
   "lifts": {
     "stats": {
-      "closed": 25,
+      "closed": 26,
       "hold": 0,
       "open": 0,
       "percentage": {
@@ -16,6 +16,7 @@
       "scheduled": 0
     },
     "status": {
+      "COL SIGNAL": "closed",
       "TC DE LA GORGE": "closed",
       "TC DE LA RUELLE": "closed",
       "TC DE MONTJOIE LAY": "closed",
@@ -49,11 +50,11 @@
   ],
   "name": "Domaine Skiable des Contamines",
   "timestamp": {
-    "lifts": 1794952226173,
-    "opening": 1794952033871,
-    "trails": 1794952226173,
+    "lifts": 1795017659431,
+    "opening": 1795015838939,
+    "trails": 1795017659431,
     "weather": 0,
-    "webcams": 1794952074496
+    "webcams": 1795017650331
   },
   "trails": {
     "list": [
@@ -127,12 +128,6 @@
         "grade": "noire",
         "level": "doubleBlack",
         "name": "LA JOUX",
-        "status": "closed"
-      },
-      {
-        "grade": "verte",
-        "level": "green",
-        "name": "COL SIGNAL",
         "status": "closed"
       },
       {
@@ -286,6 +281,8 @@
         "status": "closed"
       },
       {
+        "grade": "bleue",
+        "level": "blue",
         "name": "LUDOPARK",
         "status": "closed"
       },
@@ -357,7 +354,7 @@
       }
     ],
     "stats": {
-      "closed": 50,
+      "closed": 49,
       "hold": 0,
       "open": 0,
       "scheduled": 0

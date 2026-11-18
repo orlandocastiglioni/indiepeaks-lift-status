@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-11-16T07:45:39Z",
+  "fetchedAt": "2026-11-18T16:15:19Z",
   "href": "https://www.angelfireresort.com/trail-and-lift-status/",
   "id": "angel-fire",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Angel Express": "closed",
+      "Chile Express": "closed",
+      "Lift #1": "closed",
+      "Lift #3": "closed",
+      "Polar Coaster Carpet": "closed",
+      "Rakes Rider": "closed",
+      "Ski School Carpet": "closed",
+      "Southwest Flyer": "closed"
+    }
   },
   "ll": [
     -105.273903,
@@ -23,28 +32,10 @@
   ],
   "name": "Angel Fire",
   "timestamp": {
-    "lifts": 1794814259368,
-    "opening": 1794800617528,
-    "trails": 1794814246977,
-    "weather": 1794628013429,
-    "webcams": 1794628007290
-  },
-  "weather": {
-    "conditions": "Mostly Cloudy then Rain And Snow Showers",
-    "date": "2026-11-14",
-    "icon": [
-      "basecloud",
-      "icon-snowy"
-    ],
-    "notice": {
-      "href": "https://forecast.weather.gov/MapClick.php?lat=36.387402&lon=-105.273903",
-      "img": "/img/noaa-logo.svg",
-      "site": "noaa.gov",
-      "width": 72
-    },
-    "temperature": {
-      "max": 30
-    },
-    "text": "Rain and snow showers after 2am. Mostly cloudy, with a low around 30. South wind around 0 mph. Chance of precipitation is 80%. New snow accumulation of less than half an inch possible."
+    "lifts": 1795017664760,
+    "opening": 1795004724675,
+    "trails": 1795017649217,
+    "weather": 0,
+    "webcams": 0
   }
 }
