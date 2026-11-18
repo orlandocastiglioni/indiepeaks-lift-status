@@ -1,25 +1,25 @@
 {
-  "fetchedAt": "2026-11-17T22:00:47Z",
+  "fetchedAt": "2026-11-18T07:00:49Z",
   "href": "https://www.obertauern.com/winter/liftanlagen.html",
   "id": "obertauern",
   "lifts": {
     "stats": {
-      "closed": 17,
-      "hold": 5,
+      "closed": 22,
+      "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 65.3,
-        "hold": 19.2,
+        "closed": 84.6,
+        "hold": 0,
         "open": 0,
         "scheduled": 15.3
       },
       "scheduled": 4
     },
     "status": {
-      "Achenrain": "hold",
+      "Achenrain": "closed",
       "Anger": "closed",
       "Edelwei\u00df": "closed",
-      "Gamskarlift": "hold",
+      "Gamskarlift": "closed",
       "Gamsleiten 1": "closed",
       "Gamsleiten 2": "closed",
       "Gr\u00fcnwaldkopf": "scheduled",
@@ -30,9 +30,9 @@
       "Kringsalm": "closed",
       "Monte Flu": "closed",
       "Panorama": "scheduled",
-      "Pernerlift": "hold",
+      "Pernerlift": "closed",
       "Plattenkar": "closed",
-      "Schaidberg": "hold",
+      "Schaidberg": "closed",
       "Schrotteralmlift": "closed",
       "Sch\u00f6nalm": "closed",
       "Seekareck": "closed",
@@ -41,7 +41,7 @@
       "Sonnenlift 3": "closed",
       "Zehnerkar": "closed",
       "Zentral": "closed",
-      "\u00dcbungslift": "hold"
+      "\u00dcbungslift": "closed"
     }
   },
   "ll": [
@@ -50,10 +50,10 @@
   ],
   "name": "Obertauern",
   "timestamp": {
-    "lifts": 1794952227156,
-    "opening": 1794952033874,
-    "trails": 1794952224620,
+    "lifts": 1794984376756,
+    "opening": 1794961517450,
+    "trails": 1794984363572,
     "weather": 0,
-    "webcams": 1794952074497
+    "webcams": 0
   }
 }
