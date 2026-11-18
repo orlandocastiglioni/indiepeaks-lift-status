@@ -5098,7 +5098,34 @@
       }
     },
     "orcieres-merlette-1850": {
-      "reportURL": "https://www.orcieres.com/en/live/resort-openings/"
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/orcieres-merlette-1850.json",
+      "reportURL": "https://www.orcieres.com/en/live/resort-openings/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ],
+        "trailsOpen": "trails.stats.open",
+        "trailsTotal": [
+          "trails.stats.open",
+          "trails.stats.hold",
+          "trails.stats.scheduled",
+          "trails.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      },
+      "trailList": {
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
+      }
     },
     "pajarito-mountain": {
       "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/pajarito.json",
