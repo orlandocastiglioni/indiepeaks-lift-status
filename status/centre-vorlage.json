@@ -1,21 +1,23 @@
 {
-  "fetchedAt": "2026-11-17T13:30:12Z",
+  "fetchedAt": "2026-11-19T21:15:19Z",
   "href": "https://conditions.centrevorlage.ca/",
   "id": "centre-vorlage",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 1,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "North": "closed"
+    }
   },
   "ll": [
     -75.93821,
@@ -23,18 +25,114 @@
   ],
   "name": "Centre Vorlage",
   "timestamp": {
-    "lifts": 1794921561583,
-    "opening": 1794921389851,
-    "trails": 1794921561582,
+    "lifts": 1795122079332,
+    "opening": 1795119329989,
+    "trails": 1795122079332,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795122072720
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "black",
+        "name": "Pine Line",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "No Name",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Green #2",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Double Double",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Dechaine",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Blue #2",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Blue #1",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "1942",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Green #1",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Lost Horizons",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Don't Climb Max",
+        "status": "open"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Wee Nee Roast",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Mulli's Run",
+        "status": "open"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Wanton Soup",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Blue Natural",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "La Grande Boucle (Rando)",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Roller Coaster",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "D\u00e9chain\u00e9",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Montee Mollet",
+        "status": "open"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
-      "open": 0,
+      "open": 16,
       "scheduled": 0
     }
   }
