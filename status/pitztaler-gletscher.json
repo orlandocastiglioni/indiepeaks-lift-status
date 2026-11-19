@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-17T07:45:09Z",
+  "fetchedAt": "2026-11-19T07:15:57Z",
   "href": "https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus",
   "id": "pitztaler-gletscher",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 6,
       "hold": 0,
-      "open": 3,
+      "open": 6,
       "percentage": {
-        "closed": 75,
+        "closed": 50,
         "hold": 0,
-        "open": 25,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
@@ -18,16 +18,16 @@
     "status": {
       "Dorflift Mandarfen": "closed",
       "Gletscherexpress": "open",
-      "Gletscherseebahn": "closed",
+      "Gletscherseebahn": "open",
       "Grubenkopf": "closed",
       "Hirschtal": "closed",
       "Mittagskogel": "open",
-      "Mittelbergbahn": "closed",
+      "Mittelbergbahn": "open",
       "Muttenkopf": "closed",
       "Rifflseebahn": "closed",
       "Schlepplift Brunnenkogel": "open",
       "Sunna Alm Bahn": "closed",
-      "Wildspitzbahn": "closed"
+      "Wildspitzbahn": "open"
     }
   },
   "ll": [
@@ -36,11 +36,11 @@
   ],
   "name": "Pitztaler Gletscher",
   "timestamp": {
-    "lifts": 1794900679855,
-    "opening": 1794899752213,
-    "trails": 1794900679855,
+    "lifts": 1795071672916,
+    "opening": 1795068927990,
+    "trails": 1795071672916,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795071661828
   },
   "trails": {
     "list": [
@@ -72,22 +72,22 @@
       {
         "level": "green",
         "name": "25 Gletschersee",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "26 Wildspitz",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "28 Panorama",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "29 Downhill",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -107,7 +107,7 @@
       {
         "level": "blue",
         "name": "36 Mittelberg",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -196,9 +196,9 @@
       }
     ],
     "stats": {
-      "closed": 27,
+      "closed": 22,
       "hold": 0,
-      "open": 3,
+      "open": 8,
       "scheduled": 0
     }
   }
