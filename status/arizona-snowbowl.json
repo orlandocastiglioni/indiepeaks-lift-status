@@ -1,22 +1,22 @@
 {
-  "fetchedAt": "2026-11-14T03:46:40Z",
+  "fetchedAt": "2026-11-19T02:45:40Z",
   "href": "https://www.snowbowl.ski/the-mountain/weather-conditions-webcams/",
   "id": "arizona-snowbowl",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 8,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 88.8,
         "hold": 0,
-        "open": 0,
+        "open": 11.1,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Arizona Gondola": "closed",
+      "Arizona Gondola": "open",
       "Aspen": "closed",
       "Big Spruce": "closed",
       "Grand Canyon Express": "closed",
@@ -33,23 +33,23 @@
   ],
   "name": "Arizona Snowbowl",
   "timestamp": {
-    "lifts": 1794627997114,
-    "opening": 1794627805329,
-    "trails": 1794627997114,
+    "lifts": 1795055447778,
+    "opening": 1795051839198,
+    "trails": 1795055447778,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795055432421
   },
   "trails": {
     "list": [
       {
         "level": "black",
         "name": "Spur Catwalk",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Lower Bowl",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -59,7 +59,7 @@
       {
         "level": "black",
         "name": "Frontier",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -134,17 +134,17 @@
       {
         "level": "blue",
         "name": "Logjam",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Wild Turkey",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Round Up",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -348,9 +348,9 @@
       }
     ],
     "stats": {
-      "closed": 61,
+      "closed": 55,
       "hold": 0,
-      "open": 0,
+      "open": 6,
       "scheduled": 0
     }
   }
