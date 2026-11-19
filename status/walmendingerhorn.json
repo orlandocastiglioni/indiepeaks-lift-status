@@ -1,10 +1,11 @@
 {
-  "fetchedAt": "2026-11-19T07:30:03Z",
+  "fetchedAt": "2026-11-19T07:45:47Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "walmendingerhorn",
   "lifts": {
+    "reportedAt": "2026-11-19T07:30:21.000Z",
     "stats": {
-      "closed": 1,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
@@ -16,7 +17,12 @@
       "scheduled": 0
     },
     "status": {
-      "Walmendingerhornbahn": "closed"
+      "Doppelsessellift Walmendingerhorn": "closed",
+      "Jedermannlift": "closed",
+      "Mooslift": "closed",
+      "Muttelberg": "closed",
+      "Walmendingerhornbahn": "closed",
+      "Wildentallift": "closed"
     }
   },
   "ll": [
@@ -25,11 +31,11 @@
   ],
   "name": "Walmendingerhorn (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1795072582996,
+    "lifts": 1795073432009,
     "opening": 1795072562556,
-    "trails": 1795072582996,
+    "trails": 1795073432004,
     "weather": 0,
-    "webcams": 1795072562556
+    "webcams": 1795073413424
   },
   "trails": {
     "list": [
@@ -136,6 +142,7 @@
         "status": "closed"
       }
     ],
+    "reportedAt": "2026-11-19T07:30:21.000Z",
     "stats": {
       "closed": 17,
       "hold": 0,
