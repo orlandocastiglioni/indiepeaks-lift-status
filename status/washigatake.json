@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-13T09:15:27Z",
+  "fetchedAt": "2026-11-20T05:30:12Z",
   "href": "https://ski.washigatake.jp/condition/",
   "id": "washigatake",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 5,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 83.3,
         "hold": 0,
-        "open": 0,
+        "open": 16.6,
         "scheduled": 0
       },
       "scheduled": 0
@@ -20,7 +20,7 @@
       "50\uff4d\u30e0\u30fc\u30d3\u30f3\u30b0\u30d9\u30eb\u30c8": "closed",
       "\u7b2c\uff11\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed",
       "\u7b2c\uff12\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed",
-      "\u7b2c\uff12\u30da\u30a2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c\uff12\u30da\u30a2\u30ea\u30d5\u30c8": "open",
       "\u7b2c\uff13\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed"
     }
   },
@@ -30,23 +30,23 @@
   ],
   "name": "Washigatake",
   "timestamp": {
-    "lifts": 1794560419609,
-    "opening": 1794560412855,
-    "trails": 1794560419609,
+    "lifts": 1795151783689,
+    "opening": 1795151771967,
+    "trails": 1795151783689,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795151771967
   },
   "trails": {
     "list": [
       {
         "level": "green",
         "name": "\u30a2\u30a4\u30b9\u30af\u30e9\u30c3\u30b7\u30e3\u30fc\u30b3\u30fc\u30b9",
-        "status": "closed"
+        "status": "hold"
       }
     ],
     "stats": {
-      "closed": 1,
-      "hold": 0,
+      "closed": 0,
+      "hold": 1,
       "open": 0,
       "scheduled": 0
     }
