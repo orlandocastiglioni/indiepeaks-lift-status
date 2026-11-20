@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-20T16:15:27Z",
+  "fetchedAt": "2026-11-20T20:31:02Z",
   "href": "https://www.brianhead.com/weather-conditions-webcams/",
   "id": "brianhead",
   "lifts": {
     "stats": {
       "closed": 5,
-      "hold": 1,
-      "open": 2,
+      "hold": 0,
+      "open": 3,
       "percentage": {
         "closed": 62.5,
-        "hold": 12.5,
-        "open": 25,
+        "hold": 0,
+        "open": 37.5,
         "scheduled": 0
       },
       "scheduled": 0
@@ -23,7 +23,7 @@
       "Pioneer, Chair 6": "open",
       "Roulette, Chair 5": "closed",
       "The Dunes, Chair 7": "closed",
-      "Wildflower, Chair 1": "hold"
+      "Wildflower, Chair 1": "open"
     }
   },
   "ll": [
@@ -32,11 +32,11 @@
   ],
   "name": "Brian Head",
   "timestamp": {
-    "lifts": 1795190461425,
-    "opening": 1795188622623,
-    "trails": 1795190461424,
-    "weather": 1795184136572,
-    "webcams": 1795190445685
+    "lifts": 1795205763491,
+    "opening": 1795203959355,
+    "trails": 1795205763491,
+    "weather": 1795199452107,
+    "webcams": 1795205751570
   },
   "trails": {
     "list": [
@@ -414,11 +414,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Sunny",
+    "conditions": "Sunny",
     "date": "2026-11-20",
     "icon": [
-      "icon-cloud",
-      "icon-windy icon-sunny"
+      "basenone",
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=37.692753&lon=-112.848129",
@@ -429,6 +429,6 @@
     "temperature": {
       "max": 22
     },
-    "text": "Mostly sunny. High near 22, with temperatures falling to around 17 in the afternoon. Wind chill values as low as 2. West southwest wind 5 to 22 mph, with gusts as high as 37 mph. New snow accumulation of less than half an inch possible."
+    "text": "Sunny. High near 22, with temperatures falling to around 17 in the afternoon. Wind chill values as low as 10. West wind 5 to 8 mph."
   }
 }
