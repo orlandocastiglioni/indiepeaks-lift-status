@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-20T02:00:22Z",
+  "fetchedAt": "2026-11-20T14:45:30Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
@@ -33,18 +33,18 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1795139151332,
-    "opening": 1795136437086,
-    "trails": 1795139151332,
-    "weather": 1795135522704,
-    "webcams": 1795139139349
+    "lifts": 1795185020156,
+    "opening": 1795184128868,
+    "trails": 1795185020155,
+    "weather": 1795184136615,
+    "webcams": 1795185009670
   },
   "trails": {
     "list": [
       {
         "level": "green",
         "name": "All Smiles",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -384,7 +384,7 @@
       {
         "level": "green",
         "name": "All Smiles",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -523,18 +523,18 @@
       }
     ],
     "stats": {
-      "closed": 91,
+      "closed": 89,
       "hold": 0,
-      "open": 5,
+      "open": 7,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
-    "date": "2026-11-19",
+    "conditions": "Slight Chance Snow Showers",
+    "date": "2026-11-20",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basecloud",
+      "icon-snowy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=39.679993&lon=-105.89595",
@@ -543,8 +543,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 35
+      "max": 27
     },
-    "text": "Mostly cloudy. High near 35, with temperatures falling to around 30 in the afternoon. South southwest wind around 14 mph, with gusts as high as 24 mph."
+    "text": "A slight chance of snow showers between 8am and 5pm. Mostly sunny. High near 27, with temperatures falling to around 21 in the afternoon. West southwest wind 24 to 33 mph, with gusts as high as 55 mph. Chance of precipitation is 20%. Little or no snow accumulation expected."
   }
 }
