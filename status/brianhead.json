@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-17T13:45:55Z",
+  "fetchedAt": "2026-11-20T13:45:34Z",
   "href": "https://www.brianhead.com/weather-conditions-webcams/",
   "id": "brianhead",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 5,
       "hold": 0,
-      "open": 1,
+      "open": 3,
       "percentage": {
-        "closed": 87.5,
+        "closed": 62.5,
         "hold": 0,
-        "open": 12.5,
+        "open": 37.5,
         "scheduled": 0
       },
       "scheduled": 0
@@ -20,10 +20,10 @@
       "Blackfoot, Chair 3": "closed",
       "Giant Steps Express, Chair 2": "closed",
       "Navajo Express, Chair 4": "open",
-      "Pioneer, Chair 6": "closed",
+      "Pioneer, Chair 6": "open",
       "Roulette, Chair 5": "closed",
       "The Dunes, Chair 7": "closed",
-      "Wildflower, Chair 1": "closed"
+      "Wildflower, Chair 1": "open"
     }
   },
   "ll": [
@@ -32,68 +32,68 @@
   ],
   "name": "Brian Head",
   "timestamp": {
-    "lifts": 1794922235313,
-    "opening": 1794921389850,
-    "trails": 1794922235313,
-    "weather": 1794922227392,
-    "webcams": 1794922221777
+    "lifts": 1795181452191,
+    "opening": 1795179655076,
+    "trails": 1795181452191,
+    "weather": 1795176027052,
+    "webcams": 1795181436720
   },
   "trails": {
     "list": [
       {
         "level": "blue",
         "name": "Ute",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Moon Boggle",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Marmot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Shivwits",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Sugar Loaf",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Sun Dog",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Kodachrome",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Dineh",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Navajo Connector",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Apache Pitch",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Paiute",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -213,12 +213,12 @@
       {
         "level": "green",
         "name": "Navajo",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Maryland Parkway",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -248,17 +248,17 @@
       {
         "level": "blue",
         "name": "Pathfinder",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Gnarnia",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Slingshot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -313,17 +313,17 @@
       {
         "level": "green",
         "name": "First Time",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "You\u2019re Ready",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Fun Run",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -407,15 +407,15 @@
       }
     ],
     "stats": {
-      "closed": 68,
+      "closed": 49,
       "hold": 0,
-      "open": 5,
+      "open": 24,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Light Snow",
-    "date": "2026-11-17",
+    "conditions": "Snow",
+    "date": "2026-11-20",
     "icon": [
       "basecloud",
       "icon-snowy"
@@ -427,8 +427,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 27
+      "max": 19
     },
-    "text": "Snow before 5am, then snow showers and a slight chance of thunderstorms. Cloudy. Low around 27, with temperatures rising to around 32 overnight. South wind around 36 mph, with gusts as high as 51 mph. Chance of precipitation is 100%. New snow accumulation of 4 to 8 inches possible."
+    "text": "Snow before 5am. Mostly cloudy. Low around 19, with temperatures rising to around 21 overnight. Wind chill values as low as 2. Southwest wind 22 to 38 mph, with gusts as high as 54 mph. Chance of precipitation is 90%. New snow accumulation of 2 to 4 inches possible."
   }
 }
