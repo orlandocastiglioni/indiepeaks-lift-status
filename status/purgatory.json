@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-17T20:00:19Z",
+  "fetchedAt": "2026-11-20T12:45:43Z",
   "href": "https://www.purgatory.ski/mountain/weather-conditions-webcams/",
   "id": "purgatory",
   "lifts": {
     "stats": {
-      "closed": 12,
+      "closed": 10,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 100,
+        "closed": 83.3,
         "hold": 0,
-        "open": 0,
+        "open": 16.6,
         "scheduled": 0
       },
       "scheduled": 0
@@ -19,13 +19,13 @@
       "Colorado Couloir": "closed",
       "Columbine Magic Carpet #11": "closed",
       "Columbine Triple #9": "closed",
-      "Engineer Double #2": "closed",
+      "Engineer Double #2": "open",
       "Graduate Triple #7": "closed",
       "Grizzly Double #5": "closed",
       "Hermosa Park Express #3": "closed",
       "Legends Express #8": "closed",
       "Needles Triple #6": "closed",
-      "Purgatory Express #1": "closed",
+      "Purgatory Express #1": "open",
       "Ski School Magic Carpet #10": "closed",
       "Twilight Double #4": "closed"
     }
@@ -36,11 +36,11 @@
   ],
   "name": "Purgatory",
   "timestamp": {
-    "lifts": 1794944781618,
-    "opening": 1794942922149,
-    "trails": 1794944781618,
+    "lifts": 1795177849097,
+    "opening": 1795176020712,
+    "trails": 1795177849097,
     "weather": 0,
-    "webcams": 1794943853088
+    "webcams": 1795177832626
   },
   "trails": {
     "list": [
@@ -217,12 +217,12 @@
       {
         "level": "blue",
         "name": "Limbo",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Westfork",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -618,9 +618,9 @@
       }
     ],
     "stats": {
-      "closed": 114,
+      "closed": 112,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "scheduled": 0
     }
   }
