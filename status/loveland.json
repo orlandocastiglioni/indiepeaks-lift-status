@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-07T13:15:54Z",
+  "fetchedAt": "2026-11-20T02:00:22Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 7,
       "hold": 0,
-      "open": 1,
+      "open": 2,
       "percentage": {
-        "closed": 90,
+        "closed": 77.7,
         "hold": 0,
-        "open": 10,
+        "open": 22.2,
         "scheduled": 0
       },
       "scheduled": 0
@@ -21,11 +21,10 @@
       "Lift 3": "closed",
       "Lift 4": "closed",
       "Lift 6": "closed",
-      "Lift 7": "closed",
       "Lift 8": "closed",
       "Lift 9": "closed",
       "PTARMIGAN LIFT": "closed",
-      "Rainbow Magic Carpet": "closed"
+      "Rainbow Magic Carpet": "open"
     }
   },
   "ll": [
@@ -34,11 +33,11 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1794056423386,
-    "opening": 1794053734233,
-    "trails": 1794056423386,
-    "weather": 1794050163047,
-    "webcams": 1794056416073
+    "lifts": 1795139151332,
+    "opening": 1795136437086,
+    "trails": 1795139151332,
+    "weather": 1795135522704,
+    "webcams": 1795139139349
   },
   "trails": {
     "list": [
@@ -50,7 +49,7 @@
       {
         "level": "green",
         "name": "Take Off",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -380,7 +379,7 @@
       {
         "level": "green",
         "name": "Take Off",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -524,18 +523,18 @@
       }
     ],
     "stats": {
-      "closed": 93,
+      "closed": 91,
       "hold": 0,
-      "open": 3,
+      "open": 5,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Mostly Clear",
-    "date": "2026-11-07",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-11-19",
     "icon": [
-      "basenone",
-      "icon-moon"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=39.679993&lon=-105.89595",
@@ -544,8 +543,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 22
+      "max": 35
     },
-    "text": "Mostly clear, with a low around 22. West northwest wind around 8 mph."
+    "text": "Mostly cloudy. High near 35, with temperatures falling to around 30 in the afternoon. South southwest wind around 14 mph, with gusts as high as 24 mph."
   }
 }
