@@ -1,26 +1,26 @@
 {
-  "fetchedAt": "2026-11-18T22:30:57Z",
+  "fetchedAt": "2026-11-20T14:15:24Z",
   "href": "https://www.leecanyonlv.com/lifts-and-trails/",
   "id": "lee-canyon",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 5,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 100,
+        "closed": 71.4,
         "hold": 0,
-        "open": 0,
+        "open": 28.5,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Alpenglow Surface Lift": "closed",
+      "Alpenglow Surface Lift": "open",
       "Bluebird": "closed",
       "Chipmunk Express Coming Soon": "closed",
       "Ponderosa": "closed",
-      "Rabbit Peak": "closed",
+      "Rabbit Peak": "open",
       "Sherwood": "closed",
       "West Bowl Coming in December": "closed"
     }
@@ -31,23 +31,23 @@
   ],
   "name": "Lee Canyon",
   "timestamp": {
-    "lifts": 1795040149766,
-    "opening": 1795040134777,
-    "trails": 1795040149766,
+    "lifts": 1795183232655,
+    "opening": 1795179655079,
+    "trails": 1795183232655,
     "weather": 0,
-    "webcams": 1795039253730
+    "webcams": 1795183217820
   },
   "trails": {
     "list": [
       {
         "level": "green",
         "name": "Rabbit Peak",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Rabbit Return",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -240,9 +240,9 @@
       }
     ],
     "stats": {
-      "closed": 41,
+      "closed": 39,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "scheduled": 0
     }
   }
