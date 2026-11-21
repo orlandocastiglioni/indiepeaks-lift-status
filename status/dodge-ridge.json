@@ -1,21 +1,33 @@
 {
-  "fetchedAt": "2026-11-21T19:31:04Z",
+  "fetchedAt": "2026-11-21T19:45:17Z",
   "href": "https://dodgeridge.com/lift-status/",
   "id": "dodge-ridge",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
-      "open": 0,
+      "open": 5,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 54.5,
+        "hold": 0,
+        "open": 45.4,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chair 1 - Triple Nugget": "open",
+      "Chair 3 - Motherlode": "open",
+      "Chair 4 - Comstock": "closed",
+      "Chair 5 - Gold Rush": "closed",
+      "Chair 6 - Clementine": "open",
+      "Chair 7 - Prospector": "open",
+      "Chair 8 - Boulder Creek": "closed",
+      "Conveyer 1 River's Otter Run": "closed",
+      "Conveyor 2": "closed",
+      "Conveyor 3 The Highway": "open",
+      "TBar - 643": "closed"
+    }
   },
   "ll": [
     -119.9558639,
@@ -23,18 +35,364 @@
   ],
   "name": "Dodge Ridge",
   "timestamp": {
-    "lifts": 1795288551552,
-    "opening": 1795285852076,
-    "trails": 1795288551551,
+    "lifts": 1795289481223,
+    "opening": 1795289476363,
+    "trails": 1795289481492,
     "weather": 0,
-    "webcams": 1795288544227
+    "webcams": 1795289476363
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "blue",
+        "name": "Alley Way",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Amazing Grace",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Bobby's Freedom Run",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Bone Yard",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Boulder Over",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bunny Trail",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Center Bowl",
+        "status": "open"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Center Chute",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Claimjumper",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Clementine",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Comstock",
+        "status": "open"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Corkscrew",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Coyote Trail",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Creekside",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Diamond Back",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Double Shot",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Dynamite",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Ego Alley",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Elevator Shaft",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Exhibition",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Face",
+        "status": "open"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Fast Eddies",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Flume",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Gentle Ben",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Getaway",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Gold Nugget",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Gold Nugget Bowl",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Golly Gully",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Graceland",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Granite Bowl",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Grapevine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Headwall",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "High Noon",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "High Road",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Hole Shot",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hollywood Bowl",
+        "status": "open"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Jackpot",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Judy's",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Lil Nugget",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Low Road",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Gold Nugget",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Stagecoach",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Mineshaft",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Morningside",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Powder Keg",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Quicksilver",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Rocky's Road",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Ry's Run",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Saddleback",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Saving Face",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Separator",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Separator Access",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Silver Bowl",
+        "status": "open"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Six Shooter",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Six Shooter Access",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Skyline",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Sonora Glades",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Stagecoach",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Stampmill",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Straight Shot",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Sun Bowl",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Sundown",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Sunrise",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Sure Shot",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "T-Shot",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "The Nose",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Waterfall",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Westside",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Woodstock",
+        "status": "open"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 19,
       "hold": 0,
-      "open": 0,
+      "open": 50,
       "scheduled": 0
     }
   }
