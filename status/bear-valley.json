@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T16:15:45Z",
+  "fetchedAt": "2026-11-21T16:30:54Z",
   "href": "https://www.bearvalley.com/lift-and-trail-status",
   "id": "bear-valley",
   "lifts": {
@@ -33,9 +33,9 @@
   ],
   "name": "Bear Valley",
   "timestamp": {
-    "lifts": 1795276829653,
-    "opening": 1795274130619,
-    "trails": 1795276838308,
+    "lifts": 1795277762014,
+    "opening": 1795277754297,
+    "trails": 1795277770932,
     "weather": 0,
     "webcams": 1795276823002
   },
@@ -142,8 +142,33 @@
         "status": "open"
       },
       {
+        "level": "black",
+        "name": "Cornice",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Feather Duster",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Hank's",
+        "status": "open"
+      },
+      {
         "level": "blue",
         "name": "Hog Back",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Kyle's",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Lift Line - Koala",
         "status": "open"
       },
       {
@@ -170,31 +195,6 @@
         "level": "blue",
         "name": "Water Tank",
         "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Cornice",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Feather Duster",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Hank's",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Kyle's",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lift Line - Koala",
-        "status": "closed"
       },
       {
         "level": "blue",
@@ -558,9 +558,9 @@
       }
     ],
     "stats": {
-      "closed": 77,
+      "closed": 72,
       "hold": 0,
-      "open": 26,
+      "open": 31,
       "scheduled": 0
     }
   }
