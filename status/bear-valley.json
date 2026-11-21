@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T16:00:14Z",
+  "fetchedAt": "2026-11-21T16:15:45Z",
   "href": "https://www.bearvalley.com/lift-and-trail-status",
   "id": "bear-valley",
   "lifts": {
@@ -33,11 +33,11 @@
   ],
   "name": "Bear Valley",
   "timestamp": {
-    "lifts": 1795275970597,
+    "lifts": 1795276829653,
     "opening": 1795274130619,
-    "trails": 1795275979446,
+    "trails": 1795276838308,
     "weather": 0,
-    "webcams": 1795275961981
+    "webcams": 1795276823002
   },
   "trails": {
     "list": [
@@ -138,6 +138,66 @@
       },
       {
         "level": "blue",
+        "name": "Bono's Alley",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Hog Back",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Lonely Pine",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "NASTAR",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Sugar",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Tuck's Traverse",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Water Tank",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Cornice",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Feather Duster",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hank's",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Kyle's",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lift Line - Koala",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
         "name": "Bear Boogie",
         "status": "closed"
       },
@@ -214,66 +274,6 @@
       {
         "level": "blue",
         "name": "West World",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Bono's Alley",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Cornice",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Feather Duster",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Hank's",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Hog Back",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Kyle's",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Lift Line - Koala",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Lonely Pine",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "NASTAR",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Sugar",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Tuck's Traverse",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Water Tank",
         "status": "closed"
       },
       {
@@ -558,9 +558,9 @@
       }
     ],
     "stats": {
-      "closed": 84,
+      "closed": 77,
       "hold": 0,
-      "open": 19,
+      "open": 26,
       "scheduled": 0
     }
   }
