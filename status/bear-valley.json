@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T15:45:57Z",
+  "fetchedAt": "2026-11-21T16:00:14Z",
   "href": "https://www.bearvalley.com/lift-and-trail-status",
   "id": "bear-valley",
   "lifts": {
@@ -33,11 +33,11 @@
   ],
   "name": "Bear Valley",
   "timestamp": {
-    "lifts": 1795275047176,
+    "lifts": 1795275970597,
     "opening": 1795274130619,
-    "trails": 1795275055181,
+    "trails": 1795275979446,
     "weather": 0,
-    "webcams": 1795275040660
+    "webcams": 1795275961981
   },
   "trails": {
     "list": [
@@ -102,6 +102,21 @@
         "status": "open"
       },
       {
+        "level": "black",
+        "name": "Monte Wolfe",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "National",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Porridge Bowl",
+        "status": "open"
+      },
+      {
         "level": "green",
         "name": "Rodeo",
         "status": "open"
@@ -118,23 +133,8 @@
       },
       {
         "level": "black",
-        "name": "Monte Wolfe",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "National",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Porridge Bowl",
-        "status": "closed"
-      },
-      {
-        "level": "black",
         "name": "Yellow Submarine",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -558,9 +558,9 @@
       }
     ],
     "stats": {
-      "closed": 88,
+      "closed": 84,
       "hold": 0,
-      "open": 15,
+      "open": 19,
       "scheduled": 0
     }
   }
