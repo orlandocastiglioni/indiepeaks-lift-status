@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-11-17T12:45:47Z",
+  "fetchedAt": "2026-11-21T19:00:29Z",
   "href": "https://www.skithebeav.com/mountain/conditions/",
   "id": "beaver-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 50,
+        "hold": 0,
+        "open": 50,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beaver's Face Lift": "closed",
+      "Harry's Dream Lift": "open",
+      "Little Beaver Triple Lift": "open",
+      "Marge's Triple Lift": "closed",
+      "The BigEEZY conveyor": "open",
+      "The LittleEEZY conveyor": "closed"
+    }
   },
   "ll": [
     -111.544144,
@@ -23,18 +30,259 @@
   ],
   "name": "Beaver Mountain",
   "timestamp": {
-    "lifts": 1794918924627,
-    "opening": 1794918852871,
-    "trails": 1794918924627,
+    "lifts": 1795286815800,
+    "opening": 1795285852074,
+    "trails": 1795286815800,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795286762791
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "Eezy-Peezy",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Wee Beav",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Cottontail",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Goat Trail",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Harv's",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Jump Hill",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Little Beaver",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Tiny Tim",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Whooziwatzit",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Canyon View",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Harry's Hollow",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "North Face",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Robinson's Rim",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "School Hill",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "South Face",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "The Ridge",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "The Stump",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Rock Garden",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Blind Bull",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lone Pine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Long Hollow Ridge",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Redtail",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Rodeo Grounds",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Skid Road",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Sour Grapes",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Sunshine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Ted's Rock",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "TJ's Way",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Tunnel of Love",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Redtail",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Shady",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Beaver's Powder",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Black Forest",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Deadhorse",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Deadhorse Bypass",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "D-Street",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Ego Trip",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Easy Street",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Gentle Ben",
+        "status": "open"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Gentle Ben Terrain Park",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Grand Canyon",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Harry's Hollow",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Lower Deadhorse",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lue's",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Nasty",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "North Fields",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Stan's Bonanza",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Teddy's Frolic",
+        "status": "open"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 15,
       "hold": 0,
-      "open": 0,
+      "open": 33,
       "scheduled": 0
     }
   }
