@@ -1,25 +1,25 @@
 {
-  "fetchedAt": "2026-11-16T22:30:04Z",
+  "fetchedAt": "2026-11-22T01:00:40Z",
   "href": "https://www.missionridge.com/mountain-report/",
   "id": "mission-ridge",
   "lifts": {
     "stats": {
-      "closed": 7,
-      "hold": 0,
-      "open": 0,
+      "closed": 5,
+      "hold": 1,
+      "open": 1,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
+        "closed": 71.4,
+        "hold": 14.2,
+        "open": 14.2,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "100 LAPS Rope Tow": "closed",
-      "Chair 1": "closed",
+      "Chair 1": "hold",
       "Chair 2": "closed",
-      "Chair 3": "closed",
+      "Chair 3": "open",
       "Chair 4": "closed",
       "Ottoban Carpet": "closed",
       "Pika Peak Rope Tow": "closed"
@@ -31,18 +31,18 @@
   ],
   "name": "Mission Ridge",
   "timestamp": {
-    "lifts": 1794867364342,
-    "opening": 1794867347513,
-    "trails": 1794867364342,
+    "lifts": 1795308375840,
+    "opening": 1795306544912,
+    "trails": 1795308375840,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795307415511
   },
   "trails": {
     "list": [
       {
         "level": "green",
         "name": "Mimi",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "green",
@@ -77,7 +77,7 @@
       {
         "level": "blue",
         "name": "Tumwater 3",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "blue",
@@ -117,7 +117,7 @@
       {
         "level": "blue",
         "name": "Nastar",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -317,10 +317,10 @@
       }
     ],
     "stats": {
-      "closed": 57,
+      "closed": 54,
       "hold": 0,
-      "open": 0,
-      "scheduled": 0
+      "open": 1,
+      "scheduled": 2
     }
   }
 }
