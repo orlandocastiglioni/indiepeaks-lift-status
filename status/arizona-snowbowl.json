@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-21T21:30:32Z",
+  "fetchedAt": "2026-11-22T05:00:25Z",
   "href": "https://www.snowbowl.ski/the-mountain/weather-conditions-webcams/",
   "id": "arizona-snowbowl",
   "lifts": {
@@ -33,11 +33,11 @@
   ],
   "name": "Arizona Snowbowl",
   "timestamp": {
-    "lifts": 1795295739148,
-    "opening": 1795293930324,
-    "trails": 1795295739148,
+    "lifts": 1795322759993,
+    "opening": 1795322742322,
+    "trails": 1795322759993,
     "weather": 0,
-    "webcams": 1795295723228
+    "webcams": 1795322742322
   },
   "trails": {
     "list": [
@@ -147,6 +147,11 @@
         "status": "open"
       },
       {
+        "level": "green",
+        "name": "Lower Northstar",
+        "status": "open"
+      },
+      {
         "level": "blue",
         "name": "Lower Ridge",
         "status": "closed"
@@ -159,11 +164,6 @@
       {
         "level": "blue",
         "name": "Rattlesnake",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Lower Northstar",
         "status": "closed"
       },
       {
@@ -348,9 +348,9 @@
       }
     ],
     "stats": {
-      "closed": 53,
+      "closed": 52,
       "hold": 0,
-      "open": 8,
+      "open": 9,
       "scheduled": 0
     }
   }
