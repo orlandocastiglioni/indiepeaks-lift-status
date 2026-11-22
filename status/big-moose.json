@@ -1,21 +1,24 @@
 {
-  "fetchedAt": "2026-11-17T12:45:47Z",
+  "fetchedAt": "2026-11-22T17:00:27Z",
   "href": "https://skibigmoose.com/trail-report-1",
   "id": "big-moose",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Beginner Conveyor": "closed",
+      "Triple Chair": "closed"
+    }
   },
   "ll": [
     -69.696,
@@ -23,16 +26,157 @@
   ],
   "name": "Big Moose Mountain",
   "timestamp": {
-    "lifts": 1794918933832,
-    "opening": 1794918852871,
-    "trails": 1794918933831,
+    "lifts": 1795365937242,
+    "opening": 1795364147347,
+    "trails": 1795365937242,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795365929778
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "Canada Falls",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lower Fitzgerald",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Moxie",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Fitzgerald",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Beginner Hill",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Bog Brook",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Carry Brook",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Chase Rapids",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Eagle Stream",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Kennebec",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Penobscot",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Rip Gorge (Lift Line)",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Squaw Brook",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "St Francis",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Allagash",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Roach",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Wilson Falls",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Wilson Stream",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Alley Way",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Exterminator",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Leadbetter",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "St John",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Penobscot",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "East Branch",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "St Croix",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Moose River",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Piscataquis (The Cat)",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Terrain Park",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 28,
       "hold": 0,
       "open": 0,
       "scheduled": 0
