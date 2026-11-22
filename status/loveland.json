@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-20T15:15:04Z",
+  "fetchedAt": "2026-11-22T15:45:24Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
@@ -33,11 +33,11 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1795186872812,
-    "opening": 1795184128868,
-    "trails": 1795186872812,
-    "weather": 1795184136615,
-    "webcams": 1795186862008
+    "lifts": 1795361444834,
+    "opening": 1795360543589,
+    "trails": 1795361444834,
+    "weather": 1795354264617,
+    "webcams": 1795361435050
   },
   "trails": {
     "list": [
@@ -74,7 +74,7 @@
       {
         "level": "blue",
         "name": "Spillway",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -523,18 +523,18 @@
       }
     ],
     "stats": {
-      "closed": 91,
+      "closed": 90,
       "hold": 0,
-      "open": 5,
+      "open": 6,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Slight Chance Snow Showers",
-    "date": "2026-11-20",
+    "conditions": "Mostly Sunny",
+    "date": "2026-11-22",
     "icon": [
-      "basecloud",
-      "icon-snowy"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=39.679993&lon=-105.89595",
@@ -545,6 +545,6 @@
     "temperature": {
       "max": 27
     },
-    "text": "A slight chance of snow showers between 8am and 5pm. Mostly sunny. High near 27, with temperatures falling to around 21 in the afternoon. West southwest wind 24 to 33 mph, with gusts as high as 55 mph. Chance of precipitation is 20%. Little or no snow accumulation expected."
+    "text": "Mostly sunny. High near 27, with temperatures falling to around 21 in the afternoon. Wind chill values as low as -2. West southwest wind around 9 mph, with gusts as high as 18 mph."
   }
 }
