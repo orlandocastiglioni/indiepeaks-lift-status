@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-11-22T10:15:05Z",
+  "fetchedAt": "2026-11-22T10:30:49Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "nebelhorn",
   "lifts": {
-    "reportedAt": "2026-11-22T10:00:03.000Z",
+    "reportedAt": "2026-11-22T10:15:05.000Z",
     "stats": {
-      "closed": 3,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
@@ -17,9 +17,13 @@
       "scheduled": 0
     },
     "status": {
+      "Koblat": "closed",
+      "NTC-Wintererlebnispark": "closed",
       "Nebelhorn Gipfelbahn": "closed",
       "Nebelhornbahn I": "closed",
-      "Nebelhornbahn II": "closed"
+      "Nebelhornbahn II": "closed",
+      "Seealp-Lift": "closed",
+      "Sonngehren": "closed"
     }
   },
   "ll": [
@@ -28,11 +32,11 @@
   ],
   "name": "Nebelhorn (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1795341644299,
+    "lifts": 1795342531641,
     "opening": 1795338968348,
-    "trails": 1795341644299,
+    "trails": 1795342531640,
     "weather": 0,
-    "webcams": 1795341631484
+    "webcams": 1795342511540
   },
   "trails": {
     "list": [
@@ -115,7 +119,7 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-11-22T10:00:03.000Z",
+    "reportedAt": "2026-11-22T10:15:05.000Z",
     "stats": {
       "closed": 13,
       "hold": 0,
