@@ -1,20 +1,20 @@
 {
-  "fetchedAt": "2026-11-23T17:30:27Z",
+  "fetchedAt": "2026-11-23T17:45:27Z",
   "href": "https://pizol.com/en/winter/winter-sports-report/",
   "id": "pizol",
   "lifts": {
-    "reportedAt": "2026-11-23T17:01:00.000Z",
+    "reportedAt": "2026-11-23T17:25:00.000Z",
     "stats": {
-      "closed": 12,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
+        "closed": 66.6,
         "hold": 0,
         "open": 0,
-        "scheduled": 0
+        "scheduled": 33.3
       },
-      "scheduled": 0
+      "scheduled": 4
     },
     "status": {
       "A Bad Ragaz-Pardiel": "closed",
@@ -22,11 +22,11 @@
       "C \u00dcbungslift Prodboden": "closed",
       "D 6er-Sessel Schwamm": "closed",
       "E Verbindungslift Pizolh\u00fctte - Laufb\u00f6den": "closed",
-      "F SAC-Lift": "closed",
-      "G 4er-Sessel Gaffia - Pizolh\u00fctte": "closed",
-      "H 4er-Sessel Furt - Gaffia": "closed",
+      "F SAC-Lift": "scheduled",
+      "G 4er-Sessel Gaffia - Pizolh\u00fctte": "scheduled",
+      "H 4er-Sessel Furt - Gaffia": "scheduled",
       "I \u00dcbungslift Furt": "closed",
-      "J Gondelbahn Wangs - Maienberg - Furt": "closed",
+      "J Gondelbahn Wangs - Maienberg - Furt": "scheduled",
       "K F\u00f6rderb\u00e4nder Pardiel": "closed",
       "L Riderlift Riderpark": "closed"
     }
@@ -37,11 +37,11 @@
   ],
   "name": "Pizol",
   "timestamp": {
-    "lifts": 1795454171786,
+    "lifts": 1795455042084,
     "opening": 1795452317242,
-    "trails": 1795454171786,
+    "trails": 1795455042083,
     "weather": 0,
-    "webcams": 1795454159553
+    "webcams": 1795455030174
   },
   "trails": {
     "list": [
@@ -97,7 +97,7 @@
         "grade": "blau",
         "level": "blue",
         "name": "7 \u00dcbungslift Furt",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "blau",
@@ -211,7 +211,7 @@
         "grade": "rot",
         "level": "black",
         "name": "19 Soldanella",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "schwarz",
@@ -280,12 +280,12 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-11-23T17:01:00.000Z",
+    "reportedAt": "2026-11-23T17:25:00.000Z",
     "stats": {
-      "closed": 33,
+      "closed": 35,
       "hold": 0,
       "open": 0,
-      "scheduled": 7
+      "scheduled": 5
     }
   }
 }
