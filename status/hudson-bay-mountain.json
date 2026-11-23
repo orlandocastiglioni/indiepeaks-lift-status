@@ -1,21 +1,26 @@
 {
-  "fetchedAt": "2026-11-23T10:15:04Z",
+  "fetchedAt": "2026-11-23T10:30:57Z",
   "href": "https://www.hudsonbaymountain.com/snowreport",
   "id": "hudson-bay-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Carpet Lift": "closed",
+      "Panorama T-Bar": "closed",
+      "Prairie T-Bar": "closed",
+      "Skyline Chair Lift": "closed"
+    }
   },
   "ll": [
     -127.2712,
@@ -23,16 +28,26 @@
   ],
   "name": "Hudson Bay Mountain",
   "timestamp": {
-    "lifts": 1795428071732,
+    "lifts": 1795428940346,
     "opening": 1795426260465,
-    "trails": 1795428071732,
+    "trails": 1795428940346,
     "weather": 0,
-    "webcams": 1795428052292
+    "webcams": 1795428912857
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "name": "Rotary Trail To Town",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Local Terrain Park",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 2,
       "hold": 0,
       "open": 0,
       "scheduled": 0
