@@ -1,24 +1,24 @@
 {
-  "fetchedAt": "2026-11-20T15:00:52Z",
+  "fetchedAt": "2026-11-23T02:31:04Z",
   "href": "https://www.obergatlinburg.com/slope-report",
   "id": "ober-mountain",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 3,
       "hold": 0,
-      "open": 2,
+      "open": 0,
       "percentage": {
-        "closed": 33.3,
+        "closed": 100,
         "hold": 0,
-        "open": 66.6,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Mighty Carpet": "open",
+      "Mighty Carpet": "closed",
       "Ober Challenge (Quad)": "closed",
-      "Ober Easy": "open"
+      "Ober Easy": "closed"
     }
   },
   "ll": [
@@ -27,28 +27,28 @@
   ],
   "name": "Ober Mountain",
   "timestamp": {
-    "lifts": 1795185952343,
-    "opening": 1795184128869,
-    "trails": 1795185952342,
+    "lifts": 1795400135550,
+    "opening": 1795398372077,
+    "trails": 1795400135550,
     "weather": 0,
-    "webcams": 1795185941087
+    "webcams": 1795400123927
   },
   "trails": {
     "list": [
       {
         "level": "green",
         "name": "Ski School",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "green",
         "name": "Cub Way",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "green",
         "name": "Lower Castle",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -88,13 +88,13 @@
       {
         "level": "terrainPark",
         "name": "Terrain Park",
-        "status": "open"
+        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 7,
+      "closed": 11,
       "hold": 0,
-      "open": 4,
+      "open": 0,
       "scheduled": 0
     }
   }
