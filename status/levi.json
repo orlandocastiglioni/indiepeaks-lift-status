@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-20T12:30:27Z",
+  "fetchedAt": "2026-11-23T07:16:02Z",
   "href": "https://www.levi.fi/laskettelu-ja-hiihto/rinteet-ja-hissit/",
   "id": "levi",
   "lifts": {
@@ -52,11 +52,11 @@
   ],
   "name": "Levi",
   "timestamp": {
-    "lifts": 1795176917834,
-    "opening": 1795176020710,
-    "trails": 1795176917840,
+    "lifts": 1795417238029,
+    "opening": 1795415439636,
+    "trails": 1795417238025,
     "weather": 0,
-    "webcams": 1795176911516
+    "webcams": 1795417232184
   },
   "trails": {
     "list": [
@@ -128,12 +128,12 @@
       {
         "level": "doubleBlack",
         "name": "9.2 South Park",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "black",
         "name": "W.1",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "black",
@@ -163,12 +163,12 @@
       {
         "level": "blue",
         "name": "G.1",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "doubleBlack",
         "name": "G.2",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -193,7 +193,7 @@
       {
         "level": "black",
         "name": "Alpine Training Park",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "black",
@@ -213,7 +213,7 @@
       {
         "level": "blue",
         "name": "14.3",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "black",
@@ -233,12 +233,12 @@
       {
         "level": "black",
         "name": "6.1",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "black",
         "name": "6.2",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "black",
@@ -307,10 +307,10 @@
       }
     ],
     "stats": {
-      "closed": 41,
+      "closed": 35,
       "hold": 0,
       "open": 3,
-      "scheduled": 5
+      "scheduled": 11
     }
   }
 }
