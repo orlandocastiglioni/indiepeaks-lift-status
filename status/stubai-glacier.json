@@ -1,20 +1,20 @@
 {
-  "fetchedAt": "2026-11-23T06:30:32Z",
+  "fetchedAt": "2026-11-23T07:30:42Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/stubai-glacier/",
   "id": "stubai-glacier",
   "lifts": {
-    "reportedAt": "2026-11-23T06:15:52.000Z",
+    "reportedAt": "2026-11-23T07:16:19.000Z",
     "stats": {
-      "closed": 7,
+      "closed": 9,
       "hold": 0,
-      "open": 17,
+      "open": 16,
       "percentage": {
-        "closed": 28,
+        "closed": 36,
         "hold": 0,
-        "open": 68,
-        "scheduled": 4
+        "open": 64,
+        "scheduled": 0
       },
-      "scheduled": 1
+      "scheduled": 0
     },
     "status": {
       "3S Eisgratbahn I": "open",
@@ -27,10 +27,10 @@
       "Murmele": "open",
       "Pfaffengrat": "closed",
       "Rotadl": "open",
-      "Schaufeljoch": "open",
+      "Schaufeljoch": "closed",
       "Schlepplift Daunferner I": "open",
       "Schlepplift Daunferner II": "open",
-      "Schlepplift Daunscharte": "scheduled",
+      "Schlepplift Daunscharte": "closed",
       "Schlepplift Fernau": "closed",
       "Schlepplift Gaiskarferner": "open",
       "Schlepplift Windachferner": "closed",
@@ -50,11 +50,11 @@
   ],
   "name": "Stubaier Gletscher (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1795414554689,
-    "opening": 1795411816991,
-    "trails": 1795414554797,
+    "lifts": 1795418183334,
+    "opening": 1795415439640,
+    "trails": 1795418183337,
     "weather": 0,
-    "webcams": 1795414549157
+    "webcams": 1795418172668
   },
   "trails": {
     "list": [
@@ -158,7 +158,7 @@
         "grade": "red",
         "level": "black",
         "name": "9 Kogelferner",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "skiroute",
@@ -268,12 +268,12 @@
         "status": "open"
       }
     ],
-    "reportedAt": "2026-11-23T06:15:52.000Z",
+    "reportedAt": "2026-11-23T07:16:19.000Z",
     "stats": {
-      "closed": 21,
+      "closed": 22,
       "hold": 0,
       "open": 14,
-      "scheduled": 1
+      "scheduled": 0
     }
   }
 }
