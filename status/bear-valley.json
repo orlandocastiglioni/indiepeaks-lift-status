@@ -1,26 +1,26 @@
 {
-  "fetchedAt": "2026-11-21T22:00:07Z",
+  "fetchedAt": "2026-11-24T18:15:17Z",
   "href": "https://www.bearvalley.com/lift-and-trail-status",
   "id": "bear-valley",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 9,
       "hold": 0,
-      "open": 2,
+      "open": 0,
       "percentage": {
-        "closed": 77.7,
+        "closed": 100,
         "hold": 0,
-        "open": 22.2,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "CUB": "open",
+      "CUB": "closed",
       "GRIZZLY": "closed",
       "KOALA": "closed",
       "LIFT - LITTLE CUB CARPET": "closed",
-      "MOKELUMNE EXPRESS": "open",
+      "MOKELUMNE EXPRESS": "closed",
       "PANDA": "closed",
       "POLAR EXPRESS": "closed",
       "POOH CHAIR": "closed",
@@ -33,74 +33,14 @@
   ],
   "name": "Bear Valley",
   "timestamp": {
-    "lifts": 1795297588540,
-    "opening": 1795297574284,
-    "trails": 1795297596993,
+    "lifts": 1795543263817,
+    "opening": 1795541463284,
+    "trails": 1795543272519,
     "weather": 0,
-    "webcams": 1795297574284
+    "webcams": 1795543256260
   },
   "trails": {
     "list": [
-      {
-        "level": "black",
-        "name": "Australia Street",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Cliff Run",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Cub Meadow",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Ego Alley",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Enchanted Forest",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Groovy Gully",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Lift Line - Mokelumne Express",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Lodge Run",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Lower Mokelumne",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "Mikey's Meadow",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Mokelumne",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Mokelumne West",
-        "status": "open"
-      },
       {
         "level": "black",
         "name": "Monte Wolfe",
@@ -122,59 +62,79 @@
         "status": "open"
       },
       {
+        "level": "black",
+        "name": "Australia Street",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Cliff Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Cub Meadow",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Ego Alley",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Enchanted Forest",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Groovy Gully",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lift Line - Mokelumne Express",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lodge Run",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Mokelumne",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Mikey's Meadow",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Mokelumne",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Mokelumne West",
+        "status": "closed"
+      },
+      {
         "level": "blue",
         "name": "Spring Gap",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "green",
         "name": "Triangle",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
         "name": "Yellow Submarine",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Bono's Alley",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Cornice",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Feather Duster",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Hank's",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Hog Back",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Kyle's",
-        "status": "open"
-      },
-      {
-        "level": "black",
-        "name": "Lift Line - Koala",
-        "status": "open"
-      },
-      {
-        "level": "blue",
-        "name": "Lonely Pine",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -183,18 +143,58 @@
       },
       {
         "level": "blue",
+        "name": "Bono's Alley",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Cornice",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Feather Duster",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hank's",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hog Back",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Kyle's",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lift Line - Koala",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lonely Pine",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
         "name": "Sugar",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
         "name": "Tuck's Traverse",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
         "name": "Water Tank",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -558,9 +558,9 @@
       }
     ],
     "stats": {
-      "closed": 72,
+      "closed": 98,
       "hold": 0,
-      "open": 31,
+      "open": 5,
       "scheduled": 0
     }
   }
