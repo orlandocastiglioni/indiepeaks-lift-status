@@ -1,25 +1,25 @@
 {
-  "fetchedAt": "2026-10-07T01:30:34Z",
+  "fetchedAt": "2026-11-24T14:00:07Z",
   "href": "http://www.mthigh.com/site/trails-and-conditions/conditions/alpine-grooming/@@alpine-grooming",
   "id": "mthigh",
   "lifts": {
     "stats": {
-      "closed": 13,
+      "closed": 11,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
+        "closed": 84.6,
         "hold": 0,
         "open": 0,
-        "scheduled": 0
+        "scheduled": 15.3
       },
-      "scheduled": 0
+      "scheduled": 2
     },
     "status": {
-      "Blue Ridge Express": "closed",
+      "Blue Ridge Express": "scheduled",
       "Competition": "closed",
       "Conquest": "closed",
-      "Coyote": "closed",
+      "Coyote": "scheduled",
       "Discovery": "closed",
       "Easy Rider": "closed",
       "Exhibition": "closed",
@@ -37,11 +37,11 @@
   ],
   "name": "Mountain High",
   "timestamp": {
-    "lifts": 1791335757326,
-    "opening": 1791333057121,
-    "trails": 1791335749411,
-    "weather": 1791333061442,
-    "webcams": 1791335757006
+    "lifts": 1795527936706,
+    "opening": 1795524356364,
+    "trails": 1795527936706,
+    "weather": 1795526145757,
+    "webcams": 1795527929703
   },
   "trails": {
     "list": [
@@ -98,7 +98,7 @@
       {
         "level": "green",
         "name": "Cruiser",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -148,7 +148,7 @@
       {
         "level": "blue",
         "name": "Lower Chisolm",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -173,7 +173,7 @@
       {
         "level": "green",
         "name": "Sunnyside",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -193,7 +193,7 @@
       {
         "level": "blue",
         "name": "Upper Chisolm",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -297,18 +297,18 @@
       }
     ],
     "stats": {
-      "closed": 50,
+      "closed": 46,
       "hold": 0,
-      "open": 0,
+      "open": 4,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-10-06",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-11-24",
     "icon": [
-      "basenone",
-      "icon-sun"
+      "icon-cloud",
+      "icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=34.376888&lon=-117.691544",
@@ -317,8 +317,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 76
+      "max": 31
     },
-    "text": "Sunny, with a high near 76. Northeast wind around 5 mph."
+    "text": "Mostly cloudy, with a low around 31. Wind chill values as low as 27. East wind around 10 mph."
   }
 }
