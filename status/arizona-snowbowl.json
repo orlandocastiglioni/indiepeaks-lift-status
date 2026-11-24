@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-22T05:00:25Z",
+  "fetchedAt": "2026-11-24T15:15:04Z",
   "href": "https://www.snowbowl.ski/the-mountain/weather-conditions-webcams/",
   "id": "arizona-snowbowl",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 5,
       "hold": 0,
-      "open": 3,
+      "open": 4,
       "percentage": {
-        "closed": 66.6,
+        "closed": 55.5,
         "hold": 0,
-        "open": 33.3,
+        "open": 44.4,
         "scheduled": 0
       },
       "scheduled": 0
@@ -18,7 +18,7 @@
     "status": {
       "Arizona Gondola": "open",
       "Aspen": "closed",
-      "Big Spruce": "closed",
+      "Big Spruce": "open",
       "Grand Canyon Express": "open",
       "Hart Prairie": "closed",
       "Humphrey\u2019s Peak": "closed",
@@ -33,11 +33,11 @@
   ],
   "name": "Arizona Snowbowl",
   "timestamp": {
-    "lifts": 1795322759993,
-    "opening": 1795322742322,
-    "trails": 1795322759993,
+    "lifts": 1795532476742,
+    "opening": 1795532463373,
+    "trails": 1795532476742,
     "weather": 0,
-    "webcams": 1795322742322
+    "webcams": 1795532463373
   },
   "trails": {
     "list": [
@@ -227,6 +227,11 @@
         "status": "open"
       },
       {
+        "level": "green",
+        "name": "Big Spruce",
+        "status": "open"
+      },
+      {
         "level": "blue",
         "name": "Northstar",
         "status": "closed"
@@ -340,17 +345,12 @@
         "level": "green",
         "name": "Lupine Lane",
         "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Big Spruce",
-        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 52,
+      "closed": 51,
       "hold": 0,
-      "open": 9,
+      "open": 10,
       "scheduled": 0
     }
   }
