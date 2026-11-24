@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-24T16:45:12Z",
+  "fetchedAt": "2026-11-24T19:15:27Z",
   "href": "https://www.purgatory.ski/mountain/weather-conditions-webcams/",
   "id": "purgatory",
   "lifts": {
@@ -36,11 +36,11 @@
   ],
   "name": "Purgatory",
   "timestamp": {
-    "lifts": 1795537847087,
-    "opening": 1795536958950,
-    "trails": 1795537847087,
+    "lifts": 1795546848961,
+    "opening": 1795545949769,
+    "trails": 1795546848961,
     "weather": 0,
-    "webcams": 1795537829966
+    "webcams": 1795546831703
   },
   "trails": {
     "list": [
@@ -272,12 +272,12 @@
       {
         "level": "green",
         "name": "Lower Demon",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Upper Demon",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -623,9 +623,9 @@
       }
     ],
     "stats": {
-      "closed": 103,
+      "closed": 101,
       "hold": 0,
-      "open": 12,
+      "open": 14,
       "scheduled": 0
     }
   }
