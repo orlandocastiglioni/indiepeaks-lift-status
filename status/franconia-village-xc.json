@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-24T14:15:27Z",
+  "fetchedAt": "2026-11-24T14:30:57Z",
   "href": "https://www.franconiainn.com/xc-ski",
   "id": "franconia-village-xc",
   "ll": [
@@ -10,16 +10,117 @@
   "timestamp": {
     "lifts": 0,
     "opening": 1795528810871,
-    "trails": 1795528832714,
+    "trails": 1795529759458,
     "weather": 0,
-    "webcams": 1795528810871
+    "webcams": 1795529731786
   },
   "trails": {
-    "list": {},
+    "hazards": {
+      "Middle Earth": true,
+      "Ridge Run": true
+    },
+    "list": [
+      {
+        "level": "blue",
+        "name": "Old Mittersill Road",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Ham Branch Trail",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Maryellen's Way",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Von Ryans Express",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Fiji",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Flat Track Circle",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "River Run",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Inn Access",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Tucker Brook Trail",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Bear Run",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Glide Path",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Middle Earth",
+        "status": "hold"
+      },
+      {
+        "level": "green",
+        "name": "Air Field",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Timber Alley",
+        "status": "open"
+      },
+      {
+        "level": "black",
+        "name": "Ridge Run",
+        "status": "hold"
+      },
+      {
+        "level": "green",
+        "name": "Swiss Border",
+        "status": "open"
+      },
+      {
+        "level": "blue",
+        "name": "Neville's Turn",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Beaver Bend",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Lovett's Inn",
+        "status": "open"
+      }
+    ],
+    "reportedAt": "2026-02-21T17:28:22.376Z",
     "stats": {
-      "closed": 0,
-      "hold": 0,
-      "open": 0,
+      "closed": 1,
+      "hold": 2,
+      "open": 16,
       "scheduled": 0
     }
   }
