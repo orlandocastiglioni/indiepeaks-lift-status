@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-21T19:45:17Z",
+  "fetchedAt": "2026-11-24T00:15:37Z",
   "href": "https://dodgeridge.com/lift-status/",
   "id": "dodge-ridge",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 5,
       "hold": 0,
-      "open": 5,
+      "open": 6,
       "percentage": {
-        "closed": 54.5,
+        "closed": 45.4,
         "hold": 0,
-        "open": 45.4,
+        "open": 54.5,
         "scheduled": 0
       },
       "scheduled": 0
@@ -22,7 +22,7 @@
       "Chair 5 - Gold Rush": "closed",
       "Chair 6 - Clementine": "open",
       "Chair 7 - Prospector": "open",
-      "Chair 8 - Boulder Creek": "closed",
+      "Chair 8 - Boulder Creek": "open",
       "Conveyer 1 River's Otter Run": "closed",
       "Conveyor 2": "closed",
       "Conveyor 3 The Highway": "open",
@@ -35,11 +35,11 @@
   ],
   "name": "Dodge Ridge",
   "timestamp": {
-    "lifts": 1795289481223,
-    "opening": 1795289476363,
-    "trails": 1795289481492,
+    "lifts": 1795478447931,
+    "opening": 1795475758325,
+    "trails": 1795478449096,
     "weather": 0,
-    "webcams": 1795289476363
+    "webcams": 1795478441350
   },
   "trails": {
     "list": [
@@ -51,7 +51,7 @@
       {
         "level": "blue",
         "name": "Amazing Grace",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -66,7 +66,7 @@
       {
         "level": "black",
         "name": "Boulder Over",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -111,17 +111,17 @@
       {
         "level": "black",
         "name": "Creekside",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Diamond Back",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Double Shot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -186,17 +186,17 @@
       {
         "level": "blue",
         "name": "Graceland",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Granite Bowl",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Grapevine",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -206,7 +206,7 @@
       {
         "level": "black",
         "name": "High Noon",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -216,7 +216,7 @@
       {
         "level": "black",
         "name": "Hole Shot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -311,22 +311,22 @@
       {
         "level": "doubleBlack",
         "name": "Six Shooter",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Six Shooter Access",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Skyline",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
         "name": "Sonora Glades",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -341,7 +341,7 @@
       {
         "level": "black",
         "name": "Straight Shot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -351,22 +351,22 @@
       {
         "level": "black",
         "name": "Sundown",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Sunrise",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Sure Shot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "T-Shot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -390,9 +390,9 @@
       }
     ],
     "stats": {
-      "closed": 19,
+      "closed": 0,
       "hold": 0,
-      "open": 50,
+      "open": 69,
       "scheduled": 0
     }
   }
