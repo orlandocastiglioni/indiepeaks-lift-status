@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-25T12:45:09Z",
+  "fetchedAt": "2026-11-25T16:45:42Z",
   "href": "https://www.purgatory.ski/mountain/weather-conditions-webcams/",
   "id": "purgatory",
   "lifts": {
@@ -36,11 +36,11 @@
   ],
   "name": "Purgatory",
   "timestamp": {
-    "lifts": 1795609828035,
-    "opening": 1795607134428,
-    "trails": 1795609828035,
+    "lifts": 1795624249088,
+    "opening": 1795624232360,
+    "trails": 1795624249088,
     "weather": 0,
-    "webcams": 1795609825703
+    "webcams": 1795624232360
   },
   "trails": {
     "list": [
@@ -62,7 +62,7 @@
       {
         "level": "blue",
         "name": "Cherub",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -72,12 +72,12 @@
       {
         "level": "blue",
         "name": "Upper Hades",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Paradise",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -102,7 +102,7 @@
       {
         "level": "black",
         "name": "Catharsis",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -117,7 +117,7 @@
       {
         "level": "black",
         "name": "Styx",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -132,7 +132,7 @@
       {
         "level": "black",
         "name": "Lower Hades",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -623,9 +623,9 @@
       }
     ],
     "stats": {
-      "closed": 101,
+      "closed": 95,
       "hold": 0,
-      "open": 14,
+      "open": 20,
       "scheduled": 0
     }
   }
