@@ -1,17 +1,17 @@
 {
-  "fetchedAt": "2026-11-25T16:15:27Z",
+  "fetchedAt": "2026-11-25T16:30:24Z",
   "href": "https://pizol.com/en/winter/winter-sports-report/",
   "id": "pizol",
   "lifts": {
-    "reportedAt": "2026-11-25T16:00:00.000Z",
+    "reportedAt": "2026-11-25T16:09:00.000Z",
     "stats": {
-      "closed": 8,
+      "closed": 12,
       "hold": 0,
-      "open": 4,
+      "open": 0,
       "percentage": {
-        "closed": 66.6,
+        "closed": 100,
         "hold": 0,
-        "open": 33.3,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
@@ -22,11 +22,11 @@
       "C \u00dcbungslift Prodboden": "closed",
       "D 6er-Sessel Schwamm": "closed",
       "E Verbindungslift Pizolh\u00fctte - Laufb\u00f6den": "closed",
-      "F SAC-Lift": "open",
-      "G 4er-Sessel Gaffia - Pizolh\u00fctte": "open",
-      "H 4er-Sessel Furt - Gaffia": "open",
+      "F SAC-Lift": "closed",
+      "G 4er-Sessel Gaffia - Pizolh\u00fctte": "closed",
+      "H 4er-Sessel Furt - Gaffia": "closed",
       "I \u00dcbungslift Furt": "closed",
-      "J Gondelbahn Wangs - Maienberg - Furt": "open",
+      "J Gondelbahn Wangs - Maienberg - Furt": "closed",
       "K F\u00f6rderb\u00e4nder Pardiel": "closed",
       "L Riderlift Riderpark": "closed"
     }
@@ -37,11 +37,11 @@
   ],
   "name": "Pizol",
   "timestamp": {
-    "lifts": 1795622473042,
+    "lifts": 1795623343122,
     "opening": 1795619768095,
-    "trails": 1795622473042,
+    "trails": 1795623343122,
     "weather": 0,
-    "webcams": 1795622460362
+    "webcams": 1795623331188
   },
   "trails": {
     "list": [
@@ -79,13 +79,13 @@
         "grade": "blau",
         "level": "blue",
         "name": "5 SAC-Piste",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "blau",
         "level": "blue",
         "name": "6 Gaffia - Furt",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "blau",
@@ -127,7 +127,7 @@
         "grade": "blau",
         "level": "blue",
         "name": "10 Tw\u00e4rchamm-Piste",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "rot",
@@ -175,7 +175,7 @@
         "grade": "rot",
         "level": "black",
         "name": "15 Valeis",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "rot",
@@ -187,7 +187,7 @@
         "grade": "rot",
         "level": "black",
         "name": "17 Adler Piste",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "rot",
@@ -211,7 +211,7 @@
         "grade": "rot",
         "level": "black",
         "name": "19 Soldanella",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "schwarz",
@@ -280,12 +280,12 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-11-25T16:00:00.000Z",
+    "reportedAt": "2026-11-25T16:09:00.000Z",
     "stats": {
-      "closed": 34,
+      "closed": 40,
       "hold": 0,
-      "open": 4,
-      "scheduled": 2
+      "open": 0,
+      "scheduled": 0
     }
   }
 }
