@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-14T03:46:40Z",
+  "fetchedAt": "2026-11-25T05:15:42Z",
   "href": "https://www.redriverskiarea.com/winter/winter-mountain/snow-report/",
   "id": "red-river",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 4,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 100,
+        "closed": 57.1,
         "hold": 0,
-        "open": 0,
+        "open": 42.8,
         "scheduled": 0
       },
       "scheduled": 0
@@ -18,10 +18,10 @@
     "status": {
       "Copper": "closed",
       "Emerald": "closed",
-      "Gold": "closed",
-      "Little Blue": "closed",
+      "Gold": "open",
+      "Little Blue": "open",
       "Platinum": "closed",
-      "Rug Rat": "closed",
+      "Rug Rat": "open",
       "Silver": "closed"
     }
   },
@@ -31,11 +31,11 @@
   ],
   "name": "Red River",
   "timestamp": {
-    "lifts": 1794627997520,
-    "opening": 1794627805333,
-    "trails": 1794627997519,
+    "lifts": 1795582852018,
+    "opening": 1795582839148,
+    "trails": 1795582852018,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795582839148
   },
   "trails": {
     "list": [
@@ -72,7 +72,7 @@
       {
         "level": "green",
         "name": "Gold Rush",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -97,7 +97,7 @@
       {
         "level": "green",
         "name": "Little Blue",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -371,13 +371,13 @@
       {
         "level": "terrainPark",
         "name": "Pot O\u2019 Gold",
-        "status": "closed"
+        "status": "open"
       }
     ],
     "stats": {
-      "closed": 67,
+      "closed": 64,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "scheduled": 0
     }
   }
