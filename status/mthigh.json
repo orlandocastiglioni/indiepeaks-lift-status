@@ -1,25 +1,25 @@
 {
-  "fetchedAt": "2026-11-24T17:30:57Z",
+  "fetchedAt": "2026-11-25T00:30:34Z",
   "href": "http://www.mthigh.com/site/trails-and-conditions/conditions/alpine-grooming/@@alpine-grooming",
   "id": "mthigh",
   "lifts": {
     "stats": {
       "closed": 11,
       "hold": 0,
-      "open": 2,
+      "open": 0,
       "percentage": {
         "closed": 84.6,
         "hold": 0,
-        "open": 15.3,
-        "scheduled": 0
+        "open": 0,
+        "scheduled": 15.3
       },
-      "scheduled": 0
+      "scheduled": 2
     },
     "status": {
-      "Blue Ridge Express": "open",
+      "Blue Ridge Express": "scheduled",
       "Competition": "closed",
       "Conquest": "closed",
-      "Coyote": "open",
+      "Coyote": "scheduled",
       "Discovery": "closed",
       "Easy Rider": "closed",
       "Exhibition": "closed",
@@ -37,11 +37,11 @@
   ],
   "name": "Mountain High",
   "timestamp": {
-    "lifts": 1795540518485,
-    "opening": 1795536958949,
-    "trails": 1795540518485,
-    "weather": 1795534263851,
-    "webcams": 1795540512517
+    "lifts": 1795565777554,
+    "opening": 1795563928435,
+    "trails": 1795565777554,
+    "weather": 1795565777348,
+    "webcams": 1795565770424
   },
   "trails": {
     "list": [
@@ -304,7 +304,7 @@
     }
   },
   "weather": {
-    "conditions": "Partly Sunny",
+    "conditions": "Mostly Sunny",
     "date": "2026-11-24",
     "icon": [
       "icon-cloud",
@@ -317,8 +317,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 47
+      "max": 49
     },
-    "text": "Partly sunny, with a high near 47. Wind chill values as low as 30. East southeast wind 5 to 10 mph."
+    "text": "Mostly sunny, with a high near 49. East wind around 5 mph."
   }
 }
