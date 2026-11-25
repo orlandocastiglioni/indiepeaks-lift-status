@@ -1,27 +1,27 @@
 {
-  "fetchedAt": "2026-11-21T16:15:45Z",
+  "fetchedAt": "2026-11-25T22:45:55Z",
   "href": "https://www.skichinapeak.com/conditions",
   "id": "chinapeak",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 9,
       "hold": 0,
-      "open": 4,
+      "open": 0,
       "percentage": {
-        "closed": 55.5,
+        "closed": 100,
         "hold": 0,
-        "open": 44.4,
+        "open": 0,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Boulder Carpet": "open",
-      "Chair 1": "open",
-      "Chair 2": "open",
+      "Boulder Carpet": "closed",
+      "Chair 1": "closed",
+      "Chair 2": "closed",
       "Chair 4": "closed",
       "Chair 5": "closed",
-      "Chair 6": "open",
+      "Chair 6": "closed",
       "Chair 7": "closed",
       "Juniper Carpet": "closed",
       "Kids Carpet": "closed"
@@ -33,11 +33,11 @@
   ],
   "name": "China Peak",
   "timestamp": {
-    "lifts": 1795276832570,
-    "opening": 1795274130620,
-    "trails": 1795276832570,
-    "weather": 1795276829711,
-    "webcams": 1795276823003
+    "lifts": 1795645847678,
+    "opening": 1795645843197,
+    "trails": 1795645847677,
+    "weather": 1795644039126,
+    "webcams": 1795645843197
   },
   "trails": {
     "list": [
@@ -139,7 +139,7 @@
       {
         "level": "black",
         "name": "Exhibition",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -179,7 +179,7 @@
       {
         "level": "blue",
         "name": "Peterbuilt",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -313,18 +313,18 @@
       }
     ],
     "stats": {
-      "closed": 44,
+      "closed": 42,
       "hold": 0,
-      "open": 10,
+      "open": 12,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-11-21",
+    "conditions": "Sunny",
+    "date": "2026-11-25",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basenone",
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=37.228348&lon=-119.161705",
@@ -333,8 +333,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 38
+      "max": 47
     },
-    "text": "Mostly sunny. High near 38, with temperatures falling to around 28 in the afternoon. Wind chill values as low as 17. South southeast wind around 0 mph."
+    "text": "Sunny. High near 47, with temperatures falling to around 39 in the afternoon. Wind around 0 mph."
   }
 }
