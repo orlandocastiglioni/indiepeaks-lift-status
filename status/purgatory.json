@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-25T16:45:42Z",
+  "fetchedAt": "2026-11-25T17:15:25Z",
   "href": "https://www.purgatory.ski/mountain/weather-conditions-webcams/",
   "id": "purgatory",
   "lifts": {
@@ -36,11 +36,11 @@
   ],
   "name": "Purgatory",
   "timestamp": {
-    "lifts": 1795624249088,
+    "lifts": 1795626038776,
     "opening": 1795624232360,
-    "trails": 1795624249088,
+    "trails": 1795626038776,
     "weather": 0,
-    "webcams": 1795624232360
+    "webcams": 1795626023834
   },
   "trails": {
     "list": [
@@ -82,7 +82,7 @@
       {
         "level": "blue",
         "name": "Tinker\u2019s Dam",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -122,7 +122,7 @@
       {
         "level": "black",
         "name": "777",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -137,7 +137,7 @@
       {
         "level": "doubleBlack",
         "name": "666 (formerly No Mercy)",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "doubleBlack",
@@ -623,9 +623,9 @@
       }
     ],
     "stats": {
-      "closed": 95,
+      "closed": 92,
       "hold": 0,
-      "open": 20,
+      "open": 23,
       "scheduled": 0
     }
   }
