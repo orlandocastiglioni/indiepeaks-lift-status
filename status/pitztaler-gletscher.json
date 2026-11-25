@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-20T09:00:54Z",
+  "fetchedAt": "2026-11-25T07:45:09Z",
   "href": "https://www.pitztaler-gletscher.at/pistenplan-und-liftstatus",
   "id": "pitztaler-gletscher",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 7,
       "hold": 0,
-      "open": 6,
+      "open": 5,
       "percentage": {
-        "closed": 50,
+        "closed": 58.3,
         "hold": 0,
-        "open": 50,
+        "open": 41.6,
         "scheduled": 0
       },
       "scheduled": 0
@@ -22,7 +22,7 @@
       "Grubenkopf": "closed",
       "Hirschtal": "closed",
       "Mittagskogel": "open",
-      "Mittelbergbahn": "open",
+      "Mittelbergbahn": "closed",
       "Muttenkopf": "closed",
       "Rifflseebahn": "closed",
       "Schlepplift Brunnenkogel": "open",
@@ -36,11 +36,11 @@
   ],
   "name": "Pitztaler Gletscher",
   "timestamp": {
-    "lifts": 1795164325771,
-    "opening": 1795164315685,
-    "trails": 1795164325770,
+    "lifts": 1795591826826,
+    "opening": 1795590967471,
+    "trails": 1795591826826,
     "weather": 0,
-    "webcams": 1795164315685
+    "webcams": 1795591818070
   },
   "trails": {
     "list": [
@@ -97,7 +97,7 @@
       {
         "level": "blue",
         "name": "34 Hoher Rain",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -196,9 +196,9 @@
       }
     ],
     "stats": {
-      "closed": 21,
+      "closed": 20,
       "hold": 0,
-      "open": 9,
+      "open": 10,
       "scheduled": 0
     }
   }
