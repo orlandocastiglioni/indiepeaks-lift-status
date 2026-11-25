@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-24T19:45:39Z",
+  "fetchedAt": "2026-11-25T21:30:44Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -30,11 +30,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1795548679065,
-    "opening": 1795545949769,
-    "trails": 1795548679075,
-    "weather": 1795542360502,
-    "webcams": 1795548673615
+    "lifts": 1795641387773,
+    "opening": 1795641370271,
+    "trails": 1795641387783,
+    "weather": 1795637743509,
+    "webcams": 1795641370271
   },
   "trails": {
     "list": [
@@ -476,7 +476,7 @@
       {
         "level": "doubleBlack",
         "name": "Casablanca",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "level": "doubleBlack",
@@ -580,30 +580,30 @@
       },
       {
         "name": "The Judge-Lower",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "name": "The Judge-Upper",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "name": "Black Cat",
-        "status": "scheduled"
+        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
-      "scheduled": 111
+      "scheduled": 107
     }
   },
   "weather": {
-    "conditions": "Slight Chance Light Snow",
-    "date": "2026-11-24",
+    "conditions": "Sunny",
+    "date": "2026-11-25",
     "icon": [
-      "basecloud",
-      "icon-snowy"
+      "basenone",
+      "icon-sun"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -612,8 +612,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 30
+      "max": 36
     },
-    "text": "A slight chance of snow before 5pm. Sunny, with a high near 30. Northwest wind 10 to 15 mph, with gusts as high as 30 mph. Chance of precipitation is 20%. New snow accumulation of less than half an inch possible."
+    "text": "Sunny, with a high near 36. Northwest wind around 0 mph."
   }
 }
