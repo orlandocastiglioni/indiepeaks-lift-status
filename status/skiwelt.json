@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-17T22:30:10Z",
+  "fetchedAt": "2026-11-25T12:45:09Z",
   "href": "https://www.skiwelt.at/en/lift-status-winter.html",
   "id": "skiwelt",
   "lifts": {
@@ -107,24 +107,14 @@
   ],
   "name": "Skiwelt",
   "timestamp": {
-    "lifts": 1794954424221,
-    "opening": 1794954252618,
-    "trails": 1794954424211,
+    "lifts": 1795609827180,
+    "opening": 1795607134429,
+    "trails": 1795609827145,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795609825704
   },
   "trails": {
     "list": [
-      {
-        "level": "blue",
-        "name": "Fun Park - Jump-Line",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Fun Park - Jib-Line",
-        "status": "closed"
-      },
       {
         "level": "black",
         "name": "Kaslach Abfahrt",
@@ -529,10 +519,15 @@
         "level": "blue",
         "name": "K\u00f6glbahn",
         "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Almbahn",
+        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 83,
+      "closed": 82,
       "hold": 0,
       "open": 0,
       "scheduled": 0
