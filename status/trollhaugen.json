@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-18T16:45:57Z",
+  "fetchedAt": "2026-11-25T15:16:00Z",
   "href": "https://trollhaugen.com/snow-report/",
   "id": "trollhaugen",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 6,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 100,
+        "closed": 75,
         "hold": 0,
-        "open": 0,
+        "open": 25,
         "scheduled": 0
       },
       "scheduled": 0
@@ -18,11 +18,11 @@
     "status": {
       "Chair 1": "closed",
       "Chair 2": "closed",
-      "Chair 3": "closed",
+      "Chair 3": "open",
       "Chair 4": "closed",
       "Mickebakken Rope": "closed",
       "Minibakken Rope": "closed",
-      "Tomtebakken Rope": "closed",
+      "Tomtebakken Rope": "open",
       "Valhalla Rope": "closed"
     }
   },
@@ -32,11 +32,11 @@
   ],
   "name": "Trollhaugen",
   "timestamp": {
-    "lifts": 1795019617518,
-    "opening": 1795019441910,
-    "trails": 1795019617517,
+    "lifts": 1795618995898,
+    "opening": 1795618816961,
+    "trails": 1795618995898,
     "weather": 0,
-    "webcams": 1795019441911
+    "webcams": 1795618816961
   },
   "trails": {
     "list": [
@@ -73,7 +73,7 @@
       {
         "level": "blue",
         "name": "Nissebakken",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -178,7 +178,7 @@
       {
         "level": "terrainPark",
         "name": "Tomtebakken",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "terrainPark",
@@ -197,9 +197,9 @@
       }
     ],
     "stats": {
-      "closed": 31,
+      "closed": 29,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "scheduled": 0
     }
   }
