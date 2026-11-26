@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-25T10:15:19Z",
+  "fetchedAt": "2026-11-26T12:15:42Z",
   "href": "https://www.sipapu.ski/snow-report/",
   "id": "sipapu",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 4,
       "hold": 0,
-      "open": 1,
+      "open": 2,
       "percentage": {
-        "closed": 83.3,
+        "closed": 66.6,
         "hold": 0,
-        "open": 16.6,
+        "open": 33.3,
         "scheduled": 0
       },
       "scheduled": 0
@@ -20,7 +20,7 @@
       "Lift 2": "open",
       "Lift 3": "closed",
       "Lift 4": "closed",
-      "Lift 5": "closed",
+      "Lift 5": "open",
       "Ski School Magic Carpet": "closed"
     }
   },
@@ -30,11 +30,11 @@
   ],
   "name": "Sipapu Ski and Summer Resort",
   "timestamp": {
-    "lifts": 1795600854229,
-    "opening": 1795599036069,
-    "trails": 1795600854229,
+    "lifts": 1795694436927,
+    "opening": 1795691768330,
+    "trails": 1795694436927,
     "weather": 0,
-    "webcams": 1795600838064
+    "webcams": 1795694421075
   },
   "trails": {
     "list": [
@@ -169,7 +169,7 @@
         "status": "closed"
       },
       {
-        "level": "green",
+        "level": "blue",
         "name": "Thumper",
         "status": "open"
       },
