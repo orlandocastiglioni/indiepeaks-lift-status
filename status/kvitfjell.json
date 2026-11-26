@@ -1,27 +1,27 @@
 {
-  "fetchedAt": "2026-11-26T13:30:42Z",
+  "fetchedAt": "2026-11-26T15:00:12Z",
   "href": "https://www.alpinco.com/en/kvitfjell/snow-report",
   "id": "kvitfjell",
   "lifts": {
     "reportedAt": "2026-11-26T13:01:30.000Z",
     "stats": {
-      "closed": 14,
+      "closed": 10,
       "hold": 0,
-      "open": 0,
+      "open": 4,
       "percentage": {
-        "closed": 100,
+        "closed": 71.4,
         "hold": 0,
-        "open": 0,
+        "open": 28.5,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "A. Olympic Express": "closed",
-      "B. Kvitfjell Express": "closed",
-      "C. Vestsiden Express": "closed",
-      "D. Hotellheisen": "closed",
-      "E. Familieheisen": "closed",
+      "B. Kvitfjell Express": "open",
+      "C. Vestsiden Express": "open",
+      "D. Hotellheisen": "open",
+      "E. Familieheisen": "open",
       "F. Tunnelheisen \u00f8st": "closed",
       "G. Barne-/skiskoleheisen": "closed",
       "H. Fjellheisen": "closed",
@@ -39,11 +39,11 @@
   ],
   "name": "Kvitfjell",
   "timestamp": {
-    "lifts": 1795698944707,
-    "opening": 1795696233362,
-    "trails": 1795698944708,
+    "lifts": 1795704320426,
+    "opening": 1795703451651,
+    "trails": 1795704320428,
     "weather": 0,
-    "webcams": 1795698936066
+    "webcams": 1795704312439
   },
   "trails": {
     "list": [
@@ -65,7 +65,7 @@
       {
         "level": "black",
         "name": "3. Karirenna",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -75,7 +75,7 @@
       {
         "level": "green",
         "name": "5. Jumbo",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -104,12 +104,12 @@
       {
         "level": "blue",
         "name": "12. Familiebakken",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "14. Treningsbakken",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -129,7 +129,7 @@
       {
         "level": "black",
         "name": "21. Vestsidel\u00f8ypa",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -227,9 +227,9 @@
     ],
     "reportedAt": "2026-11-26T13:01:30.000Z",
     "stats": {
-      "closed": 36,
+      "closed": 31,
       "hold": 0,
-      "open": 0,
+      "open": 5,
       "scheduled": 0
     }
   }
