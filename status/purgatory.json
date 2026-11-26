@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-26T14:45:02Z",
+  "fetchedAt": "2026-11-26T19:01:00Z",
   "href": "https://www.purgatory.ski/mountain/weather-conditions-webcams/",
   "id": "purgatory",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 8,
       "hold": 0,
-      "open": 3,
+      "open": 4,
       "percentage": {
-        "closed": 75,
+        "closed": 66.6,
         "hold": 0,
-        "open": 25,
+        "open": 33.3,
         "scheduled": 0
       },
       "scheduled": 0
@@ -22,7 +22,7 @@
       "Engineer Double #2": "open",
       "Graduate Triple #7": "open",
       "Grizzly Double #5": "closed",
-      "Hermosa Park Express #3": "closed",
+      "Hermosa Park Express #3": "open",
       "Legends Express #8": "closed",
       "Needles Triple #6": "closed",
       "Purgatory Express #1": "open",
@@ -36,11 +36,11 @@
   ],
   "name": "Purgatory",
   "timestamp": {
-    "lifts": 1795703468260,
-    "opening": 1795703451654,
-    "trails": 1795703468260,
+    "lifts": 1795718774372,
+    "opening": 1795716945351,
+    "trails": 1795718774372,
     "weather": 0,
-    "webcams": 1795703451654
+    "webcams": 1795718756642
   },
   "trails": {
     "list": [
@@ -122,7 +122,7 @@
       {
         "level": "black",
         "name": "777",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "black",
@@ -362,7 +362,7 @@
       {
         "level": "blue",
         "name": "Upper Bank",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -372,67 +372,67 @@
       {
         "level": "green",
         "name": "Lower BD&M",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Hermosa Parkway",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Nirvana",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Silvertip",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Airmail",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Boogie",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Harris Hill Run",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Peace",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
-        "name": "Harris Park (Glades)",
-        "status": "closed"
+        "name": "Harris Park (glades)",
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Salvation",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Where",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Zinfandel",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Cool It",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -447,7 +447,7 @@
       {
         "level": "blue",
         "name": "Path to Peace",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -623,9 +623,9 @@
       }
     ],
     "stats": {
-      "closed": 95,
+      "closed": 81,
       "hold": 0,
-      "open": 20,
+      "open": 34,
       "scheduled": 0
     }
   }
