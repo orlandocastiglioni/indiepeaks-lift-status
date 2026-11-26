@@ -1,27 +1,27 @@
 {
-  "fetchedAt": "2026-11-26T09:15:27Z",
+  "fetchedAt": "2026-11-26T09:30:22Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/stubai-glacier/",
   "id": "stubai-glacier",
   "lifts": {
-    "reportedAt": "2026-11-26T08:53:50.000Z",
+    "reportedAt": "2026-11-26T09:13:12.000Z",
     "stats": {
-      "closed": 9,
+      "closed": 10,
       "hold": 0,
-      "open": 14,
+      "open": 15,
       "percentage": {
-        "closed": 36,
+        "closed": 40,
         "hold": 0,
-        "open": 56,
-        "scheduled": 8
+        "open": 60,
+        "scheduled": 0
       },
-      "scheduled": 2
+      "scheduled": 0
     },
     "status": {
       "3S Eisgratbahn I": "open",
       "3S Eisgratbahn II": "open",
       "Daunjoch": "closed",
       "Eisjoch": "open",
-      "Fernau": "scheduled",
+      "Fernau": "open",
       "Gamsgarten I": "open",
       "Gamsgarten II": "open",
       "Murmele": "open",
@@ -37,7 +37,7 @@
       "Schneekarussell": "closed",
       "Snowpark-Lift": "closed",
       "Tellerlift Kitzlift": "open",
-      "Wildspitz": "scheduled",
+      "Wildspitz": "closed",
       "Zauberteppich 1": "open",
       "Zauberteppich 3, 4": "closed",
       "Zauberteppich Eisgrat": "open",
@@ -50,11 +50,11 @@
   ],
   "name": "Stubaier Gletscher (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1795683668586,
+    "lifts": 1795684540052,
     "opening": 1795683659070,
-    "trails": 1795683669039,
+    "trails": 1795684540714,
     "weather": 0,
-    "webcams": 1795683659070
+    "webcams": 1795684530324
   },
   "trails": {
     "list": [
@@ -116,7 +116,7 @@
         "grade": "red",
         "level": "black",
         "name": "10 Windachferner Nord",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "blue",
@@ -235,7 +235,7 @@
         "grade": "red",
         "level": "black",
         "name": "11 Windachferner S\u00fcd",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "blue",
@@ -268,11 +268,11 @@
         "status": "open"
       }
     ],
-    "reportedAt": "2026-11-26T08:53:50.000Z",
+    "reportedAt": "2026-11-26T09:13:12.000Z",
     "stats": {
-      "closed": 22,
+      "closed": 24,
       "hold": 0,
-      "open": 14,
+      "open": 12,
       "scheduled": 0
     }
   }
