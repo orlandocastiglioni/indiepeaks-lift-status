@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-25T21:30:44Z",
+  "fetchedAt": "2026-11-26T20:45:32Z",
   "href": "https://www.saddlebackmaine.com/mountain-report/",
   "id": "saddleback",
   "lifts": {
@@ -30,11 +30,11 @@
   ],
   "name": "Saddleback",
   "timestamp": {
-    "lifts": 1795641387773,
-    "opening": 1795641370271,
-    "trails": 1795641387783,
-    "weather": 1795637743509,
-    "webcams": 1795641370271
+    "lifts": 1795725058471,
+    "opening": 1795725043194,
+    "trails": 1795725058482,
+    "weather": 1795724138711,
+    "webcams": 1795725043194
   },
   "trails": {
     "list": [
@@ -476,7 +476,7 @@
       {
         "level": "doubleBlack",
         "name": "Casablanca",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "doubleBlack",
@@ -592,18 +592,18 @@
       }
     ],
     "stats": {
-      "closed": 4,
+      "closed": 3,
       "hold": 0,
       "open": 0,
-      "scheduled": 107
+      "scheduled": 108
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-11-25",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-11-26",
     "icon": [
-      "basenone",
-      "icon-sun"
+      "icon-cloud",
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.983387&lon=-70.632965",
@@ -612,8 +612,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 36
+      "max": 37
     },
-    "text": "Sunny, with a high near 36. Northwest wind around 0 mph."
+    "text": "Mostly cloudy, with a high near 37. East wind around 5 mph."
   }
 }
