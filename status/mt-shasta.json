@@ -1,16 +1,31 @@
 {
-  "fetchedAt": "2026-11-27T06:45:37Z",
+  "fetchedAt": "2026-11-27T07:00:19Z",
   "href": "https://www.skipark.com/winter/conditions",
   "id": "mt-shasta",
+  "lifts": {
+    "stats": {
+      "closed": 0,
+      "hold": 0,
+      "open": 0,
+      "percentage": {
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
+      },
+      "scheduled": 0
+    },
+    "status": {}
+  },
   "ll": [
     -122.203502,
     41.321106
   ],
   "name": "Mt. Shasta Ski Park",
   "timestamp": {
-    "lifts": 0,
-    "opening": 1795761399457,
-    "trails": 1795761418733,
+    "lifts": 1795762181902,
+    "opening": 1795762165155,
+    "trails": 1795762182696,
     "weather": 0,
     "webcams": 0
   },

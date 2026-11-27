@@ -1,17 +1,17 @@
 {
-  "fetchedAt": "2026-11-25T14:30:34Z",
+  "fetchedAt": "2026-11-27T07:00:19Z",
   "href": "https://www.alpinco.com/en/hafjell/snow-report",
   "id": "hafjell",
   "lifts": {
     "reportedAt": "2026-11-03T10:38:38.000Z",
     "stats": {
-      "closed": 18,
+      "closed": 15,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 100,
+        "closed": 83.3,
         "hold": 0,
-        "open": 0,
+        "open": 16.6,
         "scheduled": 0
       },
       "scheduled": 0
@@ -21,20 +21,20 @@
       "B. Familieheisen": "closed",
       "C. Hafjellheis 1": "closed",
       "D. Kjusheisen": "closed",
-      "E. Hafjellheis 2": "closed",
+      "E. Hafjellheis 2": "open",
       "F. Skogheisen": "closed",
       "G. Fjellheisen": "closed",
       "H. Vidsynexpressen": "closed",
       "I. Gaiaheisen": "closed",
       "K. Lunnstadheisen": "closed",
-      "L. Gondolen": "closed",
+      "L. Gondolen": "open",
       "M. Moseterheisen": "closed",
       "N. Backyardheisen": "closed",
       "O. Hafjell 360": "closed",
       "P. Crossheisen": "closed",
       "X. B\u00e5ndheis Frontyard A (Favn)": "closed",
       "Y. B\u00e5ndheis Skiskole": "closed",
-      "Z. B\u00e5ndheis Frontyard B (Cross)": "closed"
+      "Z. B\u00e5ndheis Frontyard B (Cross)": "open"
     }
   },
   "ll": [
@@ -43,11 +43,11 @@
   ],
   "name": "Hafjell",
   "timestamp": {
-    "lifts": 1795616170442,
-    "opening": 1795615251859,
-    "trails": 1795616170443,
+    "lifts": 1795762175248,
+    "opening": 1795762165154,
+    "trails": 1795762175240,
     "weather": 0,
-    "webcams": 1795616162463
+    "webcams": 0
   },
   "trails": {
     "list": [
@@ -59,12 +59,12 @@
       {
         "level": "green",
         "name": "2. Fjell\u00f8ypa",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "3. Seterl\u00f8ypa",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -139,7 +139,7 @@
       {
         "level": "blue",
         "name": "20. Snarvegen",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -394,9 +394,9 @@
     ],
     "reportedAt": "2026-11-03T10:38:38.000Z",
     "stats": {
-      "closed": 68,
+      "closed": 65,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "scheduled": 0
     }
   }
