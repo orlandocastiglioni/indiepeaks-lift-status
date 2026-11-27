@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-24T13:45:24Z",
+  "fetchedAt": "2026-11-27T05:30:44Z",
   "href": "https://www.ruka.fi/en/skiresort/slopes",
   "id": "ruka-ski-resort",
   "lifts": {
     "stats": {
-      "closed": 18,
+      "closed": 16,
       "hold": 0,
-      "open": 4,
+      "open": 6,
       "percentage": {
-        "closed": 81.8,
+        "closed": 72.7,
         "hold": 0,
-        "open": 18.1,
+        "open": 27.2,
         "scheduled": 0
       },
       "scheduled": 0
@@ -34,9 +34,9 @@
       "Saarua III (G)": "open",
       "Saarua T-bar (I)": "closed",
       "Talvij\u00e4rvi (C)": "closed",
-      "Village Express (A)": "closed",
+      "Village Express (A)": "open",
       "Village-2-Valley Gondola (B)": "open",
-      "Vuosseli Express (N)": "closed",
+      "Vuosseli Express (N)": "open",
       "Vuosseli T-bar (M)": "closed"
     }
   },
@@ -46,11 +46,11 @@
   ],
   "name": "Ruka Ski Resort",
   "timestamp": {
-    "lifts": 1795527024547,
-    "opening": 1795524356366,
-    "trails": 1795527025300,
+    "lifts": 1795756548226,
+    "opening": 1795755647341,
+    "trails": 1795756547264,
     "weather": 0,
-    "webcams": 1795527018967
+    "webcams": 1795756539983
   },
   "trails": {
     "list": [
@@ -58,13 +58,13 @@
         "grade": "Intermediate",
         "level": "black",
         "name": "1 Front Slope no. 1",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "Intermediate",
         "level": "black",
         "name": "2 Front slope no. 2",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "Challenging",
@@ -302,9 +302,9 @@
       }
     ],
     "stats": {
-      "closed": 34,
+      "closed": 32,
       "hold": 0,
-      "open": 7,
+      "open": 9,
       "scheduled": 0
     }
   }
