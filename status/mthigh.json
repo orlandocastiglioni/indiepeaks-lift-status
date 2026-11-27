@@ -1,19 +1,19 @@
 {
-  "fetchedAt": "2026-11-27T00:30:24Z",
+  "fetchedAt": "2026-11-27T14:00:49Z",
   "href": "http://www.mthigh.com/site/trails-and-conditions/conditions/alpine-grooming/@@alpine-grooming",
   "id": "mthigh",
   "lifts": {
     "stats": {
-      "closed": 10,
+      "closed": 9,
       "hold": 1,
       "open": 0,
       "percentage": {
-        "closed": 71.4,
+        "closed": 64.2,
         "hold": 7.1,
         "open": 0,
-        "scheduled": 21.4
+        "scheduled": 28.5
       },
-      "scheduled": 3
+      "scheduled": 4
     },
     "status": {
       "Blue Ridge Express": "scheduled",
@@ -29,7 +29,7 @@
       "Moving Carpet West Short": "closed",
       "On Standby": "scheduled",
       "Roadrunner": "hold",
-      "Snowflake": "closed"
+      "Snowflake": "scheduled"
     }
   },
   "ll": [
@@ -38,11 +38,11 @@
   ],
   "name": "Mountain High",
   "timestamp": {
-    "lifts": 1795738572433,
-    "opening": 1795737635064,
-    "trails": 1795738572433,
-    "weather": 1795737640720,
-    "webcams": 1795738565736
+    "lifts": 1795787128290,
+    "opening": 1795787123735,
+    "trails": 1795787128289,
+    "weather": 1795786230684,
+    "webcams": 1795787123735
   },
   "trails": {
     "list": [
@@ -114,7 +114,7 @@
       {
         "level": "green",
         "name": "Easy Street",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -298,18 +298,18 @@
       }
     ],
     "stats": {
-      "closed": 45,
+      "closed": 44,
       "hold": 0,
-      "open": 5,
+      "open": 6,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-11-26",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-11-27",
     "icon": [
       "icon-cloud",
-      "icon-sunny"
+      "icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=34.376888&lon=-117.691544",
@@ -318,8 +318,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 60
+      "max": 48
     },
-    "text": "Mostly sunny, with a high near 60. Northeast wind around 10 mph."
+    "text": "Mostly cloudy, with a low around 48. East northeast wind around 5 mph."
   }
 }
