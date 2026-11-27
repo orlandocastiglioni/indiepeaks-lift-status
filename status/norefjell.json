@@ -1,29 +1,29 @@
 {
-  "fetchedAt": "2026-11-27T11:30:27Z",
+  "fetchedAt": "2026-11-27T20:00:12Z",
   "href": "https://www.norefjell.com/skibakker",
   "id": "norefjell",
   "lifts": {
     "reportedAt": "2026-11-27T11:03:38.000Z",
     "stats": {
-      "closed": 15,
+      "closed": 11,
       "hold": 0,
-      "open": 0,
+      "open": 4,
       "percentage": {
-        "closed": 100,
+        "closed": 73.3,
         "hold": 0,
-        "open": 0,
+        "open": 26.6,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "B\u00f8seterheisen (J)": "closed",
+      "B\u00f8seterheisen (J)": "open",
       "Fjellekspressen (G)": "closed",
       "Fjellheisen (E)": "closed",
-      "Hotellheisen (M)": "closed",
+      "Hotellheisen (M)": "open",
       "Lillebelte (I2)": "closed",
-      "Myggen (N)": "closed",
-      "Nedre B\u00f8seterheis (L)": "closed",
+      "Myggen (N)": "open",
+      "Nedre B\u00f8seterheis (L)": "open",
       "Norefjellheisen (A)": "closed",
       "Olaheisen (K)": "closed",
       "Ravn\u00e5sheisen (H)": "closed",
@@ -40,11 +40,11 @@
   ],
   "name": "Norefjell Ski & Spa",
   "timestamp": {
-    "lifts": 1795778150742,
-    "opening": 1795778143737,
-    "trails": 1795778150743,
+    "lifts": 1795808716132,
+    "opening": 1795806934691,
+    "trails": 1795808716133,
     "weather": 0,
-    "webcams": 1795777242780
+    "webcams": 1795808708193
   },
   "trails": {
     "list": [
@@ -186,24 +186,24 @@
       {
         "level": "black",
         "name": "28. B\u00f8seterbakken",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "29. Nedre B\u00f8seter",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "30. Hotellbakken",
-        "status": "closed"
+        "status": "open"
       }
     ],
     "reportedAt": "2026-11-27T11:03:38.000Z",
     "stats": {
-      "closed": 30,
+      "closed": 27,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "scheduled": 0
     }
   }
