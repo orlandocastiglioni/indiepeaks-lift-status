@@ -1,25 +1,25 @@
 {
-  "fetchedAt": "2026-11-27T14:00:49Z",
+  "fetchedAt": "2026-11-27T17:30:42Z",
   "href": "http://www.mthigh.com/site/trails-and-conditions/conditions/alpine-grooming/@@alpine-grooming",
   "id": "mthigh",
   "lifts": {
     "stats": {
       "closed": 9,
       "hold": 1,
-      "open": 0,
+      "open": 3,
       "percentage": {
         "closed": 64.2,
         "hold": 7.1,
-        "open": 0,
-        "scheduled": 28.5
+        "open": 21.4,
+        "scheduled": 7.1
       },
-      "scheduled": 4
+      "scheduled": 1
     },
     "status": {
-      "Blue Ridge Express": "scheduled",
+      "Blue Ridge Express": "open",
       "Competition": "closed",
       "Conquest": "closed",
-      "Coyote": "scheduled",
+      "Coyote": "open",
       "Discovery": "closed",
       "Easy Rider": "closed",
       "Exhibition": "closed",
@@ -29,7 +29,7 @@
       "Moving Carpet West Short": "closed",
       "On Standby": "scheduled",
       "Roadrunner": "hold",
-      "Snowflake": "scheduled"
+      "Snowflake": "open"
     }
   },
   "ll": [
@@ -38,11 +38,11 @@
   ],
   "name": "Mountain High",
   "timestamp": {
-    "lifts": 1795787128290,
-    "opening": 1795787123735,
-    "trails": 1795787128289,
-    "weather": 1795786230684,
-    "webcams": 1795787123735
+    "lifts": 1795799752429,
+    "opening": 1795798825200,
+    "trails": 1795799752429,
+    "weather": 1795794367955,
+    "webcams": 1795799746174
   },
   "trails": {
     "list": [
@@ -305,11 +305,11 @@
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
+    "conditions": "Partly Sunny",
     "date": "2026-11-27",
     "icon": [
       "icon-cloud",
-      "icon-night"
+      "icon-sunny"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=34.376888&lon=-117.691544",
@@ -318,8 +318,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 48
+      "max": 66
     },
-    "text": "Mostly cloudy, with a low around 48. East northeast wind around 5 mph."
+    "text": "Partly sunny, with a high near 66. West wind 5 to 10 mph."
   }
 }
