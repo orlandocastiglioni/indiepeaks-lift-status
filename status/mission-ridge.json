@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-27T15:15:24Z",
+  "fetchedAt": "2026-11-27T15:30:14Z",
   "href": "https://www.missionridge.com/mountain-report/",
   "id": "mission-ridge",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 4,
       "hold": 0,
-      "open": 2,
+      "open": 3,
       "percentage": {
-        "closed": 71.4,
+        "closed": 57.1,
         "hold": 0,
-        "open": 28.5,
+        "open": 42.8,
         "scheduled": 0
       },
       "scheduled": 0
@@ -22,7 +22,7 @@
       "Chair 3": "closed",
       "Chair 4": "closed",
       "Ottoban Carpet": "closed",
-      "Pika Peak Rope Tow": "closed"
+      "Pika Peak Rope Tow": "open"
     }
   },
   "ll": [
@@ -31,11 +31,11 @@
   ],
   "name": "Mission Ridge",
   "timestamp": {
-    "lifts": 1795791632344,
+    "lifts": 1795792545218,
     "opening": 1795790747239,
-    "trails": 1795791632344,
+    "trails": 1795792545218,
     "weather": 0,
-    "webcams": 1795791618246
+    "webcams": 1795792528973
   },
   "trails": {
     "list": [
@@ -52,7 +52,7 @@
       {
         "level": "green",
         "name": "Pika Peak",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "green",
@@ -317,10 +317,10 @@
       }
     ],
     "stats": {
-      "closed": 52,
+      "closed": 51,
       "hold": 0,
       "open": 1,
-      "scheduled": 4
+      "scheduled": 5
     }
   }
 }
