@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-11-27T05:15:31Z",
+  "fetchedAt": "2026-11-27T17:15:37Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 6,
       "hold": 0,
-      "open": 3,
+      "open": 4,
       "percentage": {
-        "closed": 70,
+        "closed": 60,
         "hold": 0,
-        "open": 30,
+        "open": 40,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Chet's Dream": "open",
-      "Lift 2": "closed",
+      "Lift 2": "open",
       "Lift 3": "closed",
       "Lift 4": "closed",
       "Lift 6": "closed",
@@ -34,11 +34,11 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1795755848890,
-    "opening": 1795755647339,
-    "trails": 1795755848890,
-    "weather": 1795755678776,
-    "webcams": 1795755678286
+    "lifts": 1795798835964,
+    "opening": 1795798825197,
+    "trails": 1795798835963,
+    "weather": 1795794367932,
+    "webcams": 1795798825198
   },
   "trails": {
     "list": [
@@ -150,12 +150,12 @@
       {
         "level": "green",
         "name": "Tango Road",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Turtle Creek",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -514,18 +514,18 @@
       }
     ],
     "stats": {
-      "closed": 89,
+      "closed": 87,
       "hold": 0,
-      "open": 5,
+      "open": 7,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Partly Cloudy",
+    "conditions": "Mostly Sunny then Slight Chance Snow Showers",
     "date": "2026-11-27",
     "icon": [
-      "icon-cloud",
-      "icon-windy icon-night"
+      "basecloud",
+      "icon-snowy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=39.679993&lon=-105.89595",
@@ -534,8 +534,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 21
+      "max": 31
     },
-    "text": "Partly cloudy, with a low around 21. West northwest wind 16 to 21 mph, with gusts as high as 36 mph."
+    "text": "A slight chance of snow showers after 5pm. Mostly sunny. High near 31, with temperatures falling to around 29 in the afternoon. West northwest wind 22 to 26 mph, with gusts as high as 45 mph. Chance of precipitation is 20%. New snow accumulation of less than half an inch possible."
   }
 }
