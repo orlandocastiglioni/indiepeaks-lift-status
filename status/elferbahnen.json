@@ -1,21 +1,27 @@
 {
-  "fetchedAt": "2026-09-22T08:30:56Z",
+  "fetchedAt": "2026-11-27T19:15:52Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/elferbahnen/",
   "id": "elferbahnen",
   "lifts": {
+    "reportedAt": "2026-11-27T19:15:43.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "8er-Einseilumlaufbahn": "closed",
+      "Schlepplift Elfer I Elferh\u00fctte": "closed",
+      "Schlepplift II H\u00f6lltal": "closed",
+      "Schlepplift Kr\u00f6\u00dfbach": "closed"
+    }
   },
   "ll": [
     11.3106,
@@ -23,16 +29,40 @@
   ],
   "name": "Elferbahnen Neustift (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1790064982957,
-    "opening": 1790062211534,
-    "trails": 1790064982957,
+    "lifts": 1795806944995,
+    "opening": 1795806934689,
+    "trails": 1795806944995,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "Abfahrt Elferh\u00fctte",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "Abfahrt H\u00f6lltal",
+        "status": "closed"
+      },
+      {
+        "name": "Skiroute",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "\u00dcbungslift Kr\u00f6\u00dfbach",
+        "status": "closed"
+      }
+    ],
+    "reportedAt": "2026-11-27T19:15:43.000Z",
     "stats": {
-      "closed": 0,
+      "closed": 4,
       "hold": 0,
       "open": 0,
       "scheduled": 0

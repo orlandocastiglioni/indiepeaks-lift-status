@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-13T05:30:45Z",
+  "fetchedAt": "2026-11-27T19:15:52Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/serlesbahnen/",
   "id": "serlesbahnen",
   "lifts": {
@@ -30,22 +30,57 @@
   ],
   "name": "Serlesbahnen Mieders (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1794546939689,
-    "opening": 1794543339882,
-    "trails": 1794546939689,
+    "lifts": 1795806945406,
+    "opening": 1795806934692,
+    "trails": 1795806945406,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {
-      "1 Waldrasteck": "closed",
-      "2 Talabfahrt": "closed",
-      "3 Schneeboden": "closed",
-      "4 Ochsenschuss": "closed",
-      "5 Besserbrunnen": "closed",
-      "6 L\u00e4rchenschuss": "closed",
-      "7 Kinderland": "closed"
-    },
+    "list": [
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "1 Waldrasteck",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "2 Talabfahrt",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "3 Schneeboden",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "4 Ochsenschuss",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "5 Besserbrunnen",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "6 L\u00e4rchenschuss",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "7 Kinderland",
+        "status": "closed"
+      }
+    ],
     "reportedAt": "2026-08-27T14:44:27.000Z",
     "stats": {
       "closed": 7,

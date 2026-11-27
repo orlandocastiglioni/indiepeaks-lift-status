@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-09-18T21:15:56Z",
-  "href": "https://www.hunthollow.com/The_Mountain",
+  "fetchedAt": "2026-11-27T19:15:52Z",
+  "href": "https://www.hunthollow.com/conditions",
   "id": "hunt-hollow",
   "lifts": {
     "stats": {
@@ -15,7 +15,9 @@
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {},
+    "suppressed": "beforeOpening",
+    "suppressedDate": "2026-12-05"
   },
   "ll": [
     -77.470948,
@@ -23,9 +25,9 @@
   ],
   "name": "Hunt Hollow Ski Club",
   "timestamp": {
-    "lifts": 1789765218579,
-    "opening": 1789762520536,
-    "trails": 1789765807728,
+    "lifts": 1795806949991,
+    "opening": 1795806934690,
+    "trails": 1795806949991,
     "weather": 0,
     "webcams": 0
   },
@@ -36,6 +38,8 @@
       "hold": 0,
       "open": 0,
       "scheduled": 0
-    }
+    },
+    "suppressed": "beforeOpening",
+    "suppressedDate": "2026-12-05"
   }
 }

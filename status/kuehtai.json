@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T11:00:32Z",
+  "fetchedAt": "2026-11-27T19:15:52Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/kuehtai/",
   "id": "kuehtai",
   "lifts": {
@@ -37,47 +37,203 @@
   ],
   "name": "Kuehtai (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1795776368099,
-    "opening": 1795774510150,
-    "trails": 1795776368099,
+    "lifts": 1795806945320,
+    "opening": 1795806934690,
+    "trails": 1795806945320,
     "weather": 0,
-    "webcams": 1795776362020
+    "webcams": 0
   },
   "trails": {
-    "list": {
-      "1 Hochalter": "open",
-      "10 Dreiseen": "open",
-      "11 Alpenrosen": "open",
-      "12 Alpenrosen": "closed",
-      "13 Alpenrosen": "closed",
-      "13 HoheMut": "closed",
-      "14 HoheMut": "closed",
-      "15 Kaiserbahn": "closed",
-      "16 Kaiserbahn": "closed",
-      "17 Schwarzmoos-Skiweg": "closed",
-      "18 Schwarzmoos": "closed",
-      "2 Hochalter": "open",
-      "2 Hohe Mut": "closed",
-      "3 Hochalter": "closed",
-      "4 Gaiskogel": "closed",
-      "4a Gaiskogel": "closed",
-      "5 Gaiskogel": "closed",
-      "6 Gaiskogel": "closed",
-      "7 Wiesberg": "closed",
-      "8 Wiesberg": "closed",
-      "9 Gaiskogel": "closed",
-      "KPark": "closed",
-      "K\u00fchteppich \u00dcbungshang": "open",
-      "Rennstrecke": "closed",
-      "Skiweg Loisl\u00b4s Schirm": "closed",
-      "Sonnenlift-Skiweg": "closed",
-      "Sonnenlift-\u00dcbungshang": "closed",
-      "StartBahn-Skiweg": "closed",
-      "StartBahn-\u00dcbungshang Hab": "closed",
-      "StartBahn-\u00dcbungshang SL": "open",
-      "Wiesberg-Park": "closed",
-      "Wunderteppich-\u00dcbungshang": "open"
-    },
+    "list": [
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "KPark",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "K\u00fchteppich \u00dcbungshang",
+        "status": "open"
+      },
+      {
+        "name": "Rennstrecke",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Skiweg Loisl\u00b4s Schirm",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Sonnenlift-Skiweg",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Sonnenlift-\u00dcbungshang",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "StartBahn-Skiweg",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "StartBahn-\u00dcbungshang Hab",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "StartBahn-\u00dcbungshang SL",
+        "status": "open"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "Wiesberg-Park",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "Wunderteppich-\u00dcbungshang",
+        "status": "open"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "1 Hochalter",
+        "status": "open"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "2 Hochalter",
+        "status": "open"
+      },
+      {
+        "name": "2 Hohe Mut",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "3 Hochalter",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "4 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "4a Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "5 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "6 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "7 Wiesberg",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "8 Wiesberg",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "9 Gaiskogel",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "10 Dreiseen",
+        "status": "open"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "11 Alpenrosen",
+        "status": "open"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "12 Alpenrosen",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "13 Alpenrosen",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "13 HoheMut",
+        "status": "closed"
+      },
+      {
+        "grade": "black",
+        "level": "doubleBlack",
+        "name": "14 HoheMut",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "15 Kaiserbahn",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "16 Kaiserbahn",
+        "status": "closed"
+      },
+      {
+        "grade": "red",
+        "level": "black",
+        "name": "17 Schwarzmoos-Skiweg",
+        "status": "closed"
+      },
+      {
+        "grade": "blue",
+        "level": "blue",
+        "name": "18 Schwarzmoos",
+        "status": "closed"
+      }
+    ],
     "reportedAt": "2026-11-27T10:44:52.000Z",
     "stats": {
       "closed": 25,

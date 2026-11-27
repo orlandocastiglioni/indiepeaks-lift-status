@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T12:30:53Z",
+  "fetchedAt": "2026-11-27T19:15:52Z",
   "href": "https://www.les7laux.com/hiver/",
   "id": "les-7-laux",
   "lifts": {
@@ -16,7 +16,9 @@
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {},
+    "suppressed": "offseason",
+    "suppressedDate": "2026-11-27T12:01:00.000Z"
   },
   "ll": [
     5.9945,
@@ -24,11 +26,11 @@
   ],
   "name": "Les 7 Laux",
   "timestamp": {
-    "lifts": 1795781743808,
-    "opening": 1795778143736,
-    "trails": 1795781743808,
+    "lifts": 1795806943551,
+    "opening": 1795806934690,
+    "trails": 1795806943550,
     "weather": 0,
-    "webcams": 1795781737957
+    "webcams": 0
   },
   "trails": {
     "list": {},
@@ -38,6 +40,8 @@
       "hold": 0,
       "open": 0,
       "scheduled": 0
-    }
+    },
+    "suppressed": "offseason",
+    "suppressedDate": "2026-11-27T12:01:00.000Z"
   }
 }

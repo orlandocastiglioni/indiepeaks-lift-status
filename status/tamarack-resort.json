@@ -1,21 +1,29 @@
 {
-  "fetchedAt": "2026-11-17T13:30:12Z",
+  "fetchedAt": "2026-11-27T19:15:52Z",
   "href": "https://tamarackidaho.com/the-mountain/snow-report",
   "id": "tamarack-resort",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 7,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Buttercup Chair": "closed",
+      "Discovery Chair": "closed",
+      "Mutton Buster Carpet": "closed",
+      "Rock Creek Poma": "closed",
+      "Summit Express": "closed",
+      "Tamarack Express": "closed",
+      "Wildwood Express": "closed"
+    }
   },
   "ll": [
     -116.1225,
@@ -23,16 +31,347 @@
   ],
   "name": "Tamarack Resort",
   "timestamp": {
-    "lifts": 1794921562450,
-    "opening": 1794921389856,
-    "trails": 1794921562450,
+    "lifts": 1795806953405,
+    "opening": 1795806934693,
+    "trails": 1795806953405,
     "weather": 0,
     "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "black",
+        "name": "Adrenaline",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "After You",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Blaze",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Buttercup",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Calle Ocho",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Canoe Ridge",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Discovery",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Dropout",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "En Fuego",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Funnel",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Get Back",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Grand Finale",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hibernator Glade",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hillary Step",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hip Hop",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Homestead",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Hootenanny",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hoo Ya!",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hotsauce",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "La Bamba",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "La Bamba Cliffs",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Ladle",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Liftline",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Bliss",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Encore",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Enigma",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Serenity",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Showtime",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lumberjack Land",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Lumberjack Way",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Me First",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Mid-Mountain Way",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Mutton Buster",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Mystery Glades",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Next Up",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Oo-La-La",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Panorama",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Powder High",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Pursuit",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Rehab",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Rock Creek",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Rumba",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Salsa",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Serenity Canyon",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Shortcut",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Showtime Return",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Snowbunny",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Staircase",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Sugarloaf",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Tamarack",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Tango",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Grove",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Spine",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Tula Tracks",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Bliss",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Encore",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Enigma",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Serenity",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Showtime",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Vista",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Wahoo!",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Waltz (Easy Way Down)",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Wildwood Way Blue",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Wildwood Way Green",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Discovery Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Homestead Terrain Park",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 66,
       "hold": 0,
       "open": 0,
       "scheduled": 0

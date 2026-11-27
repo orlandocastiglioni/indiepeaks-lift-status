@@ -1,21 +1,28 @@
 {
-  "fetchedAt": "2026-11-17T20:45:42Z",
-  "href": "https://www.silvermt.com/mountain-info/trail-status",
+  "fetchedAt": "2026-11-27T19:15:52Z",
+  "href": "https://silvermt.com/snow-report/trail-status/",
   "id": "silver-mountain",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 6,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Chair 1": "closed",
+      "Chair 2": "closed",
+      "Chair 3": "closed",
+      "Chair 4": "closed",
+      "Chair 5": "closed",
+      "Prospector Adventure": "closed"
+    }
   },
   "ll": [
     -116.1262,
@@ -23,16 +30,427 @@
   ],
   "name": "Silver Mountain Resort",
   "timestamp": {
-    "lifts": 1794947470700,
-    "opening": 1794946546526,
-    "trails": 1794947470700,
+    "lifts": 1795806949188,
+    "opening": 1795806934692,
+    "trails": 1795806949188,
     "weather": 0,
-    "webcams": 1794947457366
+    "webcams": 0
   },
   "trails": {
-    "list": {},
+    "list": [
+      {
+        "level": "green",
+        "name": "Alpenway",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Fast Eddy",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Happy Jack",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Junction",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Gem",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Get There",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Shortcut",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Dribble Down",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hammy\u2019s Delight",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Jim Dandy",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Klondike Express",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower North Star",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Northern Lights",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Quicksilver",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Steep & Deep",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Silver Belt",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Skyway Ridge",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "SOB Cat Track",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "SOB Glades",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sunrise Lower",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Sunrise Upper",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper North Star",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Northern Lights",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Heaven",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower T2d2",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Rendezvous",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Sunset",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Tall Paul",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Quicksilver",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper Steep & Deep",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Upper T2D2",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Why Not",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Shady Lady",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "The North Face Glades",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Main Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Noahs Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Collateral",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Paymaster",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Saddleback",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Paymaster",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Lower Terrible Edith",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Upper Terrible Edith",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Home James",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "East Tamarack",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Half Pipe",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hercules",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Centennial",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Gold",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Middle Centennial",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Quarter Pipe",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Centennial",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Gold",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Upper Ridge",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "West Tamarack",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "16 to 1",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Assay Road",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Corkscrew",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Eureka",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Jackass",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Last Chance",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Lower Ridge",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Midway Chair 4 Traverse",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Moonshine",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Morning Star",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Prospector",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Solitude",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Wardner Peak",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Wardner Traverse",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Bootlegger",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Shaft",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Sheer Bliss",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "Silver Basin",
+        "status": "closed"
+      },
+      {
+        "level": "doubleBlack",
+        "name": "The Meadows",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Bear Grass",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Clam Jumper",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Dawdler",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Huckleberry",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Ross Run",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Upper Noahs",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Lower Noahs",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Easy Street",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Tubing Park",
+        "status": "closed"
+      }
+    ],
     "stats": {
-      "closed": 0,
+      "closed": 82,
       "hold": 0,
       "open": 0,
       "scheduled": 0
