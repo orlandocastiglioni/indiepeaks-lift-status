@@ -1,27 +1,27 @@
 {
-  "fetchedAt": "2026-11-25T22:45:55Z",
+  "fetchedAt": "2026-11-27T11:00:32Z",
   "href": "https://www.skichinapeak.com/conditions",
   "id": "chinapeak",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 4,
       "hold": 0,
-      "open": 0,
+      "open": 5,
       "percentage": {
-        "closed": 100,
+        "closed": 44.4,
         "hold": 0,
-        "open": 0,
+        "open": 55.5,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Boulder Carpet": "closed",
-      "Chair 1": "closed",
-      "Chair 2": "closed",
-      "Chair 4": "closed",
+      "Boulder Carpet": "open",
+      "Chair 1": "open",
+      "Chair 2": "open",
+      "Chair 4": "open",
       "Chair 5": "closed",
-      "Chair 6": "closed",
+      "Chair 6": "open",
       "Chair 7": "closed",
       "Juniper Carpet": "closed",
       "Kids Carpet": "closed"
@@ -33,11 +33,11 @@
   ],
   "name": "China Peak",
   "timestamp": {
-    "lifts": 1795645847678,
-    "opening": 1795645843197,
-    "trails": 1795645847677,
-    "weather": 1795644039126,
-    "webcams": 1795645843197
+    "lifts": 1795776344633,
+    "opening": 1795774510149,
+    "trails": 1795776344633,
+    "weather": 1795770061921,
+    "webcams": 1795776341063
   },
   "trails": {
     "list": [
@@ -320,11 +320,11 @@
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-11-25",
+    "conditions": "Mostly Cloudy",
+    "date": "2026-11-27",
     "icon": [
-      "basenone",
-      "icon-sun"
+      "icon-cloud",
+      "icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=37.228348&lon=-119.161705",
@@ -333,8 +333,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 47
+      "max": 40
     },
-    "text": "Sunny. High near 47, with temperatures falling to around 39 in the afternoon. Wind around 0 mph."
+    "text": "Mostly cloudy, with a low around 40. East wind around 5 mph."
   }
 }
