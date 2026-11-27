@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-25T16:15:27Z",
+  "fetchedAt": "2026-11-27T16:15:19Z",
   "href": "https://jaypeakresort.com/skiing-riding/snow-report-maps/snow-report",
   "id": "jay-peak",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 8,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 88.8,
         "hold": 0,
-        "open": 0,
+        "open": 11.1,
         "scheduled": 0
       },
       "scheduled": 0
@@ -19,7 +19,7 @@
       "Aerial Tram": "closed",
       "Bonaventure Quad": "closed",
       "Flyer Quad": "closed",
-      "Jet Triple": "closed",
+      "Jet Triple": "open",
       "Metro Quad": "closed",
       "Stateside Carpet": "closed",
       "Taxi Quad": "closed",
@@ -33,11 +33,11 @@
   ],
   "name": "Jay Peak",
   "timestamp": {
-    "lifts": 1795622468144,
-    "opening": 1795619768092,
-    "trails": 1795622468144,
-    "weather": 1795619775498,
-    "webcams": 1795622460360
+    "lifts": 1795795259025,
+    "opening": 1795794361062,
+    "trails": 1795795259025,
+    "weather": 1795794367930,
+    "webcams": 1795795251523
   },
   "trails": {
     "list": [
@@ -329,12 +329,12 @@
       {
         "level": "black",
         "name": "The Jet",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "The Jet Lower",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -518,18 +518,18 @@
       }
     ],
     "stats": {
-      "closed": 95,
+      "closed": 93,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Sunny",
-    "date": "2026-11-25",
+    "conditions": "Mostly Cloudy then Chance Light Rain",
+    "date": "2026-11-27",
     "icon": [
-      "basenone",
-      "icon-sun"
+      "basecloud",
+      "icon-rainy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=44.928837&lon=-72.501701",
@@ -538,8 +538,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 30
+      "max": 45
     },
-    "text": "Sunny, with a high near 30. West wind around 2 mph."
+    "text": "A chance of rain after 1pm. Mostly cloudy, with a high near 45. Southeast wind 13 to 17 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
   }
 }

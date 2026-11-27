@@ -1,28 +1,28 @@
 {
-  "fetchedAt": "2026-11-24T18:30:49Z",
+  "fetchedAt": "2026-11-27T16:15:19Z",
   "href": "https://www.bearvalley.com/lift-and-trail-status",
   "id": "bear-valley",
   "lifts": {
     "stats": {
-      "closed": 9,
+      "closed": 6,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 100,
+        "closed": 66.6,
         "hold": 0,
-        "open": 0,
+        "open": 33.3,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "CUB": "closed",
+      "CUB": "open",
       "GRIZZLY": "closed",
       "KOALA": "closed",
       "LIFT - LITTLE CUB CARPET": "closed",
-      "MOKELUMNE EXPRESS": "closed",
+      "MOKELUMNE EXPRESS": "open",
       "PANDA": "closed",
-      "POLAR EXPRESS": "closed",
+      "POLAR EXPRESS": "open",
       "POOH CHAIR": "closed",
       "SUPER CUB": "closed"
     }
@@ -33,93 +33,93 @@
   ],
   "name": "Bear Valley",
   "timestamp": {
-    "lifts": 1795544136515,
-    "opening": 1795541463284,
-    "trails": 1795544145783,
+    "lifts": 1795795258433,
+    "opening": 1795794361060,
+    "trails": 1795795267719,
     "weather": 0,
-    "webcams": 1795544127590
+    "webcams": 1795795251521
   },
   "trails": {
     "list": [
       {
         "level": "blue",
         "name": "Bear Boogie",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Big John",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Blue Jay Way",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Burgess Bridge",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Corral Ridge",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Goldilocks",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Grouse Connection",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Kohoutek Gulley",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Oopla",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Pacesetter",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Pipeline",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Satisfaction",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Shady Grove",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Spy Glass",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
         "name": "Tigger's",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "West World",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -558,9 +558,9 @@
       }
     ],
     "stats": {
-      "closed": 103,
+      "closed": 87,
       "hold": 0,
-      "open": 0,
+      "open": 16,
       "scheduled": 0
     }
   }
