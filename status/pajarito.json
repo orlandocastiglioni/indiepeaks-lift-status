@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-11-14T09:45:11Z",
+  "fetchedAt": "2026-11-27T13:00:38Z",
   "href": "https://www.pajarito.ski/weather-conditions-webcams/lifts-and-trails/",
   "id": "pajarito",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 5,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 83.3,
         "hold": 0,
-        "open": 0,
+        "open": 16.6,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Aspen": "closed",
-      "Beginner": "closed",
+      "Beginner": "open",
       "Magic Carpet": "closed",
       "Mother": "closed",
       "Spruce": "closed",
@@ -30,11 +30,11 @@
   ],
   "name": "Pajarito Mountain",
   "timestamp": {
-    "lifts": 1794648663657,
-    "opening": 1794645950856,
-    "trails": 1794648655252,
+    "lifts": 1795783567656,
+    "opening": 1795782658965,
+    "trails": 1795783567656,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795783549392
   },
   "trails": {
     "list": [
@@ -206,7 +206,7 @@
       {
         "level": "green",
         "name": "West Beginner",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -325,9 +325,9 @@
       }
     ],
     "stats": {
-      "closed": 57,
+      "closed": 56,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "scheduled": 0
     }
   }
