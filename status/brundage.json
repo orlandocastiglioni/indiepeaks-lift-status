@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-27T05:30:44Z",
+  "fetchedAt": "2026-11-27T23:45:57Z",
   "href": "https://brundage.com/grooming-report/",
   "id": "brundage",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 6,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 85.7,
         "hold": 0,
-        "open": 0,
+        "open": 14.2,
         "scheduled": 0
       },
       "scheduled": 0
@@ -20,7 +20,7 @@
       "Blue Bird Express": "closed",
       "Centennial Express": "closed",
       "Easy Rider Conveyor": "closed",
-      "Easy Street Triple Chair Lift": "closed",
+      "Easy Street Triple Chair Lift": "open",
       "Hidden Valley": "closed",
       "Lakeview Triple": "closed"
     }
@@ -31,14 +31,174 @@
   ],
   "name": "Brundage Mountain Resort",
   "timestamp": {
-    "lifts": 1795756557835,
-    "opening": 1795755647337,
-    "trails": 1795756557835,
+    "lifts": 1795822281587,
+    "opening": 1795822266116,
+    "trails": 1795822281587,
     "weather": 0,
-    "webcams": 1795756568954
+    "webcams": 1795822266116
   },
   "trails": {
     "list": [
+      {
+        "level": "green",
+        "name": "Bear",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Bear Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Jammer Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Badger",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Griz",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Red Fox",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Chipmunk",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Race Course",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Slot Car",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Rappel",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Skidaddle",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Easy Street",
+        "status": "open"
+      },
+      {
+        "level": "green",
+        "name": "Tater Tot",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "French Fry",
+        "status": "closed"
+      },
+      {
+        "level": "green",
+        "name": "Pizza Pie",
+        "status": "closed"
+      },
+      {
+        "level": "terrainPark",
+        "name": "Roller Coaster Terrain Park",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Kickback",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Springboard",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Hot Shot",
+        "status": "closed"
+      },
+      {
+        "level": "blue",
+        "name": "Dropline",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Dobber's Dream",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "The Ridge \u2013 Upper Hidden Road",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "South Nozzle",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "North Nozzle",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Terminator",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "North Boundary Trail",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Dry Fly",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hippie Flats",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Funnel",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Hey Diddle Diddle",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Aspen Patch",
+        "status": "closed"
+      },
+      {
+        "level": "black",
+        "name": "Chinook Chute",
+        "status": "closed"
+      },
       {
         "level": "blue",
         "name": "North",
@@ -228,172 +388,12 @@
         "level": "black",
         "name": "Valley Girl",
         "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Bear",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Bear Terrain Park",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Jammer Terrain Park",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Badger",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Griz",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Red Fox",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Chipmunk",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Race Course",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Slot Car",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Rappel",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Skidaddle",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Easy Street",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Tater Tot",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "French Fry",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "Pizza Pie",
-        "status": "closed"
-      },
-      {
-        "level": "terrainPark",
-        "name": "Roller Coaster Terrain Park",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Kickback",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Springboard",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Hot Shot",
-        "status": "closed"
-      },
-      {
-        "level": "blue",
-        "name": "Dropline",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Dobber's Dream",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "The Ridge \u2013 Upper Hidden Road",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "South Nozzle",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "North Nozzle",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Terminator",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "North Boundary Trail",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Dry Fly",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Hippie Flats",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Funnel",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Hey Diddle Diddle",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Aspen Patch",
-        "status": "closed"
-      },
-      {
-        "level": "black",
-        "name": "Chinook Chute",
-        "status": "closed"
       }
     ],
     "stats": {
-      "closed": 70,
+      "closed": 69,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "scheduled": 0
     }
   }
