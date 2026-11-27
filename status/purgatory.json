@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T20:15:39Z",
+  "fetchedAt": "2026-11-27T21:45:57Z",
   "href": "https://www.purgatory.ski/mountain/weather-conditions-webcams/",
   "id": "purgatory",
   "lifts": {
@@ -36,11 +36,11 @@
   ],
   "name": "Purgatory",
   "timestamp": {
-    "lifts": 1795810537761,
-    "opening": 1795809904283,
-    "trails": 1795810537761,
+    "lifts": 1795815082061,
+    "opening": 1795814178343,
+    "trails": 1795815082061,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795815078443
   },
   "trails": {
     "list": [
@@ -337,7 +337,7 @@
       {
         "level": "green",
         "name": "Graduate",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "green",
@@ -357,7 +357,7 @@
       {
         "level": "blue",
         "name": "Skiway",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -623,9 +623,9 @@
       }
     ],
     "stats": {
-      "closed": 78,
+      "closed": 80,
       "hold": 0,
-      "open": 37,
+      "open": 35,
       "scheduled": 0
     }
   }
