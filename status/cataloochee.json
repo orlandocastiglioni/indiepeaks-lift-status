@@ -1,24 +1,24 @@
 {
-  "fetchedAt": "2026-11-23T12:30:32Z",
+  "fetchedAt": "2026-11-27T12:30:53Z",
   "href": "https://cataloochee.com/the-mountain/snow-report/",
   "id": "cataloochee",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 3,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 100,
+        "closed": 60,
         "hold": 0,
-        "open": 0,
+        "open": 40,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Beginners Luck (Conveyor)": "closed",
-      "Easy Way (Triple)": "closed",
-      "Omigosh (Quad)": "closed",
+      "Easy Way (Triple)": "open",
+      "Omigosh (Quad)": "open",
       "Rock Island Line (Quad)": "closed",
       "Wolf Creek ( Conveyor)": "closed"
     }
@@ -29,11 +29,11 @@
   ],
   "name": "Cataloochee",
   "timestamp": {
-    "lifts": 1795436170966,
-    "opening": 1795433467056,
-    "trails": 1795436170966,
-    "weather": 1795432573851,
-    "webcams": 1795436159649
+    "lifts": 1795781748151,
+    "opening": 1795778143734,
+    "trails": 1795781748151,
+    "weather": 1795778150067,
+    "webcams": 1795781737956
   },
   "trails": {
     "list": [
@@ -55,12 +55,12 @@
       {
         "level": "green",
         "name": "Easy Way",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Lower Omigosh",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -75,7 +75,7 @@
       {
         "level": "green",
         "name": "Rabbit Hill",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -85,7 +85,7 @@
       {
         "level": "blue",
         "name": "Rock Island Run",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -100,7 +100,7 @@
       {
         "level": "black",
         "name": "Upper Omigosh",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -129,18 +129,18 @@
       }
     ],
     "stats": {
-      "closed": 18,
+      "closed": 13,
       "hold": 0,
-      "open": 0,
+      "open": 5,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Patchy Fog then Slight Chance Light Rain",
-    "date": "2026-11-23",
+    "conditions": "Chance Light Snow then Patchy Fog",
+    "date": "2026-11-27",
     "icon": [
       "basecloud",
-      "icon-rainy"
+      "icon-snowy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=35.562656&lon=-83.090027",
@@ -149,8 +149,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 53
+      "max": 34
     },
-    "text": "Patchy fog between 7am and 10am, then a slight chance of rain between 1pm and 2pm. Partly sunny, with a high near 53. Northwest wind around 6 mph. Chance of precipitation is 20%."
+    "text": "A chance of snow before 10am, then patchy fog between 10am and noon, then patchy fog and a slight chance of snow. Cloudy, with a high near 34. West wind 12 to 16 mph, with gusts as high as 40 mph. Chance of precipitation is 30%. New snow accumulation of less than half an inch possible."
   }
 }
