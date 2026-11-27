@@ -1,21 +1,30 @@
 {
-  "fetchedAt": "2026-11-27T07:45:59Z",
+  "fetchedAt": "2026-11-27T14:45:45Z",
   "href": "https://www.angelfireresort.com/trail-and-lift-status/",
   "id": "angel-fire",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 8,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "Angel Express": "closed",
+      "Chile Express": "closed",
+      "Lift #1": "closed",
+      "Lift #3": "closed",
+      "Polar Coaster Carpet": "closed",
+      "Rakes Rider": "closed",
+      "Ski School Carpet": "closed",
+      "Southwest Flyer": "closed"
+    }
   },
   "ll": [
     -105.273903,
@@ -23,9 +32,9 @@
   ],
   "name": "Angel Fire",
   "timestamp": {
-    "lifts": 1795764662475,
+    "lifts": 1795789829718,
     "opening": 1795762165152,
-    "trails": 1795764648833,
+    "trails": 1795789815500,
     "weather": 0,
     "webcams": 0
   }
