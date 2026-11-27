@@ -1,20 +1,20 @@
 {
-  "fetchedAt": "2026-11-27T05:15:31Z",
+  "fetchedAt": "2026-11-27T07:30:42Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/stubai-glacier/",
   "id": "stubai-glacier",
   "lifts": {
-    "reportedAt": "2026-11-26T13:29:17.000Z",
+    "reportedAt": "2026-11-27T07:13:32.000Z",
     "stats": {
-      "closed": 10,
+      "closed": 8,
       "hold": 0,
       "open": 15,
       "percentage": {
-        "closed": 40,
+        "closed": 32,
         "hold": 0,
         "open": 60,
-        "scheduled": 0
+        "scheduled": 8
       },
-      "scheduled": 0
+      "scheduled": 2
     },
     "status": {
       "3S Eisgratbahn I": "open",
@@ -35,9 +35,9 @@
       "Schlepplift Gaiskarferner": "open",
       "Schlepplift Windachferner": "closed",
       "Schneekarussell": "closed",
-      "Snowpark-Lift": "closed",
+      "Snowpark-Lift": "scheduled",
       "Tellerlift Kitzlift": "open",
-      "Wildspitz": "closed",
+      "Wildspitz": "scheduled",
       "Zauberteppich 1": "open",
       "Zauberteppich 3, 4": "closed",
       "Zauberteppich Eisgrat": "open",
@@ -50,11 +50,11 @@
   ],
   "name": "Stubaier Gletscher (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1795755848822,
-    "opening": 1795755647342,
-    "trails": 1795755848818,
+    "lifts": 1795763780148,
+    "opening": 1795762165158,
+    "trails": 1795763779405,
     "weather": 0,
-    "webcams": 1795755748336
+    "webcams": 1795763768870
   },
   "trails": {
     "list": [
@@ -270,12 +270,12 @@
       {
         "level": "terrainPark",
         "name": "Stubai Zoo Snowpark",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "terrainPark",
         "name": "Stubai Zoo Medium-Line",
-        "status": "closed"
+        "status": "scheduled"
       },
       {
         "level": "terrainPark",
@@ -285,15 +285,15 @@
       {
         "level": "terrainPark",
         "name": "Stubai Zoo Easy & Jibline",
-        "status": "closed"
+        "status": "scheduled"
       }
     ],
-    "reportedAt": "2026-11-26T13:29:17.000Z",
+    "reportedAt": "2026-11-27T07:13:32.000Z",
     "stats": {
-      "closed": 28,
+      "closed": 25,
       "hold": 0,
       "open": 12,
-      "scheduled": 0
+      "scheduled": 3
     }
   }
 }

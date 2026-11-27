@@ -1,21 +1,25 @@
 {
-  "fetchedAt": "2026-11-27T07:16:03Z",
+  "fetchedAt": "2026-11-27T07:30:42Z",
   "href": "https://www.nayoro.co.jp/piyashiri/",
   "id": "nayoro-piyashiri",
   "lifts": {
     "stats": {
-      "closed": 0,
+      "closed": 3,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 25,
-        "hold": 25,
-        "open": 25,
-        "scheduled": 25
+        "closed": 100,
+        "hold": 0,
+        "open": 0,
+        "scheduled": 0
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {
+      "\u7b2c1\u30da\u30a2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c2\u30da\u30a2\u30ea\u30d5\u30c8": "closed",
+      "\u7b2c3\u30da\u30a2\u30ea\u30d5\u30c8": "closed"
+    }
   },
   "ll": [
     142.4841,
@@ -23,16 +27,30 @@
   ],
   "name": "Nayoro Piyashiri",
   "timestamp": {
-    "lifts": 1795762836687,
+    "lifts": 1795763777757,
     "opening": 1795762165156,
-    "trails": 1795762836687,
+    "trails": 1795763777757,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795763768868
   },
   "trails": {
-    "list": {},
+    "list": {
+      "\u30a4\u30fc\u30b9\u30bf\u30f3\u30b3\u30fc\u30b9": "closed",
+      "\u30b8\u30e3\u30a4\u30a2\u30f3\u30c8\u7b2c1": "closed",
+      "\u30b8\u30e3\u30a4\u30a2\u30f3\u30c8\u7b2c2": "closed",
+      "\u30c1\u30e3\u30ec\u30f3\u30b8\u30b3\u30fc\u30b9": "closed",
+      "\u30c4\u30ea\u30fc\u30e9\u30f3 \u30a8\u30ea\u30a2\u2160": "closed",
+      "\u30c4\u30ea\u30fc\u30e9\u30f3 \u30a8\u30ea\u30a2\u2161": "closed",
+      "\u30c4\u30ea\u30fc\u30e9\u30f3 \u30a8\u30ea\u30a2\u2162": "closed",
+      "\u30c4\u30ea\u30fc\u30e9\u30f3 \u30d5\u30ea\u30fc\u30a8\u30ea\u30a2": "closed",
+      "\u4e00\u822c\u30b2\u30ec\u30f3\u30c7\u7b2c1": "closed",
+      "\u4e00\u822c\u30b2\u30ec\u30f3\u30c7\u7b2c2": "closed",
+      "\u58c1": "closed",
+      "\u6797\u9593\u30b3\u30fc\u30b9": "closed",
+      "\u6a39\u6c37\u30b3\u30fc\u30b9": "closed"
+    },
     "stats": {
-      "closed": 0,
+      "closed": 13,
       "hold": 0,
       "open": 0,
       "scheduled": 0
