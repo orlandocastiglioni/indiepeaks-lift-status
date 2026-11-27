@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T05:30:44Z",
+  "fetchedAt": "2026-11-27T05:46:00Z",
   "href": "https://www.pyha.fi/en/skiresort/slopes",
   "id": "pyha-ski-resort",
   "lifts": {
@@ -33,11 +33,11 @@
   ],
   "name": "Pyh\u00e4 Ski Resort",
   "timestamp": {
-    "lifts": 1795756547249,
+    "lifts": 1795757458378,
     "opening": 1795755647341,
-    "trails": 1795756548332,
+    "trails": 1795757457307,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795757450544
   },
   "trails": {
     "list": [
@@ -57,7 +57,7 @@
         "grade": "Challenging",
         "level": "doubleBlack",
         "name": "3 Piste Palander",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "Intermediate",
@@ -129,13 +129,13 @@
         "grade": "Very easy",
         "level": "green",
         "name": "16 Children Slope",
-        "status": "closed"
+        "status": "open"
       }
     ],
     "stats": {
-      "closed": 15,
+      "closed": 13,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "scheduled": 0
     }
   }
