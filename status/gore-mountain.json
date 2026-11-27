@@ -1,29 +1,29 @@
 {
-  "fetchedAt": "2026-11-17T12:30:17Z",
+  "fetchedAt": "2026-11-27T19:30:57Z",
   "href": "https://goremountain.com/the-mountain/conditions/",
   "id": "gore-mountain",
   "lifts": {
     "stats": {
-      "closed": 15,
+      "closed": 13,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 100,
+        "closed": 86.6,
         "hold": 0,
-        "open": 0,
+        "open": 13.3,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Adirondack Express II": "closed",
+      "Adirondack Express II": "open",
       "Bear Cub Quad": "closed",
       "Burnt Ridge Quad": "closed",
       "Greenway Conveyor": "closed",
       "High Peaks Quad": "closed",
       "Hudson Chair": "closed",
       "J-Bar": "closed",
-      "North Quad": "closed",
+      "North Quad": "open",
       "Northwoods Gondola": "closed",
       "Straight Brook Quad": "closed",
       "Sunway Chair": "closed",
@@ -39,11 +39,11 @@
   ],
   "name": "Gore Mountain",
   "timestamp": {
-    "lifts": 1794917792696,
-    "opening": 1794916285864,
-    "trails": 1794917792696,
-    "weather": 1794915951464,
-    "webcams": 1794917717074
+    "lifts": 1795807485308,
+    "opening": 1795806934689,
+    "trails": 1795807485307,
+    "weather": 1795806976516,
+    "webcams": 1795806975145
   },
   "trails": {
     "list": [
@@ -220,12 +220,12 @@
       {
         "level": "blue",
         "name": "Sleeping Bear",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Tahawus",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -624,18 +624,18 @@
       }
     ],
     "stats": {
-      "closed": 115,
+      "closed": 113,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-11-17",
+    "conditions": "Light Rain",
+    "date": "2026-11-27",
     "icon": [
-      "icon-cloud",
-      "icon-sunny"
+      "basecloud",
+      "icon-rainy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.672653&lon=-74.007172",
@@ -644,8 +644,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 50
+      "max": 42
     },
-    "text": "Mostly sunny. High near 50, with temperatures falling to around 44 in the afternoon. West wind around 9 mph."
+    "text": "Patchy fog before 3pm, then rain and patchy fog. Cloudy, with a high near 42. South wind around 3 mph. Chance of precipitation is 90%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
