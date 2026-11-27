@@ -1,27 +1,27 @@
 {
-  "fetchedAt": "2026-11-25T15:16:00Z",
+  "fetchedAt": "2026-11-27T15:00:12Z",
   "href": "https://trollhaugen.com/snow-report/",
   "id": "trollhaugen",
   "lifts": {
     "stats": {
-      "closed": 6,
+      "closed": 4,
       "hold": 0,
-      "open": 2,
+      "open": 4,
       "percentage": {
-        "closed": 75,
+        "closed": 50,
         "hold": 0,
-        "open": 25,
+        "open": 50,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "Chair 1": "closed",
-      "Chair 2": "closed",
+      "Chair 2": "open",
       "Chair 3": "open",
       "Chair 4": "closed",
       "Mickebakken Rope": "closed",
-      "Minibakken Rope": "closed",
+      "Minibakken Rope": "open",
       "Tomtebakken Rope": "open",
       "Valhalla Rope": "closed"
     }
@@ -32,11 +32,11 @@
   ],
   "name": "Trollhaugen",
   "timestamp": {
-    "lifts": 1795618995898,
-    "opening": 1795618816961,
-    "trails": 1795618995898,
+    "lifts": 1795790922045,
+    "opening": 1795790776802,
+    "trails": 1795790922045,
     "weather": 0,
-    "webcams": 1795618816961
+    "webcams": 1795790776802
   },
   "trails": {
     "list": [
@@ -118,7 +118,7 @@
       {
         "level": "green",
         "name": "Minibakken",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -143,7 +143,7 @@
       {
         "level": "black",
         "name": "Storebakken",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -197,9 +197,9 @@
       }
     ],
     "stats": {
-      "closed": 29,
+      "closed": 27,
       "hold": 0,
-      "open": 2,
+      "open": 4,
       "scheduled": 0
     }
   }
