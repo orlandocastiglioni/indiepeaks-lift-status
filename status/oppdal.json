@@ -1,17 +1,17 @@
 {
-  "fetchedAt": "2026-11-22T06:30:32Z",
+  "fetchedAt": "2026-11-27T19:00:52Z",
   "href": "https://www.alpinco.com/en/oppdal/snow-report",
   "id": "oppdal",
   "lifts": {
     "reportedAt": "2026-11-22T06:11:13.000Z",
     "stats": {
-      "closed": 15,
+      "closed": 14,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 93.3,
         "hold": 0,
-        "open": 0,
+        "open": 6.6,
         "scheduled": 0
       },
       "scheduled": 0
@@ -21,7 +21,7 @@
       "B. Langheisen": "closed",
       "C. Kortheisen": "closed",
       "D. Sk\u00e5lheisen": "closed",
-      "F1. Vangsliaekspressen midten": "closed",
+      "F1. Vangsliaekspressen midten": "open",
       "F2. Vangsliaekspressen toppen": "closed",
       "H. \u00c5dalsheisen": "closed",
       "I. Tverrheisen": "closed",
@@ -40,11 +40,11 @@
   ],
   "name": "Oppdal",
   "timestamp": {
-    "lifts": 1795328156107,
-    "opening": 1795326366404,
-    "trails": 1795328156108,
+    "lifts": 1795805158797,
+    "opening": 1795803339947,
+    "trails": 1795805158796,
     "weather": 0,
-    "webcams": 1795328148492
+    "webcams": 1795805151377
   },
   "trails": {
     "list": [
@@ -71,12 +71,12 @@
       {
         "level": "black",
         "name": "5. Utforl\u00f8ypa",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "6. Solheisl\u00f8ypa",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -221,9 +221,9 @@
     ],
     "reportedAt": "2026-11-22T06:11:13.000Z",
     "stats": {
-      "closed": 34,
+      "closed": 32,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "scheduled": 0
     }
   }
