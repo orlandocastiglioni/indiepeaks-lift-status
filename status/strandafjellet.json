@@ -1,29 +1,29 @@
 {
-  "fetchedAt": "2026-11-17T11:30:40Z",
+  "fetchedAt": "2026-11-27T18:45:46Z",
   "href": "https://www.strandafjellet.no/no/node/386",
   "id": "strandafjellet",
   "lifts": {
     "reportedAt": "2026-04-21T08:29:40.000Z",
     "stats": {
-      "closed": 7,
+      "closed": 4,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "percentage": {
-        "closed": 100,
+        "closed": 57.1,
         "hold": 0,
-        "open": 0,
+        "open": 42.8,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
-      "Bandet": "closed",
+      "Bandet": "open",
       "Egga fjelltrekk": "closed",
       "Fursetheisa": "closed",
-      "Fursettrekket": "closed",
+      "Fursettrekket": "open",
       "Roaldsheisa": "closed",
       "Roaldshorn fjelltrekk": "closed",
-      "Sn\u00f8kvit": "closed"
+      "Sn\u00f8kvit": "open"
     }
   },
   "ll": [
@@ -32,11 +32,11 @@
   ],
   "name": "Strandafjellet",
   "timestamp": {
-    "lifts": 1794914149098,
-    "opening": 1794912362173,
-    "trails": 1794914149099,
+    "lifts": 1795804244237,
+    "opening": 1795804240768,
+    "trails": 1795804244263,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795804240768
   },
   "trails": {
     "list": [
@@ -83,7 +83,7 @@
       {
         "level": "black",
         "name": "Skitreffen",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -113,7 +113,7 @@
       {
         "level": "green",
         "name": "Barneparken",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -123,7 +123,7 @@
       {
         "level": "green",
         "name": "Sn\u00f8kvit",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -138,9 +138,9 @@
     ],
     "reportedAt": "2026-04-21T08:29:40.000Z",
     "stats": {
-      "closed": 19,
+      "closed": 16,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "scheduled": 0
     }
   }
