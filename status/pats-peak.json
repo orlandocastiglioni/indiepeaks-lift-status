@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-17T08:15:11Z",
+  "fetchedAt": "2026-11-27T19:18:47Z",
   "href": "https://www.patspeak.com/the-mountain/mountain-info/snow-report/",
   "id": "pats-peak",
   "lifts": {
@@ -15,7 +15,9 @@
       },
       "scheduled": 0
     },
-    "status": {}
+    "status": {},
+    "suppressed": "offseason",
+    "suppressedDate": "2026-09-11T19:28:37.000Z"
   },
   "ll": [
     -71.833412,
@@ -23,11 +25,11 @@
   ],
   "name": "Pats Peak",
   "timestamp": {
-    "lifts": 1789632032344,
-    "opening": 1789632028772,
-    "trails": 1789632144690,
-    "weather": 1789632087322,
-    "webcams": 1789632087003
+    "lifts": 1795806991791,
+    "opening": 1795806934692,
+    "trails": 1795806991790,
+    "weather": 1795806976571,
+    "webcams": 1795806975145
   },
   "trails": {
     "list": {},
@@ -36,14 +38,16 @@
       "hold": 0,
       "open": 0,
       "scheduled": 0
-    }
+    },
+    "suppressed": "offseason",
+    "suppressedDate": "2026-09-11T19:28:37.000Z"
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
-    "date": "2026-09-17",
+    "conditions": "Light Rain Likely",
+    "date": "2026-11-27",
     "icon": [
-      "icon-cloud",
-      "icon-night"
+      "basecloud",
+      "icon-rainy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=43.180679&lon=-71.833412",
@@ -52,8 +56,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 59
+      "max": 43
     },
-    "text": "Mostly cloudy, with a low around 59. Northwest wind around 0 mph."
+    "text": "Scattered rain showers between 4pm and 5pm, then rain likely. Cloudy, with a high near 43. East wind 0 to 5 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
   }
 }
