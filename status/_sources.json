@@ -4129,7 +4129,7 @@
     },
     "mont-sutton": {
       "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/mont-sutton.json",
-      "reportURL": "https://montsutton.com/en/the-mountain/ski-conditions-2",
+      "reportURL": "https://montsutton.com/en/conditions/",
       "paths": {
         "lastUpdated": "fetchedAt",
         "liftsOpen": "lifts.stats.open",
@@ -6254,7 +6254,7 @@
     },
     "silver-mountain": {
       "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/silver-mountain.json",
-      "reportURL": "https://www.silvermt.com/conditions",
+      "reportURL": "https://silvermt.com/snow-report/trail-status/",
       "paths": {
         "lastUpdated": "fetchedAt",
         "liftsOpen": "lifts.stats.open",
