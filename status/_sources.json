@@ -887,7 +887,21 @@
       "reportURL": "https://blueknob.com/trail-map-conditions"
     },
     "bogus-basin": {
-      "reportURL": "https://bogusbasin.org/your-mountain/trails-grooming/"
+      "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bogusbasin.json",
+      "reportURL": "https://bogusbasin.org/your-mountain/trails-grooming/",
+      "paths": {
+        "lastUpdated": "fetchedAt",
+        "liftsOpen": "lifts.stats.open",
+        "liftsTotal": [
+          "lifts.stats.open",
+          "lifts.stats.hold",
+          "lifts.stats.scheduled",
+          "lifts.stats.closed"
+        ]
+      },
+      "liftList": {
+        "path": "lifts.status"
+      }
     },
     "bolton-valley-resort": {
       "apiURL": "https://raw.githubusercontent.com/orlandocastiglioni/indiepeaks-lift-status/main/status/bolton-valley.json",
@@ -2684,7 +2698,10 @@
         "path": "lifts.status"
       },
       "trailList": {
-        "path": "trails.list"
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
       }
     },
     "hockley-valley-resort": {
@@ -6751,7 +6768,10 @@
         "path": "lifts.status"
       },
       "trailList": {
-        "path": "trails.list"
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
       }
     },
     "spring-mountain-adventures": {
@@ -7562,7 +7582,10 @@
         "path": "lifts.status"
       },
       "trailList": {
-        "path": "trails.list"
+        "path": "trails.list",
+        "nameKey": "name",
+        "statusKey": "status",
+        "levelKey": "level"
       }
     },
     "waterville-valley-resort": {
