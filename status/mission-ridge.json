@@ -1,24 +1,24 @@
 {
-  "fetchedAt": "2026-11-22T01:15:57Z",
+  "fetchedAt": "2026-11-27T14:30:12Z",
   "href": "https://www.missionridge.com/mountain-report/",
   "id": "mission-ridge",
   "lifts": {
     "stats": {
-      "closed": 7,
+      "closed": 5,
       "hold": 0,
-      "open": 0,
+      "open": 2,
       "percentage": {
-        "closed": 100,
+        "closed": 71.4,
         "hold": 0,
-        "open": 0,
+        "open": 28.5,
         "scheduled": 0
       },
       "scheduled": 0
     },
     "status": {
       "100 LAPS Rope Tow": "closed",
-      "Chair 1": "closed",
-      "Chair 2": "closed",
+      "Chair 1": "open",
+      "Chair 2": "open",
       "Chair 3": "closed",
       "Chair 4": "closed",
       "Ottoban Carpet": "closed",
@@ -31,18 +31,18 @@
   ],
   "name": "Mission Ridge",
   "timestamp": {
-    "lifts": 1795309263591,
-    "opening": 1795306544912,
-    "trails": 1795309263591,
+    "lifts": 1795788963156,
+    "opening": 1795787123734,
+    "trails": 1795788963156,
     "weather": 0,
-    "webcams": 1795309247363
+    "webcams": 1795788944906
   },
   "trails": {
     "list": [
       {
         "level": "green",
         "name": "Mimi",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -82,17 +82,17 @@
       {
         "level": "blue",
         "name": "Tumwater 2",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Lower Tumwater",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Sun Spot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -313,13 +313,13 @@
       },
       {
         "name": "Lil Bombers Park",
-        "status": "closed"
+        "status": "open"
       }
     ],
     "stats": {
-      "closed": 57,
+      "closed": 52,
       "hold": 0,
-      "open": 0,
+      "open": 5,
       "scheduled": 0
     }
   }
