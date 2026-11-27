@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-22T15:45:24Z",
+  "fetchedAt": "2026-11-27T05:15:31Z",
   "href": "https://skiloveland.com/trail-lift-report/",
   "id": "loveland",
   "lifts": {
     "stats": {
       "closed": 7,
       "hold": 0,
-      "open": 2,
+      "open": 3,
       "percentage": {
-        "closed": 77.7,
+        "closed": 70,
         "hold": 0,
-        "open": 22.2,
+        "open": 30,
         "scheduled": 0
       },
       "scheduled": 0
@@ -21,6 +21,7 @@
       "Lift 3": "closed",
       "Lift 4": "closed",
       "Lift 6": "closed",
+      "Lift 7": "open",
       "Lift 8": "closed",
       "Lift 9": "closed",
       "PTARMIGAN LIFT": "closed",
@@ -33,11 +34,11 @@
   ],
   "name": "Loveland",
   "timestamp": {
-    "lifts": 1795361444834,
-    "opening": 1795360543589,
-    "trails": 1795361444834,
-    "weather": 1795354264617,
-    "webcams": 1795361435050
+    "lifts": 1795755848890,
+    "opening": 1795755647339,
+    "trails": 1795755848890,
+    "weather": 1795755678776,
+    "webcams": 1795755678286
   },
   "trails": {
     "list": [
@@ -377,16 +378,6 @@
         "status": "closed"
       },
       {
-        "level": "green",
-        "name": "Take Off",
-        "status": "open"
-      },
-      {
-        "level": "green",
-        "name": "All Smiles",
-        "status": "closed"
-      },
-      {
         "level": "blue",
         "name": "Zip Trail",
         "status": "closed"
@@ -523,18 +514,18 @@
       }
     ],
     "stats": {
-      "closed": 90,
+      "closed": 89,
       "hold": 0,
-      "open": 6,
+      "open": 5,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Mostly Sunny",
-    "date": "2026-11-22",
+    "conditions": "Partly Cloudy",
+    "date": "2026-11-27",
     "icon": [
       "icon-cloud",
-      "icon-sunny"
+      "icon-windy icon-night"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=39.679993&lon=-105.89595",
@@ -543,8 +534,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 27
+      "max": 21
     },
-    "text": "Mostly sunny. High near 27, with temperatures falling to around 21 in the afternoon. Wind chill values as low as -2. West southwest wind around 9 mph, with gusts as high as 18 mph."
+    "text": "Partly cloudy, with a low around 21. West northwest wind 16 to 21 mph, with gusts as high as 36 mph."
   }
 }
