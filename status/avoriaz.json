@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-28T08:00:42Z",
+  "fetchedAt": "2026-11-28T08:15:04Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/avoriaz1800/",
   "id": "avoriaz",
   "lifts": {
@@ -59,11 +59,11 @@
   ],
   "name": "Avoriaz (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1795851956786,
+    "lifts": 1795852867256,
     "opening": 1795851940668,
-    "trails": 1795851956786,
+    "trails": 1795852867252,
     "weather": 0,
-    "webcams": 1795851940668
+    "webcams": 1795852851723
   },
   "trails": {
     "list": [
@@ -101,7 +101,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Retour chavanette",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "grade": "rouge",
@@ -339,7 +339,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Melezes",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "name": "Snowpark chapelle",
@@ -349,7 +349,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Bleue d'arare",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "bleue",
@@ -379,7 +379,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Bleue snowpark",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "grade": "rouge",
@@ -455,10 +455,10 @@
       }
     ],
     "stats": {
-      "closed": 4,
+      "closed": 3,
       "hold": 0,
-      "open": 3,
-      "scheduled": 60
+      "open": 7,
+      "scheduled": 57
     }
   }
 }
