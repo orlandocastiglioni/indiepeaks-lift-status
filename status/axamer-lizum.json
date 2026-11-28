@@ -1,17 +1,17 @@
 {
-  "fetchedAt": "2026-11-28T07:45:34Z",
+  "fetchedAt": "2026-11-28T08:30:14Z",
   "href": "https://www.ski-plus-city.com/en/ski-plus-city-pass/skiing-resorts/axamer-lizum/",
   "id": "axamer-lizum",
   "lifts": {
-    "reportedAt": "2026-11-26T10:54:27.000Z",
+    "reportedAt": "2026-11-28T08:15:18.000Z",
     "stats": {
-      "closed": 7,
+      "closed": 5,
       "hold": 0,
-      "open": 2,
+      "open": 3,
       "percentage": {
-        "closed": 77.7,
+        "closed": 62.5,
         "hold": 0,
-        "open": 22.2,
+        "open": 37.5,
         "scheduled": 0
       },
       "scheduled": 0
@@ -21,8 +21,7 @@
       "G\u00f6tzner Grube": "closed",
       "Hoadlbahn I": "open",
       "Hoadlbahn II": "open",
-      "Karleiten": "closed",
-      "Kaserwald I": "closed",
+      "Karleiten": "open",
       "Olympiabahn": "closed",
       "Pleisen": "closed",
       "Talbodenlift": "closed"
@@ -34,32 +33,14 @@
   ],
   "name": "Axamer Lizum (SKI plus CITY)",
   "timestamp": {
-    "lifts": 1795851145291,
-    "opening": 1795847434549,
-    "trails": 1795851145291,
+    "lifts": 1795853721529,
+    "opening": 1795851940668,
+    "trails": 1795853721528,
     "weather": 0,
-    "webcams": 1795851029645
+    "webcams": 1795853712766
   },
   "trails": {
     "list": [
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1 Olympia Abfahrt Damen",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "1a Skiweg Damenabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "red",
-        "level": "black",
-        "name": "1b Damen Zielschuss",
-        "status": "closed"
-      },
       {
         "grade": "red",
         "level": "black",
@@ -82,13 +63,13 @@
         "grade": "red",
         "level": "black",
         "name": "3 Olympia RSL Herren",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "blue",
         "level": "blue",
         "name": "3a Skiweg Olympiabahn",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "red",
@@ -106,13 +87,13 @@
         "grade": "red",
         "level": "black",
         "name": "4 Olympia RSL Damen",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "blue",
         "level": "blue",
         "name": "4a Skiweg Abfahrt 4",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "blue",
@@ -130,13 +111,13 @@
         "grade": "red",
         "level": "black",
         "name": "5 Karleitenabfahrt",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "blue",
         "level": "blue",
         "name": "5a Skiweg RSL Herren",
-        "status": "closed"
+        "status": "open"
       },
       {
         "grade": "red",
@@ -154,12 +135,6 @@
         "grade": "red",
         "level": "black",
         "name": "7 Pleisenabfahrt",
-        "status": "closed"
-      },
-      {
-        "grade": "blue",
-        "level": "blue",
-        "name": "9 Kaserwald I",
         "status": "closed"
       },
       {
@@ -223,11 +198,11 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-11-26T10:54:27.000Z",
+    "reportedAt": "2026-11-28T08:15:18.000Z",
     "stats": {
-      "closed": 32,
+      "closed": 22,
       "hold": 0,
-      "open": 0,
+      "open": 6,
       "scheduled": 0
     }
   }

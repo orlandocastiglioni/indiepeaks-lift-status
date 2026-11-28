@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-28T08:15:04Z",
+  "fetchedAt": "2026-11-28T08:30:14Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/avoriaz1800/",
   "id": "avoriaz",
   "lifts": {
@@ -59,11 +59,11 @@
   ],
   "name": "Avoriaz (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1795852867256,
+    "lifts": 1795853729081,
     "opening": 1795851940668,
-    "trails": 1795852867252,
+    "trails": 1795853729081,
     "weather": 0,
-    "webcams": 1795852851723
+    "webcams": 1795853712766
   },
   "trails": {
     "list": [
@@ -77,19 +77,19 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Blanchots",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "grade": "bleue",
         "level": "blue",
         "name": "Bleue chavanette",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "grade": "bleue",
         "level": "blue",
         "name": "Fornet",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "grade": "bleue",
@@ -373,7 +373,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Bleue surf",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "bleue",
@@ -385,55 +385,55 @@
         "grade": "rouge",
         "level": "black",
         "name": "Jean vuarnet",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "rouge",
         "level": "black",
         "name": "Stade tete aux boeufs",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "rouge",
         "level": "black",
         "name": "Vaineuve",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "rouge",
         "level": "black",
         "name": "Creux de la neige",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "noire",
         "level": "doubleBlack",
         "name": "Arete des intrets",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "noire",
         "level": "doubleBlack",
         "name": "Combe du machon",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "noire",
         "level": "doubleBlack",
         "name": "Combette",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "noire",
         "level": "doubleBlack",
         "name": "Coupe du monde",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "grade": "noire",
         "level": "doubleBlack",
         "name": "Crozats snowcross",
-        "status": "scheduled"
+        "status": "closed"
       },
       {
         "name": "Snowpark arare",
@@ -455,10 +455,10 @@
       }
     ],
     "stats": {
-      "closed": 3,
+      "closed": 13,
       "hold": 0,
-      "open": 7,
-      "scheduled": 57
+      "open": 10,
+      "scheduled": 44
     }
   }
 }
