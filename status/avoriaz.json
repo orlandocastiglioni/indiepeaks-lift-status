@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-28T15:30:44Z",
+  "fetchedAt": "2026-11-28T15:45:48Z",
   "href": "https://www.portesdusoleil.com/en-hiver/pistes-et-remontees-mecaniques/avoriaz1800/",
   "id": "avoriaz",
   "lifts": {
     "stats": {
-      "closed": 1,
+      "closed": 2,
       "hold": 0,
-      "open": 5,
+      "open": 4,
       "percentage": {
-        "closed": 2.8,
+        "closed": 5.7,
         "hold": 0,
-        "open": 14.2,
+        "open": 11.4,
         "scheduled": 82.8
       },
       "scheduled": 29
@@ -50,7 +50,7 @@
       "Ts3 cubore morzine": "scheduled",
       "Ts3 plateau": "open",
       "Ts6 tour": "scheduled",
-      "Tsd stade": "open"
+      "Tsd stade": "closed"
     }
   },
   "ll": [
@@ -59,11 +59,11 @@
   ],
   "name": "Avoriaz (Portes du Soleil)",
   "timestamp": {
-    "lifts": 1795878975342,
+    "lifts": 1795879865664,
     "opening": 1795877107872,
-    "trails": 1795878975342,
+    "trails": 1795879865663,
     "weather": 0,
-    "webcams": 1795878028530
+    "webcams": 1795879850644
   },
   "trails": {
     "list": [
@@ -83,7 +83,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Bleue chavanette",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "bleue",
@@ -355,7 +355,7 @@
         "grade": "bleue",
         "level": "blue",
         "name": "Bleue du lac",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "bleue",
@@ -455,9 +455,9 @@
       }
     ],
     "stats": {
-      "closed": 48,
+      "closed": 50,
       "hold": 0,
-      "open": 10,
+      "open": 8,
       "scheduled": 9
     }
   }
