@@ -1,16 +1,16 @@
 {
-  "fetchedAt": "2026-11-19T21:30:41Z",
+  "fetchedAt": "2026-11-28T01:30:18Z",
   "href": "https://spiritmt.com/current-conditions/",
   "id": "spirit-mountain",
   "lifts": {
     "stats": {
-      "closed": 5,
+      "closed": 4,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
-        "closed": 100,
+        "closed": 80,
         "hold": 0,
-        "open": 0,
+        "open": 20,
         "scheduled": 0
       },
       "scheduled": 0
@@ -20,7 +20,7 @@
       "Highline Chair": "closed",
       "Lone Oak Tow Rope": "closed",
       "Prospector Carpet": "closed",
-      "Spirit Express II": "closed"
+      "Spirit Express II": "open"
     }
   },
   "ll": [
@@ -29,11 +29,11 @@
   ],
   "name": "Spirit Mountain",
   "timestamp": {
-    "lifts": 1795122930941,
-    "opening": 1795119329993,
-    "trails": 1795122935060,
+    "lifts": 1795828552049,
+    "opening": 1795826760777,
+    "trails": 1795828556155,
     "weather": 0,
-    "webcams": 1795122923410
+    "webcams": 1795828543640
   },
   "trails": {
     "list": [
@@ -105,7 +105,7 @@
       {
         "level": "blue",
         "name": "Bindle Stiff",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -130,12 +130,12 @@
       {
         "level": "green",
         "name": "Downhill Musher",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Powder Monkey",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -154,9 +154,9 @@
       }
     ],
     "stats": {
-      "closed": 23,
+      "closed": 20,
       "hold": 0,
-      "open": 0,
+      "open": 3,
       "scheduled": 0
     }
   }
