@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T19:15:52Z",
+  "fetchedAt": "2026-11-28T00:00:04Z",
   "href": "https://montsutton.com/en/conditions/",
   "id": "mont-sutton",
   "lifts": {
@@ -31,23 +31,23 @@
   ],
   "name": "Mont Sutton",
   "timestamp": {
-    "lifts": 1795806949422,
-    "opening": 1795806934691,
-    "trails": 1795806949422,
+    "lifts": 1795823184867,
+    "opening": 1795822266120,
+    "trails": 1795823184867,
     "weather": 0,
-    "webcams": 0
+    "webcams": 1795823166758
   },
   "trails": {
     "list": [
       {
-        "level": "doubleBlack",
+        "level": "blue",
         "name": "Alleghanys (haut/top)",
         "status": "closed"
       },
       {
-        "level": "doubleBlack",
+        "level": "green",
         "name": "Alleghanys (bas/bottom)",
-        "status": "open"
+        "status": "closed"
       },
       {
         "level": "blue",
@@ -87,11 +87,6 @@
       {
         "level": "green",
         "name": "Yum-Yum",
-        "status": "closed"
-      },
-      {
-        "level": "green",
-        "name": "For\u00eat des merveilles",
         "status": "closed"
       },
       {
@@ -316,7 +311,7 @@
       },
       {
         "level": "doubleBlack",
-        "name": "\u00c9motion ( haut/top)",
+        "name": "\u00c9motion (haut/top)",
         "status": "closed"
       },
       {
@@ -383,7 +378,7 @@
     "stats": {
       "closed": 67,
       "hold": 0,
-      "open": 1,
+      "open": 0,
       "scheduled": 0
     }
   }
