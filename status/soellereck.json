@@ -1,9 +1,9 @@
 {
-  "fetchedAt": "2026-11-28T11:15:37Z",
+  "fetchedAt": "2026-11-28T11:30:49Z",
   "href": "https://www.ok-bergbahnen.com/skigebiete/status-anlagen-pisten-wege/",
   "id": "soellereck",
   "lifts": {
-    "reportedAt": "2026-11-28T10:59:49.000Z",
+    "reportedAt": "2026-11-28T11:14:49.000Z",
     "stats": {
       "closed": 7,
       "hold": 0,
@@ -32,11 +32,11 @@
   ],
   "name": "S\u00f6llereck (Oberstdorf Kleinwalsertal)",
   "timestamp": {
-    "lifts": 1795863640898,
-    "opening": 1795860029344,
-    "trails": 1795863640898,
+    "lifts": 1795864564110,
+    "opening": 1795864544039,
+    "trails": 1795864564109,
     "weather": 0,
-    "webcams": 1795862742728
+    "webcams": 1795864544039
   },
   "trails": {
     "list": [
@@ -44,24 +44,24 @@
         "grade": "Piste Leicht",
         "level": "blue",
         "name": "Familienabfahrt",
-        "status": "open"
-      },
-      {
-        "grade": "Piste Mittel",
-        "level": "black",
-        "name": "Panoramahang",
-        "status": "open"
-      },
-      {
-        "grade": "Piste Leicht",
-        "level": "blue",
-        "name": "Schrattenwang",
-        "status": "open"
+        "status": "closed"
       },
       {
         "grade": "Piste Leicht",
         "level": "blue",
         "name": "Dr\u00fcckeberger",
+        "status": "closed"
+      },
+      {
+        "grade": "Piste Mittel",
+        "level": "black",
+        "name": "Panoramahang",
+        "status": "closed"
+      },
+      {
+        "grade": "Piste Leicht",
+        "level": "blue",
+        "name": "Schrattenwang",
         "status": "closed"
       },
       {
@@ -119,11 +119,11 @@
         "status": "closed"
       }
     ],
-    "reportedAt": "2026-11-28T10:59:49.000Z",
+    "reportedAt": "2026-11-28T11:14:49.000Z",
     "stats": {
-      "closed": 10,
+      "closed": 13,
       "hold": 0,
-      "open": 3,
+      "open": 0,
       "scheduled": 0
     }
   }
