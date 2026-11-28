@@ -1,23 +1,23 @@
 {
-  "fetchedAt": "2026-11-27T23:45:57Z",
+  "fetchedAt": "2026-11-28T00:30:07Z",
   "href": "https://www.getokogen.com/winter/01trail/operation.cgi",
   "id": "geto-kogen",
   "lifts": {
     "stats": {
       "closed": 3,
       "hold": 0,
-      "open": 0,
+      "open": 1,
       "percentage": {
         "closed": 60,
         "hold": 0,
-        "open": 0,
-        "scheduled": 40
+        "open": 20,
+        "scheduled": 20
       },
-      "scheduled": 2
+      "scheduled": 1
     },
     "status": {
       "\u30af\u30ef\u30c3\u30c9\u30ea\u30d5\u30c8": "closed",
-      "\u7b2c1\u30b4\u30f3\u30c9\u30e9": "scheduled",
+      "\u7b2c1\u30b4\u30f3\u30c9\u30e9": "open",
       "\u7b2c1\u30da\u30a2\u30ea\u30d5\u30c8": "closed",
       "\u7b2c2\u30b4\u30f3\u30c9\u30e9": "closed",
       "\u7b2c2\u30da\u30a2\u30ea\u30d5\u30c8": "scheduled"
@@ -29,11 +29,11 @@
   ],
   "name": "Geto Kogen",
   "timestamp": {
-    "lifts": 1795822274023,
+    "lifts": 1795824945495,
     "opening": 1795822266118,
-    "trails": 1795822274022,
+    "trails": 1795824945494,
     "weather": 0,
-    "webcams": 1795822266118
+    "webcams": 1795824938168
   },
   "trails": {
     "list": [
@@ -55,7 +55,7 @@
       {
         "level": "blue",
         "name": "A4\u30b3\u30fc\u30b9",
-        "status": "scheduled"
+        "status": "open"
       },
       {
         "level": "green",
@@ -111,8 +111,8 @@
     "stats": {
       "closed": 8,
       "hold": 0,
-      "open": 5,
-      "scheduled": 1
+      "open": 6,
+      "scheduled": 0
     }
   }
 }
