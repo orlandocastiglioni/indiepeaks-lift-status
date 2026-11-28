@@ -1,30 +1,21 @@
 {
-  "fetchedAt": "2026-11-27T14:45:45Z",
+  "fetchedAt": "2026-11-28T07:30:27Z",
   "href": "https://www.angelfireresort.com/trail-and-lift-status/",
   "id": "angel-fire",
   "lifts": {
     "stats": {
-      "closed": 8,
+      "closed": 0,
       "hold": 0,
       "open": 0,
       "percentage": {
-        "closed": 100,
-        "hold": 0,
-        "open": 0,
-        "scheduled": 0
+        "closed": 25,
+        "hold": 25,
+        "open": 25,
+        "scheduled": 25
       },
       "scheduled": 0
     },
-    "status": {
-      "Angel Express": "closed",
-      "Chile Express": "closed",
-      "Lift #1": "closed",
-      "Lift #3": "closed",
-      "Polar Coaster Carpet": "closed",
-      "Rakes Rider": "closed",
-      "Ski School Carpet": "closed",
-      "Southwest Flyer": "closed"
-    }
+    "status": {}
   },
   "ll": [
     -105.273903,
@@ -32,10 +23,28 @@
   ],
   "name": "Angel Fire",
   "timestamp": {
-    "lifts": 1795789829718,
-    "opening": 1795762165152,
-    "trails": 1795789815500,
-    "weather": 0,
+    "lifts": 1795850153171,
+    "opening": 1795809904279,
+    "trails": 1795850136622,
+    "weather": 1795806966084,
     "webcams": 0
+  },
+  "weather": {
+    "conditions": "Partly Sunny",
+    "date": "2026-11-27",
+    "icon": [
+      "icon-cloud",
+      "icon-sunny"
+    ],
+    "notice": {
+      "href": "https://forecast.weather.gov/MapClick.php?lat=36.387402&lon=-105.273903",
+      "img": "/img/noaa-logo.svg",
+      "site": "noaa.gov",
+      "width": 72
+    },
+    "temperature": {
+      "max": 51
+    },
+    "text": "Partly sunny. High near 51, with temperatures falling to around 39 in the afternoon. West wind around 10 mph."
   }
 }
