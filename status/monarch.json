@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-14T03:46:40Z",
+  "fetchedAt": "2026-11-28T13:00:23Z",
   "href": "https://skimonarch.com/conditions/",
   "id": "monarch",
   "lifts": {
@@ -33,43 +33,43 @@
   ],
   "name": "Monarch Mountain",
   "timestamp": {
-    "lifts": 1794627997437,
-    "opening": 1794627805332,
-    "trails": 1794627997437,
-    "weather": 1794627996523,
-    "webcams": 1794627995832
+    "lifts": 1795869966323,
+    "opening": 1795869010678,
+    "trails": 1795869966323,
+    "weather": 1795869017165,
+    "webcams": 1795869951582
   },
   "trails": {
     "list": [
       {
         "level": "green",
         "name": "Drifter",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Glade",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "KC Cutoff",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Little Jo",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Lower Tango",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Rookie",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -79,27 +79,27 @@
       {
         "level": "green",
         "name": "Serendipity",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Sidewinder",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Sleepy Hollow",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Tenderfoot",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Beeline",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -109,12 +109,12 @@
       {
         "level": "blue",
         "name": "Freeway",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "North Forty",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -124,17 +124,17 @@
       {
         "level": "blue",
         "name": "Romp",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Tele Alley",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Toddler",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -159,7 +159,7 @@
       {
         "level": "black",
         "name": "Gunbarrel",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -184,7 +184,7 @@
       {
         "level": "black",
         "name": "Upper Tango",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -194,12 +194,12 @@
       {
         "level": "terrainPark",
         "name": "Ricochet",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "terrainPark",
         "name": "Tilt",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
@@ -214,12 +214,12 @@
       {
         "level": "green",
         "name": "Snowflake",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "green",
         "name": "Skywalker",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -229,12 +229,12 @@
       {
         "level": "blue",
         "name": "Quickdraw",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
         "name": "Short N Sweet",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "blue",
@@ -249,7 +249,7 @@
       {
         "level": "blue",
         "name": "Turbo",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -274,7 +274,7 @@
       {
         "level": "black",
         "name": "Mirage",
-        "status": "closed"
+        "status": "open"
       },
       {
         "level": "black",
@@ -436,18 +436,18 @@
       }
     ],
     "stats": {
-      "closed": 80,
+      "closed": 54,
       "hold": 0,
-      "open": 0,
+      "open": 26,
       "scheduled": 0
     }
   },
   "weather": {
-    "conditions": "Mostly Cloudy",
-    "date": "2026-11-14",
+    "conditions": "Snow Showers",
+    "date": "2026-11-28",
     "icon": [
-      "icon-cloud",
-      "icon-night"
+      "basecloud",
+      "icon-snowy"
     ],
     "notice": {
       "href": "https://forecast.weather.gov/MapClick.php?lat=38.512714&lon=-106.331696",
@@ -456,8 +456,8 @@
       "width": 72
     },
     "temperature": {
-      "max": 26
+      "max": 24
     },
-    "text": "Mostly cloudy, with a low around 26. Southwest wind 5 to 10 mph. New snow accumulation of less than half an inch possible."
+    "text": "Snow showers. Mostly cloudy, with a low around 24. West wind around 25 mph, with gusts as high as 40 mph. Chance of precipitation is 80%. New snow accumulation of 1 to 3 inches possible."
   }
 }
